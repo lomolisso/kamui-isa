@@ -1,0 +1,13 @@
+id: wmma.load
+kernel: k_wmma_load
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [1, 1, 1], block: [64, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: f16, count: 512, generator: {kind: random, seed: 531, low: -1.0, high: 1.0}}
+  - {name: b, kind: input, dtype: f16, count: 512, generator: {kind: random, seed: 532, low: -1.0, high: 1.0}}
+  - {name: c, kind: input, dtype: f32, count: 512, generator: {kind: random, seed: 533, low: -1.0, high: 1.0}}
+  - {name: d, kind: output, dtype: f32, count: 512}
+expect_ptx: ['wmma\.load\.a\.sync\.aligned\.row\.m16n16k16', 'wmma\.load\.b\.sync\.aligned\.col', 'wmma\.mma\.sync\.aligned\.row\.col', 'wmma\.store\.d\.sync\.aligned\.row']
+deterministic: true
+tolerance_class: reduction
+notes: 'Each warp multiplies its own 16x16 tiles (row-major A and C, column-major B).'

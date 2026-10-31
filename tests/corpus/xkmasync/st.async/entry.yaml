@@ -1,0 +1,11 @@
+id: st.async
+kernel: k_st_async
+compile: {extra_flags: []}
+launch: {grid: [4, 1, 1], block: [128, 1, 1], cluster: [2, 1, 1], dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: s32, count: 512, generator: {kind: random, seed: 624, low: -1000, high: 1000}}
+  - {name: d, kind: output, dtype: s32, count: 512}
+expect_ptx: ['st\.async\.shared::cluster\.mbarrier::complete_tx::bytes\.u32', 'fence\.mbarrier_init\.release\.cluster', 'mbarrier\.try_wait\.parity\.acquire\.cluster']
+deterministic: true
+tolerance_class: exact
+notes: 'Each thread stores 4 bytes into the peer; each mbarrier expects 128 x 4 = 512 bytes.'

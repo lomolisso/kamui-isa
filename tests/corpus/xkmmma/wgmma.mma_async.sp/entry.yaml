@@ -1,0 +1,12 @@
+id: wgmma.mma_async.sp
+kernel: k_wgmma_mma_async_sp
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [1, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: u32, count: 512, generator: {kind: random, seed: 668, low: 0, high: 1006648320}}
+  - {name: b, kind: input, dtype: u32, count: 128, generator: {kind: random, seed: 678, low: 0, high: 1006648320}}
+  - {name: d, kind: output, dtype: f32, count: 512}
+expect_ptx: ['wgmma\.mma_async\.sp\.sync\.aligned\.m64n8k32\.f32\.f16\.f16', 'wgmma\.fence\.sync\.aligned', 'wgmma\.commit_group\.sync\.aligned', 'wgmma\.wait_group\.sync\.aligned 0']
+deterministic: true
+tolerance_class: reduction
+notes: 'Metadata 0x44444444 keeps elements 0 and 1 of every group of four.'

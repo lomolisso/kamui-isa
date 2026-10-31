@@ -1,0 +1,12 @@
+id: atom.sem.release
+kernel: k_atom_sem_release
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: v, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 547, low: 0, high: 65535}}
+  - {name: acc, kind: inout, dtype: u32, count: 1, generator: {kind: const, value: 0}}
+  - {name: old, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['atom\.release\.gpu\.global\.add\.u32']
+deterministic: false
+tolerance_class: property:atomic

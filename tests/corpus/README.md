@@ -85,6 +85,7 @@ entry.yaml     how to compile, launch and check the kernel
 | `compile` | `extra_flags` for clang on top of the common ones; optional `ptxas_flags` (for example `-c` for a module with external symbols) |
 | `launch` | `grid`, `block` (three integers each), `cluster` (null or three integers), `dynamic_smem` (bytes) |
 | `params` | Kernel parameters in order. `kind` is `input` (read only), `inout` (initialised, then read back), `output` (starts zeroed, read back) or `scalar` (passed by value, `value`). `dtype` is one of `u8 s8 u16 s16 u32 s32 u64 s64 f16 bf16 f32 f64`; buffers have a `count` of elements |
+| `tensormap` params | A tensor map (TMA descriptor) that the runner encodes on the host and passes as a `__grid_constant__` 128-byte parameter: `of` (the buffer it describes), `dtype`, `mode` (`tile` or `im2col`), `dims` and `box` (sizes, innermost first), optional `swizzle`, `interleave`, `fill`, and for `im2col` the pixel window fields |
 | `generator` | Initial contents of `input` and `inout` buffers: `iota` (`start`, `step`), `const` (`value`), `random` (`seed`, `low`, `high`), `file` (`path` in the entry directory) |
 | `expect_ptx` | Regular expressions that must match `kernel.ptx`: proof that the feature survived compilation |
 | `expect_ptxas` | Optional regular expressions that must match the `ptxas -v` output |
@@ -105,7 +106,11 @@ python tools/corpus/build.py --all             # rebuild every entry and rewrite
 python tools/corpus/build.py --all --check     # rebuild and compare with the committed kernel.ptx
 python tools/corpus/build.py --all --lint      # no compiler: entry.yaml and expectations against kernel.ptx
 python tools/corpus/gen_inputs.py --all        # inputs.bin for every entry
+python tools/corpus/build.py --all --nvcc      # evidence only: nvcc's PTX of the same sources, in build/corpus-nvcc
 ```
+
+CI requires every in-scope catalog row to have an entry or to be `pending` with a reason (at most 10 percent of
+the in-scope rows): `python tools/catalog/check_coverage.py --all --require-entries`.
 
 ## Rules for kernels
 

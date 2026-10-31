@@ -1,0 +1,14 @@
+id: mma.int4
+kernel: k_mma_int4
+compile: {extra_flags: []}
+launch: {grid: [1, 1, 1], block: [64, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 501, low: 0, high: 4294967295}}
+  - {name: b, kind: input, dtype: u32, count: 128, generator: {kind: random, seed: 502, low: 0, high: 4294967295}}
+  - {name: c, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 520, low: -1000, high: 1000}}
+  - {name: dd, kind: output, dtype: s32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 64}
+expect_ptx: ['mma\.sync\.aligned\.m16n8k64\.row\.col\.s32\.s4\.s4\.s32']
+deterministic: true
+tolerance_class: exact
+notes: 'Two warps; each thread''s fragment registers are consecutive elements of a, b, c and dd.'

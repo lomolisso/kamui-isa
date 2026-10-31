@@ -1,0 +1,14 @@
+id: mma.tf32
+kernel: k_mma_tf32
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [1, 1, 1], block: [64, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 515, low: 1040187392, high: 1065353216}}
+  - {name: b, kind: input, dtype: u32, count: 128, generator: {kind: random, seed: 516, low: 1040187392, high: 1065353216}}
+  - {name: c, kind: input, dtype: f32, count: 256, generator: {kind: random, seed: 516, low: -1.0, high: 1.0}}
+  - {name: dd, kind: output, dtype: f32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 64}
+expect_ptx: ['mma\.sync\.aligned\.m16n8k8\.row\.col\.f32\.tf32\.tf32\.f32']
+deterministic: true
+tolerance_class: reduction
+notes: 'Two warps; each thread''s fragment registers are consecutive elements of a, b, c and dd.'

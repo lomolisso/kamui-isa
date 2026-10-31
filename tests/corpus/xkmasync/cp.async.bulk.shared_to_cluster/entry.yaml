@@ -1,0 +1,11 @@
+id: cp.async.bulk.shared_to_cluster
+kernel: k_cp_async_bulk_shared_to_cluster
+compile: {extra_flags: []}
+launch: {grid: [4, 1, 1], block: [128, 1, 1], cluster: [2, 1, 1], dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: s32, count: 2048, generator: {kind: random, seed: 635, low: -1000, high: 1000}}
+  - {name: d, kind: output, dtype: s32, count: 1024}
+expect_ptx: ['cp\.async\.bulk\.shared::cluster\.shared::cta\.mbarrier::complete_tx::bytes']
+deterministic: true
+tolerance_class: exact
+notes: 'd holds, for each cluster, the 512 words that CTA 0 copied into CTA 1.'

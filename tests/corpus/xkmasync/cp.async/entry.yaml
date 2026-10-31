@@ -1,0 +1,10 @@
+id: cp.async
+kernel: k_cp_async
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: s32, count: 2048, generator: {kind: random, seed: 561, low: -1000, high: 1000}}
+  - {name: d, kind: output, dtype: s32, count: 256}
+expect_ptx: ['cp\.async\.cg\.shared\.global(\.L2::\w+)? \[.*\], \[.*\], 16', 'cp\.async\.ca\.shared\.global.*8;', 'cp\.async\.commit_group', 'cp\.async\.wait_group 0', 'cp\.async\.wait_all']
+deterministic: true
+tolerance_class: exact

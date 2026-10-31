@@ -172,14 +172,14 @@ instructions are specified. Columns:
 | `testp` | `testp.op.type p, a;` | 9.7.3.1 | 1 | inline-asm | `base/testp` |  |  |
 | `trap` | `trap;` | 9.7.19.4 | 1 | cuda | `base/trap` |  |  |
 | `xor` | `xor.type d, a, b;` | 9.7.8.3 | 1 | cuda | `base/and` |  |  |
-| `atom.half` | `atom.global.add.noftz.f16 d, [a], b;` | 9.7.13.5 | 2 | cuda |  |  |  |
-| `max.fp.nan` | `max{.ftz}.NaN{.xorsign.abs}.f32 d, a, b;` | 9.7.3.12 | 3 | builtin |  |  |  |
-| `max.half` | `max{.ftz}{.NaN}{.xorsign.abs}.f16 d, a, b;` | 9.7.4.8 | 3 | builtin |  |  |  |
-| `min.fp.nan` | `min{.ftz}.NaN{.xorsign.abs}.f32 d, a, b;` | 9.7.3.11 | 3 | builtin |  |  |  |
-| `min.half` | `min{.ftz}{.NaN}{.xorsign.abs}.f16 d, a, b;` | 9.7.4.7 | 3 | builtin |  |  |  |
-| `atom.b128` | `atom.global.cas.b128 d, [a], b, c;` | 9.7.13.5 | 4 | inline-asm |  |  |  |
-| `atom.vector` | `atom.global.v2.f32.add d, [a], b;` | 9.7.13.5 | 4 | inline-asm |  |  |  |
-| `red.vector` | `red.global.v2.f32.add [a], b;` | 9.7.13.6 | 4 | inline-asm |  |  |  |
+| `atom.half` | `atom.global.add.noftz.f16 d, [a], b;` | 9.7.13.5 | 2 | inline-asm | `base/atom.half` |  |  |
+| `max.fp.nan` | `max{.ftz}.NaN{.xorsign.abs}.f32 d, a, b;` | 9.7.3.12 | 3 | builtin | `base/min.fp.nan` |  |  |
+| `max.half` | `max{.ftz}{.NaN}{.xorsign.abs}.f16 d, a, b;` | 9.7.4.8 | 3 | builtin | `base/min.half` |  |  |
+| `min.fp.nan` | `min{.ftz}.NaN{.xorsign.abs}.f32 d, a, b;` | 9.7.3.11 | 3 | builtin | `base/min.fp.nan` |  |  |
+| `min.half` | `min{.ftz}{.NaN}{.xorsign.abs}.f16 d, a, b;` | 9.7.4.7 | 3 | inline-asm | `base/min.half` |  |  |
+| `atom.b128` | `atom.global.cas.b128 d, [a], b, c;` | 9.7.13.5 | 4 | inline-asm | `base/atom.b128` |  |  |
+| `atom.vector` | `atom.global.v2.f32.add d, [a], b;` | 9.7.13.5 | 4 | inline-asm | `base/atom.vector` |  |  |
+| `red.vector` | `red.global.v2.f32.add [a], b;` | 9.7.13.6 | 4 | inline-asm | `base/atom.vector` |  |  |
 
 ### Xkmsimt: threads, warps, predication, special registers
 
@@ -213,16 +213,16 @@ instructions are specified. Columns:
 | `sreg.tid` | `mov.u32 d, %tid;` | 10.1 | 1 | cuda | `xkmsimt/sreg.tid` |  |  |
 | `sreg.total_smem_size` | `mov.u32 d, %total_smem_size;` | 10.30 | 1 | inline-asm | `xkmsimt/sreg.dynamic_smem_size` |  |  |
 | `sreg.warpid` | `mov.u32 d, %warpid;` | 10.4 | 1 | builtin | `xkmsimt/sreg.warpid` |  |  |
-| `sreg.reserved_smem_offset` | `mov.u32 d, %reserved_smem_offset;` | 10.29 | 3 | inline-asm |  |  |  |
-| `griddepcontrol` | `griddepcontrol.action;` | 9.7.13.13 | 4 | inline-asm |  |  |  |
-| `sreg.aggr_smem_size` | `mov.u32 d, %aggr_smem_size;` | 10.31 | 4 | inline-asm |  |  |  |
-| `sreg.cluster_ctaid` | `mov.u32 d, %cluster_ctaid;` | 10.14 | 4 | builtin |  |  |  |
-| `sreg.cluster_ctarank` | `mov.u32 d, %cluster_ctarank;` | 10.16 | 4 | builtin |  |  |  |
-| `sreg.cluster_nctaid` | `mov.u32 d, %cluster_nctaid;` | 10.15 | 4 | builtin |  |  |  |
-| `sreg.cluster_nctarank` | `mov.u32 d, %cluster_nctarank;` | 10.17 | 4 | builtin |  |  |  |
-| `sreg.clusterid` | `mov.u32 d, %clusterid;` | 10.12 | 4 | builtin |  |  |  |
-| `sreg.is_explicit_cluster` | `mov.u32 d, %is_explicit_cluster;` | 10.11 | 4 | builtin |  |  |  |
-| `sreg.nclusterid` | `mov.u32 d, %nclusterid;` | 10.13 | 4 | builtin |  |  |  |
+| `sreg.reserved_smem_offset` | `mov.u32 d, %reserved_smem_offset;` | 10.29 | 3 | inline-asm | `xkmsimt/sreg.reserved_smem_offset` |  |  |
+| `griddepcontrol` | `griddepcontrol.action;` | 9.7.13.13 | 4 | inline-asm | `xkmsimt/griddepcontrol` |  |  |
+| `sreg.aggr_smem_size` | `mov.u32 d, %aggr_smem_size;` | 10.31 | 4 | inline-asm | `xkmsimt/sreg.cluster_ctarank` |  |  |
+| `sreg.cluster_ctaid` | `mov.u32 d, %cluster_ctaid;` | 10.14 | 4 | builtin | `xkmsimt/sreg.cluster_ctarank` |  |  |
+| `sreg.cluster_ctarank` | `mov.u32 d, %cluster_ctarank;` | 10.16 | 4 | builtin | `xkmsimt/sreg.cluster_ctarank` |  |  |
+| `sreg.cluster_nctaid` | `mov.u32 d, %cluster_nctaid;` | 10.15 | 4 | builtin | `xkmsimt/sreg.cluster_ctarank` |  |  |
+| `sreg.cluster_nctarank` | `mov.u32 d, %cluster_nctarank;` | 10.17 | 4 | builtin | `xkmsimt/sreg.cluster_ctarank` |  |  |
+| `sreg.clusterid` | `mov.u32 d, %clusterid;` | 10.12 | 4 | builtin | `xkmsimt/sreg.cluster_ctarank` |  |  |
+| `sreg.is_explicit_cluster` | `mov.u32 d, %is_explicit_cluster;` | 10.11 | 4 | builtin | `xkmsimt/sreg.cluster_ctarank` |  |  |
+| `sreg.nclusterid` | `mov.u32 d, %nclusterid;` | 10.13 | 4 | builtin | `xkmsimt/sreg.cluster_ctarank` |  |  |
 
 ### Xkmwarp: warp-level operations
 
@@ -239,10 +239,10 @@ instructions are specified. Columns:
 | `vote.sync.any` | `vote.sync.any.pred d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda | `xkmwarp/vote.sync.any` |  |  |
 | `vote.sync.ballot` | `vote.sync.ballot.b32 d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda | `xkmwarp/vote.sync.ballot` |  |  |
 | `vote.sync.uni` | `vote.sync.uni.pred d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda | `xkmwarp/vote.sync.uni` |  |  |
-| `match.all.sync` | `match.all.sync.type d[\|p], a, membermask;` | 9.7.13.10 | 2 | cuda |  |  |  |
-| `match.any.sync` | `match.any.sync.type d, a, membermask;` | 9.7.13.10 | 2 | cuda |  |  |  |
-| `redux.sync` | `redux.sync.op.type dst, src, membermask;` | 9.7.13.12 | 3 | builtin |  |  |  |
-| `elect.sync` | `elect.sync d\|p, membermask;` | 9.7.13.14 | 4 | inline-asm |  |  |  |
+| `match.all.sync` | `match.all.sync.type d[\|p], a, membermask;` | 9.7.13.10 | 2 | cuda | `xkmwarp/match.all.sync` |  |  |
+| `match.any.sync` | `match.any.sync.type d, a, membermask;` | 9.7.13.10 | 2 | cuda | `xkmwarp/match.any.sync` |  |  |
+| `redux.sync` | `redux.sync.op.type dst, src, membermask;` | 9.7.13.12 | 3 | builtin | `xkmwarp/redux.sync` |  |  |
+| `elect.sync` | `elect.sync d\|p, membermask;` | 9.7.13.14 | 4 | inline-asm | `xkmwarp/elect.sync` |  |  |
 
 ### Xkmbar: CTA and cluster barriers
 
@@ -253,8 +253,8 @@ instructions are specified. Columns:
 | `bar.red` | `bar.red.popc.u32 d, a, p;` | 9.7.13.1 | 1 | cuda | `xkmbar/bar.red` |  |  |
 | `bar.sync` | `bar.sync 0;` | 9.7.13.1 | 1 | cuda | `xkmbar/bar.sync` |  |  |
 | `bar.sync.named` | `bar.sync a, b;` | 9.7.13.1 | 1 | builtin | `xkmbar/bar.sync.named` |  |  |
-| `barrier.sync` | `barrier.sync a{, b};` | 9.7.13.1 | 2 | builtin |  |  |  |
-| `barrier.cluster` | `barrier.cluster.arrive{.sem}{.aligned};` | 9.7.13.3 | 4 | builtin |  |  |  |
+| `barrier.sync` | `barrier.sync a{, b};` | 9.7.13.1 | 2 | builtin | `xkmbar/barrier.sync` |  |  |
+| `barrier.cluster` | `barrier.cluster.arrive{.sem}{.aligned};` | 9.7.13.3 | 4 | builtin | `xkmcluster/mapa` |  |  |
 
 ### Xkmscope: scoped and ordered memory operations
 
@@ -262,138 +262,138 @@ instructions are specified. Columns:
 |---|---|---|---|---|---|---|---|
 | `atom.scope.gpu` | `atom.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 1 | cuda | `xkmscope/atom.scope.gpu` |  |  |
 | `membar` | `membar.level; .level = { .cta, .gl, .sys }` | 9.7.13.4 | 1 | cuda | `xkmscope/membar` |  |  |
-| `atom.scope.cta` | `atom.cta.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | builtin |  |  |  |
-| `atom.scope.sys` | `atom.sys.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | builtin |  |  |  |
-| `atom.sem.acq_rel` | `atom.acq_rel.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | inline-asm |  |  |  |
-| `atom.sem.acquire` | `atom.acquire.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | inline-asm |  |  |  |
-| `atom.sem.relaxed` | `atom.relaxed.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | inline-asm |  |  |  |
-| `atom.sem.release` | `atom.release.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | inline-asm |  |  |  |
-| `fence.proxy.alias` | `fence.proxy.alias;` | 9.7.13.4 | 2 | inline-asm |  |  |  |
-| `fence.scope.cta` | `fence.acq_rel.cta;` | 9.7.13.4 | 2 | inline-asm |  |  |  |
-| `fence.scope.gpu` | `fence.acq_rel.gpu;` | 9.7.13.4 | 2 | inline-asm |  |  |  |
-| `fence.scope.sys` | `fence.acq_rel.sys;` | 9.7.13.4 | 2 | cuda |  |  |  |
-| `fence.sem.acq_rel` | `fence.acq_rel.scope;` | 9.7.13.4 | 2 | inline-asm |  |  |  |
-| `fence.sem.sc` | `fence.sc.scope;` | 9.7.13.4 | 2 | cuda |  |  |  |
-| `ld.mmio` | `ld.mmio.relaxed.sys.global.type d, [a];` | 9.7.9.8 | 2 | inline-asm |  |  |  |
-| `ld.scope.cta` | `ld.relaxed.cta.global.type d, [a];` | 9.7.9.8 | 2 | inline-asm |  |  |  |
-| `ld.scope.gpu` | `ld.relaxed.gpu.global.type d, [a];` | 9.7.9.8 | 2 | inline-asm |  |  |  |
-| `ld.scope.sys` | `ld.relaxed.sys.global.type d, [a];` | 9.7.9.8 | 2 | cuda |  |  |  |
-| `ld.sem.acquire` | `ld.acquire.scope.space.type d, [a];` | 9.7.9.8 | 2 | cuda |  |  |  |
-| `ld.sem.relaxed` | `ld.relaxed.scope.space.type d, [a];` | 9.7.9.8 | 2 | cuda |  |  |  |
-| `red.scope` | `red.scope.global.add.u32 [a], b;` | 9.7.13.6 | 2 | inline-asm |  |  |  |
-| `red.sem.release` | `red.release.gpu.global.add.u32 [a], b;` | 9.7.13.6 | 2 | inline-asm |  |  |  |
-| `st.mmio` | `st.mmio.relaxed.sys.global.type [a], b;` | 9.7.9.11 | 2 | inline-asm |  |  |  |
-| `st.scope.cta` | `st.relaxed.cta.global.type [a], b;` | 9.7.9.11 | 2 | inline-asm |  |  |  |
-| `st.scope.gpu` | `st.relaxed.gpu.global.type [a], b;` | 9.7.9.11 | 2 | inline-asm |  |  |  |
-| `st.scope.sys` | `st.relaxed.sys.global.type [a], b;` | 9.7.9.11 | 2 | cuda |  |  |  |
-| `st.sem.relaxed` | `st.relaxed.scope.space.type [a], b;` | 9.7.9.11 | 2 | cuda |  |  |  |
-| `st.sem.release` | `st.release.scope.space.type [a], b;` | 9.7.9.11 | 2 | cuda |  |  |  |
-| `atom.scope.cluster` | `atom.cluster.global.add.u32 d, [a], b;` | 9.7.13.5 | 4 | inline-asm |  |  |  |
-| `fence.proxy.async` | `fence.proxy.async{.space};` | 9.7.13.4 | 4 | inline-asm |  |  |  |
-| `fence.proxy.tensormap` | `fence.proxy.tensormap::generic.release.gpu;` | 9.7.13.4 | 4 | inline-asm |  |  |  |
-| `fence.scope.cluster` | `fence.acq_rel.cluster;` | 9.7.13.4 | 4 | builtin |  |  |  |
-| `fence.sem.acquire` | `fence.acquire.scope;` | 9.7.13.4 | 4 | inline-asm |  |  |  |
-| `fence.sem.release` | `fence.release.scope;` | 9.7.13.4 | 4 | inline-asm |  |  |  |
-| `fence.sync_restrict` | `fence.acquire.sync_restrict::shared::cluster.cluster;` | 9.7.13.4 | 4 | inline-asm |  |  |  |
-| `ld.scope.cluster` | `ld.relaxed.cluster.global.type d, [a];` | 9.7.9.8 | 4 | inline-asm |  |  |  |
-| `multimem` | `multimem.ld_reduce{.ldsem}{.scope}{.ss}.op.type d, [a];` | 9.7.9.14 | 4 | inline-asm |  |  |  |
-| `red.scope.cluster` | `red.cluster.global.add.u32 [a], b;` | 9.7.13.6 | 4 | inline-asm |  |  |  |
-| `st.scope.cluster` | `st.relaxed.cluster.global.type [a], b;` | 9.7.9.11 | 4 | inline-asm |  |  |  |
+| `atom.scope.cta` | `atom.cta.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | builtin | `xkmscope/atom.scope.cta` |  |  |
+| `atom.scope.sys` | `atom.sys.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | builtin | `xkmscope/atom.scope.sys` |  |  |
+| `atom.sem.acq_rel` | `atom.acq_rel.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | inline-asm | `xkmscope/atom.sem.acq_rel` |  |  |
+| `atom.sem.acquire` | `atom.acquire.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | inline-asm | `xkmscope/atom.sem.acquire` |  |  |
+| `atom.sem.relaxed` | `atom.relaxed.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | inline-asm | `xkmscope/atom.sem.relaxed` |  |  |
+| `atom.sem.release` | `atom.release.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | inline-asm | `xkmscope/atom.sem.release` |  |  |
+| `fence.proxy.alias` | `fence.proxy.alias;` | 9.7.13.4 | 2 | inline-asm | `xkmscope/fence.proxy.alias` |  |  |
+| `fence.scope.cta` | `fence.acq_rel.cta;` | 9.7.13.4 | 2 | inline-asm | `xkmscope/fence.scope.cta` |  |  |
+| `fence.scope.gpu` | `fence.acq_rel.gpu;` | 9.7.13.4 | 2 | inline-asm | `xkmscope/fence.scope.gpu` |  |  |
+| `fence.scope.sys` | `fence.acq_rel.sys;` | 9.7.13.4 | 2 | inline-asm | `xkmscope/fence.scope.sys` |  |  |
+| `fence.sem.acq_rel` | `fence.acq_rel.scope;` | 9.7.13.4 | 2 | inline-asm | `xkmscope/fence.sem.acq_rel` |  |  |
+| `fence.sem.sc` | `fence.sc.scope;` | 9.7.13.4 | 2 | cuda | `xkmscope/fence.sem.sc` |  |  |
+| `ld.mmio` | `ld.mmio.relaxed.sys.global.type d, [a];` | 9.7.9.8 | 2 | inline-asm | `xkmscope/ld.mmio` |  |  |
+| `ld.scope.cta` | `ld.relaxed.cta.global.type d, [a];` | 9.7.9.8 | 2 | inline-asm | `xkmscope/ld.scope.cta` |  |  |
+| `ld.scope.gpu` | `ld.relaxed.gpu.global.type d, [a];` | 9.7.9.8 | 2 | inline-asm | `xkmscope/ld.scope.gpu` |  |  |
+| `ld.scope.sys` | `ld.relaxed.sys.global.type d, [a];` | 9.7.9.8 | 2 | inline-asm | `xkmscope/ld.scope.sys` |  |  |
+| `ld.sem.acquire` | `ld.acquire.scope.space.type d, [a];` | 9.7.9.8 | 2 | cuda | `xkmscope/ld.sem.acquire` |  |  |
+| `ld.sem.relaxed` | `ld.relaxed.scope.space.type d, [a];` | 9.7.9.8 | 2 | cuda | `xkmscope/ld.sem.relaxed` |  |  |
+| `red.scope` | `red.scope.global.add.u32 [a], b;` | 9.7.13.6 | 2 | inline-asm | `xkmscope/red.scope` |  |  |
+| `red.sem.release` | `red.release.gpu.global.add.u32 [a], b;` | 9.7.13.6 | 2 | inline-asm | `xkmscope/red.sem.release` |  |  |
+| `st.mmio` | `st.mmio.relaxed.sys.global.type [a], b;` | 9.7.9.11 | 2 | inline-asm | `xkmscope/ld.mmio` |  |  |
+| `st.scope.cta` | `st.relaxed.cta.global.type [a], b;` | 9.7.9.11 | 2 | inline-asm | `xkmscope/st.scope.cta` |  |  |
+| `st.scope.gpu` | `st.relaxed.gpu.global.type [a], b;` | 9.7.9.11 | 2 | inline-asm | `xkmscope/st.scope.gpu` |  |  |
+| `st.scope.sys` | `st.relaxed.sys.global.type [a], b;` | 9.7.9.11 | 2 | inline-asm | `xkmscope/st.scope.sys` |  |  |
+| `st.sem.relaxed` | `st.relaxed.scope.space.type [a], b;` | 9.7.9.11 | 2 | cuda | `xkmscope/ld.sem.relaxed` |  |  |
+| `st.sem.release` | `st.release.scope.space.type [a], b;` | 9.7.9.11 | 2 | cuda | `xkmscope/ld.sem.acquire` |  |  |
+| `atom.scope.cluster` | `atom.cluster.global.add.u32 d, [a], b;` | 9.7.13.5 | 4 | inline-asm | `xkmscope/atom.scope.cluster` |  |  |
+| `fence.proxy.async` | `fence.proxy.async{.space};` | 9.7.13.4 | 4 | inline-asm | `xkmasync/cp.async.bulk.shared_to_global` |  |  |
+| `fence.proxy.tensormap` | `fence.proxy.tensormap::generic.release.gpu;` | 9.7.13.4 | 4 | inline-asm | `xkmasync/tensormap.cp_fenceproxy` |  |  |
+| `fence.scope.cluster` | `fence.acq_rel.cluster;` | 9.7.13.4 | 4 | builtin | `xkmscope/fence.scope.cluster` |  |  |
+| `fence.sem.acquire` | `fence.acquire.scope;` | 9.7.13.4 | 4 | inline-asm | `xkmscope/fence.sem.acquire` |  |  |
+| `fence.sem.release` | `fence.release.scope;` | 9.7.13.4 | 4 | inline-asm | `xkmscope/fence.sem.acquire` |  |  |
+| `fence.sync_restrict` | `fence.acquire.sync_restrict::shared::cluster.cluster;` | 9.7.13.4 | 4 | inline-asm | `xkmscope/fence.sync_restrict` |  |  |
+| `ld.scope.cluster` | `ld.relaxed.cluster.global.type d, [a];` | 9.7.9.8 | 4 | inline-asm | `xkmscope/ld.scope.cluster` |  |  |
+| `multimem` | `multimem.ld_reduce{.ldsem}{.scope}{.ss}.op.type d, [a];` | 9.7.9.14 | 4 | inline-asm | `xkmscope/multimem` |  |  |
+| `red.scope.cluster` | `red.cluster.global.add.u32 [a], b;` | 9.7.13.6 | 4 | inline-asm | `xkmscope/atom.scope.cluster` |  |  |
+| `st.scope.cluster` | `st.relaxed.cluster.global.type [a], b;` | 9.7.9.11 | 4 | inline-asm | `xkmscope/ld.scope.cluster` |  |  |
 
 ### Xkmmbar: mbarrier objects
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `cp.async.mbarrier.arrive` | `cp.async.mbarrier.arrive{.noinc}{.shared{::cta}}.b64 [addr];` | 9.7.13.15.15 | 4 | builtin |  |  |  |
-| `fence.op_restrict` | `fence.mbarrier_init.release.cluster;` | 9.7.13.4 | 4 | inline-asm |  |  |  |
-| `mbarrier.arrive` | `mbarrier.arrive{.sem}{.scope}{.shared{::cta}}.b64 state, [addr]{, count};` | 9.7.13.15.13 | 4 | builtin |  |  |  |
-| `mbarrier.arrive.expect_tx` | `mbarrier.arrive.expect_tx.shared::cta.b64 state, [addr], txCount;` | 9.7.13.15.13 | 4 | inline-asm |  |  |  |
-| `mbarrier.arrive.shared::cluster` | `mbarrier.arrive.release.cluster.shared::cluster.b64 _, [addr];` | 9.7.13.15.13 | 4 | inline-asm |  |  |  |
-| `mbarrier.arrive_drop` | `mbarrier.arrive_drop{.sem}{.scope}{.shared{::cta}}.b64 state, [addr]{, count};` | 9.7.13.15.14 | 4 | builtin |  |  |  |
-| `mbarrier.complete_tx` | `mbarrier.complete_tx{.sem}{.scope}{.space}.b64 [addr], txCount;` | 9.7.13.15.12 | 4 | inline-asm |  |  |  |
-| `mbarrier.expect_tx` | `mbarrier.expect_tx{.sem}{.scope}{.space}.b64 [addr], txCount;` | 9.7.13.15.11 | 4 | inline-asm |  |  |  |
-| `mbarrier.init` | `mbarrier.init{.shared{::cta}}.b64 [addr], count;` | 9.7.13.15.9 | 4 | builtin |  |  |  |
-| `mbarrier.inval` | `mbarrier.inval{.shared{::cta}}.b64 [addr];` | 9.7.13.15.10 | 4 | builtin |  |  |  |
-| `mbarrier.pending_count` | `mbarrier.pending_count.b64 count, state;` | 9.7.13.15.17 | 4 | builtin |  |  |  |
-| `mbarrier.scope.cluster` | `mbarrier.try_wait.acquire.cluster.shared::cta.b64 p, [addr], state;` | 9.7.13.15.16 | 4 | inline-asm |  |  |  |
-| `mbarrier.test_wait` | `mbarrier.test_wait{.sem}{.scope}{.shared{::cta}}.b64 waitComplete, [addr], state;` | 9.7.13.15.16 | 4 | builtin |  |  |  |
-| `mbarrier.try_wait` | `mbarrier.try_wait{.sem}{.scope}{.shared{::cta}}.b64 waitComplete, [addr], state{, suspendTimeHint};` | 9.7.13.15.16 | 4 | inline-asm |  |  |  |
-| `mbarrier.wait.parity` | `mbarrier.try_wait.parity{.sem}{.scope}{.shared{::cta}}.b64 waitComplete, [addr], phaseParity;` | 9.7.13.15.16 | 4 | inline-asm |  |  |  |
+| `cp.async.mbarrier.arrive` | `cp.async.mbarrier.arrive{.noinc}{.shared{::cta}}.b64 [addr];` | 9.7.13.15.15 | 4 | builtin | `xkmmbar/cp.async.mbarrier.arrive` |  |  |
+| `fence.op_restrict` | `fence.mbarrier_init.release.cluster;` | 9.7.13.4 | 4 | inline-asm | `xkmasync/st.async` |  |  |
+| `mbarrier.arrive` | `mbarrier.arrive{.sem}{.scope}{.shared{::cta}}.b64 state, [addr]{, count};` | 9.7.13.15.13 | 4 | builtin | `xkmmbar/mbarrier.init` |  |  |
+| `mbarrier.arrive.expect_tx` | `mbarrier.arrive.expect_tx.shared::cta.b64 state, [addr], txCount;` | 9.7.13.15.13 | 4 | inline-asm | `xkmmbar/mbarrier.try_wait` |  |  |
+| `mbarrier.arrive.shared::cluster` | `mbarrier.arrive.release.cluster.shared::cluster.b64 _, [addr];` | 9.7.13.15.13 | 4 | inline-asm | `xkmasync/red.async` |  |  |
+| `mbarrier.arrive_drop` | `mbarrier.arrive_drop{.sem}{.scope}{.shared{::cta}}.b64 state, [addr]{, count};` | 9.7.13.15.14 | 4 | builtin | `xkmmbar/mbarrier.init` |  |  |
+| `mbarrier.complete_tx` | `mbarrier.complete_tx{.sem}{.scope}{.space}.b64 [addr], txCount;` | 9.7.13.15.12 | 4 | inline-asm | `xkmmbar/mbarrier.try_wait` |  |  |
+| `mbarrier.expect_tx` | `mbarrier.expect_tx{.sem}{.scope}{.space}.b64 [addr], txCount;` | 9.7.13.15.11 | 4 | inline-asm | `xkmmbar/mbarrier.try_wait` |  |  |
+| `mbarrier.init` | `mbarrier.init{.shared{::cta}}.b64 [addr], count;` | 9.7.13.15.9 | 4 | builtin | `xkmmbar/mbarrier.init` |  |  |
+| `mbarrier.inval` | `mbarrier.inval{.shared{::cta}}.b64 [addr];` | 9.7.13.15.10 | 4 | builtin | `xkmmbar/mbarrier.init` |  |  |
+| `mbarrier.pending_count` | `mbarrier.pending_count.b64 count, state;` | 9.7.13.15.17 | 4 | builtin | `xkmmbar/mbarrier.init` |  |  |
+| `mbarrier.scope.cluster` | `mbarrier.try_wait.acquire.cluster.shared::cta.b64 p, [addr], state;` | 9.7.13.15.16 | 4 | inline-asm | `xkmasync/st.async` |  |  |
+| `mbarrier.test_wait` | `mbarrier.test_wait{.sem}{.scope}{.shared{::cta}}.b64 waitComplete, [addr], state;` | 9.7.13.15.16 | 4 | builtin | `xkmmbar/mbarrier.init` |  |  |
+| `mbarrier.try_wait` | `mbarrier.try_wait{.sem}{.scope}{.shared{::cta}}.b64 waitComplete, [addr], state{, suspendTimeHint};` | 9.7.13.15.16 | 4 | inline-asm | `xkmmbar/mbarrier.try_wait` |  |  |
+| `mbarrier.wait.parity` | `mbarrier.try_wait.parity{.sem}{.scope}{.shared{::cta}}.b64 waitComplete, [addr], phaseParity;` | 9.7.13.15.16 | 4 | inline-asm | `xkmmbar/mbarrier.try_wait` |  |  |
 
 ### Xkmasync: asynchronous copies and TMA
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `cp.async` | `cp.async.ca.shared{::cta}.global{.level::cache_hint}{.level::prefetch_size}` | 9.7.9.25.3.1 | 3 | builtin |  |  |  |
-| `cp.async.commit_group` | `cp.async.commit_group ;` | 9.7.9.25.3.2 | 3 | builtin |  |  |  |
-| `cp.async.wait_group` | `cp.async.wait_group N;` | 9.7.9.25.3.3 | 3 | builtin |  |  |  |
-| `cp.async.bulk.commit_group` | `cp.async.bulk.commit_group;` | 9.7.9.25.6.1 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.global_to_shared` | `cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes [dst], [src], size, [mbar];` | 9.7.9.25.4.1 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.multicast` | `cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes.multicast::cluster [dst], [src], size, [mbar], ctaMask;` | 9.7.9.25.4.1 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.prefetch` | `cp.async.bulk.prefetch.L2.src{.level::cache_hint} [srcMem], size {, cache-policy}` | 9.7.9.25.4.3 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.prefetch.tensor` | `cp.async.bulk.prefetch.tensor.dim.L2.src{.load_mode}{.level::cache_hint} [tensorMap, tensorCoords]` | 9.7.9.25.5.4 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.shared_to_cluster` | `cp.async.bulk.shared::cluster.shared::cta.mbarrier::complete_tx::bytes [dst], [src], size, [mbar];` | 9.7.9.25.4.1 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.shared_to_global` | `cp.async.bulk.global.shared::cta.bulk_group [dst], [src], size;` | 9.7.9.25.4.1 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.tensor.im2col` | `cp.async.bulk.tensor.3d.shared::cluster.global.im2col.mbarrier::complete_tx::bytes [dst], [tmap, {...}], [mbar], {offsets};` | 9.7.9.25.5.2 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.tensor.multicast` | `cp.async.bulk.tensor.2d.shared::cluster.global.tile.mbarrier::complete_tx::bytes.multicast::cluster [dst], [tmap, {x, y}], [mbar], ctaMask;` | 9.7.9.25.5.2 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.tensor.store` | `cp.async.bulk.tensor.2d.global.shared::cta.bulk_group [tmap, {x, y}], [src];` | 9.7.9.25.5.2 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.tensor.tile` | `cp.async.bulk.tensor.2d.shared::cluster.global.tile.mbarrier::complete_tx::bytes [dst], [tmap, {x, y}], [mbar];` | 9.7.9.25.5.2 | 4 | inline-asm |  |  |  |
-| `cp.async.bulk.wait_group` | `cp.async.bulk.wait_group{.read} N;` | 9.7.9.25.6.2 | 4 | inline-asm |  |  |  |
-| `cp.reduce.async.bulk` | `cp.reduce.async.bulk.dst.src.completion_mechanism.redOp.type` | 9.7.9.25.4.2 | 4 | inline-asm |  |  |  |
-| `cp.reduce.async.bulk.tensor` | `cp.reduce.async.bulk.tensor.dim.dst.src.redOp{.load_mode}.completion_mechanism{.level::cache_hint}` | 9.7.9.25.5.3 | 4 | inline-asm |  |  |  |
-| `prefetch.tensormap` | `prefetch{.tensormap_space}.tensormap [a];` | 9.7.9.15 | 4 | inline-asm |  |  |  |
-| `red.async` | `red.async.sem.scope{.ss}.completion_mechanism.op.type [a], b, [mbar];` | 9.7.13.7 | 4 | inline-asm |  |  |  |
-| `st.async` | `st.async{.sem}{.scope}{.ss}{.completion_mechanism}{.vec}.type [a], b, [mbar];` | 9.7.9.12 | 4 | inline-asm |  |  |  |
-| `tensormap.cp_fenceproxy` | `tensormap.cp_fenceproxy.cp_qualifiers.fence_qualifiers.sync.aligned [dst], [src], size;` | 9.7.13.16 | 4 | inline-asm |  |  |  |
-| `tensormap.replace` | `tensormap.replace.mode.field1{.ss}.b1024.type [addr], new_val;` | 9.7.9.26 | 4 | inline-asm |  |  |  |
+| `cp.async` | `cp.async.ca.shared{::cta}.global{.level::cache_hint}{.level::prefetch_size}` | 9.7.9.25.3.1 | 3 | builtin | `xkmasync/cp.async` |  |  |
+| `cp.async.commit_group` | `cp.async.commit_group ;` | 9.7.9.25.3.2 | 3 | builtin | `xkmasync/cp.async` |  |  |
+| `cp.async.wait_group` | `cp.async.wait_group N;` | 9.7.9.25.3.3 | 3 | builtin | `xkmasync/cp.async` |  |  |
+| `cp.async.bulk.commit_group` | `cp.async.bulk.commit_group;` | 9.7.9.25.6.1 | 4 | inline-asm | `xkmasync/cp.async.bulk.shared_to_global` |  |  |
+| `cp.async.bulk.global_to_shared` | `cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes [dst], [src], size, [mbar];` | 9.7.9.25.4.1 | 4 | inline-asm | `xkmasync/cp.async.bulk.global_to_shared` |  |  |
+| `cp.async.bulk.multicast` | `cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes.multicast::cluster [dst], [src], size, [mbar], ctaMask;` | 9.7.9.25.4.1 | 4 | inline-asm | `xkmasync/cp.async.bulk.multicast` |  |  |
+| `cp.async.bulk.prefetch` | `cp.async.bulk.prefetch.L2.src{.level::cache_hint} [srcMem], size {, cache-policy}` | 9.7.9.25.4.3 | 4 | inline-asm | `xkmasync/cp.async.bulk.prefetch` |  |  |
+| `cp.async.bulk.prefetch.tensor` | `cp.async.bulk.prefetch.tensor.dim.L2.src{.load_mode}{.level::cache_hint} [tensorMap, tensorCoords]` | 9.7.9.25.5.4 | 4 | inline-asm | `xkmasync/cp.async.bulk.prefetch.tensor` |  |  |
+| `cp.async.bulk.shared_to_cluster` | `cp.async.bulk.shared::cluster.shared::cta.mbarrier::complete_tx::bytes [dst], [src], size, [mbar];` | 9.7.9.25.4.1 | 4 | inline-asm | `xkmasync/cp.async.bulk.shared_to_cluster` |  |  |
+| `cp.async.bulk.shared_to_global` | `cp.async.bulk.global.shared::cta.bulk_group [dst], [src], size;` | 9.7.9.25.4.1 | 4 | inline-asm | `xkmasync/cp.async.bulk.shared_to_global` |  |  |
+| `cp.async.bulk.tensor.im2col` | `cp.async.bulk.tensor.3d.shared::cluster.global.im2col.mbarrier::complete_tx::bytes [dst], [tmap, {...}], [mbar], {offsets};` | 9.7.9.25.5.2 | 4 | inline-asm | `xkmasync/cp.async.bulk.tensor.im2col` |  |  |
+| `cp.async.bulk.tensor.multicast` | `cp.async.bulk.tensor.2d.shared::cluster.global.tile.mbarrier::complete_tx::bytes.multicast::cluster [dst], [tmap, {x, y}], [mbar], ctaMask;` | 9.7.9.25.5.2 | 4 | inline-asm | `xkmasync/cp.async.bulk.tensor.multicast` |  |  |
+| `cp.async.bulk.tensor.store` | `cp.async.bulk.tensor.2d.global.shared::cta.bulk_group [tmap, {x, y}], [src];` | 9.7.9.25.5.2 | 4 | inline-asm | `xkmasync/cp.async.bulk.tensor.store` |  |  |
+| `cp.async.bulk.tensor.tile` | `cp.async.bulk.tensor.2d.shared::cluster.global.tile.mbarrier::complete_tx::bytes [dst], [tmap, {x, y}], [mbar];` | 9.7.9.25.5.2 | 4 | inline-asm | `xkmasync/cp.async.bulk.tensor.tile` |  |  |
+| `cp.async.bulk.wait_group` | `cp.async.bulk.wait_group{.read} N;` | 9.7.9.25.6.2 | 4 | inline-asm | `xkmasync/cp.async.bulk.shared_to_global` |  |  |
+| `cp.reduce.async.bulk` | `cp.reduce.async.bulk.dst.src.completion_mechanism.redOp.type` | 9.7.9.25.4.2 | 4 | inline-asm | `xkmasync/cp.reduce.async.bulk` |  |  |
+| `cp.reduce.async.bulk.tensor` | `cp.reduce.async.bulk.tensor.dim.dst.src.redOp{.load_mode}.completion_mechanism{.level::cache_hint}` | 9.7.9.25.5.3 | 4 | inline-asm | `xkmasync/cp.reduce.async.bulk.tensor` |  |  |
+| `prefetch.tensormap` | `prefetch{.tensormap_space}.tensormap [a];` | 9.7.9.15 | 4 | inline-asm | `xkmasync/cp.async.bulk.tensor.tile` |  |  |
+| `red.async` | `red.async.sem.scope{.ss}.completion_mechanism.op.type [a], b, [mbar];` | 9.7.13.7 | 4 | inline-asm | `xkmasync/red.async` |  |  |
+| `st.async` | `st.async{.sem}{.scope}{.ss}{.completion_mechanism}{.vec}.type [a], b, [mbar];` | 9.7.9.12 | 4 | inline-asm | `xkmasync/st.async` |  |  |
+| `tensormap.cp_fenceproxy` | `tensormap.cp_fenceproxy.cp_qualifiers.fence_qualifiers.sync.aligned [dst], [src], size;` | 9.7.13.16 | 4 | inline-asm | `xkmasync/tensormap.cp_fenceproxy` |  |  |
+| `tensormap.replace` | `tensormap.replace.mode.field1{.ss}.b1024.type [addr], new_val;` | 9.7.9.26 | 4 | inline-asm | `xkmasync/tensormap.replace` |  |  |
 
 ### Xkmmma: matrix multiply-accumulate
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `ldmatrix` | `ldmatrix.sync.aligned.shape.num{.trans}{.ss}.type r, [p];` | 9.7.14.5.15 | 2 | inline-asm |  |  |  |
-| `mma.b1` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 2 | inline-asm |  |  |  |
-| `mma.f16` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 2 | inline-asm |  |  |  |
-| `mma.int4` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 2 | inline-asm |  |  |  |
-| `mma.int8` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 2 | inline-asm |  |  |  |
-| `movmatrix` | `movmatrix.sync.aligned.shape.trans.type d, a;` | 9.7.14.5.17 | 2 | inline-asm |  |  |  |
-| `wmma.load` | `wmma.load.a.sync.aligned.layout.shape{.ss}.atype r, [p] {, stride};` | 9.7.14.4.3 | 2 | builtin |  |  |  |
-| `wmma.mma` | `wmma.mma.sync.aligned.alayout.blayout.shape.dtype.ctype d, a, b, c;` | 9.7.14.4.5 | 2 | builtin |  |  |  |
-| `wmma.store` | `wmma.store.d.sync.aligned.layout.shape{.ss}.type [p], r {, stride};` | 9.7.14.4.4 | 2 | builtin |  |  |  |
-| `mma.bf16` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 3 | inline-asm |  |  |  |
-| `mma.f64` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 3 | inline-asm |  |  |  |
-| `mma.sp` | `mma.spvariant.sync.aligned.m16n8k16.row.col.dtype.f16.f16.ctype d, a, b, c, e, f;` | 9.7.14.6.3 | 3 | inline-asm |  |  |  |
-| `mma.sp::ordered_metadata` | `mma.sp::ordered_metadata.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c, e, f;` | 9.7.14.6.3 | 3 | inline-asm |  |  |  |
-| `mma.tf32` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 3 | inline-asm |  |  |  |
-| `mma.fp8` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 4 | inline-asm |  |  |  |
-| `stmatrix` | `stmatrix.sync.aligned.shape.num{.trans}{.ss}.type [p], r;` | 9.7.14.5.16 | 4 | inline-asm |  |  |  |
-| `wgmma.commit_group` | `wgmma.commit_group.sync.aligned;` | 9.7.15.7.2 | 4 | inline-asm |  |  |  |
-| `wgmma.fence` | `wgmma.fence.sync.aligned;` | 9.7.15.7.1 | 4 | inline-asm |  |  |  |
-| `wgmma.mma_async` | `wgmma.mma_async.sync.aligned.shape.dtype.f16.f16 d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b, imm-trans-a, imm-trans-b;` | 9.7.15.5.2 | 4 | inline-asm |  |  |  |
-| `wgmma.mma_async.b1` | `wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;` | 9.7.15.5.2 | 4 | inline-asm |  |  |  |
-| `wgmma.mma_async.fp8` | `wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;` | 9.7.15.5.2 | 4 | inline-asm |  |  |  |
-| `wgmma.mma_async.int8` | `wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;` | 9.7.15.5.2 | 4 | inline-asm |  |  |  |
-| `wgmma.mma_async.rs` | `wgmma.mma_async.sync.aligned.shape.dtype.f16.f16 d, a, b-desc, scale-d, imm-scale-a, imm-scale-b, imm-trans-b;` | 9.7.15.5.2 | 4 | inline-asm |  |  |  |
-| `wgmma.mma_async.sp` | `wgmma.mma_async.sp.sync.aligned.shape.dtype.f16.f16 d, a-desc, b-desc, sp-meta, sp-sel, scale-d, imm-scale-a, imm-scale-b, imm-trans-a, imm-trans-b;` | 9.7.15.6.3 | 4 | inline-asm |  |  |  |
-| `wgmma.mma_async.tf32` | `wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;` | 9.7.15.5.2 | 4 | inline-asm |  |  |  |
-| `wgmma.wait_group` | `wgmma.wait_group.sync.aligned N;` | 9.7.15.7.3 | 4 | inline-asm |  |  |  |
+| `ldmatrix` | `ldmatrix.sync.aligned.shape.num{.trans}{.ss}.type r, [p];` | 9.7.14.5.15 | 2 | inline-asm | `xkmmma/ldmatrix` |  |  |
+| `mma.b1` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 2 | inline-asm | `xkmmma/mma.b1` |  |  |
+| `mma.f16` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 2 | inline-asm | `xkmmma/mma.f16` |  |  |
+| `mma.int4` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 2 | inline-asm | `xkmmma/mma.int4` |  |  |
+| `mma.int8` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 2 | inline-asm | `xkmmma/mma.int8` |  |  |
+| `movmatrix` | `movmatrix.sync.aligned.shape.trans.type d, a;` | 9.7.14.5.17 | 2 | inline-asm | `xkmmma/movmatrix` |  |  |
+| `wmma.load` | `wmma.load.a.sync.aligned.layout.shape{.ss}.atype r, [p] {, stride};` | 9.7.14.4.3 | 2 | builtin | `xkmmma/wmma.load` |  |  |
+| `wmma.mma` | `wmma.mma.sync.aligned.alayout.blayout.shape.dtype.ctype d, a, b, c;` | 9.7.14.4.5 | 2 | builtin | `xkmmma/wmma.load` |  |  |
+| `wmma.store` | `wmma.store.d.sync.aligned.layout.shape{.ss}.type [p], r {, stride};` | 9.7.14.4.4 | 2 | builtin | `xkmmma/wmma.load` |  |  |
+| `mma.bf16` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 3 | inline-asm | `xkmmma/mma.bf16` |  |  |
+| `mma.f64` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 3 | inline-asm | `xkmmma/mma.f64` |  |  |
+| `mma.sp` | `mma.spvariant.sync.aligned.m16n8k16.row.col.dtype.f16.f16.ctype d, a, b, c, e, f;` | 9.7.14.6.3 | 3 | inline-asm | `xkmmma/mma.sp` |  |  |
+| `mma.sp::ordered_metadata` | `mma.sp::ordered_metadata.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c, e, f;` | 9.7.14.6.3 | 3 | inline-asm | `xkmmma/mma.sp.ordered_metadata` |  |  |
+| `mma.tf32` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 3 | inline-asm | `xkmmma/mma.tf32` |  |  |
+| `mma.fp8` | `mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;` | 9.7.14.5.14 | 4 | inline-asm | `xkmmma/mma.fp8` |  |  |
+| `stmatrix` | `stmatrix.sync.aligned.shape.num{.trans}{.ss}.type [p], r;` | 9.7.14.5.16 | 4 | inline-asm | `xkmmma/stmatrix` |  |  |
+| `wgmma.commit_group` | `wgmma.commit_group.sync.aligned;` | 9.7.15.7.2 | 4 | inline-asm | `xkmmma/wgmma.mma_async` |  |  |
+| `wgmma.fence` | `wgmma.fence.sync.aligned;` | 9.7.15.7.1 | 4 | inline-asm | `xkmmma/wgmma.mma_async` |  |  |
+| `wgmma.mma_async` | `wgmma.mma_async.sync.aligned.shape.dtype.f16.f16 d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b, imm-trans-a, imm-trans-b;` | 9.7.15.5.2 | 4 | inline-asm | `xkmmma/wgmma.mma_async` |  |  |
+| `wgmma.mma_async.b1` | `wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;` | 9.7.15.5.2 | 4 | inline-asm | `xkmmma/wgmma.mma_async.b1` |  |  |
+| `wgmma.mma_async.fp8` | `wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;` | 9.7.15.5.2 | 4 | inline-asm | `xkmmma/wgmma.mma_async.fp8` |  |  |
+| `wgmma.mma_async.int8` | `wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;` | 9.7.15.5.2 | 4 | inline-asm | `xkmmma/wgmma.mma_async.int8` |  |  |
+| `wgmma.mma_async.rs` | `wgmma.mma_async.sync.aligned.shape.dtype.f16.f16 d, a, b-desc, scale-d, imm-scale-a, imm-scale-b, imm-trans-b;` | 9.7.15.5.2 | 4 | inline-asm | `xkmmma/wgmma.mma_async.rs` |  |  |
+| `wgmma.mma_async.sp` | `wgmma.mma_async.sp.sync.aligned.shape.dtype.f16.f16 d, a-desc, b-desc, sp-meta, sp-sel, scale-d, imm-scale-a, imm-scale-b, imm-trans-a, imm-trans-b;` | 9.7.15.6.3 | 4 | inline-asm | `xkmmma/wgmma.mma_async.sp` |  |  |
+| `wgmma.mma_async.tf32` | `wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;` | 9.7.15.5.2 | 4 | inline-asm | `xkmmma/wgmma.mma_async.tf32` |  |  |
+| `wgmma.wait_group` | `wgmma.wait_group.sync.aligned N;` | 9.7.15.7.3 | 4 | inline-asm | `xkmmma/wgmma.mma_async` |  |  |
 
 ### Xkmcluster: clusters and distributed shared memory
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `atom.shared::cluster.add` | `atom.shared::cluster.add.type d, [a], b;` | 9.7.13.5 | 4 | inline-asm |  |  |  |
-| `cvta.shared::cluster` | `cvta.shared::cluster.u64 p, a;` | 9.7.9.20 | 4 | inline-asm |  |  |  |
-| `dir.explicitcluster` | `.explicitcluster` | 11.7.2 | 4 | cuda |  |  |  |
-| `dir.maxclusterrank` | `.maxclusterrank n` | 11.7.3 | 4 | inline-asm |  |  |  |
-| `dir.reqnctapercluster` | `.reqnctapercluster nx` | 11.7.1 | 4 | cuda |  |  |  |
-| `getctarank` | `getctarank{.space}.type d, a;` | 9.7.9.24 | 4 | builtin |  |  |  |
-| `isspacep.shared::cluster` | `isspacep.shared::cluster p, a;` | 9.7.9.19 | 4 | builtin |  |  |  |
-| `ld.shared::cluster` | `ld.shared::cluster.type d, [a];` | 9.7.9.8 | 4 | inline-asm |  |  |  |
-| `mapa` | `mapa{.space}.type d, a, b;` | 9.7.9.23 | 4 | builtin |  |  |  |
-| `red.shared::cluster` | `red.shared::cluster.add.type [a], b;` | 9.7.13.6 | 4 | inline-asm |  |  |  |
-| `space.shared::cluster` | `.shared::cluster` | 5.1.7 | 4 | builtin |  |  |  |
-| `st.shared::cluster` | `st.shared::cluster.type [a], b;` | 9.7.9.11 | 4 | inline-asm |  |  |  |
+| `atom.shared::cluster.add` | `atom.shared::cluster.add.type d, [a], b;` | 9.7.13.5 | 4 | inline-asm | `xkmcluster/atom.shared.cluster.add` |  |  |
+| `cvta.shared::cluster` | `cvta.shared::cluster.u64 p, a;` | 9.7.9.20 | 4 | inline-asm | `xkmcluster/isspacep.shared.cluster` |  |  |
+| `dir.explicitcluster` | `.explicitcluster` | 11.7.2 | 4 | cuda | `xkmcluster/dir.reqnctapercluster` |  |  |
+| `dir.maxclusterrank` | `.maxclusterrank n` | 11.7.3 | 4 | inline-asm | `xkmcluster/dir.maxclusterrank` |  |  |
+| `dir.reqnctapercluster` | `.reqnctapercluster nx` | 11.7.1 | 4 | llvm-ir | `xkmcluster/dir.reqnctapercluster` |  |  |
+| `getctarank` | `getctarank{.space}.type d, a;` | 9.7.9.24 | 4 | builtin | `xkmcluster/mapa` |  |  |
+| `isspacep.shared::cluster` | `isspacep.shared::cluster p, a;` | 9.7.9.19 | 4 | builtin | `xkmcluster/isspacep.shared.cluster` |  |  |
+| `ld.shared::cluster` | `ld.shared::cluster.type d, [a];` | 9.7.9.8 | 4 | inline-asm | `xkmcluster/ld.shared.cluster` |  |  |
+| `mapa` | `mapa{.space}.type d, a, b;` | 9.7.9.23 | 4 | builtin | `xkmcluster/mapa` |  |  |
+| `red.shared::cluster` | `red.shared::cluster.add.type [a], b;` | 9.7.13.6 | 4 | inline-asm | `xkmcluster/atom.shared.cluster.add` |  |  |
+| `space.shared::cluster` | `.shared::cluster` | 5.1.7 | 4 | builtin | `xkmcluster/mapa` |  |  |
+| `st.shared::cluster` | `st.shared::cluster.type [a], b;` | 9.7.9.11 | 4 | inline-asm | `xkmcluster/ld.shared.cluster` |  |  |
 
 ### Xkmmufu: approximate math functions
 
@@ -410,9 +410,9 @@ instructions are specified. Columns:
 | `rsqrt.approx.ftz.f64` | `rsqrt.approx.ftz.f64 d, a;` | 9.7.3.17 | 1 | inline-asm | `xkmmufu/rsqrt.approx.ftz.f64` |  |  |
 | `sin` | `sin.approx{.ftz}.f32 d, a;` | 9.7.3.18 | 1 | inline-asm | `xkmmufu/sin` |  |  |
 | `sqrt.approx` | `sqrt.approx{.ftz}.f32 d, a;` | 9.7.3.15 | 1 | inline-asm | `xkmmufu/sqrt.approx` |  |  |
-| `ex2.half` | `ex2.approx.atype d, a;` | 9.7.4.10 | 2 | inline-asm |  |  |  |
-| `tanh` | `tanh.approx.f32 d, a;` | 9.7.3.22 | 2 | inline-asm |  |  |  |
-| `tanh.half` | `tanh.approx.type d, a;` | 9.7.4.9 | 2 | inline-asm |  |  |  |
+| `ex2.half` | `ex2.approx.atype d, a;` | 9.7.4.10 | 2 | inline-asm | `xkmmufu/ex2.half` |  |  |
+| `tanh` | `tanh.approx.f32 d, a;` | 9.7.3.22 | 2 | inline-asm | `xkmmufu/tanh` |  |  |
+| `tanh.half` | `tanh.approx.type d, a;` | 9.7.4.9 | 2 | inline-asm | `xkmmufu/tanh.half` |  |  |
 
 ### Xkmmisc: bit manipulation, packed and narrow formats, hints
 
@@ -427,22 +427,22 @@ instructions are specified. Columns:
 | `half.packed` | `add{.rnd}{.ftz}{.sat}.f16x2 d, a, b;` | 9.7.4.1 | 1 | cuda | `xkmmisc/half.packed` |  |  |
 | `lop3` | `lop3.b32 d, a, b, c, immLut;` | 9.7.8.6 | 1 | inline-asm | `xkmmisc/lop3` |  |  |
 | `prmt` | `prmt.b32{.mode} d, a, b, c;` | 9.7.9.7 | 1 | builtin | `xkmmisc/prmt` |  |  |
-| `bmsk` | `bmsk.mode.b32 d, a, b;` | 9.7.1.22 | 2 | inline-asm |  |  |  |
-| `cvt.pack` | `cvt.pack.sat.convertType.abType d, a, b;` | 9.7.9.22 | 2 | inline-asm |  |  |  |
-| `nanosleep` | `nanosleep.u32 t;` | 9.7.19.2 | 2 | builtin |  |  |  |
-| `szext` | `szext.mode.type d, a, b;` | 9.7.1.21 | 2 | inline-asm |  |  |  |
-| `applypriority` | `applypriority{.global}.level::eviction_priority [a], size;` | 9.7.9.16 | 3 | inline-asm |  |  |  |
-| `createpolicy` | `createpolicy.range{.global}.level::primary_priority{.level::secondary_priority}.b64` | 9.7.9.18 | 3 | inline-asm |  |  |  |
-| `cvt.bf16` | `cvt.frnd2{.relu}{.satfinite}.bf16.f32 d, a;` | 9.7.9.21 | 3 | builtin |  |  |  |
-| `cvt.tf32` | `cvt.rna{.satfinite}.tf32.f32 d, a;` | 9.7.9.21 | 3 | builtin |  |  |  |
-| `discard` | `discard{.global}.level [a], size;` | 9.7.9.17 | 3 | inline-asm |  |  |  |
-| `half.bf16` | `add{.rnd}.bf16 d, a, b;` | 9.7.4.1 | 3 | cuda |  |  |  |
-| `ld.cache_hint` | `ld.global.L1::evict_last.L2::cache_hint.type d, [a], cache-policy;` | 9.7.9.2 | 3 | inline-asm |  |  |  |
-| `add.int.packed` | `add.u16x2 d, a, b;` | 9.7.1.1 | 4 | inline-asm |  |  |  |
-| `cvt.fp8` | `cvt.rn.satfinite{.relu}.e4m3x2.f32 d, a, b;` | 9.7.9.21 | 4 | builtin |  |  |  |
-| `max.int.packed` | `max{.relu}.u16x2 d, a, b;` | 9.7.1.13 | 4 | inline-asm |  |  |  |
-| `min.int.packed` | `min{.relu}.u16x2 d, a, b;` | 9.7.1.12 | 4 | inline-asm |  |  |  |
-| `setmaxnreg` | `setmaxnreg.action.sync.aligned.u32 imm-reg-count;` | 9.7.19.5 | 4 | inline-asm |  |  |  |
+| `bmsk` | `bmsk.mode.b32 d, a, b;` | 9.7.1.22 | 2 | inline-asm | `xkmmisc/bmsk` |  |  |
+| `cvt.pack` | `cvt.pack.sat.convertType.abType d, a, b;` | 9.7.9.22 | 2 | inline-asm | `xkmmisc/cvt.pack` |  |  |
+| `nanosleep` | `nanosleep.u32 t;` | 9.7.19.2 | 2 | builtin | `xkmmisc/nanosleep` |  |  |
+| `szext` | `szext.mode.type d, a, b;` | 9.7.1.21 | 2 | inline-asm | `xkmmisc/szext` |  |  |
+| `applypriority` | `applypriority{.global}.level::eviction_priority [a], size;` | 9.7.9.16 | 3 | inline-asm | `xkmmisc/applypriority` |  |  |
+| `createpolicy` | `createpolicy.range{.global}.level::primary_priority{.level::secondary_priority}.b64` | 9.7.9.18 | 3 | inline-asm | `xkmmisc/createpolicy` |  |  |
+| `cvt.bf16` | `cvt.frnd2{.relu}{.satfinite}.bf16.f32 d, a;` | 9.7.9.21 | 3 | builtin | `xkmmisc/cvt.bf16` |  |  |
+| `cvt.tf32` | `cvt.rna{.satfinite}.tf32.f32 d, a;` | 9.7.9.21 | 3 | builtin | `xkmmisc/cvt.tf32` |  |  |
+| `discard` | `discard{.global}.level [a], size;` | 9.7.9.17 | 3 | inline-asm | `xkmmisc/discard` |  |  |
+| `half.bf16` | `add{.rnd}.bf16 d, a, b;` | 9.7.4.1 | 3 | cuda | `xkmmisc/half.bf16` |  |  |
+| `ld.cache_hint` | `ld.global.L1::evict_last.L2::cache_hint.type d, [a], cache-policy;` | 9.7.9.2 | 3 | inline-asm | `xkmmisc/createpolicy` |  |  |
+| `add.int.packed` | `add.u16x2 d, a, b;` | 9.7.1.1 | 4 | inline-asm | `xkmmisc/add.int.packed` |  |  |
+| `cvt.fp8` | `cvt.rn.satfinite{.relu}.e4m3x2.f32 d, a, b;` | 9.7.9.21 | 4 | builtin | `xkmmisc/cvt.fp8` |  |  |
+| `max.int.packed` | `max{.relu}.u16x2 d, a, b;` | 9.7.1.13 | 4 | inline-asm | `xkmmisc/add.int.packed` |  |  |
+| `min.int.packed` | `min{.relu}.u16x2 d, a, b;` | 9.7.1.12 | 4 | inline-asm | `xkmmisc/add.int.packed` |  |  |
+| `setmaxnreg` | `setmaxnreg.action.sync.aligned.u32 imm-reg-count;` | 9.7.19.5 | 4 | inline-asm | `xkmmisc/setmaxnreg` |  |  |
 
 ## Kamui to PTX
 
