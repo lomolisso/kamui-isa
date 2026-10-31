@@ -1,0 +1,15 @@
+# Compiler intermediates
+*.i
+*.ii
+*.gpu
+*.ptx
+*.cubin
+*.fatbin
+
+# Local working areas
+.worktrees/
+build/
+
+# PTX that the project commits on purpose
+!tests/**/*.ptx
+!docs/examples/**/*.ptx
