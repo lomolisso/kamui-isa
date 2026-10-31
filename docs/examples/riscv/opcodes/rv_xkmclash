@@ -1,0 +1,2 @@
+# Deliberate mistake: this is exactly the encoding of the standard ADD instruction (opcode OP).
+kmt.clash  rd rs1 rs2 31..25=0 14..12=0 6..2=0x0C 1..0=3
