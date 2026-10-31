@@ -18,6 +18,7 @@ kernel.ptx.
     python tools/corpus/build.py --all --check         # rebuild into build/corpus, compare, write nothing
     python tools/corpus/build.py tests/corpus/xkmwarp/shfl.sync.bfly   # some entries
     python tools/corpus/build.py --all --lint          # no compiler: check entry.yaml against the committed PTX
+    python tools/corpus/build.py --all --nvcc          # evidence only: nvcc's PTX of the same sources, in build/
 """
 
 from __future__ import annotations
@@ -38,6 +39,8 @@ CORPUS = ROOT / "tests" / "corpus"
 BUILD = ROOT / "build" / "corpus"
 CLANG = os.environ.get("KAMUI_CLANG", "clang++-20")
 LLC = os.environ.get("KAMUI_LLC", "llc-20")
+NVCC = os.environ.get("KAMUI_NVCC", "nvcc")
+BUILD_NVCC = ROOT / "build" / "corpus-nvcc"
 PTXAS = os.environ.get("KAMUI_PTXAS", "ptxas")
 CUDA = os.environ.get("KAMUI_CUDA", "/usr/local/cuda")
 
@@ -46,7 +49,8 @@ COMMON_FLAGS = ["-x", "cuda", "--cuda-gpu-arch=sm_90a", "--cuda-device-only", "-
 
 DTYPES = {"u8": 1, "s8": 1, "u16": 2, "s16": 2, "f16": 2, "bf16": 2, "u32": 4, "s32": 4, "f32": 4,
           "u64": 8, "s64": 8, "f64": 8}
-PARAM_KINDS = ("input", "output", "inout", "scalar")
+PARAM_KINDS = ("input", "output", "inout", "scalar", "tensormap")
+TENSORMAP_MODES = ("tile", "im2col")
 GENERATORS = ("iota", "const", "random", "file")
 ENTRY_KEYS = {"id", "kernel", "compile", "launch", "params", "expect_ptx", "expect_ptxas", "deterministic",
               "tolerance_class", "run", "notes"}
@@ -102,6 +106,15 @@ def validate_entry(e: dict, d: Path) -> None:
         if p.get("kind") == "scalar":
             if "value" not in p:
                 errs.append(f"{where}: a scalar needs a value")
+        elif p.get("kind") == "tensormap":
+            buffers = [q.get("name") for q in (e.get("params") or [])[:i] if q.get("kind") in ("input", "output", "inout")]
+            if p.get("of") not in buffers:
+                errs.append(f"{where}: a tensormap names an earlier buffer parameter in `of`")
+            if p.get("mode") not in TENSORMAP_MODES:
+                errs.append(f"{where}: mode must be one of {TENSORMAP_MODES}")
+            dims, box = p.get("dims"), p.get("box")
+            if not (isinstance(dims, list) and isinstance(box, list) and 1 <= len(dims) <= 5 and len(dims) == len(box)):
+                errs.append(f"{where}: dims and box are lists of 1 to 5 sizes, innermost first")
         else:
             if not (isinstance(p.get("count"), int) and p["count"] > 0):
                 errs.append(f"{where}: count must be a positive integer")
@@ -218,6 +231,24 @@ def build_one(d: Path, check: bool) -> tuple[str, str | None]:
         return str(d), str(x)
 
 
+def nvcc_one(d: Path) -> tuple[str, str | None]:
+    """Evidence only: nvcc's PTX for the same kernel.cu, written to build/corpus-nvcc/, never committed."""
+    rel = d.relative_to(CORPUS)
+    if not (d / "kernel.cu").is_file():
+        return str(rel), None
+    out = BUILD_NVCC / rel / "kernel.ptx"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    flags = [f for f in extra_flags(load_entry(d)) if f in ("-ffp-contract=off", "-ffp-contract=on")]
+    fmad = ["-fmad=false"] if "-ffp-contract=off" in flags else []
+    ftz = ["-ftz=true"] if "-fcuda-flush-denormals-to-zero" in extra_flags(load_entry(d)) else []
+    r = subprocess.run([NVCC, "-arch=sm_90a", "-ptx", "-O3", *fmad, *ftz, "-o", str(out), "kernel.cu"], cwd=d,
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        out.unlink(missing_ok=True)
+        return str(rel), "nvcc failed: " + (r.stderr.strip().splitlines() or ["?"])[0]
+    return str(rel), None
+
+
 def find_entries(paths: list[str], all_: bool) -> list[Path]:
     if all_:
         return sorted(p.parent for p in CORPUS.glob("*/*/entry.yaml"))
@@ -235,6 +266,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("entries", nargs="*", help="entry directories")
     ap.add_argument("--all", action="store_true", help="every entry under tests/corpus/")
     ap.add_argument("--check", action="store_true", help="compare with the committed kernel.ptx, write nothing")
+    ap.add_argument("--nvcc", action="store_true", help="evidence only: nvcc's PTX into build/corpus-nvcc/")
     ap.add_argument("--lint", action="store_true", help="no compiler: check entry.yaml and the committed kernel.ptx")
     ap.add_argument("-j", "--jobs", type=int, default=min(32, os.cpu_count() or 1))
     args = ap.parse_args(argv)
@@ -243,6 +275,14 @@ def main(argv: list[str] | None = None) -> int:
         print("no entries")
         return 1
     failed = 0
+    if args.nvcc:
+        with ProcessPoolExecutor(max_workers=args.jobs) as ex:
+            res = list(ex.map(nvcc_one, dirs))
+        bad = [f"{r}: {e}" for r, e in res if e]
+        for line in bad:
+            print(f"skip {line}")
+        print(f"nvcc PTX for {len(dirs) - len(bad)} of {len(dirs)} entries in {BUILD_NVCC}")
+        return 0
     if args.lint:
         results = map(lint_one, dirs)
     else:
