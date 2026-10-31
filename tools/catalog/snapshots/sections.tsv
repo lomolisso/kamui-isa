@@ -1,0 +1,626 @@
+number	level	title	anchor	introduced_ptx	min_target	syntax_tokens
+1	1	Introduction	introduction			
+1.1	2	Scalable Data-Parallel Computing using GPUs	scalable-data-parallel-computing-using-gpus			
+1.2	2	Goals of PTX	goals-of-ptx			
+1.3	2	PTX ISA Version 8.7	ptx-isa-version-8-7			
+1.4	2	Document Structure	document-structure			
+2	1	Programming Model	programming-model			
+2.1	2	A Highly Multithreaded Coprocessor	a-highly-multithreaded-coprocessor			
+2.2	2	Thread Hierarchy	thread-hierarchy			
+2.2.1	3	Cooperative Thread Arrays	cooperative-thread-arrays			
+2.2.2	3	Cluster of Cooperative Thread Arrays	cluster-of-cooperative-thread-arrays			
+2.2.3	3	Grid of Clusters	grid-of-clusters			
+2.3	2	Memory Hierarchy	memory-hierarchy			
+3	1	PTX Machine Model	ptx-machine-model			
+3.1	2	A Set of SIMT Multiprocessors	a-set-of-simt-multiprocessors			
+3.2	2	Independent Thread Scheduling	independent-thread-scheduling			
+3.3	2	On-chip Shared Memory	on-chip-shared-memory			
+4	1	Syntax	syntax			
+4.1	2	Source Format	source-format			
+4.2	2	Comments	comments			
+4.3	2	Statements	statements			
+4.3.1	3	Directive Statements	directive-statements			
+4.3.2	3	Instruction Statements	instruction-statements			
+4.4	2	Identifiers	identifiers			
+4.5	2	Constants	constants			
+4.5.1	3	Integer Constants	integer-constants			
+4.5.2	3	Floating-Point Constants	floating-point-constants			
+4.5.3	3	Predicate Constants	predicate-constants			
+4.5.4	3	Constant Expressions	constant-expressions			
+4.5.5	3	Integer Constant Expression Evaluation	integer-constant-expression-evaluation			
+4.5.6	3	Summary of Constant Expression Evaluation Rules	summary-of-constant-expression-evaluation-rules			
+5	1	State Spaces, Types, and Variables	state-spaces-types-and-variables			
+5.1	2	State Spaces	state-spaces			
+5.1.1	3	Register State Space	register-state-space			
+5.1.2	3	Special Register State Space	special-register-state-space			
+5.1.3	3	Constant State Space	constant-state-space			
+5.1.3.1	4	Banked Constant State Space (deprecated)	banked-constant-state-space-deprecated			
+5.1.4	3	Global State Space	global-state-space			
+5.1.5	3	Local State Space	local-state-space			
+5.1.6	3	Parameter State Space	parameter-state-space			
+5.1.6.1	4	Kernel Function Parameters	kernel-function-parameters			
+5.1.6.2	4	Kernel Function Parameter Attributes	kernel-function-parameter-attributes			
+5.1.6.3	4	Kernel Parameter Attribute: .ptr	kernel-parameter-attribute-ptr	2.2	all	.align .const .global .local .param .ptr .shared .space .type
+5.1.6.4	4	Device Function Parameters	device-function-parameters			
+5.1.7	3	Shared State Space	shared-state-space			
+5.1.8	3	Texture State Space (deprecated)	texture-state-space-deprecated			
+5.2	2	Types	types			
+5.2.1	3	Fundamental Types	fundamental-types			
+5.2.2	3	Restricted Use of Sub-Word Sizes	restricted-use-of-sub-word-sizes			
+5.2.3	3	Alternate Floating-Point Data Formats	alternate-floating-point-data-formats			
+5.2.4	3	Packed Data Types	packed-data-types			
+5.2.4.1	4	Packed Floating Point Data Types	packed-floating-point-data-types			
+5.2.4.2	4	Packed Integer Data Types	packed-integer-data-types			
+5.3	2	Texture Sampler and Surface Types	texture-sampler-and-surface-types			
+5.3.1	3	Texture and Surface Properties	texture-and-surface-properties			
+5.3.2	3	Sampler Properties	sampler-properties			
+5.3.3	3	Channel Data Type and Channel Order Fields	channel-data-type-and-channel-order-fields			
+5.4	2	Variables	variables			
+5.4.1	3	Variable Declarations	variable-declarations			
+5.4.2	3	Vectors	vectors			
+5.4.3	3	Array Declarations	array-declarations			
+5.4.4	3	Initializers	initializers			
+5.4.5	3	Alignment	alignment			
+5.4.6	3	Parameterized Variable Names	parameterized-variable-names			
+5.4.7	3	Variable Attributes	variable-attributes			
+5.4.8	3	Variable and Function Attribute Directive: .attribute	variable-and-function-attribute-directive-attribute	4.0	sm_30	
+5.5	2	Tensors	tensors			
+5.5.1	3	Tensor Dimension, size and format	tensor-dimension-size-and-format			
+5.5.1.1	4	Sub-byte Types	sub-byte-types			
+5.5.1.1.1	5	Padding and alignment of the sub-byte types	padding-and-alignment-of-the-sub-byte-types			
+5.5.2	3	Tensor Access Modes	tensor-access-modes			
+5.5.3	3	Tiled Mode	tiled-mode			
+5.5.3.1	4	Bounding Box	bounding-box			
+5.5.3.2	4	Traversal-Stride	traversal-stride			
+5.5.3.3	4	Out of Boundary Access	out-of-boundary-access			
+5.5.3.4	4	Tile::scatter4 and Tile::gather4 modes	tile-scatter4-and-tile-gather4-modes			
+5.5.3.4.1	5	Bounding Box	tensor-tiled-scatter4-gather4-modes-bounding-box			
+5.5.4	3	Im2col mode	im2col-mode			
+5.5.4.1	4	Bounding Box	tensor-im2col-mode-bounding-box			
+5.5.4.2	4	Traversal Stride	tensor-im2col-mode-traversal-stride			
+5.5.4.3	4	Out of Boundary Access	tensor-im2col-mode-oob-access			
+5.5.5	3	Im2col::w and Im2col::w::128 modes	im2col-w-and-im2col-w-128-modes			
+5.5.5.1	4	Bounding Box	tensor-im2col-w-w128-modes-bounding-box			
+5.5.5.2	4	Traversal Stride	tensor-im2col-w-w128-modes-traversal-stride			
+5.5.5.3	4	wHalo	whalo			
+5.5.5.4	4	wOffset	woffset			
+5.5.6	3	Interleave layout	interleave-layout			
+5.5.7	3	Swizzling Modes	swizzling-modes			
+5.5.8	3	Tensor-map	tensor-map			
+6	1	Instruction Operands	instruction-operands			
+6.1	2	Operand Type Information	operand-type-information			
+6.2	2	Source Operands	source-operands			
+6.3	2	Destination Operands	destination-operands			
+6.4	2	Using Addresses, Arrays, and Vectors	using-addresses-arrays-and-vectors			
+6.4.1	3	Addresses as Operands	addresses-as-operands			
+6.4.1.1	4	Generic Addressing	generic-addressing			
+6.4.2	3	Arrays as Operands	arrays-as-operands			
+6.4.3	3	Vectors as Operands	vectors-as-operands			
+6.4.4	3	Labels and Function Names as Operands	labels-and-function-names-as-operands			
+6.5	2	Type Conversion	type-conversion			
+6.5.1	3	Scalar Conversions	scalar-conversions			
+6.5.2	3	Rounding Modifiers	rounding-modifiers			
+6.6	2	Operand Costs	operand-costs			
+7	1	Abstracting the ABI	abstracting-the-abi			
+7.1	2	Function Declarations and Definitions	function-declarations-and-definitions			
+7.1.1	3	Changes from PTX ISA Version 1.x	changes-from-ptx-isa-version-1-x			
+7.2	2	Variadic Functions	variadic-functions			
+7.3	2	Alloca	alloca			
+8	1	Memory Consistency Model	memory-consistency-model			
+8.1	2	Scope and applicability of the model	scope-and-applicability-of-the-model			
+8.1.1	3	Limitations on atomicity at system scope	limitations-on-atomicity-at-system-scope			
+8.2	2	Memory operations	memory-operations			
+8.2.1	3	Overlap	overlap			
+8.2.2	3	Aliases	aliases			
+8.2.3	3	Multimem Addresses	multimem-addresses			
+8.2.4	3	Memory Operations on Vector Data Types	memory-operations-on-vector-data-types			
+8.2.5	3	Memory Operations on Packed Data Types	memory-operations-on-packed-data-types			
+8.2.6	3	Initialization	initialization			
+8.3	2	State spaces	memory-consistency-state-spaces			
+8.4	2	Operation types	operation-types			
+8.4.1	3	mmio Operation	mmio-operation			
+8.4.2	3	volatile Operation	volatile-operation			
+8.5	2	Scope	scope			
+8.6	2	Proxies	proxies			
+8.7	2	Morally strong operations	morally-strong-operations			
+8.7.1	3	Conflict and Data-races	conflict-and-data-races			
+8.7.2	3	Limitations on Mixed-size Data-races	limitations-on-mixed-size-data-races			
+8.8	2	Release and Acquire Patterns	release-and-acquire-patterns			
+8.9	2	Ordering of memory operations	ordering-of-memory-operations			
+8.9.1	3	Program Order	program-order			
+8.9.1.1	4	Asynchronous Operations	asynchronous-operations			
+8.9.2	3	Observation Order	observation-order			
+8.9.3	3	Fence-SC Order	fence-sc-order			
+8.9.4	3	Memory synchronization	memory-synchronization			
+8.9.5	3	Causality Order	causality-order			
+8.9.6	3	Coherence Order	coherence-order			
+8.9.7	3	Communication Order	communication-order			
+8.10	2	Axioms	axioms			
+8.10.1	3	Coherence	coherence			
+8.10.2	3	Fence-SC	fence-sc			
+8.10.3	3	Atomicity	atomicity			
+8.10.4	3	No Thin Air	no-thin-air			
+8.10.5	3	Sequential Consistency Per Location	sequential-consistency-per-location			
+8.10.6	3	Causality	causality			
+9	1	Instruction Set	instruction-set			
+9.1	2	Format and Semantics of Instruction Descriptions	format-and-semantics-of-instruction-descriptions			
+9.2	2	PTX Instructions	ptx-instructions			
+9.3	2	Predicated Execution	predicated-execution			
+9.3.1	3	Comparisons	comparisons			
+9.3.1.1	4	Integer and Bit-Size Comparisons	integer-and-bit-size-comparisons			
+9.3.1.2	4	Floating Point Comparisons	floating-point-comparisons			
+9.3.2	3	Manipulating Predicates	manipulating-predicates			
+9.4	2	Type Information for Instructions and Operands	type-information-for-instructions-and-operands			
+9.4.1	3	Operand Size Exceeding Instruction-Type Size	operand-size-exceeding-instruction-type-size			
+9.5	2	Divergence of Threads in Control Constructs	divergence-of-threads-in-control-constructs			
+9.6	2	Semantics	semantics			
+9.6.1	3	Machine-Specific Semantics of 16-bit Code	machine-specific-semantics-of-16-bit-code			
+9.7	2	Instructions	instructions			
+9.7.1	3	Integer Arithmetic Instructions	integer-arithmetic-instructions			
+9.7.1.1	4	Integer Arithmetic Instructions: add	integer-arithmetic-instructions-add	1.0	all	.s16 .s16x2 .s32 .s64 .sat .type .u16 .u16x2 .u32 .u64
+9.7.1.2	4	Integer Arithmetic Instructions: sub	integer-arithmetic-instructions-sub	1.0	all	.s16 .s32 .s64 .sat .type .u16 .u32 .u64
+9.7.1.3	4	Integer Arithmetic Instructions: mul	integer-arithmetic-instructions-mul	1.0	all	.hi .lo .mode .s16 .s32 .s64 .type .u16 .u32 .u64 .wide
+9.7.1.4	4	Integer Arithmetic Instructions: mad	integer-arithmetic-instructions-mad	1.0	all	.hi .lo .mode .s16 .s32 .s64 .sat .type .u16 .u32 .u64 .wide
+9.7.1.5	4	Integer Arithmetic Instructions: mul24	integer-arithmetic-instructions-mul24	1.0	all	.hi .lo .mode .s32 .type .u32
+9.7.1.6	4	Integer Arithmetic Instructions: mad24	integer-arithmetic-instructions-mad24	1.0	all	.hi .lo .mode .s32 .sat .type .u32
+9.7.1.7	4	Integer Arithmetic Instructions: sad	integer-arithmetic-instructions-sad	1.0	all	.s16 .s32 .s64 .type .u16 .u32 .u64
+9.7.1.8	4	Integer Arithmetic Instructions: div	integer-arithmetic-instructions-div	1.0	all	.s16 .s32 .s64 .type .u16 .u32 .u64
+9.7.1.9	4	Integer Arithmetic Instructions: rem	integer-arithmetic-instructions-rem	1.0	all	.s16 .s32 .s64 .type .u16 .u32 .u64
+9.7.1.10	4	Integer Arithmetic Instructions: abs	integer-arithmetic-instructions-abs	1.0	all	.s16 .s32 .s64 .type
+9.7.1.11	4	Integer Arithmetic Instructions: neg	integer-arithmetic-instructions-neg	1.0	all	.s16 .s32 .s64 .type
+9.7.1.12	4	Integer Arithmetic Instructions: min	integer-arithmetic-instructions-min	1.0	all	.atype .btype .relu .s16 .s16x2 .s32 .s64 .u16 .u16x2 .u32 .u64
+9.7.1.13	4	Integer Arithmetic Instructions: max	integer-arithmetic-instructions-max	1.0	all	.atype .btype .relu .s16 .s16x2 .s32 .s64 .u16 .u16x2 .u32 .u64
+9.7.1.14	4	Integer Arithmetic Instructions: popc	integer-arithmetic-instructions-popc	2.0	sm_20	.b32 .b64 .type
+9.7.1.15	4	Integer Arithmetic Instructions: clz	integer-arithmetic-instructions-clz	2.0	sm_20	.b32 .b64 .type
+9.7.1.16	4	Integer Arithmetic Instructions: bfind	integer-arithmetic-instructions-bfind	2.0	sm_20	.s32 .s64 .shiftamt .type .u32 .u64
+9.7.1.17	4	Integer Arithmetic Instructions: fns	integer-arithmetic-instructions-fns	6.0	sm_30	.b32
+9.7.1.18	4	Integer Arithmetic Instructions: brev	integer-arithmetic-instructions-brev	2.0	sm_20	.b32 .b64 .type
+9.7.1.19	4	Integer Arithmetic Instructions: bfe	integer-arithmetic-instructions-bfe	2.0	sm_20	.s32 .s64 .type .u32 .u64
+9.7.1.20	4	Integer Arithmetic Instructions: bfi	integer-arithmetic-instructions-bfi	2.0	sm_20	.b32 .b64 .type
+9.7.1.21	4	Integer Arithmetic Instructions: szext	integer-arithmetic-instructions-szext	7.6	sm_70	.clamp .mode .s32 .type .u32 .wrap
+9.7.1.22	4	Integer Arithmetic Instructions: bmsk	integer-arithmetic-instructions-bmsk	7.6	sm_70	.b32 .clamp .mode .wrap
+9.7.1.23	4	Integer Arithmetic Instructions: dp4a	integer-arithmetic-instructions-dp4a	5.0	sm_61	.atype .btype .s32 .u32
+9.7.1.24	4	Integer Arithmetic Instructions: dp2a	integer-arithmetic-instructions-dp2a	5.0	sm_61	.atype .btype .hi .lo .mode .s32 .u32
+9.7.2	3	Extended-Precision Integer Arithmetic Instructions	extended-precision-integer-arithmetic-instructions			
+9.7.2.1	4	Extended-Precision Arithmetic Instructions: add.cc	extended-precision-arithmetic-instructions-add-cc	1.2	all	.cc .s32 .s64 .type .u32 .u64
+9.7.2.2	4	Extended-Precision Arithmetic Instructions: addc	extended-precision-arithmetic-instructions-addc	1.2	all	.cc .s32 .s64 .type .u32 .u64
+9.7.2.3	4	Extended-Precision Arithmetic Instructions: sub.cc	extended-precision-arithmetic-instructions-sub-cc	1.2	all	.cc .s32 .s64 .type .u32 .u64
+9.7.2.4	4	Extended-Precision Arithmetic Instructions: subc	extended-precision-arithmetic-instructions-subc	1.2	all	.cc .s32 .s64 .type .u32 .u64
+9.7.2.5	4	Extended-Precision Arithmetic Instructions: mad.cc	extended-precision-arithmetic-instructions-mad-cc	3.0	sm_20	.cc .hi .lo .s32 .s64 .type .u32 .u64
+9.7.2.6	4	Extended-Precision Arithmetic Instructions: madc	extended-precision-arithmetic-instructions-madc	3.0	sm_20	.cc .hi .lo .s32 .s64 .type .u32 .u64
+9.7.3	3	Floating-Point Instructions	floating-point-instructions			
+9.7.3.1	4	Floating Point Instructions: testp	floating-point-instructions-testp	2.0	sm_20	.f32 .f64 .finite .infinite .normal .notanumber .number .op .pred .subnormal .type
+9.7.3.2	4	Floating Point Instructions: copysign	floating-point-instructions-copysign	2.0	sm_20	.f32 .f64 .type
+9.7.3.3	4	Floating Point Instructions: add	floating-point-instructions-add	1.0	all	.f32 .f32x2 .f64 .ftz .rm .rn .rnd .rp .rz .sat
+9.7.3.4	4	Floating Point Instructions: sub	floating-point-instructions-sub	1.0	all	.f32 .f32x2 .f64 .ftz .rm .rn .rnd .rp .rz .sat
+9.7.3.5	4	Floating Point Instructions: mul	floating-point-instructions-mul	1.0	all	.f32 .f32x2 .f64 .ftz .rm .rn .rnd .rp .rz .sat
+9.7.3.6	4	Floating Point Instructions: fma	floating-point-instructions-fma	1.4	sm_13	.f32 .f32x2 .f64 .ftz .rm .rn .rnd .rp .rz .sat
+9.7.3.7	4	Floating Point Instructions: mad	floating-point-instructions-mad	1.0	all	.f32 .f64 .ftz .rm .rn .rnd .rp .rz .sat .target
+9.7.3.8	4	Floating Point Instructions: div	floating-point-instructions-div	1.0	all	.approx .f32 .f64 .ftz .full .rm .rn .rnd .rp .rz
+9.7.3.9	4	Floating Point Instructions: abs	floating-point-instructions-abs	1.0	all	.f32 .f64 .ftz
+9.7.3.10	4	Floating Point Instructions: neg	floating-point-instructions-neg	1.0	all	.f32 .f64 .ftz
+9.7.3.11	4	Floating Point Instructions: min	floating-point-instructions-min	1.0	all	.NaN .abs .f32 .f64 .ftz .xorsign
+9.7.3.12	4	Floating Point Instructions: max	floating-point-instructions-max	1.0	all	.NaN .abs .f32 .f64 .ftz .xorsign
+9.7.3.13	4	Floating Point Instructions: rcp	floating-point-instructions-rcp	1.0	all	.approx .f32 .f64 .ftz .rm .rn .rnd .rp .rz
+9.7.3.14	4	Floating Point Instructions: rcp.approx.ftz.f64	floating-point-instructions-rcp-approx-ftz-f64	2.1	sm_20	.approx .f64 .ftz
+9.7.3.15	4	Floating Point Instructions: sqrt	floating-point-instructions-sqrt	1.0	all	.approx .f32 .f64 .ftz .rm .rn .rnd .rp .rz
+9.7.3.16	4	Floating Point Instructions: rsqrt	floating-point-instructions-rsqrt	1.0	all	.approx .f32 .f64 .ftz
+9.7.3.17	4	Floating Point Instructions: rsqrt.approx.ftz.f64	floating-point-instructions-rsqrt-approx-ftz-f64	4.0	sm_20	.approx .f64 .ftz
+9.7.3.18	4	Floating Point Instructions: sin	floating-point-instructions-sin	1.0	all	.approx .f32 .ftz
+9.7.3.19	4	Floating Point Instructions: cos	floating-point-instructions-cos	1.0	all	.approx .f32 .ftz
+9.7.3.20	4	Floating Point Instructions: lg2	floating-point-instructions-lg2	1.0	all	.approx .f32 .ftz
+9.7.3.21	4	Floating Point Instructions: ex2	floating-point-instructions-ex2	1.0	all	.approx .f32 .ftz
+9.7.3.22	4	Floating Point Instructions: tanh	floating-point-instructions-tanh	7.0	sm_75	.approx .f32
+9.7.4	3	Half Precision Floating-Point Instructions	half-precision-floating-point-instructions			
+9.7.4.1	4	Half Precision Floating Point Instructions: add	half-precision-floating-point-instructions-add	4.2	sm_53	.bf16 .bf16x2 .f16 .f16x2 .ftz .rn .rnd .sat
+9.7.4.2	4	Half Precision Floating Point Instructions: sub	half-precision-floating-point-instructions-sub	4.2	sm_53	.bf16 .bf16x2 .f16 .f16x2 .ftz .rn .rnd .sat
+9.7.4.3	4	Half Precision Floating Point Instructions: mul	half-precision-floating-point-instructions-mul	4.2	sm_53	.bf16 .bf16x2 .f16 .f16x2 .ftz .rn .rnd .sat
+9.7.4.4	4	Half Precision Floating Point Instructions: fma	half-precision-floating-point-instructions-fma	4.2	sm_53	.bf16 .bf16x2 .f16 .f16x2 .ftz .oob .relu .rn .rnd .sat .type
+9.7.4.5	4	Half Precision Floating Point Instructions: neg	half-precision-floating-point-instructions-neg	6.0	sm_53	.bf16 .bf16x2 .f16 .f16x2 .ftz
+9.7.4.6	4	Half Precision Floating Point Instructions: abs	half-precision-floating-point-instructions-abs	6.5	sm_53	.bf16 .bf16x2 .f16 .f16x2 .ftz
+9.7.4.7	4	Half Precision Floating Point Instructions: min	half-precision-floating-point-instructions-min	7.0	sm_80	.NaN .abs .bf16 .bf16x2 .f16 .f16x2 .ftz .xorsign
+9.7.4.8	4	Half Precision Floating Point Instructions: max	half-precision-floating-point-instructions-max	7.0	sm_80	.NaN .abs .bf16 .bf16x2 .f16 .f16x2 .ftz .xorsign
+9.7.4.9	4	Half Precision Floating Point Instructions: tanh	half-precision-floating-point-instructions-tanh	7.0	sm_75	.approx .bf16 .bf16x2 .f16 .f16x2 .type
+9.7.4.10	4	Half Precision Floating Point Instructions: ex2	half-precision-floating-point-instructions-ex2	7.0	sm_75	.approx .atype .bf16 .bf16x2 .btype .f16 .f16x2 .ftz
+9.7.5	3	Mixed Precision Floating-Point Instructions	mixed-precision-floating-point-instructions			
+9.7.5.1	4	Mixed Precision Floating Point Instructions: add	mixed-precision-floating-point-instructions-add	8.6	sm_100	.atype .bf16 .f16 .f32 .rm .rn .rnd .rp .rz .sat
+9.7.5.2	4	Mixed Precision Floating Point Instructions: sub	mixed-precision-floating-point-instructions-sub	8.6	sm_100	.atype .bf16 .f16 .f32 .rm .rn .rnd .rp .rz .sat
+9.7.5.3	4	Mixed Precision Floating Point Instructions: fma	mixed-precision-floating-point-instructions-fma	8.6	sm_100	.abtype .bf16 .f16 .f32 .ftz .rm .rn .rnd .rp .rz .sat
+9.7.6	3	Comparison and Selection Instructions	comparison-and-selection-instructions			
+9.7.6.1	4	Comparison and Selection Instructions: set	comparison-and-selection-instructions-set	1.0	sm_13	.BoolOp .CmpOp .b16 .b32 .b64 .dtype .f32 .f64 .ftz .s16 .s32 .s64 .stype .u16 .u32 .u64
+9.7.6.2	4	Comparison and Selection Instructions: setp	comparison-and-selection-instructions-setp	1.0	sm_13	.BoolOp .CmpOp .b16 .b32 .b64 .f32 .f64 .ftz .s16 .s32 .s64 .type .u16 .u32 .u64
+9.7.6.3	4	Comparison and Selection Instructions: selp	comparison-and-selection-instructions-selp	1.0	sm_13	.b16 .b32 .b64 .f32 .f64 .s16 .s32 .s64 .type .u16 .u32 .u64
+9.7.6.4	4	Comparison and Selection Instructions: slct	comparison-and-selection-instructions-slct	1.0	sm_13	.b16 .b32 .b64 .dtype .f32 .f64 .ftz .s16 .s32 .s64 .u16 .u32 .u64
+9.7.7	3	Half Precision Comparison Instructions	half-precision-comparison-instructions			
+9.7.7.1	4	Half Precision Comparison Instructions: set	half-precision-comparison-instructions-set	4.2	sm_53	.BoolOp .CmpOp .b16 .b32 .b64 .bf16 .bf16x2 .dtype .f16 .f16x2 .f32 .f64 .ftz .s16 .s32 .s64 .stype .u16 .u32 .u64
+9.7.7.2	4	Half Precision Comparison Instructions: setp	half-precision-comparison-instructions-setp	4.2	sm_53	.BoolOp .CmpOp .bf16 .bf16x2 .f16 .f16x2 .ftz
+9.7.8	3	Logic and Shift Instructions	logic-and-shift-instructions			
+9.7.8.1	4	Logic and Shift Instructions: and	logic-and-shift-instructions-and	1.0	all	.b16 .b32 .b64 .pred .type
+9.7.8.2	4	Logic and Shift Instructions: or	logic-and-shift-instructions-or	1.0	all	.b16 .b32 .b64 .pred .type
+9.7.8.3	4	Logic and Shift Instructions: xor	logic-and-shift-instructions-xor	1.0	all	.b16 .b32 .b64 .pred .type
+9.7.8.4	4	Logic and Shift Instructions: not	logic-and-shift-instructions-not	1.0	all	.b16 .b32 .b64 .pred .type
+9.7.8.5	4	Logic and Shift Instructions: cnot	logic-and-shift-instructions-cnot	1.0	all	.b16 .b32 .b64 .type
+9.7.8.6	4	Logic and Shift Instructions: lop3	logic-and-shift-instructions-lop3	4.3	sm_50	.BoolOp .and .b32 .or
+9.7.8.7	4	Logic and Shift Instructions: shf	logic-and-shift-instructions-shf	3.1	sm_32	.b32 .clamp .l .mode .r .wrap
+9.7.8.8	4	Logic and Shift Instructions: shl	logic-and-shift-instructions-shl	1.0	all	.b16 .b32 .b64 .type
+9.7.8.9	4	Logic and Shift Instructions: shr	logic-and-shift-instructions-shr	1.0	all	.b16 .b32 .b64 .s16 .s32 .s64 .type .u16 .u32 .u64
+9.7.9	3	Data Movement and Conversion Instructions	data-movement-and-conversion-instructions			
+9.7.9.1	4	Cache Operators	cache-operators			
+9.7.9.2	4	Cache Eviction Priority Hints	cache-eviction-priority-hints			
+9.7.9.3	4	Data Movement and Conversion Instructions: mov	data-movement-and-conversion-instructions-mov	1.0	sm_13	.b16 .b32 .b64 .f32 .f64 .pred .s16 .s32 .s64 .type .u16 .u32 .u64
+9.7.9.4	4	Data Movement and Conversion Instructions: mov	data-movement-and-conversion-instructions-mov-2	1.0	all	.b128 .b16 .b32 .b64 .type
+9.7.9.5	4	Data Movement and Conversion Instructions: shfl (deprecated)	data-movement-and-conversion-instructions-shfl-deprecated	3.0	sm_30	.b32 .bfly .down .idx .mode .up
+9.7.9.6	4	Data Movement and Conversion Instructions: shfl.sync	data-movement-and-conversion-instructions-shfl-sync	6.0	sm_30	.b32 .bfly .down .idx .mode .sync .up
+9.7.9.7	4	Data Movement and Conversion Instructions: prmt	data-movement-and-conversion-instructions-prmt	2.0	sm_20	.b32 .b4e .ecl .ecr .f4e .mode .rc16 .rc8
+9.7.9.8	4	Data Movement and Conversion Instructions: ld	data-movement-and-conversion-instructions-ld	1.0	sm_13	.L1::evict_first .L1::evict_last .L1::evict_normal .L1::evict_unchanged .L1::no_allocate .L2::128B .L2::256B .L2::64B .L2::cache_hint .acquire .b128 .b16 .b32 .b64 .b8 .ca .cg .cluster .const .cop .cs .cta .cv .f32 .f64 .global .gpu .level::cache_hint .level::eviction_priority .level::prefetch_size .local .lu .mmio .param .relaxed .s16 .s32 .s64 .s8 .scope .shared .ss .sys .type .u16 .u32 .u64 .u8 .unified .v2 .v4 .vec .volatile .weak
+9.7.9.9	4	Data Movement and Conversion Instructions: ld.global.nc	data-movement-and-conversion-instructions-ld-global-nc	3.1	sm_32	.L1::evict_first .L1::evict_last .L1::evict_normal .L1::evict_unchanged .L1::no_allocate .L2::128B .L2::256B .L2::64B .L2::cache_hint .b128 .b16 .b32 .b64 .b8 .ca .cg .cop .cs .f32 .f64 .global .level::cache_hint .level::eviction_priority .level::prefetch_size .nc .s16 .s32 .s64 .s8 .type .u16 .u32 .u64 .u8 .v2 .v4 .vec
+9.7.9.10	4	Data Movement and Conversion Instructions: ldu	data-movement-and-conversion-instructions-ldu	2.0	sm_13	.b128 .b16 .b32 .b64 .b8 .f32 .f64 .global .s16 .s32 .s64 .s8 .ss .type .u16 .u32 .u64 .u8 .v2 .v4 .vec
+9.7.9.11	4	Data Movement and Conversion Instructions: st	data-movement-and-conversion-instructions-st	1.0	sm_13	.L1::evict_first .L1::evict_last .L1::evict_normal .L1::evict_unchanged .L1::no_allocate .L2::cache_hint .b128 .b16 .b32 .b64 .b8 .cg .cluster .cop .cs .cta .f32 .f64 .global .gpu .level::cache_hint .level::eviction_priority .local .mmio .param .relaxed .release .s16 .s32 .s64 .s8 .scope .sem .shared .ss .sys .type .u16 .u32 .u64 .u8 .v2 .v4 .vec .volatile .wb .weak .wt
+9.7.9.12	4	Data Movement and Conversion Instructions: st.async	data-movement-and-conversion-instructions-st-async	8.1	sm_90	.async .b16 .b32 .b64 .b8 .cluster .completion_mechanism .f32 .f64 .global .gpu .mbarrier::complete_tx::bytes .mmio .release .s16 .s32 .s64 .s8 .scope .sem .shared::cluster .ss .sys .type .u16 .u32 .u64 .u8 .v2 .v4 .vec .weak
+9.7.9.13	4	Data Movement and Conversion Instructions: st.bulk	data-movement-and-conversion-instructions-st-bulk	8.6	sm_100	.bulk .shared::cta .weak
+9.7.9.14	4	Data Movement and Conversion Instructions: multimem.ld_reduce, multimem.st, multimem.red	data-movement-and-conversion-instructions-multimem-ld-reduce-multimem-st-multimem-red	8.1	sm_90	.acc::f16 .acc::f32 .acc_prec .acquire .add .and .b32 .b64 .bf16 .bf16x2 .cluster .cta .e4m3 .e4m3x2 .e4m3x4 .e5m2 .e5m2x2 .e5m2x4 .f16 .f16x2 .f32 .f64 .global .gpu .ld_reduce .ldsem .max .min .op .or .red .redop .redsem .redtype .relaxed .release .s32 .s64 .scope .ss .st .stsem .sys .type .u32 .u64 .v2 .v4 .v8 .vec .weak .xor
+9.7.9.15	4	Data Movement and Conversion Instructions: prefetch, prefetchu	data-movement-and-conversion-instructions-prefetch-prefetchu	2.0	sm_20	.L1 .L2 .L2::evict_last .L2::evict_normal .const .global .level .level::eviction_priority .local .param .space .tensormap .tensormap_space
+9.7.9.16	4	Data Movement and Conversion Instructions: applypriority	data-movement-and-conversion-instructions-applypriority	7.4	sm_80	.L2::evict_normal .global .level::eviction_priority
+9.7.9.17	4	Data Movement and Conversion Instructions: discard	data-movement-and-conversion-instructions-discard	7.4	sm_80	.L2 .global .level
+9.7.9.18	4	Data Movement and Conversion Instructions: createpolicy	data-movement-and-conversion-instructions-createpolicy	7.4	sm_80	.L2 .L2::evict_first .L2::evict_last .L2::evict_normal .L2::evict_unchanged .b64 .cvt .fractional .global .level::primary_priority .level::secondary_priority .range
+9.7.9.19	4	Data Movement and Conversion Instructions: isspacep	data-movement-and-conversion-instructions-isspacep	2.0	sm_20	.global .local .param .pred .shared .space
+9.7.9.20	4	Data Movement and Conversion Instructions: cvta	data-movement-and-conversion-instructions-cvta	2.0	sm_20	.const .global .local .param .shared .size .space .to .u32 .u64
+9.7.9.21	4	Data Movement and Conversion Instructions: cvt	data-movement-and-conversion-instructions-cvt	1.0	sm_13	.atype .bf16 .bf16x2 .dtype .e2m1x2 .e2m1x4 .e2m3x2 .e2m3x4 .e3m2x2 .e3m2x4 .e4m3x2 .e4m3x4 .e5m2x2 .e5m2x4 .f16 .f16x2 .f32 .f4x2type .f4x4type .f64 .f6x2type .f6x4type .f8x2type .f8x4type .frnd .frnd2 .frnd3 .ftz .irnd .relu .rm .rmi .rn .rna .rni .rp .rpi .rs .rz .rzi .s16 .s32 .s64 .s8 .sat .satfinite .tf32 .u16 .u32 .u64 .u8 .ue8m0x2
+9.7.9.22	4	Data Movement and Conversion Instructions: cvt.pack	data-movement-and-conversion-instructions-cvt-pack	6.5	sm_72	.abType .b32 .cType .convertType .pack .s16 .s2 .s32 .s4 .s8 .sat .u16 .u2 .u4 .u8
+9.7.9.23	4	Data Movement and Conversion Instructions: mapa	data-movement-and-conversion-instructions-mapa	7.8	sm_90	.shared::cluster .space .type .u32 .u64
+9.7.9.24	4	Data Movement and Conversion Instructions: getctarank	data-movement-and-conversion-instructions-getctarank	7.8	sm_90	.shared::cluster .space .type .u32 .u64
+9.7.9.25	4	Data Movement and Conversion Instructions: Asynchronous copy	data-movement-and-conversion-instructions-asynchronous-copy			
+9.7.9.25.1	5	Completion Mechanisms for Asynchronous Copy Operations	completion-mechanisms-for-asynchronous-copy-operations			
+9.7.9.25.1.1	6	Async-group mechanism	async-group-mechanism			
+9.7.9.25.1.2	6	Mbarrier-based mechanism	mbarrier-based-mechanism			
+9.7.9.25.2	5	Async Proxy	async-proxy			
+9.7.9.25.3	5	Data Movement and Conversion Instructions: Non-bulk copy	data-movement-and-conversion-instructions-non-bulk-copy			
+9.7.9.25.3.1	6	Data Movement and Conversion Instructions: cp.async	data-movement-and-conversion-instructions-cp-async	7.0	sm_30	.L2::128B .L2::256B .L2::64B .L2::cache_hint .async .ca .cg .global .level::cache_hint .level::prefetch_size .shared
+9.7.9.25.3.2	6	Data Movement and Conversion Instructions: cp.async.commit_group	data-movement-and-conversion-instructions-cp-async-commit-group	7.0	sm_80	.async .commit_group
+9.7.9.25.3.3	6	Data Movement and Conversion Instructions: cp.async.wait_group / cp.async.wait_all	data-movement-and-conversion-instructions-cp-async-wait-group-cp-async-wait-all	7.0	sm_80	.async .wait_all .wait_group
+9.7.9.25.4	5	Data Movement and Conversion Instructions: Bulk copy	data-movement-and-conversion-instructions-bulk-copy			
+9.7.9.25.4.1	6	Data Movement and Conversion Instructions: cp.async.bulk	data-movement-and-conversion-instructions-cp-async-bulk	8.0	sm_90	.L2::cache_hint .async .bulk .bulk_group .completion_mechanism .cp_mask .dst .global .level::cache_hint .mbarrier::complete_tx::bytes .multicast .multicast::cluster .shared::cluster .shared::cta .src
+9.7.9.25.4.2	6	Data Movement and Conversion Instructions: cp.reduce.async.bulk	data-movement-and-conversion-instructions-cp-reduce-async-bulk	8.0	sm_90	.L2::cache_hint .add .and .async .b32 .b64 .bf16 .bulk .bulk_group .completion_mechanism .dec .dst .f16 .f32 .f64 .global .inc .level::cache_hint .max .mbarrier::complete_tx::bytes .min .noftz .or .redOp .reduce .s32 .s64 .shared::cluster .shared::cta .src .type .u32 .u64 .xor
+9.7.9.25.4.3	6	Data Movement and Conversion Instructions: cp.async.bulk.prefetch	data-movement-and-conversion-instructions-cp-async-bulk-prefetch	8.0	sm_90	.L2 .L2::cache_hint .async .bulk .global .level::cache_hint .prefetch .src
+9.7.9.25.5	5	Data Movement and Conversion Instructions: Tensor copy	data-movement-and-conversion-instructions-tensor-copy			
+9.7.9.25.5.1	6	Restriction on Tensor Copy instructions	restriction-on-tensor-copy-instructions			
+9.7.9.25.5.2	6	Data Movement and Conversion Instructions: cp.async.bulk.tensor	data-movement-and-conversion-instructions-cp-async-bulk-tensor	8.0	sm_90	.L2::cache_hint .async .bulk .bulk_group .completion_mechanism .cta_group .cta_group::1 .cta_group::2 .dim .dst .global .im2col .im2col::w .im2col::w::128 .im2col_no_offs .level::cache_hint .load_mode .mbarrier::complete_tx::bytes .multicast .multicast::cluster .shared::cluster .shared::cta .src .tensor .tile .tile::gather4 .tile::scatter4
+9.7.9.25.5.3	6	Data Movement and Conversion Instructions: cp.reduce.async.bulk.tensor	data-movement-and-conversion-instructions-cp-reduce-async-bulk-tensor	8.0	sm_90	.add .and .async .bulk .bulk_group .completion_mechanism .dec .dim .dst .global .im2col_no_offs .inc .level::cache_hint .load_mode .max .min .or .redOp .reduce .shared::cta .src .tensor .tile .xor
+9.7.9.25.5.4	6	Data Movement and Conversion Instructions: cp.async.bulk.prefetch.tensor	data-movement-and-conversion-instructions-cp-async-bulk-prefetch-tensor	8.0	sm_90	.L2 .L2::cache_hint .async .bulk .dim .global .im2col .im2col::w .im2col::w::128 .level::cache_hint .load_mode .prefetch .src .tensor .tile .tile::gather4
+9.7.9.25.6	5	Data Movement and Conversion Instructions: Bulk and Tensor copy completion instructions	data-movement-and-conversion-instructions-bulk-and-tensor-copy-completion-instructions			
+9.7.9.25.6.1	6	Data Movement and Conversion Instructions: cp.async.bulk.commit_group	data-movement-and-conversion-instructions-cp-async-bulk-commit-group	8.0	sm_90	.async .bulk .commit_group
+9.7.9.25.6.2	6	Data Movement and Conversion Instructions: cp.async.bulk.wait_group	data-movement-and-conversion-instructions-cp-async-bulk-wait-group	8.0	sm_90	.async .bulk .read .wait_group
+9.7.9.26	4	Data Movement and Conversion Instructions: tensormap.replace	data-movement-and-conversion-instructions-tensormap-replace	8.3	sm_90a	.b1024 .b32 .b64 .box_dim .element_stride .elemtype .field1 .field2 .field3 .fill_mode .global .global_address .global_dim .global_stride .interleave_layout .mode .rank .replace .shared::cta .ss .swizzle_atomicity .swizzle_mode .tile .type
+9.7.10	3	Texture Instructions	texture-instructions			
+9.7.10.1	4	Texturing Modes	texturing-modes			
+9.7.10.2	4	Mipmaps	mipmaps			
+9.7.10.3	4	Texture Instructions: tex	texture-instructions-tex	1.0	all	.a1d .a2d .a2dms .acube .base .ctype .cube .dtype .f16 .f16x2 .f32 .geom .grad .level .s32 .u32 .v2 .v4
+9.7.10.4	4	Texture Instructions: tld4	texture-instructions-tld4	2.2	sm_20	.a .a2d .acube .b .comp .cube .dtype .f32 .g .geom .r .s32 .u32 .v4
+9.7.10.5	4	Texture Instructions: txq	texture-instructions-txq	1.5	all	.addr_mode_0 .array_size .b32 .channel_data_type .channel_order .depth .filter_mode .force_unnormalized_coords .height .level .normalized_coords .num_mipmap_levels .num_samples .squery .tlquery .tquery .width
+9.7.10.6	4	Texture Instructions: istypep	texture-instructions-istypep	4.0	sm_30	.pred .samplerref .surfref .texref .type
+9.7.11	3	Surface Instructions	surface-instructions			
+9.7.11.1	4	Surface Instructions: suld	surface-instructions-suld	1.5	all	.a1d .a2d .b .b16 .b32 .b64 .b8 .ca .cg .clamp .cop .cs .cv .dtype .geom .trap .v2 .v4 .vec .zero
+9.7.11.2	4	Surface Instructions: sust	surface-instructions-sust	1.5	all	.b .b16 .b32 .b64 .b8 .cg .clamp .cop .cs .ctype .p .trap .v2 .v4 .vec .wb .wt .zero
+9.7.11.3	4	Surface Instructions: sured	surface-instructions-sured	2.0	sm_20	.add .and .b .b32 .b64 .clamp .ctype .geom .max .min .op .or .p .s32 .s64 .trap .u32 .u64 .zero
+9.7.11.4	4	Surface Instructions: suq	surface-instructions-suq	1.5	all	.array_size .b32 .channel_data_type .channel_order .depth .height .memory_layout .query .width
+9.7.12	3	Control Flow Instructions	control-flow-instructions			
+9.7.12.1	4	Control Flow Instructions: {}	control-flow-instructions-curly-braces	1.0	all	
+9.7.12.2	4	Control Flow Instructions: @	control-flow-instructions-at	1.0	all	
+9.7.12.3	4	Control Flow Instructions: bra	control-flow-instructions-bra	1.0	all	.uni
+9.7.12.4	4	Control Flow Instructions: brx.idx	control-flow-instructions-brx-idx	6.0	sm_30	.idx .uni
+9.7.12.5	4	Control Flow Instructions: call	control-flow-instructions-call	1.0	all	.uni
+9.7.12.6	4	Control Flow Instructions: ret	control-flow-instructions-ret	1.0	all	.uni
+9.7.12.7	4	Control Flow Instructions: exit	control-flow-instructions-exit	1.0	all	
+9.7.13	3	Parallel Synchronization and Communication Instructions	parallel-synchronization-and-communication-instructions			
+9.7.13.1	4	Parallel Synchronization and Communication Instructions: bar, barrier	parallel-synchronization-and-communication-instructions-bar-barrier	1.0	sm_1x	.aligned .and .arrive .cta .op .or .popc .pred .red .sync .u32
+9.7.13.2	4	Parallel Synchronization and Communication Instructions: bar.warp.sync	parallel-synchronization-and-communication-instructions-bar-warp-sync	6.0	sm_30	.sync .warp
+9.7.13.3	4	Parallel Synchronization and Communication Instructions: barrier.cluster	parallel-synchronization-and-communication-instructions-barrier-cluster	7.8	sm_90	.acquire .aligned .arrive .cluster .relaxed .release .sem .wait
+9.7.13.4	4	Parallel Synchronization and Communication Instructions: membar/fence	parallel-synchronization-and-communication-instructions-membar-fence	1.4	all	.acq_rel .acquire .alias .async .async::generic .cluster .cta .gl .global .gpu .level .mbarrier_init .op_restrict .proxy .proxykind .release .sc .scope .sem .shared .sync_restrict::shared::cluster .sync_restrict::shared::cta .sys .tensormap::generic .to_proxykind::from_proxykind
+9.7.13.5	4	Parallel Synchronization and Communication Instructions: atom	parallel-synchronization-and-communication-instructions-atom	1.1	sm_11	.L2::cache_hint .acq_rel .acquire .add .and .b128 .b16 .b32 .b64 .bf16 .bf16x2 .cas .cluster .cta .dec .exch .f16 .f16x2 .f32 .f64 .global .gpu .half_word_type .inc .level::cache_hint .max .min .noftz .op .or .packed_type .relaxed .release .s32 .s64 .scope .sem .shared .space .sys .type .u32 .u64 .v2 .v4 .v8 .vec_16_bit .vec_32_bit .xor
+9.7.13.6	4	Parallel Synchronization and Communication Instructions: red	parallel-synchronization-and-communication-instructions-red	1.2	sm_11	.L2::cache_hint .add .and .b32 .b64 .bf16 .bf16x2 .cluster .cta .dec .f16 .f16x2 .f32 .f64 .global .gpu .half_word_type .inc .level::cache_hint .max .min .noftz .op .or .packed_type .relaxed .release .s32 .s64 .scope .sem .shared .space .sys .type .u32 .u64 .v2 .v4 .v8 .vec_16_bit .vec_32_bit .xor
+9.7.13.7	4	Parallel Synchronization and Communication Instructions: red.async	parallel-synchronization-and-communication-instructions-red-async	8.1	sm_90	.add .and .async .b32 .cluster .completion_mechanism .dec .global .gpu .inc .max .mbarrier::complete_tx::bytes .min .mmio .op .or .relaxed .release .s32 .s64 .scope .sem .shared::cluster .ss .type .u32 .u64 .xor
+9.7.13.8	4	Parallel Synchronization and Communication Instructions: vote (deprecated)	parallel-synchronization-and-communication-instructions-vote-deprecated	1.2	sm_12	.all .any .b32 .ballot .mode .pred .uni
+9.7.13.9	4	Parallel Synchronization and Communication Instructions: vote.sync	parallel-synchronization-and-communication-instructions-vote-sync	6.0	sm_30	.all .any .b32 .ballot .mode .pred .sync .uni
+9.7.13.10	4	Parallel Synchronization and Communication Instructions: match.sync	parallel-synchronization-and-communication-instructions-match-sync	6.0	sm_70	.all .any .b32 .b64 .sync .type
+9.7.13.11	4	Parallel Synchronization and Communication Instructions: activemask	parallel-synchronization-and-communication-instructions-activemask	6.2	sm_30	.b32
+9.7.13.12	4	Parallel Synchronization and Communication Instructions: redux.sync	parallel-synchronization-and-communication-instructions-redux-sync	7.0	sm_80	.NaN .abs .add .and .b32 .f32 .max .min .op .or .s32 .sync .type .u32 .xor
+9.7.13.13	4	Parallel Synchronization and Communication Instructions: griddepcontrol	parallel-synchronization-and-communication-instructions-griddepcontrol	7.8	sm_90	.action .launch_dependents .wait
+9.7.13.14	4	Parallel Synchronization and Communication Instructions: elect.sync	parallel-synchronization-and-communication-instructions-elect-sync	8.0	sm_90	.sync
+9.7.13.15	4	Parallel Synchronization and Communication Instructions: mbarrier	parallel-synchronization-and-communication-instructions-mbarrier			
+9.7.13.15.1	5	Size and alignment of mbarrier object	size-and-alignment-of-mbarrier-object			
+9.7.13.15.2	5	Contents of the mbarrier object	contents-of-the-mbarrier-object			
+9.7.13.15.3	5	Lifecycle of the mbarrier object	lifecycle-of-the-mbarrier-object			
+9.7.13.15.4	5	Phase of the mbarrier object	phase-of-the-mbarrier-object			
+9.7.13.15.5	5	Tracking asynchronous operations by the mbarrier object	tracking-asynchronous-operations-by-the-mbarrier-object			
+9.7.13.15.5.1	6	expect-tx operation	expect-tx-operation			
+9.7.13.15.5.2	6	complete-tx operation	complete-tx-operation			
+9.7.13.15.6	5	Phase Completion of the mbarrier object	phase-completion-of-the-mbarrier-object			
+9.7.13.15.7	5	Arrive-on operation on mbarrier object	arrive-on-operation-on-mbarrier-object			
+9.7.13.15.8	5	mbarrier support with shared memory	mbarrier-support-with-shared-memory			
+9.7.13.15.9	5	Parallel Synchronization and Communication Instructions: mbarrier.init	parallel-synchronization-and-communication-instructions-mbarrier-init	7.0	sm_80	.b64 .init .shared
+9.7.13.15.10	5	Parallel Synchronization and Communication Instructions: mbarrier.inval	parallel-synchronization-and-communication-instructions-mbarrier-inval	7.0	sm_80	.b64 .inval .shared
+9.7.13.15.11	5	Parallel Synchronization and Communication Instructions: mbarrier.expect_tx	parallel-synchronization-and-communication-instructions-mbarrier-expect-tx	8.0	sm_90	.b64 .cluster .cta .expect_tx .relaxed .scope .sem .shared .shared::cluster .space
+9.7.13.15.12	5	Parallel Synchronization and Communication Instructions: mbarrier.complete_tx	parallel-synchronization-and-communication-instructions-mbarrier-complete-tx	8.0	sm_90	.b64 .cluster .complete_tx .cta .relaxed .scope .sem .shared .shared::cluster .space
+9.7.13.15.13	5	Parallel Synchronization and Communication Instructions: mbarrier.arrive	parallel-synchronization-and-communication-instructions-mbarrier-arrive	7.0	sm_80	.arrive .b64 .cluster .cta .expect_tx .noComplete .relaxed .release .scope .sem .shared .shared::cluster
+9.7.13.15.14	5	Parallel Synchronization and Communication Instructions: mbarrier.arrive_drop	parallel-synchronization-and-communication-instructions-mbarrier-arrive-drop	7.0	sm_80	.arrive_drop .b64 .cluster .cta .expect_tx .noComplete .relaxed .release .scope .sem .shared .shared::cluster
+9.7.13.15.15	5	Parallel Synchronization and Communication Instructions: cp.async.mbarrier.arrive	parallel-synchronization-and-communication-instructions-cp-async-mbarrier-arrive	7.0	sm_80	.arrive .async .b64 .mbarrier .noinc .shared
+9.7.13.15.16	5	Parallel Synchronization and Communication Instructions: mbarrier.test_wait/mbarrier.try_wait	parallel-synchronization-and-communication-instructions-mbarrier-test-wait-mbarrier-try-wait	7.0	sm_80	.acquire .b64 .cluster .cta .parity .relaxed .scope .sem .shared .test_wait .try_wait
+9.7.13.15.17	5	Parallel Synchronization and Communication Instructions: mbarrier.pending_count	parallel-synchronization-and-communication-instructions-mbarrier-pending-count	7.0	sm_80	.b64 .pending_count
+9.7.13.16	4	Parallel Synchronization and Communication Instructions: tensormap.cp_fenceproxy	parallel-synchronization-and-communication-instructions-tensormap-cp-fenceproxy	8.3	sm_90	.aligned .cluster .cp_fenceproxy .cp_qualifiers .cta .fence_qualifiers .global .gpu .release .scope .shared::cta .sync .sys .tensormap::generic .to_proxy::from_proxy
+9.7.13.17	4	Parallel Synchronization and Communication Instructions: clusterlaunchcontrol.try_cancel	parallel-synchronization-and-communication-instructions-clusterlaunchcontrol-try-cancel	8.6	sm_100	.async .b128 .completion_mechanism .mbarrier::complete_tx::bytes .multicast::cluster::all .shared::cta .space .try_cancel
+9.7.13.18	4	Parallel Synchronization and Communication Instructions: clusterlaunchcontrol.query_cancel	parallel-synchronization-and-communication-instructions-clusterlaunchcontrol-query-cancel	8.6	sm_100	.b128 .b32 .get_first_ctaid .is_canceled .pred .query_cancel .v4
+9.7.14	3	Warp Level Matrix Multiply-Accumulate Instructions	warp-level-matrix-multiply-accumulate-instructions			
+9.7.14.1	4	Matrix Shape	matrix-shape			
+9.7.14.2	4	Matrix Data-types	matrix-data-types			
+9.7.14.3	4	Block Scaling	block-scaling			
+9.7.14.4	4	Matrix multiply-accumulate operation using wmma instructions	matrix-multiply-accumulate-operation-using-wmma-instructions			
+9.7.14.4.1	5	Matrix Fragments for WMMA	matrix-fragments-for-wmma			
+9.7.14.4.2	5	Matrix Storage for WMMA	matrix-storage-for-wmma			
+9.7.14.4.3	5	Warp-level Matrix Load Instruction: wmma.load	warp-level-matrix-load-instruction-wmma-load	6.0	sm_70	.a .aligned .atype .b .b1 .bf16 .btype .c .col .ctype .f16 .f32 .f64 .global .layout .load .m16n16k16 .m16n16k8 .m32n8k16 .m8n32k16 .m8n8k128 .m8n8k32 .m8n8k4 .row .s32 .s4 .s8 .shape .shared .ss .sync .tf32 .u4 .u8
+9.7.14.4.4	5	Warp-level Matrix Store Instruction: wmma.store	warp-level-matrix-store-instruction-wmma-store	6.0	sm_70	.aligned .col .d .f16 .f32 .f64 .global .layout .m16n16k16 .m16n16k8 .m32n8k16 .m8n32k16 .m8n8k128 .m8n8k32 .m8n8k4 .row .s32 .shape .shared .ss .store .sync .type
+9.7.14.4.5	5	Warp-level Matrix Multiply-and-Accumulate Instruction: wmma.mma	warp-level-matrix-multiply-and-accumulate-instruction-wmma-mma	6.0	sm_70	.alayout .aligned .and .atype .b1 .bf16 .blayout .btype .col .ctype .dtype .f16 .f32 .f64 .m16n16k16 .m16n16k8 .m32n8k16 .m8n32k16 .m8n8k128 .m8n8k32 .m8n8k4 .mma .op .popc .rm .rn .rnd .row .rp .rz .s32 .s4 .s8 .satfinite .shape .sync .tf32 .u4 .u8 .xor
+9.7.14.5	4	Matrix multiply-accumulate operation using mma instruction	matrix-multiply-accumulate-operation-using-mma-instruction			
+9.7.14.5.1	5	Matrix Fragments for mma.m8n8k4 with .f16 floating point type	matrix-fragments-for-mma-m8n8k4-with-f16-floating-point-type			
+9.7.14.5.2	5	Matrix Fragments for mma.m8n8k4 with .f64 floating point type	matrix-fragments-for-mma-m8n8k4-with-f64-floating-point-type			
+9.7.14.5.3	5	Matrix Fragments for mma.m8n8k16	matrix-fragments-for-mma-m8n8k16			
+9.7.14.5.4	5	Matrix Fragments for mma.m8n8k32	matrix-fragments-for-mma-m8n8k32			
+9.7.14.5.5	5	Matrix Fragments for mma.m8n8k128	matrix-fragments-for-mma-m8n8k128			
+9.7.14.5.6	5	Matrix Fragments for mma.m16n8k4	matrix-fragments-for-mma-m16n8k4			
+9.7.14.5.7	5	Matrix Fragments for mma.m16n8k8	matrix-fragments-for-mma-m16n8k8			
+9.7.14.5.8	5	Matrix Fragments for mma.m16n8k16 with floating point type	matrix-fragments-for-mma-m16n8k16-with-floating-point-type			
+9.7.14.5.9	5	Matrix Fragments for mma.m16n8k16	matrix-fragments-for-mma-m16n8k16			
+9.7.14.5.10	5	Matrix Fragments for mma.m16n8k32	matrix-fragments-for-mma-m16n8k32			
+9.7.14.5.11	5	Matrix Fragments for mma.m16n8k64	matrix-fragments-for-mma-m16n8k64			
+9.7.14.5.12	5	Matrix Fragments for mma.m16n8k128	matrix-fragments-for-mma-m16n8k128			
+9.7.14.5.13	5	Matrix Fragments for mma.m16n8k256	matrix-fragments-for-mma-m16n8k256			
+9.7.14.5.14	5	Multiply-and-Accumulate Instruction: mma	multiply-and-accumulate-instruction-mma	6.4	sm_70	.alayout .aligned .and .atype .b1 .bf16 .bitOp .blayout .block_scale .btype .col .ctype .dtype .e2m1 .e2m3 .e3m2 .e4m3 .e5m2 .f16 .f32 .f64 .f8f6f4type .f8type .kind .kind::f8f6f4 .kind::mxf4 .kind::mxf4nvf4 .kind::mxf8f6f4 .m16n8k128 .m16n8k16 .m16n8k256 .m16n8k32 .m16n8k4 .m16n8k64 .m16n8k8 .m8n84 .m8n8k128 .m8n8k16 .m8n8k32 .m8n8k4 .popc .row .s32 .s4 .s8 .satfinite .scale_vec::1X .scale_vec::2X .scale_vec::4X .scale_vec_size .shape .stype .sync .tf32 .u4 .u8 .ue4m3 .ue8m0 .xor
+9.7.14.5.15	5	Warp-level matrix load instruction: ldmatrix	warp-level-matrix-load-instruction-ldmatrix	6.5	sm_75	.aligned .b16 .b4x16_p64 .b6x16_p32 .b8 .b8x16 .dst_fmt .m16n16 .m8n16 .m8n8 .num .shape .shared .src_fmt .ss .sync .trans .type .x1 .x2 .x4
+9.7.14.5.16	5	Warp-level matrix store instruction: stmatrix	warp-level-matrix-store-instruction-stmatrix	7.8	sm_90	.aligned .b16 .b8 .m16n8 .m8n8 .num .shape .shared .ss .sync .trans .type .x1 .x2 .x4
+9.7.14.5.17	5	Warp-level matrix transpose instruction: movmatrix	warp-level-matrix-transpose-instruction-movmatrix	7.8	sm_75	.aligned .b16 .m8n8 .shape .sync .trans .type
+9.7.14.6	4	Matrix multiply-accumulate operation using mma.sp instruction with sparse matrix A	matrix-multiply-accumulate-operation-using-mma-sp-instruction-with-sparse-matrix-a			
+9.7.14.6.1	5	Sparse matrix storage	sparse-matrix-storage			
+9.7.14.6.2	5	Matrix fragments for multiply-accumulate operation with sparse matrix A	matrix-fragments-for-multiply-accumulate-operation-with-sparse-matrix-a			
+9.7.14.6.2.1	6	Matrix Fragments for sparse mma.m16n8k16 with .f16 and .bf16 types	matrix-fragments-for-sparse-mma-m16n8k16-with-f16-and-bf16-types			
+9.7.14.6.2.2	6	Matrix Fragments for sparse mma.m16n8k32 with .f16 and .bf16 types	matrix-fragments-for-sparse-mma-m16n8k32-with-f16-and-bf16-types			
+9.7.14.6.2.3	6	Matrix Fragments for sparse mma.m16n8k16 with .tf32 floating point type	matrix-fragments-for-sparse-mma-m16n8k16-with-tf32-floating-point-type			
+9.7.14.6.2.4	6	Matrix Fragments for sparse mma.m16n8k8 with .tf32 floating point type	matrix-fragments-for-sparse-mma-m16n8k8-with-tf32-floating-point-type			
+9.7.14.6.2.5	6	Matrix Fragments for sparse mma.m16n8k32 with .u8/.s8 integer type	matrix-fragments-for-sparse-mma-m16n8k32-with-u8-s8-integer-type			
+9.7.14.6.2.6	6	Matrix Fragments for sparse mma.m16n8k64 with .u8/.s8/.e4m3/.e5m2/.e3m2/.e2m3/.e2m1 type	matrix-fragments-for-sparse-mma-m16n8k64-with-u8-s8-e4m3-e5m2-e3m2-e2m3-e2m1-type			
+9.7.14.6.2.7	6	Matrix Fragments for sparse mma.m16n8k64 with .u4/.s4 integer type	matrix-fragments-for-sparse-mma-m16n8k64-with-u4-s4-integer-type			
+9.7.14.6.2.8	6	Matrix Fragments for sparse mma.m16n8k128 with .u4/.s4/.e2m1 type	matrix-fragments-for-sparse-mma-m16n8k128-with-u4-s4-e2m1-type			
+9.7.14.6.3	5	Multiply-and-Accumulate Instruction: mma.sp/mma.sp::ordered_metadata	multiply-and-accumulate-instruction-mma-sp-mma-sp-ordered-metadata	7.1	sm_80	.aligned .atype .bf16 .block_scale .btype .col .ctype .dtype .e2m1 .e2m3 .e3m2 .e4m3 .e5m2 .f16 .f32 .f8f6f4type .f8type .kind .kind::mxf4 .kind::mxf4nvf4 .kind::mxf8f6f4 .m16n8k128 .m16n8k16 .m16n8k32 .m16n8k64 .m16n8k8 .row .s32 .s4 .s8 .satfinite .scale_vec::1X .scale_vec::2X .scale_vec::4X .scale_vec_size .shape .sp .sp::ordered_metadata .spvariant .stype .sync .tf32 .u4 .u8 .ue4m3 .ue8m0
+9.7.15	3	Asynchronous Warpgroup Level Matrix Multiply-Accumulate Instructions	asynchronous-warpgroup-level-matrix-multiply-accumulate-instructions			
+9.7.15.1	4	Warpgroup	warpgroup			
+9.7.15.2	4	Matrix Shape	asynchronous-warpgroup-level-matrix-shape			
+9.7.15.3	4	Matrix Data-types	asynchronous-warpgroup-level-matrix-data-types			
+9.7.15.4	4	Async Proxy	asynchronous-warpgroup-level-matrix-async-proxy			
+9.7.15.5	4	Asynchronous Warpgroup Level Matrix Multiply-Accumulate Operation using wgmma.mma_async instruction	asynchronous-warpgroup-level-matrix-multiply-accumulate-operation-using-wgmma-mma-async-instruction			
+9.7.15.5.1	5	Register Fragments and Shared Memory Matrix Layouts	register-fragments-and-shared-memory-matrix-layouts			
+9.7.15.5.1.1	6	Register Fragments	register-fragments			
+9.7.15.5.1.2	6	Shared Memory Matrix Layout	shared-memory-matrix-layout			
+9.7.15.5.2	5	Asynchronous Multiply-and-Accumulate Instruction: wgmma.mma_async	asynchronous-multiply-and-accumulate-instruction-wgmma-mma-async	8.0	sm_90a	.aligned .and .atype .b1 .bf16 .btype .dtype .e4m3 .e5m2 .f16 .f32 .m648176k16 .m648176k32 .m648176k8 .m64n104k16 .m64n104k32 .m64n104k8 .m64n112k16 .m64n112k256 .m64n112k32 .m64n112k8 .m64n120k16 .m64n120k32 .m64n120k8 .m64n128k16 .m64n128k256 .m64n128k32 .m64n128k8 .m64n136k16 .m64n136k32 .m64n136k8 .m64n144k16 .m64n144k256 .m64n144k32 .m64n144k8 .m64n152k16 .m64n152k32 .m64n152k8 .m64n160k16 .m64n160k256 .m64n160k32 .m64n160k8 .m64n168k16 .m64n168k32 .m64n168k8 .m64n16k16 .m64n16k256 .m64n16k32 .m64n16k8 .m64n176k256 .m64n184k16 .m64n184k32 .m64n184k8 .m64n192k16 .m64n192k256 .m64n192k32 .m64n192k8 .m64n200k16 .m64n200k32 .m64n200k8 .m64n208k16 .m64n208k256 .m64n208k32 .m64n208k8 .m64n216k16 .m64n216k32 .m64n216k8 .m64n224k16 .m64n224k256 .m64n224k32 .m64n224k8 .m64n232k16 .m64n232k32 .m64n232k8 .m64n240k16 .m64n240k256 .m64n240k32 .m64n240k8 .m64n248k16 .m64n248k32 .m64n248k8 .m64n24k16 .m64n24k256 .m64n24k32 .m64n24k8 .m64n256k16 .m64n256k256 .m64n256k32 .m64n256k8 .m64n32k16 .m64n32k256 .m64n32k32 .m64n32k8 .m64n40k16 .m64n40k32 .m64n40k8 .m64n48k16 .m64n48k256 .m64n48k32 .m64n48k8 .m64n56k16 .m64n56k32 .m64n56k8 .m64n64k16 .m64n64k256 .m64n64k32 .m64n64k8 .m64n72k16 .m64n72k32 .m64n72k8 .m64n80k16 .m64n80k256 .m64n80k32 .m64n80k8 .m64n88k16 .m64n88k32 .m64n88k8 .m64n8k16 .m64n8k256 .m64n8k32 .m64n8k8 .m64n96k16 .m64n96k256 .m64n96k32 .m64n96k8 .mma_async .op .popc .s32 .s8 .satfinite .shape .sync .tf32 .u8
+9.7.15.6	4	Asynchronous Warpgroup Level Multiply-and-Accumulate Operation using wgmma.mma_async.sp instruction	asynchronous-warpgroup-level-multiply-and-accumulate-operation-using-wgmma-mma-async-sp-instruction			
+9.7.15.6.1	5	Sparse matrix storage	asynchronous-warpgroup-level-sparse-matrix-storage			
+9.7.15.6.2	5	Matrix fragments for warpgroup-level multiply-accumulate operation with sparse matrix A	matrix-fragments-for-warpgroup-level-multiply-accumulate-operation-with-sparse-matrix-a			
+9.7.15.6.2.1	6	Matrix Fragments for sparse wgmma.mma_async.m64nNk32	matrix-fragments-for-sparse-wgmma-mma-async-m64nnk32			
+9.7.15.6.2.2	6	Matrix Fragments for sparse wgmma.mma_async.m64nNk16	matrix-fragments-for-sparse-wgmma-mma-async-m64nnk16			
+9.7.15.6.2.3	6	Matrix Fragments for sparse wgmma.mma_async.m64nNk64	matrix-fragments-for-sparse-wgmma-mma-async-m64nnk64			
+9.7.15.6.3	5	Asynchronous Multiply-and-Accumulate Instruction: wgmma.mma_async.sp	asynchronous-multiply-and-accumulate-instruction-wgmma-mma-async-sp	8.2	sm_90a	.aligned .atype .bf16 .btype .dtype .e4m3 .e5m2 .f16 .f32 .m648176k16 .m648176k32 .m648176k64 .m64n104k16 .m64n104k32 .m64n104k64 .m64n112k16 .m64n112k32 .m64n112k64 .m64n120k16 .m64n120k32 .m64n120k64 .m64n128k16 .m64n128k32 .m64n128k64 .m64n136k16 .m64n136k32 .m64n136k64 .m64n144k16 .m64n144k32 .m64n144k64 .m64n152k16 .m64n152k32 .m64n152k64 .m64n160k16 .m64n160k32 .m64n160k64 .m64n168k16 .m64n168k32 .m64n168k64 .m64n16k16 .m64n16k32 .m64n16k64 .m64n184k16 .m64n184k32 .m64n184k64 .m64n192k16 .m64n192k32 .m64n192k64 .m64n200k16 .m64n200k32 .m64n200k64 .m64n208k16 .m64n208k32 .m64n208k64 .m64n216k16 .m64n216k32 .m64n216k64 .m64n224k16 .m64n224k32 .m64n224k64 .m64n232k16 .m64n232k32 .m64n232k64 .m64n240k16 .m64n240k32 .m64n240k64 .m64n248k16 .m64n248k32 .m64n248k64 .m64n24k16 .m64n24k32 .m64n24k64 .m64n256k16 .m64n256k32 .m64n256k64 .m64n32k16 .m64n32k32 .m64n32k64 .m64n40k16 .m64n40k32 .m64n40k64 .m64n48k16 .m64n48k32 .m64n48k64 .m64n56k16 .m64n56k32 .m64n56k64 .m64n64k16 .m64n64k32 .m64n64k64 .m64n72k16 .m64n72k32 .m64n72k64 .m64n80k16 .m64n80k32 .m64n80k64 .m64n88k16 .m64n88k32 .m64n88k64 .m64n8k16 .m64n8k32 .m64n8k64 .m64n96k16 .m64n96k32 .m64n96k64 .mma_async .s32 .s8 .satfinite .shape .sp .sync .tf32 .u8
+9.7.15.7	4	Asynchronous wgmma Proxy Operations	asynchronous-wgmma-proxy-operations			
+9.7.15.7.1	5	Asynchronous Multiply-and-Accumulate Instruction: wgmma.fence	asynchronous-multiply-and-accumulate-instruction-wgmma-fence	8.0	sm_90a	.aligned .fence .sync
+9.7.15.7.2	5	Asynchronous Multiply-and-Accumulate Instruction: wgmma.commit_group	asynchronous-multiply-and-accumulate-instruction-wgmma-commit-group	8.0	sm_90a	.aligned .commit_group .sync
+9.7.15.7.3	5	Asynchronous Multiply-and-Accumulate Instruction: wgmma.wait_group	asynchronous-multiply-and-accumulate-instruction-wgmma-wait-group	8.0	sm_90a	.aligned .sync .wait_group
+9.7.16	3	TensorCore 5th Generation Family Instructions	tensorcore-5th-generation-family-instructions			
+9.7.16.1	4	Tensor Memory	tensor-memory			
+9.7.16.1.1	5	Tensor Memory Addressing	tensor-memory-addressing			
+9.7.16.1.2	5	Tensor Memory Allocation	tensor-memory-allocation			
+9.7.16.2	4	Matrix and Data Movement Shape	matrix-and-data-movement-shape			
+9.7.16.2.1	5	Matrix Shape	tcgen05-matrix-shape			
+9.7.16.2.2	5	Specifying Matrix Shape	specifying-matrix-shape			
+9.7.16.2.3	5	Data Movement Shape	data-movement-shape			
+9.7.16.2.3.1	6	Memory Layout	memory-layout			
+9.7.16.3	4	Matrix Descriptors	matrix-descriptors			
+9.7.16.3.1	5	Shared memory descriptor	shared-memory-descriptor			
+9.7.16.3.2	5	Instruction descriptor	instruction-descriptor			
+9.7.16.3.3	5	Zero-Column Mask Descriptor	zero-column-mask-descriptor			
+9.7.16.4	4	Issue Granularity	issue-granularity			
+9.7.16.4.1	5	CTA Pair	cta-pair			
+9.7.16.4.2	5	Peer CTA	peer-cta			
+9.7.16.5	4	Memory Consistency Model for 5th generation of TensorCore operations	memory-consistency-model-for-5th-generation-of-tensorcore-operations			
+9.7.16.5.1	5	Asynchronous Operations	tcgen05-memory-consistency-model-async-operations			
+9.7.16.5.2	5	Pipelined tcgen05 Instructions	pipelined-tcgen05-instructions			
+9.7.16.5.2.1	6	Implicitly pipelined tcgen05 Instructions	implicitly-pipelined-tcgen05-instructions			
+9.7.16.5.3	5	Specialized Inter-thread Synchronization for tcgen05 instructions	specialized-inter-thread-synchronization-for-tcgen05-instructions			
+9.7.16.5.4	5	Canonical synchronization patterns	canonical-synchronization-patterns			
+9.7.16.5.4.1	6	Pipelined instructions, same thread	pipelined-instructions-same-thread			
+9.7.16.5.4.2	6	Non-pipelined instructions, same thread	non-pipelined-instructions-same-thread			
+9.7.16.5.4.3	6	Pipelined instructions, different thread	pipelined-instructions-different-thread			
+9.7.16.5.4.4	6	Non-pipelined instructions, different thread	non-pipelined-instructions-different-thread			
+9.7.16.5.4.5	6	Register dependencies, same thread	register-dependencies-same-thread			
+9.7.16.5.5	5	Shared Memory Accesses	shared-memory-accesses			
+9.7.16.6	4	Tensor Memory Allocation and Management Instructions	tensor-memory-allocation-and-management-instructions			
+9.7.16.6.1	5	Tensorcore 5th Generation Instructions: tcgen05.alloc, tcgen05.dealloc, tcgen05.relinquish_alloc_permit	tensorcore-5th-generation-instructions-tcgen05-alloc-tcgen05-dealloc-tcgen05-relinquish-alloc-permit	8.6	sm_100a	.aligned .alloc .b32 .cta_group .cta_group::1 .cta_group::2 .dealloc .relinquish_alloc_permit .shared::cta .sync
+9.7.16.7	4	Tensor Memory and Register Load/Store Instructions	tensor-memory-and-register-load-store-instructions			
+9.7.16.7.1	5	Access restrictions	access-restrictions			
+9.7.16.7.2	5	Packing and Unpacking	packing-and-unpacking			
+9.7.16.7.3	5	Tensorcore 5th Generation Instructions: tcgen05.ld	tensorcore-5th-generation-instructions-tcgen05-ld	8.6	sm_100a	.aligned .b32 .ld .num .pack .pack::16b .shape1 .shape2 .sync .x1 .x128 .x16 .x2 .x32 .x4 .x64 .x8
+9.7.16.7.4	5	Tensorcore 5th Generation Instructions: tcgen05.st	tensorcore-5th-generation-instructions-tcgen05-st	8.6	sm_100a	.aligned .b32 .num .shape1 .shape2 .st .sync .unpack .unpack::16b .x1 .x128 .x16 .x2 .x32 .x4 .x64 .x8
+9.7.16.7.5	5	Tensorcore 5th Generation Instructions: tcgen05.wait	tensorcore-5th-generation-instructions-tcgen05-wait	8.6	sm_100a	.aligned .sync .wait::ld .wait::st .wait_operation
+9.7.16.8	4	Tensor Memory Data Movement Instructions	tensor-memory-data-movement-instructions			
+9.7.16.8.1	5	Optional Decompression	optional-decompression			
+9.7.16.8.1.1	6	Decompression of 4-bit floating point to 8-bit type	decompression-of-4-bit-floating-point-to-8-bit-type			
+9.7.16.8.1.2	6	Decompression of 6-bit floating point to 8-bit type	decompression-of-6-bit-floating-point-to-8-bit-type			
+9.7.16.8.2	5	Tensorcore 5th Generation Instructions: tcgen05.cp	tensorcore-5th-generation-instructions-tcgen05-cp	8.6	sm_100a	.b4x16_p64 .b6x16_p32 .b8x16 .cp .cta_group .cta_group::1 .cta_group::2 .dst_fmt .multicast .shape .src_fmt .warpx2::01_23 .warpx2::02_13 .warpx4
+9.7.16.8.3	5	Tensorcore 5th Generation Instructions: tcgen05.shift	tensorcore-5th-generation-instructions-tcgen05-shift	8.6	sm_100a	.cta_group .cta_group::1 .cta_group::2 .down .shift
+9.7.16.9	4	TensorCore 5th Generation Matrix Multiply and accumulate Operations	tensorcore-5th-generation-matrix-multiply-and-accumulate-operations			
+9.7.16.9.1	5	Transpose and Negate operations	transpose-and-negate-operations			
+9.7.16.9.2	5	Matrix Layout Organization	matrix-layout-organization			
+9.7.16.9.3	5	Valid Combinations of Type-Size, Major-ness and Swizzling	valid-combinations-of-type-size-major-ness-and-swizzling			
+9.7.16.9.4	5	Packing formats of elements in Tensor and Shared memory	packing-formats-of-elements-in-tensor-and-shared-memory			
+9.7.16.9.4.1	6	Packing format for matrix D in Tensor Memory	packing-format-for-matrix-d-in-tensor-memory			
+9.7.16.9.4.2	6	Packing format for matrix A and B	packing-format-for-matrix-a-and-b			
+9.7.16.9.4.3	6	Packing format used for matrix A by .kind::mxf8f6f4 in Tensor Memory	packing-format-used-for-matrix-a-by-kind-mxf8f6f4-in-tensor-memory			
+9.7.16.9.4.4	6	Packing format used for matrix A and B by .kind::mxf8f6f4 in Shared Memory	packing-format-used-for-matrix-a-and-b-by-kind-mxf8f6f4-in-shared-memory			
+9.7.16.9.4.5	6	Packing format used for matrix A by .kind::mxf4 and .kind::mxf4nvf4 in Tensor Memory	packing-format-used-for-matrix-a-by-kind-mxf4-and-kind-mxf4nvf4-in-tensor-memory			
+9.7.16.9.4.6	6	Packing format used for matrix A and B by .kind::mxf4 and .kind::mxf4nvf4 in Shared Memory	packing-format-used-for-matrix-a-and-b-by-kind-mxf4-and-kind-mxf4nvf4-in-shared-memory			
+9.7.16.9.5	5	Data Path Layout Organization	data-path-layout-organization			
+9.7.16.9.5.1	6	Layout A (M = 256)	layout-a-m-256			
+9.7.16.9.5.2	6	Layout B (M = 128 + cta-group::2 + Dense A matrix)	layout-b-m-128-cta-group-2-dense-a-matrix			
+9.7.16.9.5.3	6	Layout C (M = 128 + cta-group::2 + Sparse A matrix)	layout-c-m-128-cta-group-2-sparse-a-matrix			
+9.7.16.9.5.4	6	Layout D (M = 128 + cta-group::1)	layout-d-m-128-cta-group-1			
+9.7.16.9.5.5	6	Layout E (M = 64 + .ws mode)	layout-e-m-64-ws-mode			
+9.7.16.9.5.6	6	Layout F (M = 64 + non .ws mode)	layout-f-m-64-non-ws-mode			
+9.7.16.9.5.7	6	Layout G (M = 32)	layout-g-m-32			
+9.7.16.9.6	5	Shared Memory Layout and Swizzling	shared-memory-layout-and-swizzling			
+9.7.16.9.7	5	Block Scaling	tcgen05-block-scaling			
+9.7.16.9.7.1	6	Valid combinations of scale_vec_size with types and MMA-Kind	valid-combinations-of-scale-vec-size-with-types-and-mma-kind			
+9.7.16.9.7.2	6	Scale Factor A ID	scale-factor-a-id			
+9.7.16.9.7.3	6	Scale Factor B ID	scale-factor-b-id			
+9.7.16.9.8	5	Sparse Matrices	sparse-matrices			
+9.7.16.9.8.1	6	Sparse tcgen05.mma.sp with .kind::tf32	sparse-tcgen05-mma-sp-with-kind-tf32			
+9.7.16.9.8.2	6	Sparse tcgen05.mma.sp with .kind::f16, .kind::f8f6f4, .kind::mxf8f6f4, .kind::i8	sparse-tcgen05-mma-sp-with-kind-f16-kind-f8f6f4-kind-mxf8f6f4-kind-i8			
+9.7.16.9.8.3	6	Sparse tcgen05.mma.sp with .kind::mxf4 and .kind::mxf4nvf4	sparse-tcgen05-mma-sp-with-kind-mxf4-and-kind-mxf4nvf4			
+9.7.16.9.8.4	6	Sparsity selector	sparsity-selector			
+9.7.16.9.8.5	6	Alignment restriction	alignment-restriction			
+9.7.16.9.9	5	TensorCore 5th Generation of MMA Instructions	tensorcore-5th-generation-of-mma-instructions			
+9.7.16.9.9.1	6	TensorCore 5th Generation Instructions: tcgen05.mma	tensorcore-5th-generation-instructions-tcgen05-mma	8.6	sm_100a	.ashift .block_scale .collector::buffer::op .collector_usage .cta_group .cta_group::1 .cta_group::2 .kind .kind::f16 .kind::f8f6f4 .kind::i8 .kind::mxf4 .kind::mxf4nvf4 .kind::mxf8f6f4 .kind::tf32 .mma .scale_vec::1X .scale_vec::2X .scale_vec::4X .scale_vec_size
+9.7.16.9.9.2	6	TensorCore 5th Generation Instructions: tcgen05.mma.sp	tensorcore-5th-generation-instructions-tcgen05-mma-sp	8.6	sm_100a	.ashift .block_scale .collector::buffer::op .collector_usage .cta_group .cta_group::1 .cta_group::2 .kind .kind::f16 .kind::f8f6f4 .kind::i8 .kind::mxf4 .kind::mxf4nvf4 .kind::mxf8f6f4 .kind::tf32 .mma .scale_vec::1X .scale_vec::2X .scale_vec::4X .scale_vec_size .sp
+9.7.16.9.9.3	6	TensorCore 5th Generation Instructions: tcgen05.mma.ws	tensorcore-5th-generation-instructions-tcgen05-mma-ws	8.6	sm_100a	.collector::buffer::op .collector_usage .cta_group::1 .kind .kind::f16 .kind::f8f6f4 .kind::i8 .kind::tf32 .mma .ws
+9.7.16.9.9.4	6	TensorCore 5th Generation Instructions: tcgen05.mma.ws.sp	tensorcore-5th-generation-instructions-tcgen05-mma-ws-sp	8.6	sm_100a	.collector::buffer::op .collector_usage .cta_group::1 .kind .kind::f16 .kind::f8f6f4 .kind::i8 .kind::tf32 .mma .sp .ws
+9.7.16.10	4	TensorCore 5th Generation Specialized Synchronization Operations	tensorcore-5th-generation-specialized-synchronization-operations			
+9.7.16.10.1	5	TensorCore 5th Generation Instructions: tcgen05.fence	tensorcore-5th-generation-instructions-tcgen05-fence	8.6	sm_100a	.fence::after_thread_sync .fence::before_thread_sync
+9.7.16.11	4	TensorCore 5th Generation Async Synchronization Operations	tensorcore-5th-generation-async-synchronization-operations			
+9.7.16.11.1	5	TensorCore 5th Generation Instructions: tcgen05.commit	tensorcore-5th-generation-instructions-tcgen05-commit	8.6	sm_100a	.b64 .commit .completion_mechanism .cta_group .cta_group::1 .cta_group::2 .mbarrier::arrive::one .multicast .multicast::cluster .shared::cluster
+9.7.17	3	Stack Manipulation Instructions	stack-manipulation-instructions			
+9.7.17.1	4	Stack Manipulation Instructions: stacksave	stack-manipulation-instructions-stacksave	7.3	sm_52	.type .u32 .u64
+9.7.17.2	4	Stack Manipulation Instructions: stackrestore	stack-manipulation-instructions-stackrestore	7.3	sm_52	.type .u32 .u64
+9.7.17.3	4	Stack Manipulation Instructions: alloca	stack-manipulation-instructions-alloca	7.3	sm_52	.type .u32 .u64
+9.7.18	3	Video Instructions	video-instructions			
+9.7.18.1	4	Scalar Video Instructions	scalar-video-instructions			
+9.7.18.1.1	5	Scalar Video Instructions: vadd, vsub, vabsdiff, vmin, vmax	scalar-video-instructions-vadd-vsub-vabsdiff-vmin-vmax	2.0	sm_20	.add .asel .atype .b0 .b1 .b2 .b3 .bsel .btype .dsel .dtype .h0 .h1 .max .min .op2 .s32 .sat .u32
+9.7.18.1.2	5	Scalar Video Instructions: vshl, vshr	scalar-video-instructions-vshl-vshr	2.0	sm_20	.add .asel .atype .b0 .b1 .b2 .b3 .bsel .clamp .dsel .dtype .h0 .h1 .max .min .mode .op2 .s32 .sat .u32 .wrap
+9.7.18.1.3	5	Scalar Video Instructions: vmad	scalar-video-instructions-vmad	2.0	sm_20	.asel .atype .b0 .b1 .b2 .b3 .bsel .btype .dtype .h0 .h1 .po .s32 .sat .scale .shr15 .shr7 .u32
+9.7.18.1.4	5	Scalar Video Instructions: vset	scalar-video-instructions-vset	2.0	sm_20	.add .asel .atype .b0 .b1 .b2 .b3 .bsel .btype .cmp .dsel .eq .ge .gt .h0 .h1 .le .lt .max .min .ne .op2 .s32 .u32
+9.7.18.2	4	SIMD Video Instructions	simd-video-instructions			
+9.7.18.2.1	5	SIMD Video Instructions: vadd2, vsub2, vavrg2, vabsdiff2, vmin2, vmax2	simd-video-instructions-vadd2-vsub2-vavrg2-vabsdiff2-vmin2-vmax2	3.0	sm_30	.add .asel .atype .bsel .btype .dtype .h0 .h1 .h10 .h32 .hxy .mask .s32 .sat .u32
+9.7.18.2.2	5	SIMD Video Instructions: vset2	simd-video-instructions-vset2	3.0	sm_30	.add .asel .atype .bsel .btype .cmp .eq .ge .gt .h0 .h1 .h10 .h32 .hxy .le .lt .mask .ne .s32 .u32
+9.7.18.2.3	5	SIMD Video Instructions: vadd4, vsub4, vavrg4, vabsdiff4, vmin4, vmax4	simd-video-instructions-vadd4-vsub4-vavrg4-vabsdiff4-vmin4-vmax4	3.0	sm_30	.add .asel .atype .b0 .b1 .b10 .b2 .b20 .b21 .b210 .b3 .b30 .b31 .b310 .b32 .b320 .b321 .b3210 .b7654 .bsel .btype .bxyzw .dtype .mask .s32 .sat .u32
+9.7.18.2.4	5	SIMD Video Instructions: vset4	simd-video-instructions-vset4	3.0	sm_30	.add .asel .atype .b0 .b1 .b10 .b2 .b20 .b21 .b210 .b3 .b30 .b31 .b310 .b32 .b320 .b321 .b3210 .b7654 .bsel .btype .bxyzw .cmp .eq .ge .gt .le .lt .mask .ne .s32 .u32
+9.7.19	3	Miscellaneous Instructions	miscellaneous-instructions			
+9.7.19.1	4	Miscellaneous Instructions: brkpt	miscellaneous-instructions-brkpt	1.0	sm_11	
+9.7.19.2	4	Miscellaneous Instructions: nanosleep	miscellaneous-instructions-nanosleep	6.3	sm_70	.u32
+9.7.19.3	4	Miscellaneous Instructions: pmevent	miscellaneous-instructions-pmevent	1.4	all	.mask
+9.7.19.4	4	Miscellaneous Instructions: trap	miscellaneous-instructions-trap	1.0	all	
+9.7.19.5	4	Miscellaneous Instructions: setmaxnreg	miscellaneous-instructions-setmaxnreg	8.0	sm_90a	.action .aligned .dec .inc .sync .u32
+10	1	Special Registers	special-registers			
+10.1	2	Special Registers: %tid	special-registers-tid	1.0	all	
+10.2	2	Special Registers: %ntid	special-registers-ntid	1.0	all	
+10.3	2	Special Registers: %laneid	special-registers-laneid	1.3	all	
+10.4	2	Special Registers: %warpid	special-registers-warpid	1.3	all	
+10.5	2	Special Registers: %nwarpid	special-registers-nwarpid	2.0	sm_20	
+10.6	2	Special Registers: %ctaid	special-registers-ctaid	1.0	all	
+10.7	2	Special Registers: %nctaid	special-registers-nctaid	1.0	all	
+10.8	2	Special Registers: %smid	special-registers-smid	1.3	all	
+10.9	2	Special Registers: %nsmid	special-registers-nsmid	2.0	sm_20	
+10.10	2	Special Registers: %gridid	special-registers-gridid	1.0	all	
+10.11	2	Special Registers: %is_explicit_cluster	special-registers-is-explicit-cluster	7.8	sm_90	
+10.12	2	Special Registers: %clusterid	special-registers-clusterid	7.8	sm_90	
+10.13	2	Special Registers: %nclusterid	special-registers-nclusterid	7.8	sm_90	
+10.14	2	Special Registers: %cluster_ctaid	special-registers-cluster-ctaid	7.8	sm_90	
+10.15	2	Special Registers: %cluster_nctaid	special-registers-cluster-nctaid	7.8	sm_90	
+10.16	2	Special Registers: %cluster_ctarank	special-registers-cluster-ctarank	7.8	sm_90	
+10.17	2	Special Registers: %cluster_nctarank	special-registers-cluster-nctarank	7.8	sm_90	
+10.18	2	Special Registers: %lanemask_eq	special-registers-lanemask-eq	2.0	sm_20	
+10.19	2	Special Registers: %lanemask_le	special-registers-lanemask-le	2.0	sm_20	
+10.20	2	Special Registers: %lanemask_lt	special-registers-lanemask-lt	2.0	sm_20	
+10.21	2	Special Registers: %lanemask_ge	special-registers-lanemask-ge	2.0	sm_20	
+10.22	2	Special Registers: %lanemask_gt	special-registers-lanemask-gt	2.0	sm_20	
+10.23	2	Special Registers: %clock, %clock_hi	special-registers-clock-clock-hi	1.0	all	
+10.24	2	Special Registers: %clock64	special-registers-clock64	2.0	sm_20	
+10.25	2	Special Registers: %pm0..%pm7	special-registers-pm0-pm7	1.3	all	
+10.26	2	Special Registers: %pm0_64..%pm7_64	special-registers-pm0-64-pm7-64	4.0	sm_50	
+10.27	2	Special Registers: %envreg<32>	special-registers-envreg-32	2.1	all	
+10.28	2	Special Registers: %globaltimer, %globaltimer_lo, %globaltimer_hi	special-registers-globaltimer-globaltimer-lo-globaltimer-hi	3.1	sm_30	
+10.29	2	Special Registers: %reserved_smem_offset_begin, %reserved_smem_offset_end, %reserved_smem_offset_cap, %reserved_smem_offset_<2>	special-registers-reserved-smem-offset-begin-reserved-smem-offset-end-reserved-smem-offset-cap-reserved-smem-offset-2	7.6	sm_80	
+10.30	2	Special Registers: %total_smem_size	special-registers-total-smem-size	4.1	sm_20	
+10.31	2	Special Registers: %aggr_smem_size	special-registers-aggr-smem-size	8.1	sm_90	
+10.32	2	Special Registers: %dynamic_smem_size	special-registers-dynamic-smem-size	4.1	sm_20	
+10.33	2	Special Registers: %current_graph_exec	special-registers-current-graph-exec	8.0	sm_50	
+11	1	Directives	directives			
+11.1	2	PTX Module Directives	ptx-module-directives			
+11.1.1	3	PTX Module Directives: .version	ptx-module-directives-version	1.0	all	.minor .version
+11.1.2	3	PTX Module Directives: .target	ptx-module-directives-target	1.0	all	.target
+11.1.3	3	PTX Module Directives: .address_size	ptx-module-directives-address-size	2.3	all	.address_size
+11.2	2	Specifying Kernel Entry Points and Functions	specifying-kernel-entry-points-and-functions			
+11.2.1	3	Kernel and Function Directives: .entry	kernel-and-function-directives-entry		all	.entry
+11.2.2	3	Kernel and Function Directives: .func	kernel-and-function-directives-func	1.0	all	.attribute .func .noreturn
+11.2.3	3	Kernel and Function Directives: .alias	kernel-and-function-directives-alias	6.3	sm_30	.alias
+11.3	2	Control Flow Directives	control-flow-directives			
+11.3.1	3	Control Flow Directives: .branchtargets	control-flow-directives-branchtargets	2.1	sm_20	.branchtargets
+11.3.2	3	Control Flow Directives: .calltargets	control-flow-directives-calltargets	2.1	sm_20	.calltargets
+11.3.3	3	Control Flow Directives: .callprototype	control-flow-directives-callprototype	2.1	sm_20	.callprototype .noreturn
+11.4	2	Performance-Tuning Directives	performance-tuning-directives			
+11.4.1	3	Performance-Tuning Directives: .maxnreg	performance-tuning-directives-maxnreg	1.3	all	.maxnreg
+11.4.2	3	Performance-Tuning Directives: .maxntid	performance-tuning-directives-maxntid	1.3	all	.maxntid
+11.4.3	3	Performance-Tuning Directives: .reqntid	performance-tuning-directives-reqntid	2.1	all	.reqntid
+11.4.4	3	Performance-Tuning Directives: .minnctapersm	performance-tuning-directives-minnctapersm	2.0	all	.minnctapersm
+11.4.5	3	Performance-Tuning Directives: .maxnctapersm (deprecated)	performance-tuning-directives-maxnctapersm-deprecated	1.3	all	.maxnctapersm
+11.4.6	3	Performance-Tuning Directives: .noreturn	performance-tuning-directives-noreturn	6.4	sm_30	.noreturn
+11.4.7	3	Performance-Tuning Directives: .pragma	performance-tuning-directives-pragma	2.0	all	.pragma
+11.5	2	Debugging Directives	debugging-directives			
+11.5.1	3	Debugging Directives: @@dwarf	debugging-directives-dwarf	1.2	all	.byte .quad
+11.5.2	3	Debugging Directives: .section	debugging-directives-section	2.0	all	.b16 .b32 .b64 .b8 .section
+11.5.3	3	Debugging Directives: .file	debugging-directives-file	1.0	all	.file
+11.5.4	3	Debugging Directives: .loc	debugging-directives-loc	1.0	all	.loc
+11.6	2	Linking Directives	linking-directives			
+11.6.1	3	Linking Directives: .extern	linking-directives-extern	1.0	all	.extern
+11.6.2	3	Linking Directives: .visible	linking-directives-visible	1.0	all	.visible
+11.6.3	3	Linking Directives: .weak	linking-directives-weak	3.1	all	.weak
+11.6.4	3	Linking Directives: .common	linking-directives-common	5.0	sm_20	.common
+11.7	2	Cluster Dimension Directives	cluster-dimension-directives			
+11.7.1	3	Cluster Dimension Directives: .reqnctapercluster	cluster-dimension-directives-reqnctapercluster	7.8	sm_90	.reqnctapercluster
+11.7.2	3	Cluster Dimension Directives: .explicitcluster	cluster-dimension-directives-explicitcluster	7.8	sm_90	.explicitcluster
+11.7.3	3	Cluster Dimension Directives: .maxclusterrank	cluster-dimension-directives-maxclusterrank	7.8	sm_90	.maxclusterrank
+12	1	Release Notes	release-notes			
+12.1	2	Changes in PTX ISA Version 8.7	changes-in-ptx-isa-version-8-7			
+12.2	2	Changes in PTX ISA Version 8.6	changes-in-ptx-isa-version-8-6			
+12.3	2	Changes in PTX ISA Version 8.5	changes-in-ptx-isa-version-8-5			
+12.4	2	Changes in PTX ISA Version 8.4	changes-in-ptx-isa-version-8-4			
+12.5	2	Changes in PTX ISA Version 8.3	changes-in-ptx-isa-version-8-3			
+12.6	2	Changes in PTX ISA Version 8.2	changes-in-ptx-isa-version-8-2			
+12.7	2	Changes in PTX ISA Version 8.1	changes-in-ptx-isa-version-8-1			
+12.8	2	Changes in PTX ISA Version 8.0	changes-in-ptx-isa-version-8-0			
+12.9	2	Changes in PTX ISA Version 7.8	changes-in-ptx-isa-version-7-8			
+12.10	2	Changes in PTX ISA Version 7.7	changes-in-ptx-isa-version-7-7			
+12.11	2	Changes in PTX ISA Version 7.6	changes-in-ptx-isa-version-7-6			
+12.12	2	Changes in PTX ISA Version 7.5	changes-in-ptx-isa-version-7-5			
+12.13	2	Changes in PTX ISA Version 7.4	changes-in-ptx-isa-version-7-4			
+12.14	2	Changes in PTX ISA Version 7.3	changes-in-ptx-isa-version-7-3			
+12.15	2	Changes in PTX ISA Version 7.2	changes-in-ptx-isa-version-7-2			
+12.16	2	Changes in PTX ISA Version 7.1	changes-in-ptx-isa-version-7-1			
+12.17	2	Changes in PTX ISA Version 7.0	changes-in-ptx-isa-version-7-0			
+12.18	2	Changes in PTX ISA Version 6.5	changes-in-ptx-isa-version-6-5			
+12.19	2	Changes in PTX ISA Version 6.4	changes-in-ptx-isa-version-6-4			
+12.20	2	Changes in PTX ISA Version 6.3	changes-in-ptx-isa-version-6-3			
+12.21	2	Changes in PTX ISA Version 6.2	changes-in-ptx-isa-version-6-2			
+12.22	2	Changes in PTX ISA Version 6.1	changes-in-ptx-isa-version-6-1			
+12.23	2	Changes in PTX ISA Version 6.0	changes-in-ptx-isa-version-6-0			
+12.24	2	Changes in PTX ISA Version 5.0	changes-in-ptx-isa-version-5-0			
+12.25	2	Changes in PTX ISA Version 4.3	changes-in-ptx-isa-version-4-3			
+12.26	2	Changes in PTX ISA Version 4.2	changes-in-ptx-isa-version-4-2			
+12.27	2	Changes in PTX ISA Version 4.1	changes-in-ptx-isa-version-4-1			
+12.28	2	Changes in PTX ISA Version 4.0	changes-in-ptx-isa-version-4-0			
+12.29	2	Changes in PTX ISA Version 3.2	changes-in-ptx-isa-version-3-2			
+12.30	2	Changes in PTX ISA Version 3.1	changes-in-ptx-isa-version-3-1			
+12.31	2	Changes in PTX ISA Version 3.0	changes-in-ptx-isa-version-3-0			
+12.32	2	Changes in PTX ISA Version 2.3	changes-in-ptx-isa-version-2-3			
+12.33	2	Changes in PTX ISA Version 2.2	changes-in-ptx-isa-version-2-2			
+12.34	2	Changes in PTX ISA Version 2.1	changes-in-ptx-isa-version-2-1			
+12.35	2	Changes in PTX ISA Version 2.0	changes-in-ptx-isa-version-2-0			
+14	1	Descriptions of .pragma Strings	descriptions-of-pragma-strings			
+14.1	2	Pragma Strings: “nounroll”	pragma-strings-nounroll	2.0	sm_1x	.pragma
+14.2	2	Pragma Strings: “used_bytes_mask”	pragma-strings-used-bytes-mask	8.3	sm_50	.pragma
+15	1	Notices	notices			
+15.1	2	Notice	notice			
+15.2	2	OpenCL	opencl			
+15.3	2	Trademarks	trademarks			

@@ -13,3 +13,7 @@ build/
 # PTX that the project commits on purpose
 !tests/**/*.ptx
 !docs/examples/**/*.ptx
+
+# Python caches
+__pycache__/
+.pytest_cache/
