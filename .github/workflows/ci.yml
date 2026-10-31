@@ -1,0 +1,83 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CC_TYPES: feat|fix|docs|test|refactor|perf|build|ci|chore|revert
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pull request title is a conventional commit
+        if: github.event_name == 'pull_request'
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          re="^(${CC_TYPES})(\([a-z0-9._/-]+\))?!?: [^ ].*[^.]$"
+          if [[ ! "$TITLE" =~ $re ]] || [ "${#TITLE}" -gt 72 ]; then
+            echo "::error::PR title must be 'type(scope): subject', at most 72 characters: $TITLE"
+            exit 1
+          fi
+
+      - name: Commit subjects are conventional commits
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          re="^(${CC_TYPES})(\([a-z0-9._/-]+\))?!?: [^ ].*[^.]$"
+          bad=0
+          while IFS= read -r subject; do
+            if [[ ! "$subject" =~ $re ]] || [ "${#subject}" -gt 72 ]; then
+              echo "::error::not a conventional commit subject: $subject"
+              bad=1
+            fi
+          done < <(git log --no-merges --format=%s "$BASE..$HEAD")
+          exit "$bad"
+
+      - name: Changelog updated for user-visible changes
+        if: github.event_name == 'pull_request'
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [[ "$TITLE" =~ ^(feat|fix)(\(|!|:) ]] || [[ "$TITLE" =~ ^[a-z]+(\([^\)]*\))?!: ]]; then
+            if ! git diff --name-only "$BASE...$HEAD" | grep -qx CHANGELOG.md; then
+              echo "::error::feat, fix and breaking changes must add a line to CHANGELOG.md"
+              exit 1
+            fi
+          fi
+
+      - name: No em-dash characters
+        run: |
+          if git grep -nP '\x{2014}' -- . ':(exclude)deps'; then
+            echo "::error::replace the em-dash characters above"
+            exit 1
+          fi
+
+      - name: Shell scripts pass shellcheck
+        run: shellcheck tools/*.sh tools/tests/*.sh .devcontainer/*.sh .devcontainer/bin/*
+
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tool tests
+        run: tools/tests/run.sh
