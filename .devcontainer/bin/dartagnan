@@ -1,0 +1,4 @@
+#!/bin/sh
+# Wrapper so `dartagnan <cat file> <program> [options]` works from any directory.
+mkdir -p "${DAT3M_OUTPUT:-/tmp/dat3m-output}"
+exec java -jar "${DAT3M_HOME:-/opt/dat3m}/dartagnan/target/dartagnan.jar" "$@"
