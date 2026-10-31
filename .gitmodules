@@ -1,0 +1,15 @@
+[submodule "deps/sail-riscv"]
+	path = deps/sail-riscv
+	url = https://github.com/riscv/sail-riscv
+	branch = master
+	shallow = true
+[submodule "deps/riscv-opcodes"]
+	path = deps/riscv-opcodes
+	url = https://github.com/riscv/riscv-opcodes
+	branch = master
+	shallow = true
+[submodule "deps/ptx-memory-model"]
+	path = deps/ptx-memory-model
+	url = https://github.com/NVlabs/PTXMemoryModel
+	branch = master
+	shallow = true
