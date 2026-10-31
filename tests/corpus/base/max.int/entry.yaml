@@ -1,0 +1,16 @@
+id: max.int
+kernel: k_max_int
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a32, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 11, low: -100000, high: 100000}}
+  - {name: b32, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 53, low: -100000, high: 100000}}
+  - {name: d32, kind: output, dtype: s32, count: 256}
+  - {name: du32, kind: output, dtype: u32, count: 256}
+  - {name: a64, kind: input, dtype: s64, count: 256, generator: {kind: random, seed: 12, low: -1099511627776, high: 1099511627776}}
+  - {name: b64, kind: input, dtype: s64, count: 256, generator: {kind: random, seed: 54, low: -1099511627776, high: 1099511627776}}
+  - {name: d64, kind: output, dtype: s64, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['max\.s32', 'max\.u32', 'max\.s64']
+deterministic: true
+tolerance_class: exact

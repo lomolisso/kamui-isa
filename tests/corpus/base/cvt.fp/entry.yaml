@@ -1,0 +1,20 @@
+id: cvt.fp
+kernel: k_cvt_fp
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: f, kind: input, dtype: f32, count: 256, generator: {kind: random, seed: 102, low: -1000000.0, high: 1000000.0}}
+  - {name: iv, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 103, low: -2147483648, high: 2147483647}}
+  - {name: di, kind: output, dtype: s32, count: 256}
+  - {name: du, kind: output, dtype: u32, count: 256}
+  - {name: dfi, kind: output, dtype: f32, count: 256}
+  - {name: dd, kind: output, dtype: f64, count: 256}
+  - {name: dfd, kind: output, dtype: f32, count: 256}
+  - {name: dtr, kind: output, dtype: f32, count: 256}
+  - {name: drn, kind: output, dtype: f32, count: 256}
+  - {name: dfl, kind: output, dtype: f32, count: 256}
+  - {name: dce, kind: output, dtype: f32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['cvt\.rzi\.s32\.f32', 'cvt\.rn\.f32\.s32', 'cvt\.f64\.f32', 'cvt\.rn\.f32\.f64', 'cvt\.rzi\.f32\.f32', 'cvt\.rni\.f32\.f32', 'cvt\.rmi\.f32\.f32', 'cvt\.rpi\.f32\.f32']
+deterministic: true
+tolerance_class: exact

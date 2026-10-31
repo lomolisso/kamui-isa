@@ -1,0 +1,18 @@
+id: mul.int
+kernel: k_mul_int
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a32, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 21, low: -2147483648, high: 2147483647}}
+  - {name: b32, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 22, low: -2147483648, high: 2147483647}}
+  - {name: dlo, kind: output, dtype: s32, count: 256}
+  - {name: dhi, kind: output, dtype: s32, count: 256}
+  - {name: duhi, kind: output, dtype: u32, count: 256}
+  - {name: dwide, kind: output, dtype: s64, count: 256}
+  - {name: ua64, kind: input, dtype: u64, count: 256, generator: {kind: random, seed: 23, low: 0, high: 18446744073709551615}}
+  - {name: ub64, kind: input, dtype: u64, count: 256, generator: {kind: random, seed: 24, low: 0, high: 18446744073709551615}}
+  - {name: d64hi, kind: output, dtype: u64, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['mul\.lo\.s32', 'mul\.hi\.s32', 'mul\.hi\.u32', 'mul\.wide\.s32', 'mul\.hi\.u64']
+deterministic: true
+tolerance_class: exact

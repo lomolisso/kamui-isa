@@ -1,0 +1,12 @@
+id: sreg.warpid
+kernel: k_sreg_warpid
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: d, kind: output, dtype: u32, count: 1024}
+  - {name: g, kind: output, dtype: u64, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['%warpid', '%nwarpid', '%smid', '%nsmid', '%gridid']
+deterministic: false
+tolerance_class: property:range
+notes: 'Values depend on scheduling: warpid < nwarpid, smid < nsmid, gridid equal for all threads.'

@@ -1,0 +1,15 @@
+id: bfe
+kernel: k_bfe
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a32, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 13, low: 0, high: 4294967295}}
+  - {name: du, kind: output, dtype: u32, count: 256}
+  - {name: ds, kind: output, dtype: s32, count: 256}
+  - {name: a64, kind: input, dtype: u64, count: 256, generator: {kind: random, seed: 58, low: 0, high: 18446744073709551615}}
+  - {name: d64, kind: output, dtype: u64, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['bfe\.u32', 'bfe\.s32', 'bfe\.u64']
+deterministic: true
+tolerance_class: exact
+notes: 'Positions and lengths cover 0 and out-of-range values.'

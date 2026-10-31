@@ -1,0 +1,19 @@
+id: and
+kernel: k_and
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a32, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 13, low: 0, high: 4294967295}}
+  - {name: b32, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 81, low: 0, high: 4294967295}}
+  - {name: d_and, kind: output, dtype: u32, count: 256}
+  - {name: d_or, kind: output, dtype: u32, count: 256}
+  - {name: d_xor, kind: output, dtype: u32, count: 256}
+  - {name: d_not, kind: output, dtype: u32, count: 256}
+  - {name: a64, kind: input, dtype: u64, count: 256, generator: {kind: random, seed: 82, low: 0, high: 18446744073709551615}}
+  - {name: b64, kind: input, dtype: u64, count: 256, generator: {kind: random, seed: 83, low: 0, high: 18446744073709551615}}
+  - {name: d64, kind: output, dtype: u64, count: 256}
+  - {name: dp, kind: output, dtype: s32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['and\.b32', 'or\.b32', 'xor\.b32', 'not\.b32', 'and\.b64']
+deterministic: true
+tolerance_class: exact

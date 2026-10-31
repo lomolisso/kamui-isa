@@ -1,0 +1,14 @@
+id: dp4a
+kernel: k_dp4a
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 13, low: 0, high: 4294967295}}
+  - {name: b, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 61, low: 0, high: 4294967295}}
+  - {name: c, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 62, low: 0, high: 4294967295}}
+  - {name: ds, kind: output, dtype: s32, count: 256}
+  - {name: du, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['dp4a\.s32\.s32', 'dp4a\.u32\.u32']
+deterministic: true
+tolerance_class: exact

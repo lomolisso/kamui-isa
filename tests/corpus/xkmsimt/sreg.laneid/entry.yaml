@@ -1,0 +1,10 @@
+id: sreg.laneid
+kernel: k_sreg_laneid
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: d, kind: output, dtype: u32, count: 1536}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['%laneid', '%lanemask_eq', '%lanemask_gt']
+deterministic: true
+tolerance_class: exact

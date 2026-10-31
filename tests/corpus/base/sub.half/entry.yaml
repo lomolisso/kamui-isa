@@ -1,0 +1,12 @@
+id: sub.half
+kernel: k_sub_half
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: f16, count: 256, generator: {kind: random, seed: 169, low: -60.0, high: 60.0}}
+  - {name: b, kind: input, dtype: f16, count: 256, generator: {kind: random, seed: 179, low: -60.0, high: 60.0}}
+  - {name: d, kind: output, dtype: f16, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['sub\.rn\.f16']
+deterministic: true
+tolerance_class: exact

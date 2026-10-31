@@ -1,0 +1,17 @@
+id: lop3
+kernel: k_lop3
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 13, low: 0, high: 4294967295}}
+  - {name: b, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 84, low: 0, high: 4294967295}}
+  - {name: c, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 85, low: 0, high: 4294967295}}
+  - {name: d0, kind: output, dtype: u32, count: 256}
+  - {name: d1, kind: output, dtype: u32, count: 256}
+  - {name: d2, kind: output, dtype: u32, count: 256}
+  - {name: d3, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['lop3\.b32 .*0x96', 'lop3\.b32 .*0xe8']
+deterministic: true
+tolerance_class: exact
+notes: 'LUTs: xor3 (0x96), majority (0xe8), select (0xca), nor3 (0x01).'

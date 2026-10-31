@@ -1,0 +1,19 @@
+id: atom.global.exch
+kernel: k_atom_global_exch
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: val, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 334, low: 0, high: 65535}}
+  - {name: acc, kind: inout, dtype: u32, count: 1, generator: {kind: const, value: 28672}}
+  - {name: arr, kind: inout, dtype: u32, count: 256, generator: {kind: random, seed: 344, low: 0, high: 65535}}
+  - {name: old_same, kind: output, dtype: u32, count: 256}
+  - {name: old_dist, kind: output, dtype: u32, count: 256}
+  - {name: acc64, kind: inout, dtype: u64, count: 1, generator: {kind: const, value: 28672}}
+  - {name: old64, kind: output, dtype: u64, count: 256}
+  - {name: accf, kind: inout, dtype: f32, count: 1, generator: {kind: const, value: 1.0}}
+  - {name: oldf, kind: output, dtype: f32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['atom\.global\.exch\.b32', 'atom\.global\.exch\.b64']
+deterministic: false
+tolerance_class: property:atomic
+notes: 'Same-address returned values depend on the order; check them as a set (ptxas warp-aggregates uniform addresses). Per-thread addresses and the final values of commutative operations are exact.'

@@ -1,0 +1,17 @@
+id: shf
+kernel: k_shf
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: lo, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 13, low: 0, high: 4294967295}}
+  - {name: hi, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 86, low: 0, high: 4294967295}}
+  - {name: sh, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 14, low: 0, high: 40}}
+  - {name: dlw, kind: output, dtype: u32, count: 256}
+  - {name: dlc, kind: output, dtype: u32, count: 256}
+  - {name: drw, kind: output, dtype: u32, count: 256}
+  - {name: drc, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['shf\.l\.wrap\.b32', 'shf\.l\.clamp\.b32', 'shf\.r\.wrap\.b32', 'shf\.r\.clamp\.b32']
+deterministic: true
+tolerance_class: exact
+notes: 'Shift amounts 0 to 40 show wrap (mod 32) against clamp (min 32).'

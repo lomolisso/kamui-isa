@@ -1,0 +1,15 @@
+id: atom.global.dec
+kernel: k_atom_global_dec
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: val, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 333, low: 0, high: 65535}}
+  - {name: acc, kind: inout, dtype: u32, count: 1, generator: {kind: const, value: 28672}}
+  - {name: arr, kind: inout, dtype: u32, count: 256, generator: {kind: random, seed: 343, low: 0, high: 65535}}
+  - {name: old_same, kind: output, dtype: u32, count: 256}
+  - {name: old_dist, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['atom(\.global)?\.dec\.u32']
+deterministic: false
+tolerance_class: property:atomic
+notes: 'Same-address returned values depend on the order; check them as a set (ptxas warp-aggregates uniform addresses). Per-thread addresses and the final values of commutative operations are exact.'
