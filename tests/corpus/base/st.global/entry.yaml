@@ -1,0 +1,14 @@
+id: st.global
+kernel: k_st_global
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 316, low: -100000, high: 100000}}
+  - {name: d8, kind: output, dtype: u8, count: 256}
+  - {name: d16, kind: output, dtype: s16, count: 256}
+  - {name: d64, kind: output, dtype: u64, count: 256}
+  - {name: dv, kind: output, dtype: s32, count: 1024}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['st\.global\.u8', 'st\.global\.u16', 'st\.global\.u64', 'st\.global\.v4\.u32']
+deterministic: true
+tolerance_class: exact

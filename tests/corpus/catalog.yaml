@@ -12,7 +12,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/abs.fp
   tolerance_class: exact
 - id: abs.half
   kind: instruction
@@ -24,7 +24,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/abs.half
   tolerance_class: exact
 - id: abs.int
   kind: instruction
@@ -37,7 +37,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/abs.int
   tolerance_class: exact
 - id: activemask
   kind: instruction
@@ -50,8 +50,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmwarp/activemask
+  tolerance_class: property:activemask
 - id: add.cc
   kind: instruction
   opcodes: [add.cc]
@@ -63,7 +63,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/add.cc
   tolerance_class: exact
   notes: Carry flag; clang uses it for 128-bit integer add. RISC-V has no flags (sltu).
 - id: add.fp
@@ -76,7 +76,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/add.fp
   tolerance_class: exact
   notes: 'f32 and f64; opcode ''add'' is covered by add.int.'
 - id: add.half
@@ -89,7 +89,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/add.half
   tolerance_class: exact
   notes: .f16 (Zfh); packed and bf16 forms in half.packed and half.bf16.
 - id: add.int
@@ -103,7 +103,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/add.int
   tolerance_class: exact
   notes: Includes .sat (s32).
 - id: add.int.packed
@@ -141,7 +141,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/add.cc
   tolerance_class: exact
 - id: alloca
   kind: instruction
@@ -154,7 +154,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/stacksave
   tolerance_class: exact
 - id: and
   kind: instruction
@@ -167,7 +167,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/and
   tolerance_class: exact
 - id: app.atomics
   kind: application
@@ -179,7 +179,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/app.atomics
   tolerance_class: exact
   notes: Many CTAs update global counters with integer atomics.
 - id: app.barrier
@@ -192,7 +192,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmbar/app.barrier
   tolerance_class: exact
   notes: Warps exchange data through shared memory around bar.sync.
 - id: app.shfl_reduce
@@ -205,7 +205,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/app.shfl_reduce
   tolerance_class: exact
   notes: Warp sum with shfl.sync.bfly.
 - id: app.vecadd
@@ -218,7 +218,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/app.vecadd
   tolerance_class: exact
   notes: 'Vector add: c[i] = a[i] + b[i].'
 - id: applypriority
@@ -259,8 +259,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.generic.add
+  tolerance_class: property:atomic
   notes: Generic address.
 - id: atom.global.add
   kind: modifier
@@ -273,8 +273,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: reduction
+  entry: tests/corpus/base/atom.global.add
+  tolerance_class: property:atomic
   notes: 'Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set. Float add (f32, f64) is order-dependent.'
 - id: atom.global.and
   kind: modifier
@@ -287,8 +287,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.global.and
+  tolerance_class: property:atomic
   notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
 - id: atom.global.cas
   kind: modifier
@@ -301,8 +301,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.global.cas
+  tolerance_class: property:atomic
   notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
 - id: atom.global.dec
   kind: modifier
@@ -315,8 +315,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.global.dec
+  tolerance_class: property:atomic
   notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
 - id: atom.global.exch
   kind: modifier
@@ -329,8 +329,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.global.exch
+  tolerance_class: property:atomic
   notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
 - id: atom.global.inc
   kind: modifier
@@ -343,8 +343,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.global.inc
+  tolerance_class: property:atomic
   notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
 - id: atom.global.max
   kind: modifier
@@ -357,8 +357,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.global.max
+  tolerance_class: property:atomic
   notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
 - id: atom.global.min
   kind: modifier
@@ -371,8 +371,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.global.min
+  tolerance_class: property:atomic
   notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
 - id: atom.global.or
   kind: modifier
@@ -385,8 +385,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.global.or
+  tolerance_class: property:atomic
   notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
 - id: atom.global.xor
   kind: modifier
@@ -399,8 +399,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.global.xor
+  tolerance_class: property:atomic
   notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
 - id: atom.half
   kind: modifier
@@ -453,8 +453,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmscope/atom.scope.gpu
+  tolerance_class: property:atomic
   notes: Default scope of atomicAdd and friends.
 - id: atom.scope.sys
   kind: modifier
@@ -536,8 +536,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.shared.add
+  tolerance_class: property:atomic
   notes: 'All operations, shared memory.'
 - id: 'atom.shared::cluster.add'
   kind: modifier
@@ -575,7 +575,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmbar/bar.arrive
   tolerance_class: exact
 - id: bar.red
   kind: modifier
@@ -588,7 +588,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmbar/bar.red
   tolerance_class: exact
   notes: __syncthreads_count/and/or.
 - id: bar.sync
@@ -602,7 +602,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmbar/bar.sync
   tolerance_class: exact
   notes: __syncthreads.
 - id: bar.sync.named
@@ -615,7 +615,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmbar/bar.sync.named
   tolerance_class: exact
   notes: Named barrier 0-15 with an explicit thread count.
 - id: bar.warp.sync
@@ -629,7 +629,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/bar.warp.sync
   tolerance_class: exact
   notes: __syncwarp.
 - id: barrier.cluster
@@ -671,7 +671,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/bfe
   tolerance_class: exact
 - id: bfi
   kind: instruction
@@ -684,7 +684,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/bfi
   tolerance_class: exact
 - id: bfind
   kind: instruction
@@ -697,7 +697,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/bfind
   tolerance_class: exact
   notes: Kernel covers .shiftamt.
 - id: bmsk
@@ -725,7 +725,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/bra
   tolerance_class: exact
   notes: Divergent branch; convergence is open decision 2.
 - id: bra.uni
@@ -739,7 +739,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/bra.uni
   tolerance_class: exact
   notes: Non-divergent branch.
 - id: brev
@@ -753,7 +753,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/brev
   tolerance_class: exact
   notes: Bit reverse; Zbb has only rev8 (byte reverse).
 - id: brkpt
@@ -767,7 +767,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/brkpt
   tolerance_class: exact
   notes: 'Breakpoint (ebreak); stops the kernel without a debugger, so compile-only.'
 - id: brx.idx
@@ -781,7 +781,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/brx.idx
   tolerance_class: exact
   notes: Indirect branch through a .branchtargets list (switch jump tables).
 - id: call
@@ -795,7 +795,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/call
   tolerance_class: exact
   notes: Direct calls; kernels use __noinline__ device functions.
 - id: call.indirect
@@ -808,7 +808,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/call.indirect
   tolerance_class: exact
   notes: Call through a function pointer with .callprototype.
 - id: clusterlaunchcontrol.query_cancel
@@ -846,7 +846,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/clz
   tolerance_class: exact
   notes: Zbb clz.
 - id: cnot
@@ -860,7 +860,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/cnot
   tolerance_class: exact
 - id: copysign
   kind: instruction
@@ -873,7 +873,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/copysign
   tolerance_class: exact
   notes: fsgnj.
 - id: cos
@@ -885,10 +885,10 @@ features:
   min_target: all
   family: Xkmmufu
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/cos
+  tolerance_class: ulp:2
 - id: cp.async
   kind: instruction
   opcodes: [cp.async.ca, cp.async.cg]
@@ -1151,7 +1151,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/call
   tolerance_class: exact
   notes: Nested scope for register declarations.
 - id: ctrl.predicate
@@ -1164,7 +1164,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/bra
   tolerance_class: exact
   notes: Guard predicate on any instruction.
 - id: cvt.bf16
@@ -1189,7 +1189,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/cvt.fp
   tolerance_class: exact
   notes: Integer and f32/f64 conversions with rounding; .rni/.rzi round to integral (no direct RV64 instruction).
 - id: cvt.fp6fp4
@@ -1226,7 +1226,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/cvt.half
   tolerance_class: exact
   notes: Zfh conversions.
 - id: cvt.int
@@ -1240,7 +1240,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/cvt.int
   tolerance_class: exact
   notes: 'Integer to integer (widen, narrow, saturate).'
 - id: cvt.pack
@@ -1277,9 +1277,9 @@ features:
   min_target: sm_20
   family: base
   tier: 1
-  route: cuda
+  route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/cvta
   tolerance_class: exact
   notes: Generic to and from a state space (address-window arithmetic).
 - id: 'cvta.shared::cluster'
@@ -1304,7 +1304,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/app.vecadd
   tolerance_class: exact
   notes: In every file; entry app.vecadd.
 - id: dir.alias
@@ -1317,7 +1317,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.alias
   tolerance_class: exact
   notes: Function aliases (__attribute__((alias))).
 - id: dir.attribute
@@ -1330,9 +1330,9 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: pending
   tolerance_class: exact
-  notes: '''.attribute(.managed)'' for __managed__ variables.'
+  notes: 'pending: clang 20 ignores __managed__ in CUDA (it emits a plain .global variable); .attribute(.managed) needs a PTX-level entry.'
 - id: dir.branchtargets
   kind: directive
   ptx_syntax: 'Label: .branchtargets list-of-labels ;'
@@ -1343,7 +1343,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/brx.idx
   tolerance_class: exact
   notes: Target list of brx.idx.
 - id: dir.callprototype
@@ -1356,7 +1356,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/call.indirect
   tolerance_class: exact
   notes: Indirect calls.
 - id: dir.calltargets
@@ -1369,8 +1369,9 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: pending
   tolerance_class: exact
+  notes: 'pending: .calltargets names the possible targets of one indirect call inside hand-written PTX; neither clang nor inline asm can place it. Needs PTX-level entries.'
 - id: dir.common
   kind: directive
   ptx_syntax: .common identifier
@@ -1381,8 +1382,9 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: pending
   tolerance_class: exact
+  notes: 'pending: .common is a module-level declaration; CUDA sends file-scope asm to the host compilation, so it cannot reach the PTX from CUDA C++. Needs a PTX-level entry.'
 - id: dir.dwarf
   kind: directive
   ptx_syntax: '@@DWARF dwarf-string'
@@ -1393,9 +1395,9 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: pending
   tolerance_class: exact
-  notes: 'Debug information: parse and ignore; entry compiled with -g.'
+  notes: 'pending: @@dwarf is the legacy DWARF form that LLVM never emits (it uses .section); needs a PTX-level entry.'
 - id: dir.entry
   kind: directive
   ptx_syntax: .entry kernel-name ( param-list ) kernel-body
@@ -1406,7 +1408,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/app.vecadd
   tolerance_class: exact
   notes: In every file; entry app.vecadd.
 - id: dir.explicitcluster
@@ -1431,7 +1433,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.extern
   tolerance_class: exact
   notes: External declarations (extern __device__).
 - id: dir.file
@@ -1444,7 +1446,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.loc
   tolerance_class: exact
   notes: 'Debug information: parse and ignore.'
 - id: dir.func
@@ -1457,7 +1459,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/call
   tolerance_class: exact
   notes: Device functions (__noinline__).
 - id: dir.loc
@@ -1470,7 +1472,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.loc
   tolerance_class: exact
   notes: 'Debug information: parse and ignore.'
 - id: dir.maxclusterrank
@@ -1505,9 +1507,9 @@ features:
   min_target: all
   family: base
   tier: 1
-  route: cuda
+  route: llvm-ir
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.maxnreg
   tolerance_class: exact
   notes: Effect visible in ptxas -v (expect_ptxas).
 - id: dir.maxntid
@@ -1520,7 +1522,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.maxntid
   tolerance_class: exact
   notes: __launch_bounds__.
 - id: dir.minnctapersm
@@ -1533,7 +1535,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.maxntid
   tolerance_class: exact
   notes: __launch_bounds__ second argument.
 - id: dir.noreturn
@@ -1544,9 +1546,9 @@ features:
   min_target: sm_30
   family: base
   tier: 1
-  route: inline-asm
+  route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.noreturn
   tolerance_class: exact
 - id: dir.pragma
   kind: directive
@@ -1558,7 +1560,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.pragma
   tolerance_class: exact
   notes: 'Only "nounroll" matters (#pragma unroll 1).'
 - id: dir.ptr
@@ -1571,7 +1573,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/app.vecadd
   tolerance_class: exact
   notes: 'Kernel pointer parameter attribute; clang emits ''.ptr .align 1'' on every pointer parameter.'
 - id: dir.reqnctapercluster
@@ -1595,9 +1597,9 @@ features:
   min_target: all
   family: base
   tier: 1
-  route: inline-asm
+  route: llvm-ir
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.reqntid
   tolerance_class: exact
   notes: Launch with another block size must fail (H100 job).
 - id: dir.section
@@ -1610,7 +1612,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.loc
   tolerance_class: exact
   notes: 'Debug information: parse and ignore.'
 - id: dir.target
@@ -1623,7 +1625,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/app.vecadd
   tolerance_class: exact
   notes: In every file; entry app.vecadd.
 - id: dir.version
@@ -1636,7 +1638,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/app.vecadd
   tolerance_class: exact
   notes: In every file; entry app.vecadd.
 - id: dir.visible
@@ -1649,7 +1651,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/app.vecadd
   tolerance_class: exact
   notes: In every file; entry app.vecadd.
 - id: dir.weak
@@ -1662,7 +1664,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/dir.weak
   tolerance_class: exact
 - id: discard
   kind: instruction
@@ -1689,8 +1691,8 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/div.fp.approx
+  tolerance_class: ulp:2
   notes: __fdividef.
 - id: div.fp.full
   kind: instruction
@@ -1701,10 +1703,10 @@ features:
   min_target: all
   family: Xkmmufu
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/div.fp.full
+  tolerance_class: ulp:2
 - id: div.fp.rn
   kind: instruction
   opcodes: [div.rn, div.rz, div.rm, div.rp]
@@ -1716,7 +1718,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/div.fp.rn
   tolerance_class: exact
   notes: IEEE division (fdiv).
 - id: div.int
@@ -1730,7 +1732,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/div.int
   tolerance_class: exact
   notes: Division by zero result is unspecified in PTX; kernels avoid it.
 - id: dp2a
@@ -1744,7 +1746,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/dp2a
   tolerance_class: exact
 - id: dp4a
   kind: instruction
@@ -1757,7 +1759,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/dp4a
   tolerance_class: exact
 - id: elect.sync
   kind: instruction
@@ -1781,10 +1783,10 @@ features:
   min_target: all
   family: Xkmmufu
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/ex2
+  tolerance_class: ulp:2
 - id: ex2.half
   kind: instruction
   ptx_syntax: 'ex2.approx.atype d, a;'
@@ -1808,7 +1810,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/exit
   tolerance_class: exact
   notes: Ends the thread.
 - id: fence.op_restrict
@@ -1988,7 +1990,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/fma.fp
   tolerance_class: exact
   notes: 'clang contracts a*b+c to fma unless -ffp-contract=off.'
 - id: fma.half
@@ -2001,7 +2003,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/fma.half
   tolerance_class: exact
   notes: Kernel covers .relu; .oob (sm_90) is left to the specification.
 - id: fma.mixed
@@ -2026,7 +2028,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/fns
   tolerance_class: exact
 - id: fp.ftz
   kind: modifier
@@ -2038,7 +2040,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/fp.ftz
   tolerance_class: ftz
   notes: Flush subnormal inputs and results to zero; RISC-V has no FTZ mode (-fcuda-flush-denormals-to-zero).
 - id: fp.rounding
@@ -2051,7 +2053,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/fp.rounding
   tolerance_class: exact
   notes: 'Rounding modifiers of add, sub, mul, fma and cvt; RISC-V static rm field.'
 - id: fp.sat
@@ -2064,7 +2066,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/fp.sat
   tolerance_class: exact
   notes: 'Clamp the result to [0.0, 1.0].'
 - id: getctarank
@@ -2117,7 +2119,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/half.packed
   tolerance_class: exact
   notes: 'Packed .f16x2 arithmetic (add, sub, mul, fma, neg, abs, min, max).'
 - id: isspacep
@@ -2131,7 +2133,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/isspacep
   tolerance_class: exact
   notes: Address-window range check (open decision 4).
 - id: 'isspacep.shared::cluster'
@@ -2180,9 +2182,9 @@ features:
   min_target: sm_20
   family: base
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.cache_op
   tolerance_class: exact
   notes: Cache operators are hints; Kamui may ignore them.
 - id: ld.const
@@ -2196,7 +2198,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.const
   tolerance_class: exact
 - id: ld.generic
   kind: modifier
@@ -2209,7 +2211,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.generic
   tolerance_class: exact
   notes: 'Generic address: the state space is found from the address window (open decision 4).'
 - id: ld.global
@@ -2223,7 +2225,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.global
   tolerance_class: exact
 - id: ld.global.nc
   kind: instruction
@@ -2236,7 +2238,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.global.nc
   tolerance_class: exact
   notes: __ldg; read-only data path.
 - id: ld.local
@@ -2250,7 +2252,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.local
   tolerance_class: exact
 - id: ld.mmio
   kind: modifier
@@ -2276,7 +2278,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/call
   tolerance_class: exact
   notes: Kernel parameters and device-function arguments.
 - id: ld.scope.cluster
@@ -2366,7 +2368,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.shared
   tolerance_class: exact
   notes: 'Includes .shared::cta.'
 - id: 'ld.shared::cluster'
@@ -2395,7 +2397,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.volatile
   tolerance_class: exact
 - id: ldmatrix
   kind: instruction
@@ -2421,7 +2423,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ldu
   tolerance_class: exact
 - id: lg2
   kind: instruction
@@ -2432,10 +2434,10 @@ features:
   min_target: all
   family: Xkmmufu
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/lg2
+  tolerance_class: ulp:2
 - id: lop3
   kind: instruction
   opcodes: [lop3]
@@ -2447,7 +2449,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/lop3
   tolerance_class: exact
   notes: Arbitrary three-input logic function (8-bit LUT).
 - id: mad.cc
@@ -2461,7 +2463,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mad.cc
   tolerance_class: exact
 - id: mad.fp
   kind: instruction
@@ -2473,7 +2475,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mad.fp
   tolerance_class: exact
   notes: mad.rn.f32 is fma on sm_20+.
 - id: mad.int
@@ -2487,7 +2489,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mad.int
   tolerance_class: exact
   notes: 'Kernel covers .lo, .hi, .wide and .sat.'
 - id: mad24
@@ -2501,7 +2503,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mad24
   tolerance_class: exact
 - id: madc
   kind: instruction
@@ -2514,7 +2516,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mad.cc
   tolerance_class: exact
 - id: mapa
   kind: instruction
@@ -2565,7 +2567,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/max.fp
   tolerance_class: exact
 - id: max.fp.nan
   kind: modifier
@@ -2602,7 +2604,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/max.int
   tolerance_class: exact
 - id: max.int.packed
   kind: modifier
@@ -2797,7 +2799,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/membar
   tolerance_class: exact
   notes: __threadfence_block/__threadfence/__threadfence_system.
 - id: min.fp
@@ -2810,7 +2812,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/min.fp
   tolerance_class: exact
 - id: min.fp.nan
   kind: modifier
@@ -2848,7 +2850,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/min.int
   tolerance_class: exact
 - id: min.int.packed
   kind: modifier
@@ -3013,9 +3015,9 @@ features:
   min_target: sm_13
   family: base
   tier: 1
-  route: cuda
+  route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mov
   tolerance_class: exact
 - id: mov.packing
   kind: instruction
@@ -3025,9 +3027,9 @@ features:
   min_target: all
   family: base
   tier: 1
-  route: cuda
+  route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mov.packing
   tolerance_class: exact
   notes: 'Pack and unpack vectors (mov.b64 {lo, hi}).'
 - id: movmatrix
@@ -3054,7 +3056,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mul.fp
   tolerance_class: exact
 - id: mul.half
   kind: instruction
@@ -3066,7 +3068,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mul.half
   tolerance_class: exact
 - id: mul.int
   kind: instruction
@@ -3079,7 +3081,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mul.int
   tolerance_class: exact
   notes: 'Kernel covers .lo, .hi and .wide.'
 - id: mul24
@@ -3091,9 +3093,9 @@ features:
   min_target: all
   family: base
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/mul24
   tolerance_class: exact
 - id: multimem
   kind: instruction
@@ -3132,7 +3134,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/neg.fp
   tolerance_class: exact
 - id: neg.half
   kind: instruction
@@ -3144,7 +3146,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/neg.half
   tolerance_class: exact
 - id: neg.int
   kind: instruction
@@ -3157,7 +3159,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/neg.int
   tolerance_class: exact
 - id: not
   kind: instruction
@@ -3170,7 +3172,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/and
   tolerance_class: exact
 - id: or
   kind: instruction
@@ -3183,7 +3185,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/and
   tolerance_class: exact
 - id: pmevent
   kind: instruction
@@ -3208,7 +3210,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/popc
   tolerance_class: exact
   notes: Zbb cpop.
 - id: prefetch
@@ -3222,7 +3224,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/prefetch
   tolerance_class: exact
   notes: Hint; may be a no-op.
 - id: prefetch.tensormap
@@ -3248,7 +3250,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/prefetchu
   tolerance_class: exact
   notes: Hint; may be a no-op.
 - id: prmt
@@ -3262,7 +3264,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/prmt
   tolerance_class: exact
   notes: 'Kernel covers the .f4e, .b4e, .rc8, .ecl, .ecr, .rc16 modes.'
 - id: rcp.approx
@@ -3274,10 +3276,10 @@ features:
   min_target: all
   family: Xkmmufu
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:1'
+  entry: tests/corpus/xkmmufu/rcp.approx
+  tolerance_class: ulp:1
 - id: rcp.approx.ftz.f64
   kind: instruction
   opcodes: [rcp.approx.ftz.f64]
@@ -3287,10 +3289,10 @@ features:
   min_target: sm_20
   family: Xkmmufu
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:1'
+  entry: tests/corpus/xkmmufu/rcp.approx.ftz.f64
+  tolerance_class: ulp:1
 - id: rcp.rn
   kind: instruction
   opcodes: [rcp.rn, rcp.rz, rcp.rm, rcp.rp]
@@ -3302,7 +3304,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/rcp.rn
   tolerance_class: exact
   notes: IEEE reciprocal (fdiv 1/x).
 - id: red.async
@@ -3330,7 +3332,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/red.generic
   tolerance_class: exact
 - id: red.global
   kind: modifier
@@ -3343,7 +3345,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/red.global
   tolerance_class: reduction
   notes: All operations. clang emits atom even when the result is unused; ptxas turns that into RED.
 - id: red.scope
@@ -3397,7 +3399,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/red.shared
   tolerance_class: exact
 - id: 'red.shared::cluster'
   kind: modifier
@@ -3459,7 +3461,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/rem.int
   tolerance_class: exact
 - id: ret
   kind: instruction
@@ -3472,7 +3474,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/call
   tolerance_class: exact
 - id: rsqrt
   kind: instruction
@@ -3483,10 +3485,10 @@ features:
   min_target: all
   family: Xkmmufu
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/rsqrt
+  tolerance_class: ulp:2
 - id: rsqrt.approx.ftz.f64
   kind: instruction
   opcodes: [rsqrt.approx.ftz.f64]
@@ -3498,8 +3500,8 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/rsqrt.approx.ftz.f64
+  tolerance_class: ulp:2
 - id: sad
   kind: instruction
   opcodes: [sad]
@@ -3511,7 +3513,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/sad
   tolerance_class: exact
 - id: selp
   kind: instruction
@@ -3524,7 +3526,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/selp
   tolerance_class: exact
   notes: Zicond.
 - id: set
@@ -3538,7 +3540,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/set
   tolerance_class: exact
   notes: Integer and float compares; kernel covers .and/.or/.xor.
 - id: set.half
@@ -3551,7 +3553,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/set.half
   tolerance_class: exact
 - id: setmaxnreg
   kind: instruction
@@ -3578,7 +3580,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/setp
   tolerance_class: exact
 - id: setp.half
   kind: instruction
@@ -3590,7 +3592,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/setp.half
   tolerance_class: exact
 - id: shf
   kind: instruction
@@ -3603,7 +3605,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/shf
   tolerance_class: exact
   notes: Funnel shift (__funnelshift_l/r).
 - id: shfl
@@ -3629,7 +3631,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/shfl.sync.bfly
   tolerance_class: exact
 - id: shfl.sync.down
   kind: modifier
@@ -3642,7 +3644,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/shfl.sync.down
   tolerance_class: exact
 - id: shfl.sync.idx
   kind: modifier
@@ -3655,7 +3657,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/shfl.sync.idx
   tolerance_class: exact
 - id: shfl.sync.up
   kind: modifier
@@ -3668,7 +3670,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/shfl.sync.up
   tolerance_class: exact
 - id: shl
   kind: instruction
@@ -3681,7 +3683,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/shl
   tolerance_class: exact
 - id: shr
   kind: instruction
@@ -3694,7 +3696,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/shl
   tolerance_class: exact
 - id: sin
   kind: instruction
@@ -3705,10 +3707,10 @@ features:
   min_target: all
   family: Xkmmufu
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/sin
+  tolerance_class: ulp:2
   notes: The manual gives an absolute error bound; the class is refined with the H100 goldens.
 - id: slct
   kind: instruction
@@ -3721,7 +3723,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/slct
   tolerance_class: exact
 - id: space.const
   kind: state-space
@@ -3733,7 +3735,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.const
   tolerance_class: exact
   notes: '__constant__ data, read through ld.const.'
 - id: space.global
@@ -3746,7 +3748,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.global
   tolerance_class: exact
 - id: space.local
   kind: state-space
@@ -3758,7 +3760,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.local
   tolerance_class: exact
   notes: Per-thread memory; an address window (open decision 4).
 - id: space.param
@@ -3771,7 +3773,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/call
   tolerance_class: exact
   notes: Kernel and device-function parameters.
 - id: space.reg
@@ -3784,7 +3786,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/app.vecadd
   tolerance_class: exact
   notes: 'Virtual registers, unlimited; register allocation is open decision 1.'
 - id: space.shared
@@ -3797,7 +3799,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.shared
   tolerance_class: exact
   notes: Per-CTA memory; an address window (open decision 4).
 - id: 'space.shared::cluster'
@@ -3823,7 +3825,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.tid
   tolerance_class: exact
   notes: 'Special registers; see the sreg.* rows.'
 - id: space.tex
@@ -3846,10 +3848,10 @@ features:
   min_target: all
   family: Xkmmufu
   tier: 1
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:1'
+  entry: tests/corpus/xkmmufu/sqrt.approx
+  tolerance_class: ulp:1
 - id: sqrt.rn
   kind: instruction
   opcodes: [sqrt.rn, sqrt.rz, sqrt.rm, sqrt.rp]
@@ -3859,10 +3861,10 @@ features:
   min_target: all
   family: base
   tier: 1
-  route: cuda
+  route: builtin
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/sqrt.rn
+  tolerance_class: ulp:1
   notes: fsqrt.
 - id: sreg.aggr_smem_size
   kind: special-register
@@ -3886,8 +3888,8 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
-  tolerance_class: 'property:monotonic'
+  entry: tests/corpus/xkmsimt/sreg.clock
+  tolerance_class: property:monotonic
   notes: 'Also %clock_hi.'
 - id: sreg.clock64
   kind: special-register
@@ -3899,7 +3901,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.clock
   tolerance_class: 'property:monotonic'
 - id: sreg.cluster_ctaid
   kind: special-register
@@ -3971,7 +3973,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.tid
   tolerance_class: exact
 - id: sreg.current_graph_exec
   kind: special-register
@@ -3983,7 +3985,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.current_graph_exec
   tolerance_class: exact
   notes: 0 when the kernel is not launched from a CUDA graph.
 - id: sreg.dynamic_smem_size
@@ -3996,8 +3998,8 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmsimt/sreg.dynamic_smem_size
+  tolerance_class: property:range
 - id: sreg.envreg
   kind: special-register
   ptx_syntax: 'mov.u32 d, %envreg;'
@@ -4008,8 +4010,8 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'property:uniform'
+  entry: tests/corpus/xkmsimt/sreg.envreg
+  tolerance_class: property:uniform
   notes: '%envreg0..%envreg31, values set by the driver.'
 - id: sreg.globaltimer
   kind: special-register
@@ -4021,7 +4023,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.clock
   tolerance_class: 'property:monotonic'
   notes: 'Also %globaltimer_lo and %globaltimer_hi.'
 - id: sreg.gridid
@@ -4034,7 +4036,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.warpid
   tolerance_class: 'property:uniform'
 - id: sreg.is_explicit_cluster
   kind: special-register
@@ -4058,7 +4060,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.laneid
   tolerance_class: exact
 - id: sreg.lanemask_eq
   kind: special-register
@@ -4070,7 +4072,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.laneid
   tolerance_class: exact
 - id: sreg.lanemask_ge
   kind: special-register
@@ -4082,7 +4084,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.laneid
   tolerance_class: exact
 - id: sreg.lanemask_gt
   kind: special-register
@@ -4094,7 +4096,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.laneid
   tolerance_class: exact
 - id: sreg.lanemask_le
   kind: special-register
@@ -4106,7 +4108,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.laneid
   tolerance_class: exact
 - id: sreg.lanemask_lt
   kind: special-register
@@ -4118,7 +4120,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.laneid
   tolerance_class: exact
 - id: sreg.nclusterid
   kind: special-register
@@ -4142,7 +4144,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.tid
   tolerance_class: exact
 - id: sreg.nsmid
   kind: special-register
@@ -4154,7 +4156,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.warpid
   tolerance_class: 'property:range'
 - id: sreg.ntid
   kind: special-register
@@ -4166,7 +4168,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.tid
   tolerance_class: exact
 - id: sreg.nwarpid
   kind: special-register
@@ -4178,7 +4180,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.warpid
   tolerance_class: 'property:range'
 - id: sreg.pm
   kind: special-register
@@ -4225,7 +4227,7 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.warpid
   tolerance_class: 'property:range'
 - id: sreg.tid
   kind: special-register
@@ -4237,7 +4239,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.tid
   tolerance_class: exact
 - id: sreg.total_smem_size
   kind: special-register
@@ -4249,7 +4251,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.dynamic_smem_size
   tolerance_class: exact
 - id: sreg.warpid
   kind: special-register
@@ -4261,8 +4263,8 @@ features:
   tier: 1
   route: builtin
   status: in-scope
-  entry: ''
-  tolerance_class: 'property:range'
+  entry: tests/corpus/xkmsimt/sreg.warpid
+  tolerance_class: property:range
 - id: st.async
   kind: instruction
   opcodes: [st.async]
@@ -4300,7 +4302,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/st.cache_op
   tolerance_class: exact
   notes: Hints; may be ignored.
 - id: st.generic
@@ -4314,7 +4316,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.generic
   tolerance_class: exact
 - id: st.global
   kind: modifier
@@ -4327,7 +4329,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/st.global
   tolerance_class: exact
 - id: st.local
   kind: modifier
@@ -4340,7 +4342,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.local
   tolerance_class: exact
 - id: st.mmio
   kind: modifier
@@ -4366,7 +4368,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/call
   tolerance_class: exact
   notes: Device-function call arguments.
 - id: st.scope.cluster
@@ -4455,7 +4457,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.shared
   tolerance_class: exact
   notes: 'Includes .shared::cta.'
 - id: 'st.shared::cluster'
@@ -4484,7 +4486,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/ld.volatile
   tolerance_class: exact
 - id: stackrestore
   kind: instruction
@@ -4497,7 +4499,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/stacksave
   tolerance_class: exact
 - id: stacksave
   kind: instruction
@@ -4508,9 +4510,9 @@ features:
   min_target: sm_52
   family: base
   tier: 1
-  route: cuda
+  route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/stacksave
   tolerance_class: exact
   notes: Dynamic stack allocation (variable-length arrays).
 - id: stmatrix
@@ -4538,7 +4540,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/add.cc
   tolerance_class: exact
 - id: sub.fp
   kind: instruction
@@ -4550,7 +4552,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/sub.fp
   tolerance_class: exact
 - id: sub.half
   kind: instruction
@@ -4562,7 +4564,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/sub.half
   tolerance_class: exact
 - id: sub.int
   kind: instruction
@@ -4575,7 +4577,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/sub.int
   tolerance_class: exact
 - id: sub.mixed
   kind: instruction
@@ -4599,7 +4601,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/add.cc
   tolerance_class: exact
 - id: suld
   kind: instruction
@@ -4871,7 +4873,7 @@ features:
   tier: 1
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/testp
   tolerance_class: exact
   notes: fclass.
 - id: tex
@@ -4909,8 +4911,8 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/trap
+  tolerance_class: property:launch_fails
   notes: Aborts the kernel; the H100 run expects a launch error.
 - id: txq
   kind: instruction
@@ -4995,7 +4997,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/vote.sync.all
   tolerance_class: exact
 - id: vote.sync.any
   kind: modifier
@@ -5008,7 +5010,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/vote.sync.any
   tolerance_class: exact
 - id: vote.sync.ballot
   kind: modifier
@@ -5021,7 +5023,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/vote.sync.ballot
   tolerance_class: exact
 - id: vote.sync.uni
   kind: modifier
@@ -5034,7 +5036,7 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/vote.sync.uni
   tolerance_class: exact
 - id: vset
   kind: instruction
@@ -5264,5 +5266,5 @@ features:
   tier: 1
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/and
   tolerance_class: exact

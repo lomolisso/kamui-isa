@@ -1,0 +1,17 @@
+id: shl
+kernel: k_shl
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 13, low: 0, high: 4294967295}}
+  - {name: sh, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 14, low: 0, high: 40}}
+  - {name: dl32, kind: output, dtype: u32, count: 256}
+  - {name: dru32, kind: output, dtype: u32, count: 256}
+  - {name: drs32, kind: output, dtype: s32, count: 256}
+  - {name: dl64, kind: output, dtype: u64, count: 256}
+  - {name: dc, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['shl\.b32', 'shr\.u32', 'shr\.s32', 'shl\.b64']
+deterministic: true
+tolerance_class: exact
+notes: 'PTX clamps shift amounts above the width (RISC-V masks them); amounts 0 to 40 (64-bit: 0 to 80) show it.'

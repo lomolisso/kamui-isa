@@ -1,0 +1,16 @@
+id: mul24
+kernel: k_mul24
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 41, low: -67108864, high: 67108864}}
+  - {name: b, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 42, low: -67108864, high: 67108864}}
+  - {name: d, kind: output, dtype: s32, count: 256}
+  - {name: du, kind: output, dtype: u32, count: 256}
+  - {name: dhi, kind: output, dtype: s32, count: 256}
+  - {name: dc, kind: output, dtype: s32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['mul24\.lo\.s32', 'mul24\.lo\.u32', 'mul24\.hi\.s32']
+deterministic: true
+tolerance_class: exact
+notes: 'Only the low 24 bits of each operand count. clang 20 lowers __mul24 (dc) to a plain mul.lo.s32.'

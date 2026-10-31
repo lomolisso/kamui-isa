@@ -1,0 +1,12 @@
+id: div.fp.full
+kernel: k_div_fp_full
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: f32, count: 256, generator: {kind: random, seed: 135, low: -1.0e+30, high: 1.0e+30}}
+  - {name: b, kind: input, dtype: f32, count: 256, generator: {kind: random, seed: 136, low: -1.0e+30, high: 1.0e+30}}
+  - {name: d, kind: output, dtype: f32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['div\.full\.f32']
+deterministic: true
+tolerance_class: ulp:2

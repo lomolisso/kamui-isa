@@ -1,0 +1,12 @@
+id: app.vecadd
+kernel: k_app_vecadd
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [4, 1, 1], block: [256, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: f32, count: 1000, generator: {kind: random, seed: 1, low: -100.0, high: 100.0}}
+  - {name: b, kind: input, dtype: f32, count: 1000, generator: {kind: random, seed: 2, low: -100.0, high: 100.0}}
+  - {name: c, kind: output, dtype: f32, count: 1000}
+  - {name: n, kind: scalar, dtype: s32, value: 1000}
+expect_ptx: ['add\.rn\.f32', '\.version 8\.7', '\.target sm_90a', '\.address_size 64', '\.visible \.entry', '\.param \.u64 \.ptr', '\.reg \.', '@%p\d+ bra', 'ret;']
+deterministic: true
+tolerance_class: exact

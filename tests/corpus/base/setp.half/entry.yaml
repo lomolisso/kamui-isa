@@ -1,0 +1,12 @@
+id: setp.half
+kernel: k_setp_half
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: f16, count: 256, generator: {kind: random, seed: 189, low: -4.0, high: 4.0}}
+  - {name: b, kind: input, dtype: f16, count: 256, generator: {kind: random, seed: 190, low: -4.0, high: 4.0}}
+  - {name: d, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['setp\.\w+\.f16']
+deterministic: true
+tolerance_class: exact

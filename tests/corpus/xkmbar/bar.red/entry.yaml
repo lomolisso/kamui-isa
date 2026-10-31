@@ -1,0 +1,12 @@
+id: bar.red
+kernel: k_bar_red
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: val, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 301, low: 0, high: 4294967295}}
+  - {name: dc, kind: output, dtype: s32, count: 256}
+  - {name: da, kind: output, dtype: s32, count: 256}
+  - {name: dor, kind: output, dtype: s32, count: 256}
+expect_ptx: ['bar(rier)?\.red\.popc\.u32', 'bar(rier)?\.red\.and\.pred', 'bar(rier)?\.red\.or\.pred']
+deterministic: true
+tolerance_class: exact

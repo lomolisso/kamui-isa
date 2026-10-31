@@ -1,0 +1,12 @@
+id: activemask
+kernel: k_activemask
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: val, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 301, low: 0, high: 4294967295}}
+  - {name: d, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['activemask\.b32']
+deterministic: false
+tolerance_class: property:activemask
+notes: 'With independent thread scheduling the mask may be any subset containing the thread; check as a property.'

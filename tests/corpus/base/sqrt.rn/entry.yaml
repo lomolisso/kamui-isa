@@ -1,0 +1,15 @@
+id: sqrt.rn
+kernel: k_sqrt_rn
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: f32, count: 256, generator: {kind: random, seed: 149, low: 0.0, high: 1000000.0}}
+  - {name: d, kind: output, dtype: f32, count: 256}
+  - {name: a64, kind: input, dtype: f64, count: 256, generator: {kind: random, seed: 150, low: 0.0, high: 1000000.0}}
+  - {name: d64, kind: output, dtype: f64, count: 256}
+  - {name: dc, kind: output, dtype: f32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['sqrt\.rn\.f32', 'sqrt\.rn\.f64']
+deterministic: true
+tolerance_class: ulp:1
+notes: 'clang 20 lowers plain sqrtf (dc) to sqrt.approx.f32, unlike nvcc; __fsqrt_rn gives sqrt.rn.f32. dc needs ulp:1.'

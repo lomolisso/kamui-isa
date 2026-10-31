@@ -1,0 +1,11 @@
+id: sreg.current_graph_exec
+kernel: k_sreg_current_graph_exec
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: d, kind: output, dtype: u64, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['%current_graph_exec']
+deterministic: true
+tolerance_class: exact
+notes: '0 for a launch outside a CUDA graph.'

@@ -1,0 +1,14 @@
+id: setp
+kernel: k_setp
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a32, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 91, low: -8, high: 8}}
+  - {name: b32, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 92, low: -8, high: 8}}
+  - {name: fa, kind: input, dtype: f32, count: 256, generator: {kind: random, seed: 93, low: -2.0, high: 2.0}}
+  - {name: fb, kind: input, dtype: f32, count: 256, generator: {kind: random, seed: 94, low: -2.0, high: 2.0}}
+  - {name: d, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['setp\.eq\.s32', 'setp\.lt\.s32', 'setp\.[gl][te]\.u32', 'setp\.\w+\.f32', 'setp\.nan\.f32|setp\.\w*u\.f32']
+deterministic: true
+tolerance_class: exact

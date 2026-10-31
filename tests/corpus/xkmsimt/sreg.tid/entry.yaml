@@ -1,0 +1,9 @@
+id: sreg.tid
+kernel: k_sreg_tid
+compile: {extra_flags: []}
+launch: {grid: [2, 2, 2], block: [8, 4, 2], cluster: null, dynamic_smem: 0}
+params:
+  - {name: d, kind: output, dtype: u32, count: 2048}
+expect_ptx: ['%tid\.z', '%ntid\.y', '%ctaid\.z', '%nctaid\.y']
+deterministic: true
+tolerance_class: exact

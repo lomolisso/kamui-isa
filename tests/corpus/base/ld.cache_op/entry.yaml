@@ -1,0 +1,12 @@
+id: ld.cache_op
+kernel: k_ld_cache_op
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 321, low: -1000, high: 1000}}
+  - {name: d, kind: output, dtype: s32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['ld\.global\.ca', 'ld\.global\.cg', 'ld\.global\.cs', 'ld\.global\.lu', 'ld\.global\.cv']
+deterministic: true
+tolerance_class: exact
+notes: 'clang 20''s CUDA headers do not provide __ldcg and friends; inline asm.'

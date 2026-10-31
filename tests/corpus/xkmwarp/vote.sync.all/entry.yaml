@@ -1,0 +1,13 @@
+id: vote.sync.all
+kernel: k_vote_sync_all
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: val, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 301, low: 0, high: 4294967295}}
+  - {name: d, kind: output, dtype: u32, count: 256}
+  - {name: dh, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['vote\.sync\.all\.pred']
+deterministic: true
+tolerance_class: exact
+notes: 'Warps 0 to 2 use all-true, all-false and all-but-one predicates; the second vote uses the low half-warp.'

@@ -30,148 +30,148 @@ instructions are specified. Columns:
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `abs.fp` | `abs{.ftz}.f32 d, a;` | 9.7.3.9 | 1 | cuda |  |  |  |
-| `abs.half` | `abs{.ftz}.f16 d, a;` | 9.7.4.6 | 1 | cuda |  |  |  |
-| `abs.int` | `abs.type d, a;` | 9.7.1.10 | 1 | cuda |  |  |  |
-| `add.cc` | `add.cc.type d, a, b;` | 9.7.2.1 | 1 | cuda |  |  |  |
-| `add.fp` | `add{.rnd}{.ftz}{.sat}.f32 d, a, b;` | 9.7.3.3 | 1 | cuda |  |  |  |
-| `add.half` | `add{.rnd}{.ftz}{.sat}.f16 d, a, b;` | 9.7.4.1 | 1 | cuda |  |  |  |
-| `add.int` | `add.type d, a, b;` | 9.7.1.1 | 1 | cuda |  |  |  |
-| `addc` | `addc{.cc}.type d, a, b;` | 9.7.2.2 | 1 | cuda |  |  |  |
-| `alloca` | `alloca.type ptr, size{, immAlign};` | 9.7.17.3 | 1 | cuda |  |  |  |
-| `and` | `and.type d, a, b;` | 9.7.8.1 | 1 | cuda |  |  |  |
-| `app.atomics` |  |  | 1 | cuda |  |  |  |
-| `app.vecadd` |  |  | 1 | cuda |  |  |  |
-| `atom.generic.add` | `atom.add.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.global.add` | `atom.global.add.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.global.and` | `atom.global.and.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.global.cas` | `atom.global.cas.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.global.dec` | `atom.global.dec.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.global.exch` | `atom.global.exch.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.global.inc` | `atom.global.inc.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.global.max` | `atom.global.max.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.global.min` | `atom.global.min.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.global.or` | `atom.global.or.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.global.xor` | `atom.global.xor.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `atom.shared.add` | `atom.shared.add.type d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `bfind` | `bfind.type d, a;` | 9.7.1.16 | 1 | inline-asm |  |  |  |
-| `bra.uni` | `bra.uni tgt;` | 9.7.12.3 | 1 | cuda |  |  |  |
-| `brkpt` | `brkpt;` | 9.7.19.1 | 1 | cuda |  |  |  |
-| `call` | `call{.uni} (ret-param), func, (param-list);` | 9.7.12.5 | 1 | cuda |  |  |  |
-| `call.indirect` | `call{.uni} (ret-param), fptr, (param-list), flist;` | 9.7.12.5 | 1 | cuda |  |  |  |
-| `clz` | `clz.type d, a;` | 9.7.1.15 | 1 | cuda |  |  |  |
-| `cnot` | `cnot.type d, a;` | 9.7.8.5 | 1 | inline-asm |  |  |  |
-| `copysign` | `copysign.type d, a, b;` | 9.7.3.2 | 1 | cuda |  |  |  |
-| `ctrl.block` | `{ instructionList }` | 9.7.12.1 | 1 | cuda |  |  |  |
-| `cvt.fp` | `cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a;` | 9.7.9.21 | 1 | cuda |  |  |  |
-| `cvt.half` | `cvt.frnd2{.relu}{.satfinite}.f16.f32 d, a;` | 9.7.9.21 | 1 | cuda |  |  |  |
-| `cvt.int` | `cvt{.sat}.dtype.atype d, a;` | 9.7.9.21 | 1 | cuda |  |  |  |
-| `cvta` | `cvta.space.size p, a;` | 9.7.9.20 | 1 | cuda |  |  |  |
-| `dir.address_size` | `.address_size address-size` | 11.1.3 | 1 | cuda |  |  |  |
-| `dir.alias` | `.alias fAlias, fAliasee;` | 11.2.3 | 1 | cuda |  |  |  |
-| `dir.attribute` | `.global .attribute(.managed) .type name;` | 5.4.8 | 1 | cuda |  |  |  |
-| `dir.callprototype` | `label: .callprototype _ .noreturn;` | 11.3.3 | 1 | cuda |  |  |  |
-| `dir.calltargets` | `Label: .calltargets list-of-functions ;` | 11.3.2 | 1 | inline-asm |  |  |  |
-| `dir.common` | `.common identifier` | 11.6.4 | 1 | inline-asm |  |  |  |
-| `dir.dwarf` | `@@DWARF dwarf-string` | 11.5.1 | 1 | cuda |  |  |  |
-| `dir.entry` | `.entry kernel-name ( param-list ) kernel-body` | 11.2.1 | 1 | cuda |  |  |  |
-| `dir.extern` | `.extern identifier` | 11.6.1 | 1 | cuda |  |  |  |
-| `dir.file` | `.file file_index "filename" {, timestamp, file_size}` | 11.5.3 | 1 | cuda |  |  |  |
-| `dir.func` | `.func {.attribute(attr-list)} fname {.noreturn} function-body` | 11.2.2 | 1 | cuda |  |  |  |
-| `dir.loc` | `.loc file_index line_number column_position` | 11.5.4 | 1 | cuda |  |  |  |
-| `dir.maxnreg` | `.maxnreg n` | 11.4.1 | 1 | cuda |  |  |  |
-| `dir.maxntid` | `.maxntid nx` | 11.4.2 | 1 | cuda |  |  |  |
-| `dir.minnctapersm` | `.minnctapersm ncta` | 11.4.4 | 1 | cuda |  |  |  |
-| `dir.noreturn` | `.noreturn` | 11.4.6 | 1 | inline-asm |  |  |  |
-| `dir.pragma` | `.pragma list-of-strings ;` | 11.4.7 | 1 | cuda |  |  |  |
-| `dir.ptr` | `.param .type .ptr .space .align N varname` | 5.1.6.3 | 1 | cuda |  |  |  |
-| `dir.reqntid` | `.reqntid nx` | 11.4.3 | 1 | inline-asm |  |  |  |
-| `dir.section` | `.section section_name { dwarf-lines }` | 11.5.2 | 1 | cuda |  |  |  |
-| `dir.target` | `.target stringlist` | 11.1.2 | 1 | cuda |  |  |  |
-| `dir.version` | `.version major.minor` | 11.1.1 | 1 | cuda |  |  |  |
-| `dir.visible` | `.visible identifier` | 11.6.2 | 1 | cuda |  |  |  |
-| `dir.weak` | `.weak identifier` | 11.6.3 | 1 | cuda |  |  |  |
-| `div.fp.rn` | `div.rnd{.ftz}.f32 d, a, b;` | 9.7.3.8 | 1 | cuda |  |  |  |
-| `div.int` | `div.type d, a, b;` | 9.7.1.8 | 1 | cuda |  |  |  |
-| `fma.fp` | `fma.rnd{.ftz}{.sat}.f32 d, a, b, c;` | 9.7.3.6 | 1 | cuda |  |  |  |
-| `fma.half` | `fma.rnd{.ftz}{.sat}.f16 d, a, b, c;` | 9.7.4.4 | 1 | cuda |  |  |  |
-| `fp.ftz` | `add{.rnd}.ftz.f32 d, a, b;` | 9.7.3.3 | 1 | cuda |  |  |  |
-| `fp.rounding` | `.rnd = { .rn, .rz, .rm, .rp }` | 9.7.3.3 | 1 | inline-asm |  |  |  |
-| `fp.sat` | `add{.rnd}{.ftz}.sat.f32 d, a, b;` | 9.7.3.3 | 1 | inline-asm |  |  |  |
-| `isspacep` | `isspacep.space p, a;` | 9.7.9.19 | 1 | builtin |  |  |  |
-| `ld.cache_op` | `ld.space.cop.type d, [a]; .cop = { .ca, .cg, .cs, .lu, .cv }` | 9.7.9.1 | 1 | builtin |  |  |  |
-| `ld.const` | `ld.const.type d, [a];` | 9.7.9.8 | 1 | cuda |  |  |  |
-| `ld.generic` | `ld.type d, [a];` | 9.7.9.8 | 1 | cuda |  |  |  |
-| `ld.global` | `ld.global.type d, [a];` | 9.7.9.8 | 1 | cuda |  |  |  |
-| `ld.global.nc` | `ld.global{.cop}.nc{.level::cache_hint}{.level::prefetch_size}.type d, [a]{, cache-policy};` | 9.7.9.9 | 1 | builtin |  |  |  |
-| `ld.local` | `ld.local.type d, [a];` | 9.7.9.8 | 1 | cuda |  |  |  |
-| `ld.param` | `ld.param.type d, [a];` | 9.7.9.8 | 1 | cuda |  |  |  |
-| `ld.shared` | `ld.shared.type d, [a];` | 9.7.9.8 | 1 | cuda |  |  |  |
-| `ld.volatile` | `ld.volatile.space.type d, [a];` | 9.7.9.8 | 1 | cuda |  |  |  |
-| `ldu` | `ldu{.ss}.type d, [a];` | 9.7.9.10 | 1 | builtin |  |  |  |
-| `mad.cc` | `mad{.hi,.lo}.cc.type d, a, b, c;` | 9.7.2.5 | 1 | inline-asm |  |  |  |
-| `mad.fp` | `mad{.ftz}{.sat}.f32 d, a, b, c;` | 9.7.3.7 | 1 | inline-asm |  |  |  |
-| `mad.int` | `mad.mode.type d, a, b, c;` | 9.7.1.4 | 1 | cuda |  |  |  |
-| `mad24` | `mad24.mode.type d, a, b, c;` | 9.7.1.6 | 1 | inline-asm |  |  |  |
-| `madc` | `madc{.hi,.lo}{.cc}.type d, a, b, c;` | 9.7.2.6 | 1 | inline-asm |  |  |  |
-| `max.fp` | `max{.ftz}{.NaN}{.xorsign.abs}.f32 d, a, b;` | 9.7.3.12 | 1 | cuda |  |  |  |
-| `max.int` | `max.atype d, a, b;` | 9.7.1.13 | 1 | cuda |  |  |  |
-| `min.fp` | `min{.ftz}{.NaN}{.xorsign.abs}.f32 d, a, b;` | 9.7.3.11 | 1 | cuda |  |  |  |
-| `min.int` | `min.atype d, a, b;` | 9.7.1.12 | 1 | cuda |  |  |  |
-| `mov` | `mov.type d, a;` | 9.7.9.3 | 1 | cuda |  |  |  |
-| `mov.packing` | `mov.type d, {a, b};` | 9.7.9.4 | 1 | cuda |  |  |  |
-| `mul.fp` | `mul{.rnd}{.ftz}{.sat}.f32 d, a, b;` | 9.7.3.5 | 1 | cuda |  |  |  |
-| `mul.half` | `mul{.rnd}{.ftz}{.sat}.f16 d, a, b;` | 9.7.4.3 | 1 | cuda |  |  |  |
-| `mul.int` | `mul.mode.type d, a, b;` | 9.7.1.3 | 1 | cuda |  |  |  |
-| `mul24` | `mul24.mode.type d, a, b;` | 9.7.1.5 | 1 | builtin |  |  |  |
-| `neg.fp` | `neg{.ftz}.f32 d, a;` | 9.7.3.10 | 1 | cuda |  |  |  |
-| `neg.half` | `neg{.ftz}.f16 d, a;` | 9.7.4.5 | 1 | cuda |  |  |  |
-| `neg.int` | `neg.type d, a;` | 9.7.1.11 | 1 | cuda |  |  |  |
-| `not` | `not.type d, a;` | 9.7.8.4 | 1 | cuda |  |  |  |
-| `or` | `or.type d, a, b;` | 9.7.8.2 | 1 | cuda |  |  |  |
-| `popc` | `popc.type d, a;` | 9.7.1.14 | 1 | cuda |  |  |  |
-| `prefetch` | `prefetch{.space}.level [a];` | 9.7.9.15 | 1 | inline-asm |  |  |  |
-| `prefetchu` | `prefetchu.L1 [a];` | 9.7.9.15 | 1 | inline-asm |  |  |  |
-| `rcp.rn` | `rcp.rnd{.ftz}.f32 d, a;` | 9.7.3.13 | 1 | builtin |  |  |  |
-| `red.generic` | `red.add.type [a], b;` | 9.7.13.6 | 1 | inline-asm |  |  |  |
-| `red.global` | `red.global.add.type [a], b;` | 9.7.13.6 | 1 | inline-asm |  |  |  |
-| `red.shared` | `red.shared.add.type [a], b;` | 9.7.13.6 | 1 | inline-asm |  |  |  |
-| `rem.int` | `rem.type d, a, b;` | 9.7.1.9 | 1 | cuda |  |  |  |
-| `ret` | `ret{.uni};` | 9.7.12.6 | 1 | cuda |  |  |  |
-| `sad` | `sad.type d, a, b, c;` | 9.7.1.7 | 1 | builtin |  |  |  |
-| `selp` | `selp.type d, a, b, c;` | 9.7.6.3 | 1 | cuda |  |  |  |
-| `set` | `set.CmpOp{.ftz}.dtype.stype d, a, b;` | 9.7.6.1 | 1 | inline-asm |  |  |  |
-| `set.half` | `set.CmpOp{.ftz}.f16.stype d, a, b;` | 9.7.7.1 | 1 | inline-asm |  |  |  |
-| `setp` | `setp.CmpOp{.ftz}.type p[\|q], a, b;` | 9.7.6.2 | 1 | cuda |  |  |  |
-| `setp.half` | `setp.CmpOp{.ftz}.f16 p, a, b;` | 9.7.7.2 | 1 | cuda |  |  |  |
-| `shf` | `shf.l.mode.b32 d, a, b, c;` | 9.7.8.7 | 1 | cuda |  |  |  |
-| `shl` | `shl.type d, a, b;` | 9.7.8.8 | 1 | cuda |  |  |  |
-| `shr` | `shr.type d, a, b;` | 9.7.8.9 | 1 | cuda |  |  |  |
-| `slct` | `slct.dtype.s32 d, a, b, c;` | 9.7.6.4 | 1 | inline-asm |  |  |  |
-| `space.const` | `.const .type name;` | 5.1.3 | 1 | cuda |  |  |  |
-| `space.global` | `.global .type name;` | 5.1.4 | 1 | cuda |  |  |  |
-| `space.local` | `.local .type name;` | 5.1.5 | 1 | cuda |  |  |  |
-| `space.param` | `.param .type name;` | 5.1.6 | 1 | cuda |  |  |  |
-| `space.reg` | `.reg .type name;` | 5.1.1 | 1 | cuda |  |  |  |
-| `space.shared` | `.shared{::cta} .type name;` | 5.1.7 | 1 | cuda |  |  |  |
-| `sqrt.rn` | `sqrt.rnd{.ftz}.f32 d, a;` | 9.7.3.15 | 1 | cuda |  |  |  |
-| `st.cache_op` | `st.space.cop.type [a], b; .cop = { .wb, .cg, .cs, .wt }` | 9.7.9.1 | 1 | inline-asm |  |  |  |
-| `st.generic` | `st.type [a], b;` | 9.7.9.11 | 1 | cuda |  |  |  |
-| `st.global` | `st.global.type [a], b;` | 9.7.9.11 | 1 | cuda |  |  |  |
-| `st.local` | `st.local.type [a], b;` | 9.7.9.11 | 1 | cuda |  |  |  |
-| `st.param` | `st.param.type [a], b;` | 9.7.9.11 | 1 | cuda |  |  |  |
-| `st.shared` | `st.shared.type [a], b;` | 9.7.9.11 | 1 | cuda |  |  |  |
-| `st.volatile` | `st.volatile.space.type [a], b;` | 9.7.9.11 | 1 | cuda |  |  |  |
-| `stackrestore` | `stackrestore.type a;` | 9.7.17.2 | 1 | cuda |  |  |  |
-| `stacksave` | `stacksave.type d;` | 9.7.17.1 | 1 | cuda |  |  |  |
-| `sub.cc` | `sub.cc.type d, a, b;` | 9.7.2.3 | 1 | cuda |  |  |  |
-| `sub.fp` | `sub{.rnd}{.ftz}{.sat}.f32 d, a, b;` | 9.7.3.4 | 1 | cuda |  |  |  |
-| `sub.half` | `sub{.rnd}{.ftz}{.sat}.f16 d, a, b;` | 9.7.4.2 | 1 | cuda |  |  |  |
-| `sub.int` | `sub.type d, a, b;` | 9.7.1.2 | 1 | cuda |  |  |  |
-| `subc` | `subc{.cc}.type d, a, b;` | 9.7.2.4 | 1 | cuda |  |  |  |
-| `testp` | `testp.op.type p, a;` | 9.7.3.1 | 1 | inline-asm |  |  |  |
-| `trap` | `trap;` | 9.7.19.4 | 1 | cuda |  |  |  |
-| `xor` | `xor.type d, a, b;` | 9.7.8.3 | 1 | cuda |  |  |  |
+| `abs.fp` | `abs{.ftz}.f32 d, a;` | 9.7.3.9 | 1 | cuda | `base/abs.fp` |  |  |
+| `abs.half` | `abs{.ftz}.f16 d, a;` | 9.7.4.6 | 1 | cuda | `base/abs.half` |  |  |
+| `abs.int` | `abs.type d, a;` | 9.7.1.10 | 1 | cuda | `base/abs.int` |  |  |
+| `add.cc` | `add.cc.type d, a, b;` | 9.7.2.1 | 1 | cuda | `base/add.cc` |  |  |
+| `add.fp` | `add{.rnd}{.ftz}{.sat}.f32 d, a, b;` | 9.7.3.3 | 1 | cuda | `base/add.fp` |  |  |
+| `add.half` | `add{.rnd}{.ftz}{.sat}.f16 d, a, b;` | 9.7.4.1 | 1 | cuda | `base/add.half` |  |  |
+| `add.int` | `add.type d, a, b;` | 9.7.1.1 | 1 | cuda | `base/add.int` |  |  |
+| `addc` | `addc{.cc}.type d, a, b;` | 9.7.2.2 | 1 | cuda | `base/add.cc` |  |  |
+| `alloca` | `alloca.type ptr, size{, immAlign};` | 9.7.17.3 | 1 | cuda | `base/stacksave` |  |  |
+| `and` | `and.type d, a, b;` | 9.7.8.1 | 1 | cuda | `base/and` |  |  |
+| `app.atomics` |  |  | 1 | cuda | `base/app.atomics` |  |  |
+| `app.vecadd` |  |  | 1 | cuda | `base/app.vecadd` |  |  |
+| `atom.generic.add` | `atom.add.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.generic.add` |  |  |
+| `atom.global.add` | `atom.global.add.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.global.add` |  |  |
+| `atom.global.and` | `atom.global.and.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.global.and` |  |  |
+| `atom.global.cas` | `atom.global.cas.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.global.cas` |  |  |
+| `atom.global.dec` | `atom.global.dec.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.global.dec` |  |  |
+| `atom.global.exch` | `atom.global.exch.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.global.exch` |  |  |
+| `atom.global.inc` | `atom.global.inc.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.global.inc` |  |  |
+| `atom.global.max` | `atom.global.max.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.global.max` |  |  |
+| `atom.global.min` | `atom.global.min.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.global.min` |  |  |
+| `atom.global.or` | `atom.global.or.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.global.or` |  |  |
+| `atom.global.xor` | `atom.global.xor.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.global.xor` |  |  |
+| `atom.shared.add` | `atom.shared.add.type d, [a], b;` | 9.7.13.5 | 1 | cuda | `base/atom.shared.add` |  |  |
+| `bfind` | `bfind.type d, a;` | 9.7.1.16 | 1 | inline-asm | `base/bfind` |  |  |
+| `bra.uni` | `bra.uni tgt;` | 9.7.12.3 | 1 | cuda | `base/bra.uni` |  |  |
+| `brkpt` | `brkpt;` | 9.7.19.1 | 1 | cuda | `base/brkpt` |  |  |
+| `call` | `call{.uni} (ret-param), func, (param-list);` | 9.7.12.5 | 1 | cuda | `base/call` |  |  |
+| `call.indirect` | `call{.uni} (ret-param), fptr, (param-list), flist;` | 9.7.12.5 | 1 | cuda | `base/call.indirect` |  |  |
+| `clz` | `clz.type d, a;` | 9.7.1.15 | 1 | cuda | `base/clz` |  |  |
+| `cnot` | `cnot.type d, a;` | 9.7.8.5 | 1 | inline-asm | `base/cnot` |  |  |
+| `copysign` | `copysign.type d, a, b;` | 9.7.3.2 | 1 | cuda | `base/copysign` |  |  |
+| `ctrl.block` | `{ instructionList }` | 9.7.12.1 | 1 | cuda | `base/call` |  |  |
+| `cvt.fp` | `cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a;` | 9.7.9.21 | 1 | cuda | `base/cvt.fp` |  |  |
+| `cvt.half` | `cvt.frnd2{.relu}{.satfinite}.f16.f32 d, a;` | 9.7.9.21 | 1 | cuda | `base/cvt.half` |  |  |
+| `cvt.int` | `cvt{.sat}.dtype.atype d, a;` | 9.7.9.21 | 1 | cuda | `base/cvt.int` |  |  |
+| `cvta` | `cvta.space.size p, a;` | 9.7.9.20 | 1 | inline-asm | `base/cvta` |  |  |
+| `dir.address_size` | `.address_size address-size` | 11.1.3 | 1 | cuda | `base/app.vecadd` |  |  |
+| `dir.alias` | `.alias fAlias, fAliasee;` | 11.2.3 | 1 | cuda | `base/dir.alias` |  |  |
+| `dir.attribute` | `.global .attribute(.managed) .type name;` | 5.4.8 | 1 | cuda | pending |  |  |
+| `dir.callprototype` | `label: .callprototype _ .noreturn;` | 11.3.3 | 1 | cuda | `base/call.indirect` |  |  |
+| `dir.calltargets` | `Label: .calltargets list-of-functions ;` | 11.3.2 | 1 | inline-asm | pending |  |  |
+| `dir.common` | `.common identifier` | 11.6.4 | 1 | inline-asm | pending |  |  |
+| `dir.dwarf` | `@@DWARF dwarf-string` | 11.5.1 | 1 | cuda | pending |  |  |
+| `dir.entry` | `.entry kernel-name ( param-list ) kernel-body` | 11.2.1 | 1 | cuda | `base/app.vecadd` |  |  |
+| `dir.extern` | `.extern identifier` | 11.6.1 | 1 | cuda | `base/dir.extern` |  |  |
+| `dir.file` | `.file file_index "filename" {, timestamp, file_size}` | 11.5.3 | 1 | cuda | `base/dir.loc` |  |  |
+| `dir.func` | `.func {.attribute(attr-list)} fname {.noreturn} function-body` | 11.2.2 | 1 | cuda | `base/call` |  |  |
+| `dir.loc` | `.loc file_index line_number column_position` | 11.5.4 | 1 | cuda | `base/dir.loc` |  |  |
+| `dir.maxnreg` | `.maxnreg n` | 11.4.1 | 1 | llvm-ir | `base/dir.maxnreg` |  |  |
+| `dir.maxntid` | `.maxntid nx` | 11.4.2 | 1 | cuda | `base/dir.maxntid` |  |  |
+| `dir.minnctapersm` | `.minnctapersm ncta` | 11.4.4 | 1 | cuda | `base/dir.maxntid` |  |  |
+| `dir.noreturn` | `.noreturn` | 11.4.6 | 1 | cuda | `base/dir.noreturn` |  |  |
+| `dir.pragma` | `.pragma list-of-strings ;` | 11.4.7 | 1 | cuda | `base/dir.pragma` |  |  |
+| `dir.ptr` | `.param .type .ptr .space .align N varname` | 5.1.6.3 | 1 | cuda | `base/app.vecadd` |  |  |
+| `dir.reqntid` | `.reqntid nx` | 11.4.3 | 1 | llvm-ir | `base/dir.reqntid` |  |  |
+| `dir.section` | `.section section_name { dwarf-lines }` | 11.5.2 | 1 | cuda | `base/dir.loc` |  |  |
+| `dir.target` | `.target stringlist` | 11.1.2 | 1 | cuda | `base/app.vecadd` |  |  |
+| `dir.version` | `.version major.minor` | 11.1.1 | 1 | cuda | `base/app.vecadd` |  |  |
+| `dir.visible` | `.visible identifier` | 11.6.2 | 1 | cuda | `base/app.vecadd` |  |  |
+| `dir.weak` | `.weak identifier` | 11.6.3 | 1 | cuda | `base/dir.weak` |  |  |
+| `div.fp.rn` | `div.rnd{.ftz}.f32 d, a, b;` | 9.7.3.8 | 1 | cuda | `base/div.fp.rn` |  |  |
+| `div.int` | `div.type d, a, b;` | 9.7.1.8 | 1 | cuda | `base/div.int` |  |  |
+| `fma.fp` | `fma.rnd{.ftz}{.sat}.f32 d, a, b, c;` | 9.7.3.6 | 1 | cuda | `base/fma.fp` |  |  |
+| `fma.half` | `fma.rnd{.ftz}{.sat}.f16 d, a, b, c;` | 9.7.4.4 | 1 | cuda | `base/fma.half` |  |  |
+| `fp.ftz` | `add{.rnd}.ftz.f32 d, a, b;` | 9.7.3.3 | 1 | cuda | `base/fp.ftz` |  |  |
+| `fp.rounding` | `.rnd = { .rn, .rz, .rm, .rp }` | 9.7.3.3 | 1 | inline-asm | `base/fp.rounding` |  |  |
+| `fp.sat` | `add{.rnd}{.ftz}.sat.f32 d, a, b;` | 9.7.3.3 | 1 | inline-asm | `base/fp.sat` |  |  |
+| `isspacep` | `isspacep.space p, a;` | 9.7.9.19 | 1 | builtin | `base/isspacep` |  |  |
+| `ld.cache_op` | `ld.space.cop.type d, [a]; .cop = { .ca, .cg, .cs, .lu, .cv }` | 9.7.9.1 | 1 | inline-asm | `base/ld.cache_op` |  |  |
+| `ld.const` | `ld.const.type d, [a];` | 9.7.9.8 | 1 | cuda | `base/ld.const` |  |  |
+| `ld.generic` | `ld.type d, [a];` | 9.7.9.8 | 1 | cuda | `base/ld.generic` |  |  |
+| `ld.global` | `ld.global.type d, [a];` | 9.7.9.8 | 1 | cuda | `base/ld.global` |  |  |
+| `ld.global.nc` | `ld.global{.cop}.nc{.level::cache_hint}{.level::prefetch_size}.type d, [a]{, cache-policy};` | 9.7.9.9 | 1 | builtin | `base/ld.global.nc` |  |  |
+| `ld.local` | `ld.local.type d, [a];` | 9.7.9.8 | 1 | cuda | `base/ld.local` |  |  |
+| `ld.param` | `ld.param.type d, [a];` | 9.7.9.8 | 1 | cuda | `base/call` |  |  |
+| `ld.shared` | `ld.shared.type d, [a];` | 9.7.9.8 | 1 | cuda | `base/ld.shared` |  |  |
+| `ld.volatile` | `ld.volatile.space.type d, [a];` | 9.7.9.8 | 1 | cuda | `base/ld.volatile` |  |  |
+| `ldu` | `ldu{.ss}.type d, [a];` | 9.7.9.10 | 1 | builtin | `base/ldu` |  |  |
+| `mad.cc` | `mad{.hi,.lo}.cc.type d, a, b, c;` | 9.7.2.5 | 1 | inline-asm | `base/mad.cc` |  |  |
+| `mad.fp` | `mad{.ftz}{.sat}.f32 d, a, b, c;` | 9.7.3.7 | 1 | inline-asm | `base/mad.fp` |  |  |
+| `mad.int` | `mad.mode.type d, a, b, c;` | 9.7.1.4 | 1 | cuda | `base/mad.int` |  |  |
+| `mad24` | `mad24.mode.type d, a, b, c;` | 9.7.1.6 | 1 | inline-asm | `base/mad24` |  |  |
+| `madc` | `madc{.hi,.lo}{.cc}.type d, a, b, c;` | 9.7.2.6 | 1 | inline-asm | `base/mad.cc` |  |  |
+| `max.fp` | `max{.ftz}{.NaN}{.xorsign.abs}.f32 d, a, b;` | 9.7.3.12 | 1 | cuda | `base/max.fp` |  |  |
+| `max.int` | `max.atype d, a, b;` | 9.7.1.13 | 1 | cuda | `base/max.int` |  |  |
+| `min.fp` | `min{.ftz}{.NaN}{.xorsign.abs}.f32 d, a, b;` | 9.7.3.11 | 1 | cuda | `base/min.fp` |  |  |
+| `min.int` | `min.atype d, a, b;` | 9.7.1.12 | 1 | cuda | `base/min.int` |  |  |
+| `mov` | `mov.type d, a;` | 9.7.9.3 | 1 | inline-asm | `base/mov` |  |  |
+| `mov.packing` | `mov.type d, {a, b};` | 9.7.9.4 | 1 | inline-asm | `base/mov.packing` |  |  |
+| `mul.fp` | `mul{.rnd}{.ftz}{.sat}.f32 d, a, b;` | 9.7.3.5 | 1 | cuda | `base/mul.fp` |  |  |
+| `mul.half` | `mul{.rnd}{.ftz}{.sat}.f16 d, a, b;` | 9.7.4.3 | 1 | cuda | `base/mul.half` |  |  |
+| `mul.int` | `mul.mode.type d, a, b;` | 9.7.1.3 | 1 | cuda | `base/mul.int` |  |  |
+| `mul24` | `mul24.mode.type d, a, b;` | 9.7.1.5 | 1 | inline-asm | `base/mul24` |  |  |
+| `neg.fp` | `neg{.ftz}.f32 d, a;` | 9.7.3.10 | 1 | cuda | `base/neg.fp` |  |  |
+| `neg.half` | `neg{.ftz}.f16 d, a;` | 9.7.4.5 | 1 | cuda | `base/neg.half` |  |  |
+| `neg.int` | `neg.type d, a;` | 9.7.1.11 | 1 | cuda | `base/neg.int` |  |  |
+| `not` | `not.type d, a;` | 9.7.8.4 | 1 | cuda | `base/and` |  |  |
+| `or` | `or.type d, a, b;` | 9.7.8.2 | 1 | cuda | `base/and` |  |  |
+| `popc` | `popc.type d, a;` | 9.7.1.14 | 1 | cuda | `base/popc` |  |  |
+| `prefetch` | `prefetch{.space}.level [a];` | 9.7.9.15 | 1 | inline-asm | `base/prefetch` |  |  |
+| `prefetchu` | `prefetchu.L1 [a];` | 9.7.9.15 | 1 | inline-asm | `base/prefetchu` |  |  |
+| `rcp.rn` | `rcp.rnd{.ftz}.f32 d, a;` | 9.7.3.13 | 1 | builtin | `base/rcp.rn` |  |  |
+| `red.generic` | `red.add.type [a], b;` | 9.7.13.6 | 1 | inline-asm | `base/red.generic` |  |  |
+| `red.global` | `red.global.add.type [a], b;` | 9.7.13.6 | 1 | inline-asm | `base/red.global` |  |  |
+| `red.shared` | `red.shared.add.type [a], b;` | 9.7.13.6 | 1 | inline-asm | `base/red.shared` |  |  |
+| `rem.int` | `rem.type d, a, b;` | 9.7.1.9 | 1 | cuda | `base/rem.int` |  |  |
+| `ret` | `ret{.uni};` | 9.7.12.6 | 1 | cuda | `base/call` |  |  |
+| `sad` | `sad.type d, a, b, c;` | 9.7.1.7 | 1 | builtin | `base/sad` |  |  |
+| `selp` | `selp.type d, a, b, c;` | 9.7.6.3 | 1 | cuda | `base/selp` |  |  |
+| `set` | `set.CmpOp{.ftz}.dtype.stype d, a, b;` | 9.7.6.1 | 1 | inline-asm | `base/set` |  |  |
+| `set.half` | `set.CmpOp{.ftz}.f16.stype d, a, b;` | 9.7.7.1 | 1 | inline-asm | `base/set.half` |  |  |
+| `setp` | `setp.CmpOp{.ftz}.type p[\|q], a, b;` | 9.7.6.2 | 1 | cuda | `base/setp` |  |  |
+| `setp.half` | `setp.CmpOp{.ftz}.f16 p, a, b;` | 9.7.7.2 | 1 | cuda | `base/setp.half` |  |  |
+| `shf` | `shf.l.mode.b32 d, a, b, c;` | 9.7.8.7 | 1 | cuda | `base/shf` |  |  |
+| `shl` | `shl.type d, a, b;` | 9.7.8.8 | 1 | cuda | `base/shl` |  |  |
+| `shr` | `shr.type d, a, b;` | 9.7.8.9 | 1 | cuda | `base/shl` |  |  |
+| `slct` | `slct.dtype.s32 d, a, b, c;` | 9.7.6.4 | 1 | inline-asm | `base/slct` |  |  |
+| `space.const` | `.const .type name;` | 5.1.3 | 1 | cuda | `base/ld.const` |  |  |
+| `space.global` | `.global .type name;` | 5.1.4 | 1 | cuda | `base/ld.global` |  |  |
+| `space.local` | `.local .type name;` | 5.1.5 | 1 | cuda | `base/ld.local` |  |  |
+| `space.param` | `.param .type name;` | 5.1.6 | 1 | cuda | `base/call` |  |  |
+| `space.reg` | `.reg .type name;` | 5.1.1 | 1 | cuda | `base/app.vecadd` |  |  |
+| `space.shared` | `.shared{::cta} .type name;` | 5.1.7 | 1 | cuda | `base/ld.shared` |  |  |
+| `sqrt.rn` | `sqrt.rnd{.ftz}.f32 d, a;` | 9.7.3.15 | 1 | builtin | `base/sqrt.rn` |  |  |
+| `st.cache_op` | `st.space.cop.type [a], b; .cop = { .wb, .cg, .cs, .wt }` | 9.7.9.1 | 1 | inline-asm | `base/st.cache_op` |  |  |
+| `st.generic` | `st.type [a], b;` | 9.7.9.11 | 1 | cuda | `base/ld.generic` |  |  |
+| `st.global` | `st.global.type [a], b;` | 9.7.9.11 | 1 | cuda | `base/st.global` |  |  |
+| `st.local` | `st.local.type [a], b;` | 9.7.9.11 | 1 | cuda | `base/ld.local` |  |  |
+| `st.param` | `st.param.type [a], b;` | 9.7.9.11 | 1 | cuda | `base/call` |  |  |
+| `st.shared` | `st.shared.type [a], b;` | 9.7.9.11 | 1 | cuda | `base/ld.shared` |  |  |
+| `st.volatile` | `st.volatile.space.type [a], b;` | 9.7.9.11 | 1 | cuda | `base/ld.volatile` |  |  |
+| `stackrestore` | `stackrestore.type a;` | 9.7.17.2 | 1 | cuda | `base/stacksave` |  |  |
+| `stacksave` | `stacksave.type d;` | 9.7.17.1 | 1 | inline-asm | `base/stacksave` |  |  |
+| `sub.cc` | `sub.cc.type d, a, b;` | 9.7.2.3 | 1 | cuda | `base/add.cc` |  |  |
+| `sub.fp` | `sub{.rnd}{.ftz}{.sat}.f32 d, a, b;` | 9.7.3.4 | 1 | cuda | `base/sub.fp` |  |  |
+| `sub.half` | `sub{.rnd}{.ftz}{.sat}.f16 d, a, b;` | 9.7.4.2 | 1 | cuda | `base/sub.half` |  |  |
+| `sub.int` | `sub.type d, a, b;` | 9.7.1.2 | 1 | cuda | `base/sub.int` |  |  |
+| `subc` | `subc{.cc}.type d, a, b;` | 9.7.2.4 | 1 | cuda | `base/add.cc` |  |  |
+| `testp` | `testp.op.type p, a;` | 9.7.3.1 | 1 | inline-asm | `base/testp` |  |  |
+| `trap` | `trap;` | 9.7.19.4 | 1 | cuda | `base/trap` |  |  |
+| `xor` | `xor.type d, a, b;` | 9.7.8.3 | 1 | cuda | `base/and` |  |  |
 | `atom.half` | `atom.global.add.noftz.f16 d, [a], b;` | 9.7.13.5 | 2 | cuda |  |  |  |
 | `max.fp.nan` | `max{.ftz}.NaN{.xorsign.abs}.f32 d, a, b;` | 9.7.3.12 | 3 | builtin |  |  |  |
 | `max.half` | `max{.ftz}{.NaN}{.xorsign.abs}.f16 d, a, b;` | 9.7.4.8 | 3 | builtin |  |  |  |
@@ -185,34 +185,34 @@ instructions are specified. Columns:
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `bra` | `@p bra{.uni} tgt;` | 9.7.12.3 | 1 | cuda |  |  |  |
-| `brx.idx` | `@p brx.idx{.uni} index, tlist;` | 9.7.12.4 | 1 | cuda |  |  |  |
-| `ctrl.predicate` | `@{!}p instruction;` | 9.7.12.2 | 1 | cuda |  |  |  |
-| `dir.branchtargets` | `Label: .branchtargets list-of-labels ;` | 11.3.1 | 1 | cuda |  |  |  |
-| `exit` | `exit;` | 9.7.12.7 | 1 | builtin |  |  |  |
-| `space.sreg` | `.sreg (predefined only)` | 5.1.2 | 1 | cuda |  |  |  |
-| `sreg.clock` | `mov.u32 d, %clock;` | 10.23 | 1 | builtin |  |  |  |
-| `sreg.clock64` | `mov.u64 d, %clock64;` | 10.24 | 1 | builtin |  |  |  |
-| `sreg.ctaid` | `mov.u32 d, %ctaid;` | 10.6 | 1 | cuda |  |  |  |
-| `sreg.current_graph_exec` | `mov.u64 d, %current_graph_exec;` | 10.33 | 1 | inline-asm |  |  |  |
-| `sreg.dynamic_smem_size` | `mov.u32 d, %dynamic_smem_size;` | 10.32 | 1 | inline-asm |  |  |  |
-| `sreg.envreg` | `mov.u32 d, %envreg;` | 10.27 | 1 | inline-asm |  |  |  |
-| `sreg.globaltimer` | `mov.u64 d, %globaltimer;` | 10.28 | 1 | builtin |  |  |  |
-| `sreg.gridid` | `mov.u64 d, %gridid;` | 10.10 | 1 | builtin |  |  |  |
-| `sreg.laneid` | `mov.u32 d, %laneid;` | 10.3 | 1 | builtin |  |  |  |
-| `sreg.lanemask_eq` | `mov.u32 d, %lanemask_eq;` | 10.18 | 1 | builtin |  |  |  |
-| `sreg.lanemask_ge` | `mov.u32 d, %lanemask_ge;` | 10.21 | 1 | builtin |  |  |  |
-| `sreg.lanemask_gt` | `mov.u32 d, %lanemask_gt;` | 10.22 | 1 | builtin |  |  |  |
-| `sreg.lanemask_le` | `mov.u32 d, %lanemask_le;` | 10.19 | 1 | builtin |  |  |  |
-| `sreg.lanemask_lt` | `mov.u32 d, %lanemask_lt;` | 10.20 | 1 | builtin |  |  |  |
-| `sreg.nctaid` | `mov.u32 d, %nctaid;` | 10.7 | 1 | cuda |  |  |  |
-| `sreg.nsmid` | `mov.u32 d, %nsmid;` | 10.9 | 1 | builtin |  |  |  |
-| `sreg.ntid` | `mov.u32 d, %ntid;` | 10.2 | 1 | cuda |  |  |  |
-| `sreg.nwarpid` | `mov.u32 d, %nwarpid;` | 10.5 | 1 | builtin |  |  |  |
-| `sreg.smid` | `mov.u32 d, %smid;` | 10.8 | 1 | builtin |  |  |  |
-| `sreg.tid` | `mov.u32 d, %tid;` | 10.1 | 1 | cuda |  |  |  |
-| `sreg.total_smem_size` | `mov.u32 d, %total_smem_size;` | 10.30 | 1 | inline-asm |  |  |  |
-| `sreg.warpid` | `mov.u32 d, %warpid;` | 10.4 | 1 | builtin |  |  |  |
+| `bra` | `@p bra{.uni} tgt;` | 9.7.12.3 | 1 | cuda | `xkmsimt/bra` |  |  |
+| `brx.idx` | `@p brx.idx{.uni} index, tlist;` | 9.7.12.4 | 1 | cuda | `xkmsimt/brx.idx` |  |  |
+| `ctrl.predicate` | `@{!}p instruction;` | 9.7.12.2 | 1 | cuda | `xkmsimt/bra` |  |  |
+| `dir.branchtargets` | `Label: .branchtargets list-of-labels ;` | 11.3.1 | 1 | cuda | `xkmsimt/brx.idx` |  |  |
+| `exit` | `exit;` | 9.7.12.7 | 1 | builtin | `xkmsimt/exit` |  |  |
+| `space.sreg` | `.sreg (predefined only)` | 5.1.2 | 1 | cuda | `xkmsimt/sreg.tid` |  |  |
+| `sreg.clock` | `mov.u32 d, %clock;` | 10.23 | 1 | builtin | `xkmsimt/sreg.clock` |  |  |
+| `sreg.clock64` | `mov.u64 d, %clock64;` | 10.24 | 1 | builtin | `xkmsimt/sreg.clock` |  |  |
+| `sreg.ctaid` | `mov.u32 d, %ctaid;` | 10.6 | 1 | cuda | `xkmsimt/sreg.tid` |  |  |
+| `sreg.current_graph_exec` | `mov.u64 d, %current_graph_exec;` | 10.33 | 1 | inline-asm | `xkmsimt/sreg.current_graph_exec` |  |  |
+| `sreg.dynamic_smem_size` | `mov.u32 d, %dynamic_smem_size;` | 10.32 | 1 | inline-asm | `xkmsimt/sreg.dynamic_smem_size` |  |  |
+| `sreg.envreg` | `mov.u32 d, %envreg;` | 10.27 | 1 | inline-asm | `xkmsimt/sreg.envreg` |  |  |
+| `sreg.globaltimer` | `mov.u64 d, %globaltimer;` | 10.28 | 1 | builtin | `xkmsimt/sreg.clock` |  |  |
+| `sreg.gridid` | `mov.u64 d, %gridid;` | 10.10 | 1 | builtin | `xkmsimt/sreg.warpid` |  |  |
+| `sreg.laneid` | `mov.u32 d, %laneid;` | 10.3 | 1 | builtin | `xkmsimt/sreg.laneid` |  |  |
+| `sreg.lanemask_eq` | `mov.u32 d, %lanemask_eq;` | 10.18 | 1 | builtin | `xkmsimt/sreg.laneid` |  |  |
+| `sreg.lanemask_ge` | `mov.u32 d, %lanemask_ge;` | 10.21 | 1 | builtin | `xkmsimt/sreg.laneid` |  |  |
+| `sreg.lanemask_gt` | `mov.u32 d, %lanemask_gt;` | 10.22 | 1 | builtin | `xkmsimt/sreg.laneid` |  |  |
+| `sreg.lanemask_le` | `mov.u32 d, %lanemask_le;` | 10.19 | 1 | builtin | `xkmsimt/sreg.laneid` |  |  |
+| `sreg.lanemask_lt` | `mov.u32 d, %lanemask_lt;` | 10.20 | 1 | builtin | `xkmsimt/sreg.laneid` |  |  |
+| `sreg.nctaid` | `mov.u32 d, %nctaid;` | 10.7 | 1 | cuda | `xkmsimt/sreg.tid` |  |  |
+| `sreg.nsmid` | `mov.u32 d, %nsmid;` | 10.9 | 1 | builtin | `xkmsimt/sreg.warpid` |  |  |
+| `sreg.ntid` | `mov.u32 d, %ntid;` | 10.2 | 1 | cuda | `xkmsimt/sreg.tid` |  |  |
+| `sreg.nwarpid` | `mov.u32 d, %nwarpid;` | 10.5 | 1 | builtin | `xkmsimt/sreg.warpid` |  |  |
+| `sreg.smid` | `mov.u32 d, %smid;` | 10.8 | 1 | builtin | `xkmsimt/sreg.warpid` |  |  |
+| `sreg.tid` | `mov.u32 d, %tid;` | 10.1 | 1 | cuda | `xkmsimt/sreg.tid` |  |  |
+| `sreg.total_smem_size` | `mov.u32 d, %total_smem_size;` | 10.30 | 1 | inline-asm | `xkmsimt/sreg.dynamic_smem_size` |  |  |
+| `sreg.warpid` | `mov.u32 d, %warpid;` | 10.4 | 1 | builtin | `xkmsimt/sreg.warpid` |  |  |
 | `sreg.reserved_smem_offset` | `mov.u32 d, %reserved_smem_offset;` | 10.29 | 3 | inline-asm |  |  |  |
 | `griddepcontrol` | `griddepcontrol.action;` | 9.7.13.13 | 4 | inline-asm |  |  |  |
 | `sreg.aggr_smem_size` | `mov.u32 d, %aggr_smem_size;` | 10.31 | 4 | inline-asm |  |  |  |
@@ -228,17 +228,17 @@ instructions are specified. Columns:
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `activemask` | `activemask.b32 d;` | 9.7.13.11 | 1 | cuda |  |  |  |
-| `app.shfl_reduce` |  |  | 1 | cuda |  |  |  |
-| `bar.warp.sync` | `bar.warp.sync membermask;` | 9.7.13.2 | 1 | cuda |  |  |  |
-| `shfl.sync.bfly` | `shfl.sync.bfly.b32 d[\|p], a, b, c, membermask;` | 9.7.9.6 | 1 | cuda |  |  |  |
-| `shfl.sync.down` | `shfl.sync.down.b32 d[\|p], a, b, c, membermask;` | 9.7.9.6 | 1 | cuda |  |  |  |
-| `shfl.sync.idx` | `shfl.sync.idx.b32 d[\|p], a, b, c, membermask;` | 9.7.9.6 | 1 | cuda |  |  |  |
-| `shfl.sync.up` | `shfl.sync.up.b32 d[\|p], a, b, c, membermask;` | 9.7.9.6 | 1 | cuda |  |  |  |
-| `vote.sync.all` | `vote.sync.all.pred d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda |  |  |  |
-| `vote.sync.any` | `vote.sync.any.pred d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda |  |  |  |
-| `vote.sync.ballot` | `vote.sync.ballot.b32 d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda |  |  |  |
-| `vote.sync.uni` | `vote.sync.uni.pred d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda |  |  |  |
+| `activemask` | `activemask.b32 d;` | 9.7.13.11 | 1 | cuda | `xkmwarp/activemask` |  |  |
+| `app.shfl_reduce` |  |  | 1 | cuda | `xkmwarp/app.shfl_reduce` |  |  |
+| `bar.warp.sync` | `bar.warp.sync membermask;` | 9.7.13.2 | 1 | cuda | `xkmwarp/bar.warp.sync` |  |  |
+| `shfl.sync.bfly` | `shfl.sync.bfly.b32 d[\|p], a, b, c, membermask;` | 9.7.9.6 | 1 | cuda | `xkmwarp/shfl.sync.bfly` |  |  |
+| `shfl.sync.down` | `shfl.sync.down.b32 d[\|p], a, b, c, membermask;` | 9.7.9.6 | 1 | cuda | `xkmwarp/shfl.sync.down` |  |  |
+| `shfl.sync.idx` | `shfl.sync.idx.b32 d[\|p], a, b, c, membermask;` | 9.7.9.6 | 1 | cuda | `xkmwarp/shfl.sync.idx` |  |  |
+| `shfl.sync.up` | `shfl.sync.up.b32 d[\|p], a, b, c, membermask;` | 9.7.9.6 | 1 | cuda | `xkmwarp/shfl.sync.up` |  |  |
+| `vote.sync.all` | `vote.sync.all.pred d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda | `xkmwarp/vote.sync.all` |  |  |
+| `vote.sync.any` | `vote.sync.any.pred d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda | `xkmwarp/vote.sync.any` |  |  |
+| `vote.sync.ballot` | `vote.sync.ballot.b32 d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda | `xkmwarp/vote.sync.ballot` |  |  |
+| `vote.sync.uni` | `vote.sync.uni.pred d, {!}a, membermask;` | 9.7.13.9 | 1 | cuda | `xkmwarp/vote.sync.uni` |  |  |
 | `match.all.sync` | `match.all.sync.type d[\|p], a, membermask;` | 9.7.13.10 | 2 | cuda |  |  |  |
 | `match.any.sync` | `match.any.sync.type d, a, membermask;` | 9.7.13.10 | 2 | cuda |  |  |  |
 | `redux.sync` | `redux.sync.op.type dst, src, membermask;` | 9.7.13.12 | 3 | builtin |  |  |  |
@@ -248,11 +248,11 @@ instructions are specified. Columns:
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `app.barrier` |  |  | 1 | cuda |  |  |  |
-| `bar.arrive` | `bar.arrive a, b;` | 9.7.13.1 | 1 | inline-asm |  |  |  |
-| `bar.red` | `bar.red.popc.u32 d, a, p;` | 9.7.13.1 | 1 | cuda |  |  |  |
-| `bar.sync` | `bar.sync 0;` | 9.7.13.1 | 1 | cuda |  |  |  |
-| `bar.sync.named` | `bar.sync a, b;` | 9.7.13.1 | 1 | builtin |  |  |  |
+| `app.barrier` |  |  | 1 | cuda | `xkmbar/app.barrier` |  |  |
+| `bar.arrive` | `bar.arrive a, b;` | 9.7.13.1 | 1 | inline-asm | `xkmbar/bar.arrive` |  |  |
+| `bar.red` | `bar.red.popc.u32 d, a, p;` | 9.7.13.1 | 1 | cuda | `xkmbar/bar.red` |  |  |
+| `bar.sync` | `bar.sync 0;` | 9.7.13.1 | 1 | cuda | `xkmbar/bar.sync` |  |  |
+| `bar.sync.named` | `bar.sync a, b;` | 9.7.13.1 | 1 | builtin | `xkmbar/bar.sync.named` |  |  |
 | `barrier.sync` | `barrier.sync a{, b};` | 9.7.13.1 | 2 | builtin |  |  |  |
 | `barrier.cluster` | `barrier.cluster.arrive{.sem}{.aligned};` | 9.7.13.3 | 4 | builtin |  |  |  |
 
@@ -260,8 +260,8 @@ instructions are specified. Columns:
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `atom.scope.gpu` | `atom.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 1 | cuda |  |  |  |
-| `membar` | `membar.level; .level = { .cta, .gl, .sys }` | 9.7.13.4 | 1 | cuda |  |  |  |
+| `atom.scope.gpu` | `atom.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 1 | cuda | `xkmscope/atom.scope.gpu` |  |  |
+| `membar` | `membar.level; .level = { .cta, .gl, .sys }` | 9.7.13.4 | 1 | cuda | `xkmscope/membar` |  |  |
 | `atom.scope.cta` | `atom.cta.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | builtin |  |  |  |
 | `atom.scope.sys` | `atom.sys.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | builtin |  |  |  |
 | `atom.sem.acq_rel` | `atom.acq_rel.gpu.global.add.u32 d, [a], b;` | 9.7.13.5 | 2 | inline-asm |  |  |  |
@@ -399,17 +399,17 @@ instructions are specified. Columns:
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `cos` | `cos.approx{.ftz}.f32 d, a;` | 9.7.3.19 | 1 | builtin |  |  |  |
-| `div.fp.approx` | `div.approx{.ftz}.f32 d, a, b;` | 9.7.3.8 | 1 | builtin |  |  |  |
-| `div.fp.full` | `div.full{.ftz}.f32 d, a, b;` | 9.7.3.8 | 1 | builtin |  |  |  |
-| `ex2` | `ex2.approx{.ftz}.f32 d, a;` | 9.7.3.21 | 1 | builtin |  |  |  |
-| `lg2` | `lg2.approx{.ftz}.f32 d, a;` | 9.7.3.20 | 1 | builtin |  |  |  |
-| `rcp.approx` | `rcp.approx{.ftz}.f32 d, a;` | 9.7.3.13 | 1 | builtin |  |  |  |
-| `rcp.approx.ftz.f64` | `rcp.approx.ftz.f64 d, a;` | 9.7.3.14 | 1 | builtin |  |  |  |
-| `rsqrt` | `rsqrt.approx{.ftz}.f32 d, a;` | 9.7.3.16 | 1 | builtin |  |  |  |
-| `rsqrt.approx.ftz.f64` | `rsqrt.approx.ftz.f64 d, a;` | 9.7.3.17 | 1 | inline-asm |  |  |  |
-| `sin` | `sin.approx{.ftz}.f32 d, a;` | 9.7.3.18 | 1 | builtin |  |  |  |
-| `sqrt.approx` | `sqrt.approx{.ftz}.f32 d, a;` | 9.7.3.15 | 1 | builtin |  |  |  |
+| `cos` | `cos.approx{.ftz}.f32 d, a;` | 9.7.3.19 | 1 | inline-asm | `xkmmufu/cos` |  |  |
+| `div.fp.approx` | `div.approx{.ftz}.f32 d, a, b;` | 9.7.3.8 | 1 | builtin | `xkmmufu/div.fp.approx` |  |  |
+| `div.fp.full` | `div.full{.ftz}.f32 d, a, b;` | 9.7.3.8 | 1 | inline-asm | `xkmmufu/div.fp.full` |  |  |
+| `ex2` | `ex2.approx{.ftz}.f32 d, a;` | 9.7.3.21 | 1 | inline-asm | `xkmmufu/ex2` |  |  |
+| `lg2` | `lg2.approx{.ftz}.f32 d, a;` | 9.7.3.20 | 1 | inline-asm | `xkmmufu/lg2` |  |  |
+| `rcp.approx` | `rcp.approx{.ftz}.f32 d, a;` | 9.7.3.13 | 1 | inline-asm | `xkmmufu/rcp.approx` |  |  |
+| `rcp.approx.ftz.f64` | `rcp.approx.ftz.f64 d, a;` | 9.7.3.14 | 1 | inline-asm | `xkmmufu/rcp.approx.ftz.f64` |  |  |
+| `rsqrt` | `rsqrt.approx{.ftz}.f32 d, a;` | 9.7.3.16 | 1 | inline-asm | `xkmmufu/rsqrt` |  |  |
+| `rsqrt.approx.ftz.f64` | `rsqrt.approx.ftz.f64 d, a;` | 9.7.3.17 | 1 | inline-asm | `xkmmufu/rsqrt.approx.ftz.f64` |  |  |
+| `sin` | `sin.approx{.ftz}.f32 d, a;` | 9.7.3.18 | 1 | inline-asm | `xkmmufu/sin` |  |  |
+| `sqrt.approx` | `sqrt.approx{.ftz}.f32 d, a;` | 9.7.3.15 | 1 | inline-asm | `xkmmufu/sqrt.approx` |  |  |
 | `ex2.half` | `ex2.approx.atype d, a;` | 9.7.4.10 | 2 | inline-asm |  |  |  |
 | `tanh` | `tanh.approx.f32 d, a;` | 9.7.3.22 | 2 | inline-asm |  |  |  |
 | `tanh.half` | `tanh.approx.type d, a;` | 9.7.4.9 | 2 | inline-asm |  |  |  |
@@ -418,15 +418,15 @@ instructions are specified. Columns:
 
 | Feature | PTX syntax | Section | Tier | Route | Corpus | Kamui lowering | Kamui instructions |
 |---|---|---|---|---|---|---|---|
-| `bfe` | `bfe.type d, a, b, c;` | 9.7.1.19 | 1 | inline-asm |  |  |  |
-| `bfi` | `bfi.type f, a, b, c, d;` | 9.7.1.20 | 1 | inline-asm |  |  |  |
-| `brev` | `brev.type d, a;` | 9.7.1.18 | 1 | cuda |  |  |  |
-| `dp2a` | `dp2a.mode.atype.btype d, a, b, c;` | 9.7.1.24 | 1 | inline-asm |  |  |  |
-| `dp4a` | `dp4a.atype.btype d, a, b, c;` | 9.7.1.23 | 1 | inline-asm |  |  |  |
-| `fns` | `fns.b32 d, mask, base, offset;` | 9.7.1.17 | 1 | builtin |  |  |  |
-| `half.packed` | `add{.rnd}{.ftz}{.sat}.f16x2 d, a, b;` | 9.7.4.1 | 1 | cuda |  |  |  |
-| `lop3` | `lop3.b32 d, a, b, c, immLut;` | 9.7.8.6 | 1 | inline-asm |  |  |  |
-| `prmt` | `prmt.b32{.mode} d, a, b, c;` | 9.7.9.7 | 1 | builtin |  |  |  |
+| `bfe` | `bfe.type d, a, b, c;` | 9.7.1.19 | 1 | inline-asm | `xkmmisc/bfe` |  |  |
+| `bfi` | `bfi.type f, a, b, c, d;` | 9.7.1.20 | 1 | inline-asm | `xkmmisc/bfi` |  |  |
+| `brev` | `brev.type d, a;` | 9.7.1.18 | 1 | cuda | `xkmmisc/brev` |  |  |
+| `dp2a` | `dp2a.mode.atype.btype d, a, b, c;` | 9.7.1.24 | 1 | inline-asm | `xkmmisc/dp2a` |  |  |
+| `dp4a` | `dp4a.atype.btype d, a, b, c;` | 9.7.1.23 | 1 | inline-asm | `xkmmisc/dp4a` |  |  |
+| `fns` | `fns.b32 d, mask, base, offset;` | 9.7.1.17 | 1 | builtin | `xkmmisc/fns` |  |  |
+| `half.packed` | `add{.rnd}{.ftz}{.sat}.f16x2 d, a, b;` | 9.7.4.1 | 1 | cuda | `xkmmisc/half.packed` |  |  |
+| `lop3` | `lop3.b32 d, a, b, c, immLut;` | 9.7.8.6 | 1 | inline-asm | `xkmmisc/lop3` |  |  |
+| `prmt` | `prmt.b32{.mode} d, a, b, c;` | 9.7.9.7 | 1 | builtin | `xkmmisc/prmt` |  |  |
 | `bmsk` | `bmsk.mode.b32 d, a, b;` | 9.7.1.22 | 2 | inline-asm |  |  |  |
 | `cvt.pack` | `cvt.pack.sat.convertType.abType d, a, b;` | 9.7.9.22 | 2 | inline-asm |  |  |  |
 | `nanosleep` | `nanosleep.u32 t;` | 9.7.19.2 | 2 | builtin |  |  |  |

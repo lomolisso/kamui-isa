@@ -1,0 +1,11 @@
+id: app.atomics
+kernel: k_app_atomics
+compile: {extra_flags: []}
+launch: {grid: [8, 1, 1], block: [256, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: u32, count: 2048, generator: {kind: random, seed: 4, low: 0, high: 1048576}}
+  - {name: bins, kind: inout, dtype: u32, count: 64, generator: {kind: const, value: 0}}
+  - {name: maxv, kind: inout, dtype: u32, count: 1, generator: {kind: const, value: 0}}
+expect_ptx: ['atom\.global\.add\.u32|red\.global\.add\.u32', 'atom\.global\.max\.u32']
+deterministic: true
+tolerance_class: exact

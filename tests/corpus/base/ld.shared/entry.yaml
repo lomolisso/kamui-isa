@@ -1,0 +1,11 @@
+id: ld.shared
+kernel: k_ld_shared
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 317, low: -100000, high: 100000}}
+  - {name: d32, kind: output, dtype: s32, count: 256}
+  - {name: d64, kind: output, dtype: s64, count: 256}
+expect_ptx: ['st\.shared\.u32|st\.shared\.b32', 'ld\.shared\.u32|ld\.shared\.b32', 'st\.shared\.u64|st\.shared\.b64', 'ld\.shared\.u64|ld\.shared\.b64']
+deterministic: true
+tolerance_class: exact

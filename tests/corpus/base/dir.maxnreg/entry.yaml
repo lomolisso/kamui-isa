@@ -1,0 +1,12 @@
+id: dir.maxnreg
+kernel: k_dir_maxnreg
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 399, low: -1000, high: 1000}}
+  - {name: d, kind: output, dtype: s32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['\.maxnreg 32']
+expect_ptxas: ['Used ([0-9]|[12][0-9]|3[0-2]) registers']
+deterministic: true
+tolerance_class: exact
