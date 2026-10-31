@@ -1,0 +1,9 @@
+# Accepted mismatches of the coverage checks (tools/catalog/check_coverage.py).
+# One entry per mismatch: check (llvm or release-notes), the mention, and why it is correct.
+# The check fails on an exception that no longer matches anything, so this list cannot grow stale.
+exceptions:
+  - check: llvm
+    mention: param
+    reason: >-
+      Parsing artifact. The record CallArgParam prints the parameter name "param<N>" of a call
+      argument list, not an instruction.

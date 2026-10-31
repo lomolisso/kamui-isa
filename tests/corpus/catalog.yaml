@@ -1,0 +1,5268 @@
+# PTX feature catalog: one entry per PTX 8.7 feature in scope for sm_90a, or excluded with a reason.
+# Field reference: tests/corpus/README.md. Entries are sorted by id (checked by
+# tools/catalog/check_coverage.py --validate). spec/ptx-table.md is generated from this file.
+features:
+- id: abs.fp
+  kind: instruction
+  ptx_syntax: 'abs{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.9 Floating Point Instructions: abs'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: abs.half
+  kind: instruction
+  ptx_syntax: 'abs{.ftz}.f16 d, a;'
+  manual_section: '9.7.4.6 Half Precision Floating Point Instructions: abs'
+  introduced_ptx: '6.5'
+  min_target: sm_53
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: abs.int
+  kind: instruction
+  opcodes: [abs]
+  ptx_syntax: 'abs.type d, a;'
+  manual_section: '9.7.1.10 Integer Arithmetic Instructions: abs'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: activemask
+  kind: instruction
+  opcodes: [activemask]
+  ptx_syntax: activemask.b32 d;
+  manual_section: '9.7.13.11 Parallel Synchronization and Communication Instructions: activemask'
+  introduced_ptx: '6.2'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: add.cc
+  kind: instruction
+  opcodes: [add.cc]
+  ptx_syntax: 'add.cc.type d, a, b;'
+  manual_section: '9.7.2.1 Extended-Precision Arithmetic Instructions: add.cc'
+  introduced_ptx: '1.2'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Carry flag; clang uses it for 128-bit integer add. RISC-V has no flags (sltu).
+- id: add.fp
+  kind: instruction
+  ptx_syntax: 'add{.rnd}{.ftz}{.sat}.f32 d, a, b;'
+  manual_section: '9.7.3.3 Floating Point Instructions: add'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'f32 and f64; opcode ''add'' is covered by add.int.'
+- id: add.half
+  kind: instruction
+  ptx_syntax: 'add{.rnd}{.ftz}{.sat}.f16 d, a, b;'
+  manual_section: '9.7.4.1 Half Precision Floating Point Instructions: add'
+  introduced_ptx: '4.2'
+  min_target: sm_53
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: .f16 (Zfh); packed and bf16 forms in half.packed and half.bf16.
+- id: add.int
+  kind: instruction
+  opcodes: [add]
+  ptx_syntax: 'add.type d, a, b;'
+  manual_section: '9.7.1.1 Integer Arithmetic Instructions: add'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Includes .sat (s32).
+- id: add.int.packed
+  kind: modifier
+  ptx_syntax: 'add.u16x2 d, a, b;'
+  manual_section: '9.7.1.1 Integer Arithmetic Instructions: add'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmmisc
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Packed .u16x2/.s16x2 add (sm_90).
+- id: add.mixed
+  kind: instruction
+  ptx_syntax: 'add{.rnd}{.sat}.f32.atype d, a, c;'
+  manual_section: '9.7.5.1 Mixed Precision Floating Point Instructions: add'
+  introduced_ptx: '8.6'
+  min_target: sm_100
+  family: base
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: addc
+  kind: instruction
+  opcodes: [addc]
+  ptx_syntax: 'addc{.cc}.type d, a, b;'
+  manual_section: '9.7.2.2 Extended-Precision Arithmetic Instructions: addc'
+  introduced_ptx: '1.2'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: alloca
+  kind: instruction
+  opcodes: [alloca]
+  ptx_syntax: 'alloca.type ptr, size{, immAlign};'
+  manual_section: '9.7.17.3 Stack Manipulation Instructions: alloca'
+  introduced_ptx: '7.3'
+  min_target: sm_52
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: and
+  kind: instruction
+  opcodes: [and]
+  ptx_syntax: 'and.type d, a, b;'
+  manual_section: '9.7.8.1 Logic and Shift Instructions: and'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: app.atomics
+  kind: application
+  ptx_syntax: ''
+  manual_section: ''
+  introduced_ptx: ''
+  min_target: ''
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Many CTAs update global counters with integer atomics.
+- id: app.barrier
+  kind: application
+  ptx_syntax: ''
+  manual_section: ''
+  introduced_ptx: ''
+  min_target: ''
+  family: Xkmbar
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Warps exchange data through shared memory around bar.sync.
+- id: app.shfl_reduce
+  kind: application
+  ptx_syntax: ''
+  manual_section: ''
+  introduced_ptx: ''
+  min_target: ''
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Warp sum with shfl.sync.bfly.
+- id: app.vecadd
+  kind: application
+  ptx_syntax: ''
+  manual_section: ''
+  introduced_ptx: ''
+  min_target: ''
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Vector add: c[i] = a[i] + b[i].'
+- id: applypriority
+  kind: instruction
+  opcodes: [applypriority]
+  ptx_syntax: 'applypriority{.global}.level::eviction_priority [a], size;'
+  manual_section: '9.7.9.16 Data Movement and Conversion Instructions: applypriority'
+  introduced_ptx: '7.4'
+  min_target: sm_80
+  family: Xkmmisc
+  tier: 3
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: L2 cache hint.
+- id: atom.b128
+  kind: modifier
+  ptx_syntax: 'atom.global.cas.b128 d, [a], b, c;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '8.3'
+  min_target: sm_90
+  family: base
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 128-bit exch and cas.
+- id: atom.generic.add
+  kind: modifier
+  opcodes: [atom.add, atom.inc, atom.dec, atom.min, atom.max, atom.and, atom.or, atom.xor, atom.exch, atom.cas]
+  ptx_syntax: 'atom.add.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Generic address.
+- id: atom.global.add
+  kind: modifier
+  opcodes: [atom.global.add]
+  ptx_syntax: 'atom.global.add.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+  notes: 'Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set. Float add (f32, f64) is order-dependent.'
+- id: atom.global.and
+  kind: modifier
+  opcodes: [atom.global.and]
+  ptx_syntax: 'atom.global.and.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
+- id: atom.global.cas
+  kind: modifier
+  opcodes: [atom.global.cas]
+  ptx_syntax: 'atom.global.cas.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
+- id: atom.global.dec
+  kind: modifier
+  opcodes: [atom.global.dec]
+  ptx_syntax: 'atom.global.dec.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
+- id: atom.global.exch
+  kind: modifier
+  opcodes: [atom.global.exch]
+  ptx_syntax: 'atom.global.exch.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
+- id: atom.global.inc
+  kind: modifier
+  opcodes: [atom.global.inc]
+  ptx_syntax: 'atom.global.inc.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
+- id: atom.global.max
+  kind: modifier
+  opcodes: [atom.global.max]
+  ptx_syntax: 'atom.global.max.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
+- id: atom.global.min
+  kind: modifier
+  opcodes: [atom.global.min]
+  ptx_syntax: 'atom.global.min.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
+- id: atom.global.or
+  kind: modifier
+  opcodes: [atom.global.or]
+  ptx_syntax: 'atom.global.or.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
+- id: atom.global.xor
+  kind: modifier
+  opcodes: [atom.global.xor]
+  ptx_syntax: 'atom.global.xor.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel has same-address and distinct-address variants (ptxas warp-aggregates uniform addresses); old values checked as a set.
+- id: atom.half
+  kind: modifier
+  ptx_syntax: 'atom.global.add.noftz.f16 d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '6.3'
+  min_target: sm_70
+  family: base
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+  notes: 'f16, f16x2 (sm_70), bf16, bf16x2 (sm_90) add.'
+- id: atom.scope.cluster
+  kind: modifier
+  opcodes: [atom.cluster]
+  ptx_syntax: 'atom.cluster.global.add.u32 d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: atom.scope.cta
+  kind: modifier
+  opcodes: [atom.cta]
+  ptx_syntax: 'atom.cta.global.add.u32 d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '5.0'
+  min_target: sm_60
+  family: Xkmscope
+  tier: 2
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: '__nvvm_atom_cta_*.'
+- id: atom.scope.gpu
+  kind: modifier
+  opcodes: [atom.gpu]
+  ptx_syntax: 'atom.gpu.global.add.u32 d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '5.0'
+  min_target: sm_60
+  family: Xkmscope
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Default scope of atomicAdd and friends.
+- id: atom.scope.sys
+  kind: modifier
+  opcodes: [atom.sys]
+  ptx_syntax: 'atom.sys.global.add.u32 d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '5.0'
+  min_target: sm_60
+  family: Xkmscope
+  tier: 2
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: '__nvvm_atom_sys_*.'
+- id: atom.sem.acq_rel
+  kind: modifier
+  opcodes: [atom.acq_rel]
+  ptx_syntax: 'atom.acq_rel.gpu.global.add.u32 d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: clang 20 drops orderings on atomic RMW.
+- id: atom.sem.acquire
+  kind: modifier
+  opcodes: [atom.acquire]
+  ptx_syntax: 'atom.acquire.gpu.global.add.u32 d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: clang 20 drops orderings on atomic RMW.
+- id: atom.sem.relaxed
+  kind: modifier
+  opcodes: [atom.relaxed]
+  ptx_syntax: 'atom.relaxed.gpu.global.add.u32 d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: atom.sem.release
+  kind: modifier
+  opcodes: [atom.release]
+  ptx_syntax: 'atom.release.gpu.global.add.u32 d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: clang 20 drops orderings on atomic RMW.
+- id: atom.shared.add
+  kind: modifier
+  opcodes: [atom.shared]
+  ptx_syntax: 'atom.shared.add.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '1.1'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'All operations, shared memory.'
+- id: 'atom.shared::cluster.add'
+  kind: modifier
+  ptx_syntax: 'atom.shared::cluster.add.type d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: atom.vector
+  kind: modifier
+  ptx_syntax: 'atom.global.v2.f32.add d, [a], b;'
+  manual_section: '9.7.13.5 Parallel Synchronization and Communication Instructions: atom'
+  introduced_ptx: '8.1'
+  min_target: sm_90
+  family: base
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Vector float atomics (.v2/.v4/.v8 of f32, f16, bf16).'
+- id: bar.arrive
+  kind: modifier
+  opcodes: [bar.arrive, barrier.arrive]
+  ptx_syntax: 'bar.arrive a, b;'
+  manual_section: '9.7.13.1 Parallel Synchronization and Communication Instructions: bar, barrier'
+  introduced_ptx: '1.0'
+  min_target: sm_1x
+  family: Xkmbar
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: bar.red
+  kind: modifier
+  opcodes: [bar.red, barrier.red]
+  ptx_syntax: 'bar.red.popc.u32 d, a, p;'
+  manual_section: '9.7.13.1 Parallel Synchronization and Communication Instructions: bar, barrier'
+  introduced_ptx: '1.0'
+  min_target: sm_1x
+  family: Xkmbar
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: __syncthreads_count/and/or.
+- id: bar.sync
+  kind: modifier
+  opcodes: [bar.sync, barrier.sync.aligned]
+  ptx_syntax: bar.sync 0;
+  manual_section: '9.7.13.1 Parallel Synchronization and Communication Instructions: bar, barrier'
+  introduced_ptx: '1.0'
+  min_target: sm_1x
+  family: Xkmbar
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: __syncthreads.
+- id: bar.sync.named
+  kind: modifier
+  ptx_syntax: 'bar.sync a, b;'
+  manual_section: '9.7.13.1 Parallel Synchronization and Communication Instructions: bar, barrier'
+  introduced_ptx: '1.0'
+  min_target: sm_1x
+  family: Xkmbar
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Named barrier 0-15 with an explicit thread count.
+- id: bar.warp.sync
+  kind: instruction
+  opcodes: [bar.warp.sync]
+  ptx_syntax: bar.warp.sync membermask;
+  manual_section: '9.7.13.2 Parallel Synchronization and Communication Instructions: bar.warp.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: __syncwarp.
+- id: barrier.cluster
+  kind: instruction
+  opcodes: [barrier.cluster]
+  ptx_syntax: 'barrier.cluster.arrive{.sem}{.aligned};'
+  manual_section: '9.7.13.3 Parallel Synchronization and Communication Instructions: barrier.cluster'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmbar
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Kernel covers arrive, arrive.relaxed and wait.'
+- id: barrier.sync
+  kind: modifier
+  opcodes: [barrier.sync, barrier]
+  ptx_syntax: 'barrier.sync a{, b};'
+  manual_section: '9.7.13.1 Parallel Synchronization and Communication Instructions: bar, barrier'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmbar
+  tier: 2
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Non-aligned barrier: threads may reach it from different code (independent thread scheduling).'
+- id: bfe
+  kind: instruction
+  opcodes: [bfe]
+  ptx_syntax: 'bfe.type d, a, b, c;'
+  manual_section: '9.7.1.19 Integer Arithmetic Instructions: bfe'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmmisc
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: bfi
+  kind: instruction
+  opcodes: [bfi]
+  ptx_syntax: 'bfi.type f, a, b, c, d;'
+  manual_section: '9.7.1.20 Integer Arithmetic Instructions: bfi'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmmisc
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: bfind
+  kind: instruction
+  opcodes: [bfind]
+  ptx_syntax: 'bfind.type d, a;'
+  manual_section: '9.7.1.16 Integer Arithmetic Instructions: bfind'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel covers .shiftamt.
+- id: bmsk
+  kind: instruction
+  opcodes: [bmsk]
+  ptx_syntax: 'bmsk.mode.b32 d, a, b;'
+  manual_section: '9.7.1.22 Integer Arithmetic Instructions: bmsk'
+  introduced_ptx: '7.6'
+  min_target: sm_70
+  family: Xkmmisc
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: clang 20 does not emit it. A plain RV64 sequence may suffice; decided with the specification.
+- id: bra
+  kind: instruction
+  opcodes: [bra]
+  ptx_syntax: '@p bra{.uni} tgt;'
+  manual_section: '9.7.12.3 Control Flow Instructions: bra'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Divergent branch; convergence is open decision 2.
+- id: bra.uni
+  kind: modifier
+  opcodes: [bra.uni]
+  ptx_syntax: bra.uni tgt;
+  manual_section: '9.7.12.3 Control Flow Instructions: bra'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Non-divergent branch.
+- id: brev
+  kind: instruction
+  opcodes: [brev]
+  ptx_syntax: 'brev.type d, a;'
+  manual_section: '9.7.1.18 Integer Arithmetic Instructions: brev'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmmisc
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Bit reverse; Zbb has only rev8 (byte reverse).
+- id: brkpt
+  kind: instruction
+  opcodes: [brkpt]
+  ptx_syntax: brkpt;
+  manual_section: '9.7.19.1 Miscellaneous Instructions: brkpt'
+  introduced_ptx: '1.0'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Breakpoint (ebreak); stops the kernel without a debugger, so compile-only.'
+- id: brx.idx
+  kind: instruction
+  opcodes: [brx.idx]
+  ptx_syntax: '@p brx.idx{.uni} index, tlist;'
+  manual_section: '9.7.12.4 Control Flow Instructions: brx.idx'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmsimt
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Indirect branch through a .branchtargets list (switch jump tables).
+- id: call
+  kind: instruction
+  opcodes: [call]
+  ptx_syntax: 'call{.uni} (ret-param), func, (param-list);'
+  manual_section: '9.7.12.5 Control Flow Instructions: call'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Direct calls; kernels use __noinline__ device functions.
+- id: call.indirect
+  kind: modifier
+  ptx_syntax: 'call{.uni} (ret-param), fptr, (param-list), flist;'
+  manual_section: '9.7.12.5 Control Flow Instructions: call'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Call through a function pointer with .callprototype.
+- id: clusterlaunchcontrol.query_cancel
+  kind: instruction
+  opcodes: [clusterlaunchcontrol.query_cancel]
+  ptx_syntax: 'clusterlaunchcontrol.query_cancel.is_canceled.pred.b128 pred, try_cancel_response;'
+  manual_section: '9.7.13.18 Parallel Synchronization and Communication Instructions: clusterlaunchcontrol.query_cancel'
+  introduced_ptx: '8.6'
+  min_target: sm_100
+  family: base
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: clusterlaunchcontrol.try_cancel
+  kind: instruction
+  opcodes: [clusterlaunchcontrol.try_cancel]
+  ptx_syntax: 'clusterlaunchcontrol.try_cancel.async{.space}.completion_mechanism{.multicast::cluster::all}.b128 [addr], [mbar];'
+  manual_section: '9.7.13.17 Parallel Synchronization and Communication Instructions: clusterlaunchcontrol.try_cancel'
+  introduced_ptx: '8.6'
+  min_target: sm_100
+  family: base
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: clz
+  kind: instruction
+  opcodes: [clz]
+  ptx_syntax: 'clz.type d, a;'
+  manual_section: '9.7.1.15 Integer Arithmetic Instructions: clz'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Zbb clz.
+- id: cnot
+  kind: instruction
+  opcodes: [cnot]
+  ptx_syntax: 'cnot.type d, a;'
+  manual_section: '9.7.8.5 Logic and Shift Instructions: cnot'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: copysign
+  kind: instruction
+  opcodes: [copysign]
+  ptx_syntax: 'copysign.type d, a, b;'
+  manual_section: '9.7.3.2 Floating Point Instructions: copysign'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: fsgnj.
+- id: cos
+  kind: instruction
+  opcodes: [cos]
+  ptx_syntax: 'cos.approx{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.19 Floating Point Instructions: cos'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmmufu
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+- id: cp.async
+  kind: instruction
+  opcodes: [cp.async.ca, cp.async.cg]
+  ptx_syntax: 'cp.async.ca.shared{::cta}.global{.level::cache_hint}{.level::prefetch_size}'
+  manual_section: '9.7.9.25.3.1 Data Movement and Conversion Instructions: cp.async'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmasync
+  tier: 3
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Asynchronous global to shared copy (4, 8, 16 bytes).'
+- id: cp.async.bulk.commit_group
+  kind: instruction
+  opcodes: [cp.async.bulk.commit_group]
+  ptx_syntax: cp.async.bulk.commit_group;
+  manual_section: '9.7.9.25.6.1 Data Movement and Conversion Instructions: cp.async.bulk.commit_group'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.async.bulk.global_to_shared
+  kind: modifier
+  opcodes:
+  - 'cp.async.bulk.shared::cluster.global'
+  - 'cp.async.bulk.shared::cta.global'
+  ptx_syntax: 'cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes [dst], [src], size, [mbar];'
+  manual_section: '9.7.9.25.4.1 Data Movement and Conversion Instructions: cp.async.bulk'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.async.bulk.multicast
+  kind: modifier
+  ptx_syntax: 'cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes.multicast::cluster [dst], [src], size, [mbar], ctaMask;'
+  manual_section: '9.7.9.25.4.1 Data Movement and Conversion Instructions: cp.async.bulk'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Optimised only on sm_90a.
+- id: cp.async.bulk.prefetch
+  kind: instruction
+  opcodes: [cp.async.bulk.prefetch.L2]
+  ptx_syntax: 'cp.async.bulk.prefetch.L2.src{.level::cache_hint} [srcMem], size {, cache-policy}'
+  manual_section: '9.7.9.25.4.3 Data Movement and Conversion Instructions: cp.async.bulk.prefetch'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.async.bulk.prefetch.tensor
+  kind: instruction
+  opcodes: [cp.async.bulk.prefetch.tensor]
+  ptx_syntax: 'cp.async.bulk.prefetch.tensor.dim.L2.src{.load_mode}{.level::cache_hint} [tensorMap, tensorCoords]'
+  manual_section: '9.7.9.25.5.4 Data Movement and Conversion Instructions: cp.async.bulk.prefetch.tensor'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.async.bulk.shared_to_cluster
+  kind: modifier
+  opcodes:
+  - 'cp.async.bulk.shared::cluster.shared::cta'
+  ptx_syntax: 'cp.async.bulk.shared::cluster.shared::cta.mbarrier::complete_tx::bytes [dst], [src], size, [mbar];'
+  manual_section: '9.7.9.25.4.1 Data Movement and Conversion Instructions: cp.async.bulk'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.async.bulk.shared_to_global
+  kind: modifier
+  opcodes: [cp.async.bulk.global]
+  ptx_syntax: 'cp.async.bulk.global.shared::cta.bulk_group [dst], [src], size;'
+  manual_section: '9.7.9.25.4.1 Data Movement and Conversion Instructions: cp.async.bulk'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.async.bulk.tensor.im2col
+  kind: modifier
+  ptx_syntax: 'cp.async.bulk.tensor.3d.shared::cluster.global.im2col.mbarrier::complete_tx::bytes [dst], [tmap, {...}], [mbar], {offsets};'
+  manual_section: '9.7.9.25.5.2 Data Movement and Conversion Instructions: cp.async.bulk.tensor'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.async.bulk.tensor.multicast
+  kind: modifier
+  ptx_syntax: 'cp.async.bulk.tensor.2d.shared::cluster.global.tile.mbarrier::complete_tx::bytes.multicast::cluster [dst], [tmap, {x, y}], [mbar], ctaMask;'
+  manual_section: '9.7.9.25.5.2 Data Movement and Conversion Instructions: cp.async.bulk.tensor'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.async.bulk.tensor.store
+  kind: modifier
+  ptx_syntax: 'cp.async.bulk.tensor.2d.global.shared::cta.bulk_group [tmap, {x, y}], [src];'
+  manual_section: '9.7.9.25.5.2 Data Movement and Conversion Instructions: cp.async.bulk.tensor'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: TMA store.
+- id: cp.async.bulk.tensor.tile
+  kind: modifier
+  opcodes: [cp.async.bulk.tensor]
+  ptx_syntax: 'cp.async.bulk.tensor.2d.shared::cluster.global.tile.mbarrier::complete_tx::bytes [dst], [tmap, {x, y}], [mbar];'
+  manual_section: '9.7.9.25.5.2 Data Movement and Conversion Instructions: cp.async.bulk.tensor'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'TMA load, tile mode, 1d to 5d; needs a tensor map built on the host.'
+- id: cp.async.bulk.wait_group
+  kind: instruction
+  opcodes: [cp.async.bulk.wait_group]
+  ptx_syntax: 'cp.async.bulk.wait_group{.read} N;'
+  manual_section: '9.7.9.25.6.2 Data Movement and Conversion Instructions: cp.async.bulk.wait_group'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel covers .read.
+- id: cp.async.commit_group
+  kind: instruction
+  opcodes: [cp.async.commit_group]
+  ptx_syntax: cp.async.commit_group ;
+  manual_section: '9.7.9.25.3.2 Data Movement and Conversion Instructions: cp.async.commit_group'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmasync
+  tier: 3
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.async.mbarrier.arrive
+  kind: instruction
+  opcodes: [cp.async.mbarrier.arrive]
+  ptx_syntax: 'cp.async.mbarrier.arrive{.noinc}{.shared{::cta}}.b64 [addr];'
+  manual_section: '9.7.13.15.15 Parallel Synchronization and Communication Instructions: cp.async.mbarrier.arrive'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmbar
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.async.wait_group
+  kind: instruction
+  opcodes: [cp.async.wait_group, cp.async.wait_all]
+  ptx_syntax: cp.async.wait_group N;
+  manual_section: '9.7.9.25.3.3 Data Movement and Conversion Instructions: cp.async.wait_group / cp.async.wait_all'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmasync
+  tier: 3
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.reduce.async.bulk
+  kind: instruction
+  opcodes: [cp.reduce.async.bulk]
+  ptx_syntax: cp.reduce.async.bulk.dst.src.completion_mechanism.redOp.type
+  manual_section: '9.7.9.25.4.2 Data Movement and Conversion Instructions: cp.reduce.async.bulk'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cp.reduce.async.bulk.tensor
+  kind: instruction
+  opcodes: [cp.reduce.async.bulk.tensor]
+  ptx_syntax: 'cp.reduce.async.bulk.tensor.dim.dst.src.redOp{.load_mode}.completion_mechanism{.level::cache_hint}'
+  manual_section: '9.7.9.25.5.3 Data Movement and Conversion Instructions: cp.reduce.async.bulk.tensor'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: createpolicy
+  kind: instruction
+  opcodes: [createpolicy]
+  ptx_syntax: 'createpolicy.range{.global}.level::primary_priority{.level::secondary_priority}.b64'
+  manual_section: '9.7.9.18 Data Movement and Conversion Instructions: createpolicy'
+  introduced_ptx: '7.4'
+  min_target: sm_80
+  family: Xkmmisc
+  tier: 3
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Builds a cache-policy operand for .L2::cache_hint.'
+- id: ctrl.block
+  kind: instruction
+  ptx_syntax: '{ instructionList }'
+  manual_section: '9.7.12.1 Control Flow Instructions: {}'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Nested scope for register declarations.
+- id: ctrl.predicate
+  kind: instruction
+  ptx_syntax: '@{!}p instruction;'
+  manual_section: '9.7.12.2 Control Flow Instructions: @'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Guard predicate on any instruction.
+- id: cvt.bf16
+  kind: modifier
+  ptx_syntax: 'cvt.frnd2{.relu}{.satfinite}.bf16.f32 d, a;'
+  manual_section: '9.7.9.21 Data Movement and Conversion Instructions: cvt'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmisc
+  tier: 3
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cvt.fp
+  kind: modifier
+  ptx_syntax: 'cvt{.irnd}{.ftz}{.sat}.dtype.atype d, a;'
+  manual_section: '9.7.9.21 Data Movement and Conversion Instructions: cvt'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Integer and f32/f64 conversions with rounding; .rni/.rzi round to integral (no direct RV64 instruction).
+- id: cvt.fp6fp4
+  kind: modifier
+  ptx_syntax: 'cvt.rn.satfinite{.relu}.e2m1x2.f32 d, a, b;'
+  manual_section: '9.7.9.21 Data Movement and Conversion Instructions: cvt'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmisc
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope (FP6, FP4 and UE8M0 types)'
+  entry: ''
+- id: cvt.fp8
+  kind: modifier
+  ptx_syntax: 'cvt.rn.satfinite{.relu}.e4m3x2.f32 d, a, b;'
+  manual_section: '9.7.9.21 Data Movement and Conversion Instructions: cvt'
+  introduced_ptx: '7.8'
+  min_target: sm_89
+  family: Xkmmisc
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: .e4m3x2 and .e5m2x2 to and from f32 and f16x2.
+- id: cvt.half
+  kind: modifier
+  ptx_syntax: 'cvt.frnd2{.relu}{.satfinite}.f16.f32 d, a;'
+  manual_section: '9.7.9.21 Data Movement and Conversion Instructions: cvt'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Zfh conversions.
+- id: cvt.int
+  kind: modifier
+  opcodes: [cvt]
+  ptx_syntax: 'cvt{.sat}.dtype.atype d, a;'
+  manual_section: '9.7.9.21 Data Movement and Conversion Instructions: cvt'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Integer to integer (widen, narrow, saturate).'
+- id: cvt.pack
+  kind: instruction
+  opcodes: [cvt.pack]
+  ptx_syntax: 'cvt.pack.sat.convertType.abType d, a, b;'
+  manual_section: '9.7.9.22 Data Movement and Conversion Instructions: cvt.pack'
+  introduced_ptx: '6.5'
+  min_target: sm_72
+  family: Xkmmisc
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cvt.tf32
+  kind: modifier
+  ptx_syntax: 'cvt.rna{.satfinite}.tf32.f32 d, a;'
+  manual_section: '9.7.9.21 Data Movement and Conversion Instructions: cvt'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmisc
+  tier: 3
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: cvta
+  kind: instruction
+  opcodes: [cvta]
+  ptx_syntax: 'cvta.space.size p, a;'
+  manual_section: '9.7.9.20 Data Movement and Conversion Instructions: cvta'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Generic to and from a state space (address-window arithmetic).
+- id: 'cvta.shared::cluster'
+  kind: modifier
+  ptx_syntax: 'cvta.shared::cluster.u64 p, a;'
+  manual_section: '9.7.9.20 Data Movement and Conversion Instructions: cvta'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: dir.address_size
+  kind: directive
+  ptx_syntax: .address_size address-size
+  manual_section: '11.1.3 PTX Module Directives: .address_size'
+  introduced_ptx: '2.3'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: In every file; entry app.vecadd.
+- id: dir.alias
+  kind: directive
+  ptx_syntax: '.alias fAlias, fAliasee;'
+  manual_section: '11.2.3 Kernel and Function Directives: .alias'
+  introduced_ptx: '6.3'
+  min_target: sm_30
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Function aliases (__attribute__((alias))).
+- id: dir.attribute
+  kind: directive
+  ptx_syntax: .global .attribute(.managed) .type name;
+  manual_section: '5.4.8 Variable and Function Attribute Directive: .attribute'
+  introduced_ptx: '4.0'
+  min_target: sm_30
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: '''.attribute(.managed)'' for __managed__ variables.'
+- id: dir.branchtargets
+  kind: directive
+  ptx_syntax: 'Label: .branchtargets list-of-labels ;'
+  manual_section: '11.3.1 Control Flow Directives: .branchtargets'
+  introduced_ptx: '2.1'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Target list of brx.idx.
+- id: dir.callprototype
+  kind: directive
+  ptx_syntax: 'label: .callprototype _ .noreturn;'
+  manual_section: '11.3.3 Control Flow Directives: .callprototype'
+  introduced_ptx: '2.1'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Indirect calls.
+- id: dir.calltargets
+  kind: directive
+  ptx_syntax: 'Label: .calltargets list-of-functions ;'
+  manual_section: '11.3.2 Control Flow Directives: .calltargets'
+  introduced_ptx: '2.1'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: dir.common
+  kind: directive
+  ptx_syntax: .common identifier
+  manual_section: '11.6.4 Linking Directives: .common'
+  introduced_ptx: '5.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: dir.dwarf
+  kind: directive
+  ptx_syntax: '@@DWARF dwarf-string'
+  manual_section: '11.5.1 Debugging Directives: @@dwarf'
+  introduced_ptx: '1.2'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Debug information: parse and ignore; entry compiled with -g.'
+- id: dir.entry
+  kind: directive
+  ptx_syntax: .entry kernel-name ( param-list ) kernel-body
+  manual_section: '11.2.1 Kernel and Function Directives: .entry'
+  introduced_ptx: ''
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: In every file; entry app.vecadd.
+- id: dir.explicitcluster
+  kind: directive
+  ptx_syntax: .explicitcluster
+  manual_section: '11.7.2 Cluster Dimension Directives: .explicitcluster'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: dir.extern
+  kind: directive
+  ptx_syntax: .extern identifier
+  manual_section: '11.6.1 Linking Directives: .extern'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: External declarations (extern __device__).
+- id: dir.file
+  kind: directive
+  ptx_syntax: '.file file_index "filename" {, timestamp, file_size}'
+  manual_section: '11.5.3 Debugging Directives: .file'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Debug information: parse and ignore.'
+- id: dir.func
+  kind: directive
+  ptx_syntax: '.func {.attribute(attr-list)} fname {.noreturn} function-body'
+  manual_section: '11.2.2 Kernel and Function Directives: .func'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Device functions (__noinline__).
+- id: dir.loc
+  kind: directive
+  ptx_syntax: .loc file_index line_number column_position
+  manual_section: '11.5.4 Debugging Directives: .loc'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Debug information: parse and ignore.'
+- id: dir.maxclusterrank
+  kind: directive
+  ptx_syntax: .maxclusterrank n
+  manual_section: '11.7.3 Cluster Dimension Directives: .maxclusterrank'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Launch with a larger cluster must fail (H100 job).
+- id: dir.maxnctapersm
+  kind: directive
+  ptx_syntax: .maxnctapersm ncta
+  manual_section: '11.4.5 Performance-Tuning Directives: .maxnctapersm (deprecated)'
+  introduced_ptx: '1.3'
+  min_target: all
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: deprecated directive (replaced by .minnctapersm); clang never emits it
+  entry: ''
+- id: dir.maxnreg
+  kind: directive
+  ptx_syntax: .maxnreg n
+  manual_section: '11.4.1 Performance-Tuning Directives: .maxnreg'
+  introduced_ptx: '1.3'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Effect visible in ptxas -v (expect_ptxas).
+- id: dir.maxntid
+  kind: directive
+  ptx_syntax: .maxntid nx
+  manual_section: '11.4.2 Performance-Tuning Directives: .maxntid'
+  introduced_ptx: '1.3'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: __launch_bounds__.
+- id: dir.minnctapersm
+  kind: directive
+  ptx_syntax: .minnctapersm ncta
+  manual_section: '11.4.4 Performance-Tuning Directives: .minnctapersm'
+  introduced_ptx: '2.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: __launch_bounds__ second argument.
+- id: dir.noreturn
+  kind: directive
+  ptx_syntax: .noreturn
+  manual_section: '11.4.6 Performance-Tuning Directives: .noreturn'
+  introduced_ptx: '6.4'
+  min_target: sm_30
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: dir.pragma
+  kind: directive
+  ptx_syntax: .pragma list-of-strings ;
+  manual_section: '11.4.7 Performance-Tuning Directives: .pragma'
+  introduced_ptx: '2.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Only "nounroll" matters (#pragma unroll 1).'
+- id: dir.ptr
+  kind: directive
+  ptx_syntax: .param .type .ptr .space .align N varname
+  manual_section: '5.1.6.3 Kernel Parameter Attribute: .ptr'
+  introduced_ptx: '2.2'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Kernel pointer parameter attribute; clang emits ''.ptr .align 1'' on every pointer parameter.'
+- id: dir.reqnctapercluster
+  kind: directive
+  ptx_syntax: .reqnctapercluster nx
+  manual_section: '11.7.1 Cluster Dimension Directives: .reqnctapercluster'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: __cluster_dims__.
+- id: dir.reqntid
+  kind: directive
+  ptx_syntax: .reqntid nx
+  manual_section: '11.4.3 Performance-Tuning Directives: .reqntid'
+  introduced_ptx: '2.1'
+  min_target: all
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Launch with another block size must fail (H100 job).
+- id: dir.section
+  kind: directive
+  ptx_syntax: '.section section_name { dwarf-lines }'
+  manual_section: '11.5.2 Debugging Directives: .section'
+  introduced_ptx: '2.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Debug information: parse and ignore.'
+- id: dir.target
+  kind: directive
+  ptx_syntax: .target stringlist
+  manual_section: '11.1.2 PTX Module Directives: .target'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: In every file; entry app.vecadd.
+- id: dir.version
+  kind: directive
+  ptx_syntax: .version major.minor
+  manual_section: '11.1.1 PTX Module Directives: .version'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: In every file; entry app.vecadd.
+- id: dir.visible
+  kind: directive
+  ptx_syntax: .visible identifier
+  manual_section: '11.6.2 Linking Directives: .visible'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: In every file; entry app.vecadd.
+- id: dir.weak
+  kind: directive
+  ptx_syntax: .weak identifier
+  manual_section: '11.6.3 Linking Directives: .weak'
+  introduced_ptx: '3.1'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: discard
+  kind: instruction
+  opcodes: [discard]
+  ptx_syntax: 'discard{.global}.level [a], size;'
+  manual_section: '9.7.9.17 Data Movement and Conversion Instructions: discard'
+  introduced_ptx: '7.4'
+  min_target: sm_80
+  family: Xkmmisc
+  tier: 3
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: L2 cache hint; contents become undefined.
+- id: div.fp.approx
+  kind: instruction
+  opcodes: [div.approx]
+  ptx_syntax: 'div.approx{.ftz}.f32 d, a, b;'
+  manual_section: '9.7.3.8 Floating Point Instructions: div'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmmufu
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+  notes: __fdividef.
+- id: div.fp.full
+  kind: instruction
+  opcodes: [div.full]
+  ptx_syntax: 'div.full{.ftz}.f32 d, a, b;'
+  manual_section: '9.7.3.8 Floating Point Instructions: div'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmmufu
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+- id: div.fp.rn
+  kind: instruction
+  opcodes: [div.rn, div.rz, div.rm, div.rp]
+  ptx_syntax: 'div.rnd{.ftz}.f32 d, a, b;'
+  manual_section: '9.7.3.8 Floating Point Instructions: div'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: IEEE division (fdiv).
+- id: div.int
+  kind: instruction
+  opcodes: [div]
+  ptx_syntax: 'div.type d, a, b;'
+  manual_section: '9.7.1.8 Integer Arithmetic Instructions: div'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Division by zero result is unspecified in PTX; kernels avoid it.
+- id: dp2a
+  kind: instruction
+  opcodes: [dp2a]
+  ptx_syntax: 'dp2a.mode.atype.btype d, a, b, c;'
+  manual_section: '9.7.1.24 Integer Arithmetic Instructions: dp2a'
+  introduced_ptx: '5.0'
+  min_target: sm_61
+  family: Xkmmisc
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: dp4a
+  kind: instruction
+  opcodes: [dp4a]
+  ptx_syntax: 'dp4a.atype.btype d, a, b, c;'
+  manual_section: '9.7.1.23 Integer Arithmetic Instructions: dp4a'
+  introduced_ptx: '5.0'
+  min_target: sm_61
+  family: Xkmmisc
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: elect.sync
+  kind: instruction
+  opcodes: [elect.sync]
+  ptx_syntax: 'elect.sync d|p, membermask;'
+  manual_section: '9.7.13.14 Parallel Synchronization and Communication Instructions: elect.sync'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmwarp
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ex2
+  kind: instruction
+  opcodes: [ex2]
+  ptx_syntax: 'ex2.approx{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.21 Floating Point Instructions: ex2'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmmufu
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+- id: ex2.half
+  kind: instruction
+  ptx_syntax: 'ex2.approx.atype d, a;'
+  manual_section: '9.7.4.10 Half Precision Floating Point Instructions: ex2'
+  introduced_ptx: '7.0'
+  min_target: sm_75
+  family: Xkmmufu
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+- id: exit
+  kind: instruction
+  opcodes: [exit]
+  ptx_syntax: exit;
+  manual_section: '9.7.12.7 Control Flow Instructions: exit'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Ends the thread.
+- id: fence.op_restrict
+  kind: modifier
+  opcodes: [fence.mbarrier_init]
+  ptx_syntax: fence.mbarrier_init.release.cluster;
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmmbar
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.proxy.alias
+  kind: modifier
+  opcodes: [fence.proxy.alias]
+  ptx_syntax: fence.proxy.alias;
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '7.5'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.proxy.async
+  kind: modifier
+  opcodes: [fence.proxy.async]
+  ptx_syntax: 'fence.proxy.async{.space};'
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Orders generic-proxy accesses before async-proxy (TMA, wgmma) accesses.'
+- id: fence.proxy.tensormap
+  kind: modifier
+  opcodes:
+  - 'fence.proxy.tensormap::generic'
+  ptx_syntax: 'fence.proxy.tensormap::generic.release.gpu;'
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '8.3'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.scope.cluster
+  kind: modifier
+  ptx_syntax: fence.acq_rel.cluster;
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.scope.cta
+  kind: modifier
+  ptx_syntax: fence.acq_rel.cta;
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.scope.gpu
+  kind: modifier
+  ptx_syntax: fence.acq_rel.gpu;
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.scope.sys
+  kind: modifier
+  ptx_syntax: fence.acq_rel.sys;
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.sem.acq_rel
+  kind: modifier
+  opcodes: [fence.acq_rel]
+  ptx_syntax: fence.acq_rel.scope;
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.sem.acquire
+  kind: modifier
+  opcodes: [fence.acquire]
+  ptx_syntax: fence.acquire.scope;
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '8.6'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.sem.release
+  kind: modifier
+  opcodes: [fence.release]
+  ptx_syntax: fence.release.scope;
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '8.6'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.sem.sc
+  kind: modifier
+  opcodes: [fence.sc]
+  ptx_syntax: fence.sc.scope;
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fence.sync_restrict
+  kind: modifier
+  ptx_syntax: 'fence.acquire.sync_restrict::shared::cluster.cluster;'
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '8.6'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fma.fp
+  kind: instruction
+  opcodes: [fma]
+  ptx_syntax: 'fma.rnd{.ftz}{.sat}.f32 d, a, b, c;'
+  manual_section: '9.7.3.6 Floating Point Instructions: fma'
+  introduced_ptx: '1.4'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'clang contracts a*b+c to fma unless -ffp-contract=off.'
+- id: fma.half
+  kind: instruction
+  ptx_syntax: 'fma.rnd{.ftz}{.sat}.f16 d, a, b, c;'
+  manual_section: '9.7.4.4 Half Precision Floating Point Instructions: fma'
+  introduced_ptx: '4.2'
+  min_target: sm_53
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel covers .relu; .oob (sm_90) is left to the specification.
+- id: fma.mixed
+  kind: instruction
+  ptx_syntax: 'fma.rnd{.ftz}{.sat}.f32.abtype d, a, b, c;'
+  manual_section: '9.7.5.3 Mixed Precision Floating Point Instructions: fma'
+  introduced_ptx: '8.6'
+  min_target: sm_100
+  family: base
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: fns
+  kind: instruction
+  opcodes: [fns]
+  ptx_syntax: 'fns.b32 d, mask, base, offset;'
+  manual_section: '9.7.1.17 Integer Arithmetic Instructions: fns'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmmisc
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: fp.ftz
+  kind: modifier
+  ptx_syntax: 'add{.rnd}.ftz.f32 d, a, b;'
+  manual_section: '9.7.3.3 Floating Point Instructions: add'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: ftz
+  notes: Flush subnormal inputs and results to zero; RISC-V has no FTZ mode (-fcuda-flush-denormals-to-zero).
+- id: fp.rounding
+  kind: modifier
+  ptx_syntax: '.rnd = { .rn, .rz, .rm, .rp }'
+  manual_section: '9.7.3.3 Floating Point Instructions: add'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Rounding modifiers of add, sub, mul, fma and cvt; RISC-V static rm field.'
+- id: fp.sat
+  kind: modifier
+  ptx_syntax: 'add{.rnd}{.ftz}.sat.f32 d, a, b;'
+  manual_section: '9.7.3.3 Floating Point Instructions: add'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Clamp the result to [0.0, 1.0].'
+- id: getctarank
+  kind: instruction
+  opcodes: [getctarank]
+  ptx_syntax: 'getctarank{.space}.type d, a;'
+  manual_section: '9.7.9.24 Data Movement and Conversion Instructions: getctarank'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: griddepcontrol
+  kind: instruction
+  opcodes: [griddepcontrol]
+  ptx_syntax: griddepcontrol.action;
+  manual_section: '9.7.13.13 Parallel Synchronization and Communication Instructions: griddepcontrol'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmsimt
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Programmatic dependent launch; without the launch attribute it behaves as a no-op.
+- id: half.bf16
+  kind: modifier
+  ptx_syntax: 'add{.rnd}.bf16 d, a, b;'
+  manual_section: '9.7.4.1 Half Precision Floating Point Instructions: add'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmmisc
+  tier: 3
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Scalar and packed bf16 arithmetic; add/sub/mul need sm_90, fma/min/max sm_80.'
+- id: half.packed
+  kind: modifier
+  ptx_syntax: 'add{.rnd}{.ftz}{.sat}.f16x2 d, a, b;'
+  manual_section: '9.7.4.1 Half Precision Floating Point Instructions: add'
+  introduced_ptx: '4.2'
+  min_target: sm_53
+  family: Xkmmisc
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Packed .f16x2 arithmetic (add, sub, mul, fma, neg, abs, min, max).'
+- id: isspacep
+  kind: instruction
+  opcodes: [isspacep]
+  ptx_syntax: 'isspacep.space p, a;'
+  manual_section: '9.7.9.19 Data Movement and Conversion Instructions: isspacep'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Address-window range check (open decision 4).
+- id: 'isspacep.shared::cluster'
+  kind: modifier
+  ptx_syntax: 'isspacep.shared::cluster p, a;'
+  manual_section: '9.7.9.19 Data Movement and Conversion Instructions: isspacep'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: istypep
+  kind: instruction
+  opcodes: [istypep]
+  ptx_syntax: 'istypep.type p, a;'
+  manual_section: '9.7.10.6 Texture Instructions: istypep'
+  introduced_ptx: '4.0'
+  min_target: sm_30
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'texture: graphics, out of scope'
+  entry: ''
+- id: ld.cache_hint
+  kind: modifier
+  ptx_syntax: 'ld.global.L1::evict_last.L2::cache_hint.type d, [a], cache-policy;'
+  manual_section: 9.7.9.2 Cache Eviction Priority Hints
+  introduced_ptx: '7.4'
+  min_target: sm_80
+  family: Xkmmisc
+  tier: 3
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Eviction priority and L2 cache-policy hints (sm_70/sm_80); may be ignored.
+- id: ld.cache_op
+  kind: modifier
+  opcodes: [ld.ca, ld.cg, ld.cs, ld.lu, ld.cv]
+  ptx_syntax: 'ld.space.cop.type d, [a]; .cop = { .ca, .cg, .cs, .lu, .cv }'
+  manual_section: 9.7.9.1 Cache Operators
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Cache operators are hints; Kamui may ignore them.
+- id: ld.const
+  kind: modifier
+  opcodes: [ld.const]
+  ptx_syntax: 'ld.const.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ld.generic
+  kind: modifier
+  opcodes: [ld]
+  ptx_syntax: 'ld.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Generic address: the state space is found from the address window (open decision 4).'
+- id: ld.global
+  kind: modifier
+  opcodes: [ld.global]
+  ptx_syntax: 'ld.global.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ld.global.nc
+  kind: instruction
+  opcodes: [ld.global.nc]
+  ptx_syntax: 'ld.global{.cop}.nc{.level::cache_hint}{.level::prefetch_size}.type d, [a]{, cache-policy};'
+  manual_section: '9.7.9.9 Data Movement and Conversion Instructions: ld.global.nc'
+  introduced_ptx: '3.1'
+  min_target: sm_32
+  family: base
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: __ldg; read-only data path.
+- id: ld.local
+  kind: modifier
+  opcodes: [ld.local]
+  ptx_syntax: 'ld.local.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ld.mmio
+  kind: modifier
+  opcodes: [ld.mmio]
+  ptx_syntax: 'ld.mmio.relaxed.sys.global.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '8.2'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ld.param
+  kind: modifier
+  opcodes: [ld.param]
+  ptx_syntax: 'ld.param.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel parameters and device-function arguments.
+- id: ld.scope.cluster
+  kind: modifier
+  ptx_syntax: 'ld.relaxed.cluster.global.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ld.scope.cta
+  kind: modifier
+  ptx_syntax: 'ld.relaxed.cta.global.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ld.scope.gpu
+  kind: modifier
+  ptx_syntax: 'ld.relaxed.gpu.global.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ld.scope.sys
+  kind: modifier
+  ptx_syntax: 'ld.relaxed.sys.global.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ld.sem.acquire
+  kind: modifier
+  opcodes: [ld.acquire]
+  ptx_syntax: 'ld.acquire.scope.space.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: C++ acquire load gives ld.acquire.sys.
+- id: ld.sem.relaxed
+  kind: modifier
+  opcodes: [ld.relaxed]
+  ptx_syntax: 'ld.relaxed.scope.space.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: C++ relaxed atomic load gives ld.relaxed.sys.
+- id: ld.shared
+  kind: modifier
+  opcodes: [ld.shared]
+  ptx_syntax: 'ld.shared.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Includes .shared::cta.'
+- id: 'ld.shared::cluster'
+  kind: modifier
+  opcodes:
+  - 'ld.shared::cluster'
+  ptx_syntax: 'ld.shared::cluster.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Load from another CTA''s shared memory (distributed shared memory).'
+- id: ld.volatile
+  kind: modifier
+  opcodes: [ld.volatile]
+  ptx_syntax: 'ld.volatile.space.type d, [a];'
+  manual_section: '9.7.9.8 Data Movement and Conversion Instructions: ld'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ldmatrix
+  kind: instruction
+  opcodes: [ldmatrix]
+  ptx_syntax: 'ldmatrix.sync.aligned.shape.num{.trans}{.ss}.type r, [p];'
+  manual_section: '9.7.14.5.15 Warp-level matrix load instruction: ldmatrix'
+  introduced_ptx: '6.5'
+  min_target: sm_75
+  family: Xkmmma
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ldu
+  kind: instruction
+  opcodes: [ldu]
+  ptx_syntax: 'ldu{.ss}.type d, [a];'
+  manual_section: '9.7.9.10 Data Movement and Conversion Instructions: ldu'
+  introduced_ptx: '2.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: lg2
+  kind: instruction
+  opcodes: [lg2]
+  ptx_syntax: 'lg2.approx{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.20 Floating Point Instructions: lg2'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmmufu
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+- id: lop3
+  kind: instruction
+  opcodes: [lop3]
+  ptx_syntax: 'lop3.b32 d, a, b, c, immLut;'
+  manual_section: '9.7.8.6 Logic and Shift Instructions: lop3'
+  introduced_ptx: '4.3'
+  min_target: sm_50
+  family: Xkmmisc
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Arbitrary three-input logic function (8-bit LUT).
+- id: mad.cc
+  kind: instruction
+  opcodes: [mad.cc]
+  ptx_syntax: 'mad{.hi,.lo}.cc.type d, a, b, c;'
+  manual_section: '9.7.2.5 Extended-Precision Arithmetic Instructions: mad.cc'
+  introduced_ptx: '3.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mad.fp
+  kind: instruction
+  ptx_syntax: 'mad{.ftz}{.sat}.f32 d, a, b, c;'
+  manual_section: '9.7.3.7 Floating Point Instructions: mad'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: mad.rn.f32 is fma on sm_20+.
+- id: mad.int
+  kind: instruction
+  opcodes: [mad]
+  ptx_syntax: 'mad.mode.type d, a, b, c;'
+  manual_section: '9.7.1.4 Integer Arithmetic Instructions: mad'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Kernel covers .lo, .hi, .wide and .sat.'
+- id: mad24
+  kind: instruction
+  opcodes: [mad24]
+  ptx_syntax: 'mad24.mode.type d, a, b, c;'
+  manual_section: '9.7.1.6 Integer Arithmetic Instructions: mad24'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: madc
+  kind: instruction
+  opcodes: [madc]
+  ptx_syntax: 'madc{.hi,.lo}{.cc}.type d, a, b, c;'
+  manual_section: '9.7.2.6 Extended-Precision Arithmetic Instructions: madc'
+  introduced_ptx: '3.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mapa
+  kind: instruction
+  opcodes: [mapa]
+  ptx_syntax: 'mapa{.space}.type d, a, b;'
+  manual_section: '9.7.9.23 Data Movement and Conversion Instructions: mapa'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: match.all.sync
+  kind: modifier
+  opcodes: [match.all.sync]
+  ptx_syntax: 'match.all.sync.type d[|p], a, membermask;'
+  manual_section: '9.7.13.10 Parallel Synchronization and Communication Instructions: match.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmwarp
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: match.any.sync
+  kind: modifier
+  opcodes: [match.any.sync]
+  ptx_syntax: 'match.any.sync.type d, a, membermask;'
+  manual_section: '9.7.13.10 Parallel Synchronization and Communication Instructions: match.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmwarp
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: max.fp
+  kind: instruction
+  ptx_syntax: 'max{.ftz}{.NaN}{.xorsign.abs}.f32 d, a, b;'
+  manual_section: '9.7.3.12 Floating Point Instructions: max'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: max.fp.nan
+  kind: modifier
+  ptx_syntax: 'max{.ftz}.NaN{.xorsign.abs}.f32 d, a, b;'
+  manual_section: '9.7.3.12 Floating Point Instructions: max'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: base
+  tier: 3
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: max.half
+  kind: instruction
+  ptx_syntax: 'max{.ftz}{.NaN}{.xorsign.abs}.f16 d, a, b;'
+  manual_section: '9.7.4.8 Half Precision Floating Point Instructions: max'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: base
+  tier: 3
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: max.int
+  kind: instruction
+  opcodes: [max]
+  ptx_syntax: 'max.atype d, a, b;'
+  manual_section: '9.7.1.13 Integer Arithmetic Instructions: max'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: max.int.packed
+  kind: modifier
+  ptx_syntax: 'max{.relu}.u16x2 d, a, b;'
+  manual_section: '9.7.1.13 Integer Arithmetic Instructions: max'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmmisc
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Packed .u16x2/.s16x2 and .relu forms (sm_90).
+- id: mbarrier.arrive
+  kind: instruction
+  opcodes: [mbarrier.arrive]
+  ptx_syntax: 'mbarrier.arrive{.sem}{.scope}{.shared{::cta}}.b64 state, [addr]{, count};'
+  manual_section: '9.7.13.15.13 Parallel Synchronization and Communication Instructions: mbarrier.arrive'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmbar
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mbarrier.arrive.expect_tx
+  kind: modifier
+  opcodes: [mbarrier.arrive.expect_tx]
+  ptx_syntax: 'mbarrier.arrive.expect_tx.shared::cta.b64 state, [addr], txCount;'
+  manual_section: '9.7.13.15.13 Parallel Synchronization and Communication Instructions: mbarrier.arrive'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmmbar
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: 'mbarrier.arrive.shared::cluster'
+  kind: modifier
+  ptx_syntax: 'mbarrier.arrive.release.cluster.shared::cluster.b64 _, [addr];'
+  manual_section: '9.7.13.15.13 Parallel Synchronization and Communication Instructions: mbarrier.arrive'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmmbar
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Arrive on an mbarrier of another CTA in the cluster.
+- id: mbarrier.arrive_drop
+  kind: instruction
+  opcodes: [mbarrier.arrive_drop]
+  ptx_syntax: 'mbarrier.arrive_drop{.sem}{.scope}{.shared{::cta}}.b64 state, [addr]{, count};'
+  manual_section: '9.7.13.15.14 Parallel Synchronization and Communication Instructions: mbarrier.arrive_drop'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmbar
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mbarrier.complete_tx
+  kind: instruction
+  opcodes: [mbarrier.complete_tx]
+  ptx_syntax: 'mbarrier.complete_tx{.sem}{.scope}{.space}.b64 [addr], txCount;'
+  manual_section: '9.7.13.15.12 Parallel Synchronization and Communication Instructions: mbarrier.complete_tx'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmmbar
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mbarrier.expect_tx
+  kind: instruction
+  opcodes: [mbarrier.expect_tx]
+  ptx_syntax: 'mbarrier.expect_tx{.sem}{.scope}{.space}.b64 [addr], txCount;'
+  manual_section: '9.7.13.15.11 Parallel Synchronization and Communication Instructions: mbarrier.expect_tx'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmmbar
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mbarrier.init
+  kind: instruction
+  opcodes: [mbarrier.init]
+  ptx_syntax: 'mbarrier.init{.shared{::cta}}.b64 [addr], count;'
+  manual_section: '9.7.13.15.9 Parallel Synchronization and Communication Instructions: mbarrier.init'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmbar
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: sm_80 form; tier 4 with the rest of Xkmmbar.
+- id: mbarrier.inval
+  kind: instruction
+  opcodes: [mbarrier.inval]
+  ptx_syntax: 'mbarrier.inval{.shared{::cta}}.b64 [addr];'
+  manual_section: '9.7.13.15.10 Parallel Synchronization and Communication Instructions: mbarrier.inval'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmbar
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mbarrier.pending_count
+  kind: instruction
+  opcodes: [mbarrier.pending_count]
+  ptx_syntax: 'mbarrier.pending_count.b64 count, state;'
+  manual_section: '9.7.13.15.17 Parallel Synchronization and Communication Instructions: mbarrier.pending_count'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmbar
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mbarrier.scope.cluster
+  kind: modifier
+  ptx_syntax: 'mbarrier.try_wait.acquire.cluster.shared::cta.b64 p, [addr], state;'
+  manual_section: '9.7.13.15.16 Parallel Synchronization and Communication Instructions: mbarrier.test_wait/mbarrier.try_wait'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmmbar
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: .acquire/.release/.relaxed with .cta or .cluster scope.
+- id: mbarrier.test_wait
+  kind: modifier
+  opcodes: [mbarrier.test_wait]
+  ptx_syntax: 'mbarrier.test_wait{.sem}{.scope}{.shared{::cta}}.b64 waitComplete, [addr], state;'
+  manual_section: '9.7.13.15.16 Parallel Synchronization and Communication Instructions: mbarrier.test_wait/mbarrier.try_wait'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmbar
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mbarrier.try_wait
+  kind: modifier
+  opcodes: [mbarrier.try_wait]
+  ptx_syntax: 'mbarrier.try_wait{.sem}{.scope}{.shared{::cta}}.b64 waitComplete, [addr], state{, suspendTimeHint};'
+  manual_section: '9.7.13.15.16 Parallel Synchronization and Communication Instructions: mbarrier.test_wait/mbarrier.try_wait'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmmbar
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mbarrier.wait.parity
+  kind: modifier
+  ptx_syntax: 'mbarrier.try_wait.parity{.sem}{.scope}{.shared{::cta}}.b64 waitComplete, [addr], phaseParity;'
+  manual_section: '9.7.13.15.16 Parallel Synchronization and Communication Instructions: mbarrier.test_wait/mbarrier.try_wait'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmmbar
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: membar
+  kind: instruction
+  opcodes: [membar]
+  ptx_syntax: 'membar.level; .level = { .cta, .gl, .sys }'
+  manual_section: '9.7.13.4 Parallel Synchronization and Communication Instructions: membar/fence'
+  introduced_ptx: '1.4'
+  min_target: all
+  family: Xkmscope
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: __threadfence_block/__threadfence/__threadfence_system.
+- id: min.fp
+  kind: instruction
+  ptx_syntax: 'min{.ftz}{.NaN}{.xorsign.abs}.f32 d, a, b;'
+  manual_section: '9.7.3.11 Floating Point Instructions: min'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: min.fp.nan
+  kind: modifier
+  ptx_syntax: 'min{.ftz}.NaN{.xorsign.abs}.f32 d, a, b;'
+  manual_section: '9.7.3.11 Floating Point Instructions: min'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: base
+  tier: 3
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: NaN-propagating min and .xorsign.abs (sm_86).
+- id: min.half
+  kind: instruction
+  ptx_syntax: 'min{.ftz}{.NaN}{.xorsign.abs}.f16 d, a, b;'
+  manual_section: '9.7.4.7 Half Precision Floating Point Instructions: min'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: base
+  tier: 3
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: min.int
+  kind: instruction
+  opcodes: [min]
+  ptx_syntax: 'min.atype d, a, b;'
+  manual_section: '9.7.1.12 Integer Arithmetic Instructions: min'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: min.int.packed
+  kind: modifier
+  ptx_syntax: 'min{.relu}.u16x2 d, a, b;'
+  manual_section: '9.7.1.12 Integer Arithmetic Instructions: min'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmmisc
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Packed .u16x2/.s16x2 and .relu forms (sm_90).
+- id: mma.b1
+  kind: modifier
+  ptx_syntax: 'mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;'
+  manual_section: '9.7.14.5.14 Multiply-and-Accumulate Instruction: mma'
+  introduced_ptx: '6.5'
+  min_target: sm_75
+  family: Xkmmma
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: .b1 with .xor.popc or .and.popc.
+- id: mma.bf16
+  kind: modifier
+  ptx_syntax: 'mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;'
+  manual_section: '9.7.14.5.14 Multiply-and-Accumulate Instruction: mma'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmma
+  tier: 3
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+- id: mma.block_scale
+  kind: modifier
+  ptx_syntax: 'mma.sync.aligned.m16n8k64.row.col.kind.block_scale{.scale_vec_size}.f32.e2m1.e2m1.f32.ue8m0 d, a, b, c, scale-a-data, {byte-id-a, thread-id-a}, scale-b-data, {byte-id-b, thread-id-b};'
+  manual_section: '9.7.14.5.14 Multiply-and-Accumulate Instruction: mma'
+  introduced_ptx: '8.7'
+  min_target: sm_120a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope (block scaling, .kind::mxf*)'
+  entry: ''
+- id: mma.f16
+  kind: modifier
+  opcodes: [mma]
+  ptx_syntax: 'mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;'
+  manual_section: '9.7.14.5.14 Multiply-and-Accumulate Instruction: mma'
+  introduced_ptx: '6.4'
+  min_target: sm_70
+  family: Xkmmma
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+  notes: 'm8n8k4, m16n8k8, m16n8k16 with f16 or f32 accumulators.'
+- id: mma.f64
+  kind: modifier
+  ptx_syntax: 'mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;'
+  manual_section: '9.7.14.5.14 Multiply-and-Accumulate Instruction: mma'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmma
+  tier: 3
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+  notes: 'm8n8k4 (and m16n8k* on sm_90).'
+- id: mma.fp8
+  kind: modifier
+  ptx_syntax: 'mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;'
+  manual_section: '9.7.14.5.14 Multiply-and-Accumulate Instruction: mma'
+  introduced_ptx: '8.4'
+  min_target: sm_89
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+  notes: '.e4m3/.e5m2, m16n8k32.'
+- id: mma.int4
+  kind: modifier
+  ptx_syntax: 'mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;'
+  manual_section: '9.7.14.5.14 Multiply-and-Accumulate Instruction: mma'
+  introduced_ptx: '6.5'
+  min_target: sm_75
+  family: Xkmmma
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: .s4/.u4.
+- id: mma.int8
+  kind: modifier
+  ptx_syntax: 'mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;'
+  manual_section: '9.7.14.5.14 Multiply-and-Accumulate Instruction: mma'
+  introduced_ptx: '6.5'
+  min_target: sm_75
+  family: Xkmmma
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: '.s8/.u8, m8n8k16 and m16n8k32.'
+- id: mma.sp
+  kind: instruction
+  opcodes: [mma.sp]
+  ptx_syntax: 'mma.spvariant.sync.aligned.m16n8k16.row.col.dtype.f16.f16.ctype d, a, b, c, e, f;'
+  manual_section: '9.7.14.6.3 Multiply-and-Accumulate Instruction: mma.sp/mma.sp::ordered_metadata'
+  introduced_ptx: '7.1'
+  min_target: sm_80
+  family: Xkmmma
+  tier: 3
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+- id: 'mma.sp::ordered_metadata'
+  kind: modifier
+  opcodes:
+  - 'mma.sp::ordered_metadata'
+  ptx_syntax: 'mma.sp::ordered_metadata.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c, e, f;'
+  manual_section: '9.7.14.6.3 Multiply-and-Accumulate Instruction: mma.sp/mma.sp::ordered_metadata'
+  introduced_ptx: '8.5'
+  min_target: sm_80
+  family: Xkmmma
+  tier: 3
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+- id: mma.tf32
+  kind: modifier
+  ptx_syntax: 'mma.sync.aligned.shape.row.col.dtype.atype.btype.ctype d, a, b, c;'
+  manual_section: '9.7.14.5.14 Multiply-and-Accumulate Instruction: mma'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmmma
+  tier: 3
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+- id: mov
+  kind: instruction
+  opcodes: [mov]
+  ptx_syntax: 'mov.type d, a;'
+  manual_section: '9.7.9.3 Data Movement and Conversion Instructions: mov'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mov.packing
+  kind: instruction
+  ptx_syntax: 'mov.type d, {a, b};'
+  manual_section: '9.7.9.4 Data Movement and Conversion Instructions: mov'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Pack and unpack vectors (mov.b64 {lo, hi}).'
+- id: movmatrix
+  kind: instruction
+  opcodes: [movmatrix]
+  ptx_syntax: 'movmatrix.sync.aligned.shape.trans.type d, a;'
+  manual_section: '9.7.14.5.17 Warp-level matrix transpose instruction: movmatrix'
+  introduced_ptx: '7.8'
+  min_target: sm_75
+  family: Xkmmma
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: clang 20 does not emit it.
+- id: mul.fp
+  kind: instruction
+  ptx_syntax: 'mul{.rnd}{.ftz}{.sat}.f32 d, a, b;'
+  manual_section: '9.7.3.5 Floating Point Instructions: mul'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mul.half
+  kind: instruction
+  ptx_syntax: 'mul{.rnd}{.ftz}{.sat}.f16 d, a, b;'
+  manual_section: '9.7.4.3 Half Precision Floating Point Instructions: mul'
+  introduced_ptx: '4.2'
+  min_target: sm_53
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: mul.int
+  kind: instruction
+  opcodes: [mul]
+  ptx_syntax: 'mul.mode.type d, a, b;'
+  manual_section: '9.7.1.3 Integer Arithmetic Instructions: mul'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Kernel covers .lo, .hi and .wide.'
+- id: mul24
+  kind: instruction
+  opcodes: [mul24]
+  ptx_syntax: 'mul24.mode.type d, a, b;'
+  manual_section: '9.7.1.5 Integer Arithmetic Instructions: mul24'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: multimem
+  kind: instruction
+  opcodes: [multimem]
+  ptx_syntax: 'multimem.ld_reduce{.ldsem}{.scope}{.ss}.op.type d, [a];'
+  manual_section: '9.7.9.14 Data Movement and Conversion Instructions: multimem.ld_reduce, multimem.st, multimem.red'
+  introduced_ptx: '8.1'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Needs a multicast memory object (NVLink multicast); cannot run on one H100. Candidate for exclusion.
+- id: nanosleep
+  kind: instruction
+  opcodes: [nanosleep]
+  ptx_syntax: nanosleep.u32 t;
+  manual_section: '9.7.19.2 Miscellaneous Instructions: nanosleep'
+  introduced_ptx: '6.3'
+  min_target: sm_70
+  family: Xkmmisc
+  tier: 2
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:completes'
+- id: neg.fp
+  kind: instruction
+  ptx_syntax: 'neg{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.10 Floating Point Instructions: neg'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: neg.half
+  kind: instruction
+  ptx_syntax: 'neg{.ftz}.f16 d, a;'
+  manual_section: '9.7.4.5 Half Precision Floating Point Instructions: neg'
+  introduced_ptx: '6.0'
+  min_target: sm_53
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: neg.int
+  kind: instruction
+  opcodes: [neg]
+  ptx_syntax: 'neg.type d, a;'
+  manual_section: '9.7.1.11 Integer Arithmetic Instructions: neg'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: not
+  kind: instruction
+  opcodes: [not]
+  ptx_syntax: 'not.type d, a;'
+  manual_section: '9.7.8.4 Logic and Shift Instructions: not'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: or
+  kind: instruction
+  opcodes: [or]
+  ptx_syntax: 'or.type d, a, b;'
+  manual_section: '9.7.8.2 Logic and Shift Instructions: or'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: pmevent
+  kind: instruction
+  opcodes: [pmevent]
+  ptx_syntax: pmevent a;
+  manual_section: '9.7.19.3 Miscellaneous Instructions: pmevent'
+  introduced_ptx: '1.4'
+  min_target: all
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'performance-monitor event: profiling only, out of scope'
+  entry: ''
+- id: popc
+  kind: instruction
+  opcodes: [popc]
+  ptx_syntax: 'popc.type d, a;'
+  manual_section: '9.7.1.14 Integer Arithmetic Instructions: popc'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Zbb cpop.
+- id: prefetch
+  kind: instruction
+  opcodes: [prefetch]
+  ptx_syntax: 'prefetch{.space}.level [a];'
+  manual_section: '9.7.9.15 Data Movement and Conversion Instructions: prefetch, prefetchu'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Hint; may be a no-op.
+- id: prefetch.tensormap
+  kind: modifier
+  ptx_syntax: 'prefetch{.tensormap_space}.tensormap [a];'
+  manual_section: '9.7.9.15 Data Movement and Conversion Instructions: prefetch, prefetchu'
+  introduced_ptx: '8.0'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: prefetchu
+  kind: instruction
+  opcodes: [prefetchu]
+  ptx_syntax: 'prefetchu.L1 [a];'
+  manual_section: '9.7.9.15 Data Movement and Conversion Instructions: prefetch, prefetchu'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Hint; may be a no-op.
+- id: prmt
+  kind: instruction
+  opcodes: [prmt]
+  ptx_syntax: 'prmt.b32{.mode} d, a, b, c;'
+  manual_section: '9.7.9.7 Data Movement and Conversion Instructions: prmt'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmmisc
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Kernel covers the .f4e, .b4e, .rc8, .ecl, .ecr, .rc16 modes.'
+- id: rcp.approx
+  kind: instruction
+  opcodes: [rcp.approx]
+  ptx_syntax: 'rcp.approx{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.13 Floating Point Instructions: rcp'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmmufu
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:1'
+- id: rcp.approx.ftz.f64
+  kind: instruction
+  opcodes: [rcp.approx.ftz.f64]
+  ptx_syntax: 'rcp.approx.ftz.f64 d, a;'
+  manual_section: '9.7.3.14 Floating Point Instructions: rcp.approx.ftz.f64'
+  introduced_ptx: '2.1'
+  min_target: sm_20
+  family: Xkmmufu
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:1'
+- id: rcp.rn
+  kind: instruction
+  opcodes: [rcp.rn, rcp.rz, rcp.rm, rcp.rp]
+  ptx_syntax: 'rcp.rnd{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.13 Floating Point Instructions: rcp'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: IEEE reciprocal (fdiv 1/x).
+- id: red.async
+  kind: instruction
+  opcodes: [red.async]
+  ptx_syntax: 'red.async.sem.scope{.ss}.completion_mechanism.op.type [a], b, [mbar];'
+  manual_section: '9.7.13.7 Parallel Synchronization and Communication Instructions: red.async'
+  introduced_ptx: '8.1'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: clang 20 does not emit it.
+- id: red.generic
+  kind: modifier
+  opcodes: [red]
+  ptx_syntax: 'red.add.type [a], b;'
+  manual_section: '9.7.13.6 Parallel Synchronization and Communication Instructions: red'
+  introduced_ptx: '1.2'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: red.global
+  kind: modifier
+  opcodes: [red.global]
+  ptx_syntax: 'red.global.add.type [a], b;'
+  manual_section: '9.7.13.6 Parallel Synchronization and Communication Instructions: red'
+  introduced_ptx: '1.2'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+  notes: All operations. clang emits atom even when the result is unused; ptxas turns that into RED.
+- id: red.scope
+  kind: modifier
+  opcodes: [red.cta, red.gpu, red.sys]
+  ptx_syntax: 'red.scope.global.add.u32 [a], b;'
+  manual_section: '9.7.13.6 Parallel Synchronization and Communication Instructions: red'
+  introduced_ptx: '5.0'
+  min_target: sm_60
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Kernel covers .cta, .gpu and .sys.'
+- id: red.scope.cluster
+  kind: modifier
+  opcodes: [red.cluster]
+  ptx_syntax: 'red.cluster.global.add.u32 [a], b;'
+  manual_section: '9.7.13.6 Parallel Synchronization and Communication Instructions: red'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: red.sem.release
+  kind: modifier
+  opcodes: [red.release, red.relaxed]
+  ptx_syntax: 'red.release.gpu.global.add.u32 [a], b;'
+  manual_section: '9.7.13.6 Parallel Synchronization and Communication Instructions: red'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: red.shared
+  kind: modifier
+  opcodes: [red.shared]
+  ptx_syntax: 'red.shared.add.type [a], b;'
+  manual_section: '9.7.13.6 Parallel Synchronization and Communication Instructions: red'
+  introduced_ptx: '1.2'
+  min_target: sm_11
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: 'red.shared::cluster'
+  kind: modifier
+  ptx_syntax: 'red.shared::cluster.add.type [a], b;'
+  manual_section: '9.7.13.6 Parallel Synchronization and Communication Instructions: red'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: red.vector
+  kind: modifier
+  ptx_syntax: 'red.global.v2.f32.add [a], b;'
+  manual_section: '9.7.13.6 Parallel Synchronization and Communication Instructions: red'
+  introduced_ptx: '8.1'
+  min_target: sm_90
+  family: base
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: redux.sync
+  kind: instruction
+  opcodes: [redux.sync]
+  ptx_syntax: 'redux.sync.op.type dst, src, membermask;'
+  manual_section: '9.7.13.12 Parallel Synchronization and Communication Instructions: redux.sync'
+  introduced_ptx: '7.0'
+  min_target: sm_80
+  family: Xkmwarp
+  tier: 3
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Integer add, min, max, and, or, xor.'
+- id: redux.sync.f32
+  kind: modifier
+  ptx_syntax: 'redux.sync.op{.abs}{.NaN}.f32 dst, src, membermask;'
+  manual_section: '9.7.13.12 Parallel Synchronization and Communication Instructions: redux.sync'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmwarp
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope (.f32 with .abs/.NaN)'
+  entry: ''
+- id: rem.int
+  kind: instruction
+  opcodes: [rem]
+  ptx_syntax: 'rem.type d, a, b;'
+  manual_section: '9.7.1.9 Integer Arithmetic Instructions: rem'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: ret
+  kind: instruction
+  opcodes: [ret]
+  ptx_syntax: 'ret{.uni};'
+  manual_section: '9.7.12.6 Control Flow Instructions: ret'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: rsqrt
+  kind: instruction
+  opcodes: [rsqrt]
+  ptx_syntax: 'rsqrt.approx{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.16 Floating Point Instructions: rsqrt'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmmufu
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+- id: rsqrt.approx.ftz.f64
+  kind: instruction
+  opcodes: [rsqrt.approx.ftz.f64]
+  ptx_syntax: 'rsqrt.approx.ftz.f64 d, a;'
+  manual_section: '9.7.3.17 Floating Point Instructions: rsqrt.approx.ftz.f64'
+  introduced_ptx: '4.0'
+  min_target: sm_20
+  family: Xkmmufu
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+- id: sad
+  kind: instruction
+  opcodes: [sad]
+  ptx_syntax: 'sad.type d, a, b, c;'
+  manual_section: '9.7.1.7 Integer Arithmetic Instructions: sad'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: selp
+  kind: instruction
+  opcodes: [selp]
+  ptx_syntax: 'selp.type d, a, b, c;'
+  manual_section: '9.7.6.3 Comparison and Selection Instructions: selp'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Zicond.
+- id: set
+  kind: instruction
+  opcodes: [set]
+  ptx_syntax: 'set.CmpOp{.ftz}.dtype.stype d, a, b;'
+  manual_section: '9.7.6.1 Comparison and Selection Instructions: set'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Integer and float compares; kernel covers .and/.or/.xor.
+- id: set.half
+  kind: instruction
+  ptx_syntax: 'set.CmpOp{.ftz}.f16.stype d, a, b;'
+  manual_section: '9.7.7.1 Half Precision Comparison Instructions: set'
+  introduced_ptx: '4.2'
+  min_target: sm_53
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: setmaxnreg
+  kind: instruction
+  opcodes: [setmaxnreg]
+  ptx_syntax: setmaxnreg.action.sync.aligned.u32 imm-reg-count;
+  manual_section: '9.7.19.5 Miscellaneous Instructions: setmaxnreg'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmmisc
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: sm_90a only; register-allocation hint (open decision 1).
+- id: setp
+  kind: instruction
+  opcodes: [setp]
+  ptx_syntax: 'setp.CmpOp{.ftz}.type p[|q], a, b;'
+  manual_section: '9.7.6.2 Comparison and Selection Instructions: setp'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: setp.half
+  kind: instruction
+  ptx_syntax: 'setp.CmpOp{.ftz}.f16 p, a, b;'
+  manual_section: '9.7.7.2 Half Precision Comparison Instructions: setp'
+  introduced_ptx: '4.2'
+  min_target: sm_53
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: shf
+  kind: instruction
+  opcodes: [shf]
+  ptx_syntax: 'shf.l.mode.b32 d, a, b, c;'
+  manual_section: '9.7.8.7 Logic and Shift Instructions: shf'
+  introduced_ptx: '3.1'
+  min_target: sm_32
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Funnel shift (__funnelshift_l/r).
+- id: shfl
+  kind: instruction
+  opcodes: [shfl]
+  ptx_syntax: 'shfl.mode.b32 d[|p], a, b, c;'
+  manual_section: '9.7.9.5 Data Movement and Conversion Instructions: shfl (deprecated)'
+  introduced_ptx: '3.0'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  status: excluded
+  exclusion_reason: 'deprecated non-.sync form, not supported on sm_70 and later'
+  entry: ''
+- id: shfl.sync.bfly
+  kind: modifier
+  opcodes: [shfl.sync.bfly]
+  ptx_syntax: 'shfl.sync.bfly.b32 d[|p], a, b, c, membermask;'
+  manual_section: '9.7.9.6 Data Movement and Conversion Instructions: shfl.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: shfl.sync.down
+  kind: modifier
+  opcodes: [shfl.sync.down]
+  ptx_syntax: 'shfl.sync.down.b32 d[|p], a, b, c, membermask;'
+  manual_section: '9.7.9.6 Data Movement and Conversion Instructions: shfl.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: shfl.sync.idx
+  kind: modifier
+  opcodes: [shfl.sync.idx]
+  ptx_syntax: 'shfl.sync.idx.b32 d[|p], a, b, c, membermask;'
+  manual_section: '9.7.9.6 Data Movement and Conversion Instructions: shfl.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: shfl.sync.up
+  kind: modifier
+  opcodes: [shfl.sync.up]
+  ptx_syntax: 'shfl.sync.up.b32 d[|p], a, b, c, membermask;'
+  manual_section: '9.7.9.6 Data Movement and Conversion Instructions: shfl.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: shl
+  kind: instruction
+  opcodes: [shl]
+  ptx_syntax: 'shl.type d, a, b;'
+  manual_section: '9.7.8.8 Logic and Shift Instructions: shl'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: shr
+  kind: instruction
+  opcodes: [shr]
+  ptx_syntax: 'shr.type d, a, b;'
+  manual_section: '9.7.8.9 Logic and Shift Instructions: shr'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sin
+  kind: instruction
+  opcodes: [sin]
+  ptx_syntax: 'sin.approx{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.18 Floating Point Instructions: sin'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmmufu
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+  notes: The manual gives an absolute error bound; the class is refined with the H100 goldens.
+- id: slct
+  kind: instruction
+  opcodes: [slct]
+  ptx_syntax: 'slct.dtype.s32 d, a, b, c;'
+  manual_section: '9.7.6.4 Comparison and Selection Instructions: slct'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: space.const
+  kind: state-space
+  ptx_syntax: .const .type name;
+  manual_section: 5.1.3 Constant State Space
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: '__constant__ data, read through ld.const.'
+- id: space.global
+  kind: state-space
+  ptx_syntax: .global .type name;
+  manual_section: 5.1.4 Global State Space
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: space.local
+  kind: state-space
+  ptx_syntax: .local .type name;
+  manual_section: 5.1.5 Local State Space
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Per-thread memory; an address window (open decision 4).
+- id: space.param
+  kind: state-space
+  ptx_syntax: .param .type name;
+  manual_section: 5.1.6 Parameter State Space
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Kernel and device-function parameters.
+- id: space.reg
+  kind: state-space
+  ptx_syntax: .reg .type name;
+  manual_section: 5.1.1 Register State Space
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Virtual registers, unlimited; register allocation is open decision 1.'
+- id: space.shared
+  kind: state-space
+  ptx_syntax: '.shared{::cta} .type name;'
+  manual_section: 5.1.7 Shared State Space
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Per-CTA memory; an address window (open decision 4).
+- id: 'space.shared::cluster'
+  kind: state-space
+  ptx_syntax: '.shared::cluster'
+  manual_section: 5.1.7 Shared State Space
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Distributed shared memory: shared memory of any CTA in the cluster.'
+- id: space.sreg
+  kind: state-space
+  ptx_syntax: .sreg (predefined only)
+  manual_section: 5.1.2 Special Register State Space
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Special registers; see the sreg.* rows.'
+- id: space.tex
+  kind: state-space
+  ptx_syntax: .tex .type name;
+  manual_section: 5.1.8 Texture State Space (deprecated)
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'texture: graphics, out of scope (deprecated)'
+  entry: ''
+- id: sqrt.approx
+  kind: instruction
+  opcodes: [sqrt.approx]
+  ptx_syntax: 'sqrt.approx{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.15 Floating Point Instructions: sqrt'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmmufu
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:1'
+- id: sqrt.rn
+  kind: instruction
+  opcodes: [sqrt.rn, sqrt.rz, sqrt.rm, sqrt.rp]
+  ptx_syntax: 'sqrt.rnd{.ftz}.f32 d, a;'
+  manual_section: '9.7.3.15 Floating Point Instructions: sqrt'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: fsqrt.
+- id: sreg.aggr_smem_size
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %aggr_smem_size;'
+  manual_section: '10.31 Special Registers: %aggr_smem_size'
+  introduced_ptx: '8.1'
+  min_target: sm_90
+  family: Xkmsimt
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.clock
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %clock;'
+  manual_section: '10.23 Special Registers: %clock, %clock_hi'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:monotonic'
+  notes: 'Also %clock_hi.'
+- id: sreg.clock64
+  kind: special-register
+  ptx_syntax: 'mov.u64 d, %clock64;'
+  manual_section: '10.24 Special Registers: %clock64'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:monotonic'
+- id: sreg.cluster_ctaid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %cluster_ctaid;'
+  manual_section: '10.14 Special Registers: %cluster_ctaid'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmsimt
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.cluster_ctarank
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %cluster_ctarank;'
+  manual_section: '10.16 Special Registers: %cluster_ctarank'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmsimt
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.cluster_nctaid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %cluster_nctaid;'
+  manual_section: '10.15 Special Registers: %cluster_nctaid'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmsimt
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.cluster_nctarank
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %cluster_nctarank;'
+  manual_section: '10.17 Special Registers: %cluster_nctarank'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmsimt
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.clusterid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %clusterid;'
+  manual_section: '10.12 Special Registers: %clusterid'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmsimt
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.ctaid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %ctaid;'
+  manual_section: '10.6 Special Registers: %ctaid'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.current_graph_exec
+  kind: special-register
+  ptx_syntax: 'mov.u64 d, %current_graph_exec;'
+  manual_section: '10.33 Special Registers: %current_graph_exec'
+  introduced_ptx: '8.0'
+  min_target: sm_50
+  family: Xkmsimt
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 0 when the kernel is not launched from a CUDA graph.
+- id: sreg.dynamic_smem_size
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %dynamic_smem_size;'
+  manual_section: '10.32 Special Registers: %dynamic_smem_size'
+  introduced_ptx: '4.1'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.envreg
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %envreg;'
+  manual_section: '10.27 Special Registers: %envreg<32>'
+  introduced_ptx: '2.1'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:uniform'
+  notes: '%envreg0..%envreg31, values set by the driver.'
+- id: sreg.globaltimer
+  kind: special-register
+  ptx_syntax: 'mov.u64 d, %globaltimer;'
+  manual_section: '10.28 Special Registers: %globaltimer, %globaltimer_lo, %globaltimer_hi'
+  introduced_ptx: '3.1'
+  min_target: sm_30
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:monotonic'
+  notes: 'Also %globaltimer_lo and %globaltimer_hi.'
+- id: sreg.gridid
+  kind: special-register
+  ptx_syntax: 'mov.u64 d, %gridid;'
+  manual_section: '10.10 Special Registers: %gridid'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:uniform'
+- id: sreg.is_explicit_cluster
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %is_explicit_cluster;'
+  manual_section: '10.11 Special Registers: %is_explicit_cluster'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmsimt
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.laneid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %laneid;'
+  manual_section: '10.3 Special Registers: %laneid'
+  introduced_ptx: '1.3'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.lanemask_eq
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %lanemask_eq;'
+  manual_section: '10.18 Special Registers: %lanemask_eq'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.lanemask_ge
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %lanemask_ge;'
+  manual_section: '10.21 Special Registers: %lanemask_ge'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.lanemask_gt
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %lanemask_gt;'
+  manual_section: '10.22 Special Registers: %lanemask_gt'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.lanemask_le
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %lanemask_le;'
+  manual_section: '10.19 Special Registers: %lanemask_le'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.lanemask_lt
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %lanemask_lt;'
+  manual_section: '10.20 Special Registers: %lanemask_lt'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.nclusterid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %nclusterid;'
+  manual_section: '10.13 Special Registers: %nclusterid'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmsimt
+  tier: 4
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.nctaid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %nctaid;'
+  manual_section: '10.7 Special Registers: %nctaid'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.nsmid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %nsmid;'
+  manual_section: '10.9 Special Registers: %nsmid'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:range'
+- id: sreg.ntid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %ntid;'
+  manual_section: '10.2 Special Registers: %ntid'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.nwarpid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %nwarpid;'
+  manual_section: '10.5 Special Registers: %nwarpid'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:range'
+- id: sreg.pm
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %pm0;'
+  manual_section: '10.25 Special Registers: %pm0..%pm7'
+  introduced_ptx: '1.3'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  status: excluded
+  exclusion_reason: 'performance-monitor counters: profiling only, out of scope'
+  entry: ''
+- id: sreg.pm64
+  kind: special-register
+  ptx_syntax: 'mov.u64 d, %pm0_64;'
+  manual_section: '10.26 Special Registers: %pm0_64..%pm7_64'
+  introduced_ptx: '4.0'
+  min_target: sm_50
+  family: Xkmsimt
+  tier: 1
+  status: excluded
+  exclusion_reason: 'performance-monitor counters: profiling only, out of scope'
+  entry: ''
+- id: sreg.reserved_smem_offset
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %reserved_smem_offset;'
+  manual_section: '10.29 Special Registers: %reserved_smem_offset_begin, %reserved_smem_offset_end, %reserved_smem_offset_cap, %reserved_smem_offset_<2>'
+  introduced_ptx: '7.6'
+  min_target: sm_80
+  family: Xkmsimt
+  tier: 3
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:range'
+  notes: '_begin, _end, _cap, _<2>.'
+- id: sreg.smid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %smid;'
+  manual_section: '10.8 Special Registers: %smid'
+  introduced_ptx: '1.3'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:range'
+- id: sreg.tid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %tid;'
+  manual_section: '10.1 Special Registers: %tid'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.total_smem_size
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %total_smem_size;'
+  manual_section: '10.30 Special Registers: %total_smem_size'
+  introduced_ptx: '4.1'
+  min_target: sm_20
+  family: Xkmsimt
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sreg.warpid
+  kind: special-register
+  ptx_syntax: 'mov.u32 d, %warpid;'
+  manual_section: '10.4 Special Registers: %warpid'
+  introduced_ptx: '1.3'
+  min_target: all
+  family: Xkmsimt
+  tier: 1
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: 'property:range'
+- id: st.async
+  kind: instruction
+  opcodes: [st.async]
+  ptx_syntax: 'st.async{.sem}{.scope}{.ss}{.completion_mechanism}{.vec}.type [a], b, [mbar];'
+  manual_section: '9.7.9.12 Data Movement and Conversion Instructions: st.async'
+  introduced_ptx: '8.1'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Store to remote shared memory with mbarrier complete_tx. clang 20 does not emit it.
+- id: st.bulk
+  kind: instruction
+  opcodes: [st.bulk]
+  ptx_syntax: 'st.bulk{.weak}{.shared::cta} [a], size, initval;'
+  manual_section: '9.7.9.13 Data Movement and Conversion Instructions: st.bulk'
+  introduced_ptx: '8.6'
+  min_target: sm_100
+  family: base
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: st.cache_op
+  kind: modifier
+  opcodes: [st.wb, st.cg, st.cs, st.wt]
+  ptx_syntax: 'st.space.cop.type [a], b; .cop = { .wb, .cg, .cs, .wt }'
+  manual_section: 9.7.9.1 Cache Operators
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Hints; may be ignored.
+- id: st.generic
+  kind: modifier
+  opcodes: [st]
+  ptx_syntax: 'st.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: st.global
+  kind: modifier
+  opcodes: [st.global]
+  ptx_syntax: 'st.global.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: st.local
+  kind: modifier
+  opcodes: [st.local]
+  ptx_syntax: 'st.local.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: st.mmio
+  kind: modifier
+  opcodes: [st.mmio]
+  ptx_syntax: 'st.mmio.relaxed.sys.global.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '8.2'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: st.param
+  kind: modifier
+  opcodes: [st.param]
+  ptx_syntax: 'st.param.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Device-function call arguments.
+- id: st.scope.cluster
+  kind: modifier
+  ptx_syntax: 'st.relaxed.cluster.global.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmscope
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: st.scope.cta
+  kind: modifier
+  ptx_syntax: 'st.relaxed.cta.global.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: st.scope.gpu
+  kind: modifier
+  ptx_syntax: 'st.relaxed.gpu.global.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: st.scope.sys
+  kind: modifier
+  ptx_syntax: 'st.relaxed.sys.global.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: st.sem.relaxed
+  kind: modifier
+  opcodes: [st.relaxed]
+  ptx_syntax: 'st.relaxed.scope.space.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: st.sem.release
+  kind: modifier
+  opcodes: [st.release]
+  ptx_syntax: 'st.release.scope.space.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmscope
+  tier: 2
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: C++ release store gives st.release.sys.
+- id: st.shared
+  kind: modifier
+  opcodes: [st.shared]
+  ptx_syntax: 'st.shared.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Includes .shared::cta.'
+- id: 'st.shared::cluster'
+  kind: modifier
+  opcodes:
+  - 'st.shared::cluster'
+  ptx_syntax: 'st.shared::cluster.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmcluster
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: 'Store to another CTA''s shared memory.'
+- id: st.volatile
+  kind: modifier
+  opcodes: [st.volatile]
+  ptx_syntax: 'st.volatile.space.type [a], b;'
+  manual_section: '9.7.9.11 Data Movement and Conversion Instructions: st'
+  introduced_ptx: '1.0'
+  min_target: sm_13
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: stackrestore
+  kind: instruction
+  opcodes: [stackrestore]
+  ptx_syntax: stackrestore.type a;
+  manual_section: '9.7.17.2 Stack Manipulation Instructions: stackrestore'
+  introduced_ptx: '7.3'
+  min_target: sm_52
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: stacksave
+  kind: instruction
+  opcodes: [stacksave]
+  ptx_syntax: stacksave.type d;
+  manual_section: '9.7.17.1 Stack Manipulation Instructions: stacksave'
+  introduced_ptx: '7.3'
+  min_target: sm_52
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Dynamic stack allocation (variable-length arrays).
+- id: stmatrix
+  kind: instruction
+  opcodes: [stmatrix]
+  ptx_syntax: 'stmatrix.sync.aligned.shape.num{.trans}{.ss}.type [p], r;'
+  manual_section: '9.7.14.5.16 Warp-level matrix store instruction: stmatrix'
+  introduced_ptx: '7.8'
+  min_target: sm_90
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: clang 20 does not emit it.
+- id: sub.cc
+  kind: instruction
+  opcodes: [sub.cc]
+  ptx_syntax: 'sub.cc.type d, a, b;'
+  manual_section: '9.7.2.3 Extended-Precision Arithmetic Instructions: sub.cc'
+  introduced_ptx: '1.2'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sub.fp
+  kind: instruction
+  ptx_syntax: 'sub{.rnd}{.ftz}{.sat}.f32 d, a, b;'
+  manual_section: '9.7.3.4 Floating Point Instructions: sub'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sub.half
+  kind: instruction
+  ptx_syntax: 'sub{.rnd}{.ftz}{.sat}.f16 d, a, b;'
+  manual_section: '9.7.4.2 Half Precision Floating Point Instructions: sub'
+  introduced_ptx: '4.2'
+  min_target: sm_53
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sub.int
+  kind: instruction
+  opcodes: [sub]
+  ptx_syntax: 'sub.type d, a, b;'
+  manual_section: '9.7.1.2 Integer Arithmetic Instructions: sub'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: sub.mixed
+  kind: instruction
+  ptx_syntax: 'sub{.rnd}{.sat}.f32.atype d, a, c;'
+  manual_section: '9.7.5.2 Mixed Precision Floating Point Instructions: sub'
+  introduced_ptx: '8.6'
+  min_target: sm_100
+  family: base
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: subc
+  kind: instruction
+  opcodes: [subc]
+  ptx_syntax: 'subc{.cc}.type d, a, b;'
+  manual_section: '9.7.2.4 Extended-Precision Arithmetic Instructions: subc'
+  introduced_ptx: '1.2'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: suld
+  kind: instruction
+  opcodes: [suld]
+  ptx_syntax: 'suld.b.geom{.cop}.vec.dtype.clamp d, [a, b];'
+  manual_section: '9.7.11.1 Surface Instructions: suld'
+  introduced_ptx: '1.5'
+  min_target: all
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'surface: graphics, out of scope'
+  entry: ''
+- id: suq
+  kind: instruction
+  opcodes: [suq]
+  ptx_syntax: 'suq.query.b32 d, [a];'
+  manual_section: '9.7.11.4 Surface Instructions: suq'
+  introduced_ptx: '1.5'
+  min_target: all
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'surface: graphics, out of scope'
+  entry: ''
+- id: sured
+  kind: instruction
+  opcodes: [sured]
+  ptx_syntax: 'sured.b.op.geom.ctype.clamp [a,b],c;'
+  manual_section: '9.7.11.3 Surface Instructions: sured'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'surface: graphics, out of scope'
+  entry: ''
+- id: sust
+  kind: instruction
+  opcodes: [sust]
+  ptx_syntax: 'sust.b.{1d,2d,3d}{.cop}.vec.ctype.clamp [a, b], c;'
+  manual_section: '9.7.11.2 Surface Instructions: sust'
+  introduced_ptx: '1.5'
+  min_target: all
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'surface: graphics, out of scope'
+  entry: ''
+- id: szext
+  kind: instruction
+  opcodes: [szext]
+  ptx_syntax: 'szext.mode.type d, a, b;'
+  manual_section: '9.7.1.21 Integer Arithmetic Instructions: szext'
+  introduced_ptx: '7.6'
+  min_target: sm_70
+  family: Xkmmisc
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: clang 20 does not emit it. A plain RV64 shift pair may suffice; decided with the specification.
+- id: tanh
+  kind: instruction
+  opcodes: [tanh]
+  ptx_syntax: 'tanh.approx.f32 d, a;'
+  manual_section: '9.7.3.22 Floating Point Instructions: tanh'
+  introduced_ptx: '7.0'
+  min_target: sm_75
+  family: Xkmmufu
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+  notes: clang 20 does not emit tanh.approx.
+- id: tanh.half
+  kind: instruction
+  ptx_syntax: 'tanh.approx.type d, a;'
+  manual_section: '9.7.4.9 Half Precision Floating Point Instructions: tanh'
+  introduced_ptx: '7.0'
+  min_target: sm_75
+  family: Xkmmufu
+  tier: 2
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: 'ulp:2'
+- id: tcgen05.alloc
+  kind: instruction
+  opcodes: [tcgen05.alloc, tcgen05.dealloc, tcgen05.relinquish_alloc_permit]
+  ptx_syntax: 'tcgen05.alloc.cta_group.sync.aligned{.shared::cta}.b32 [dst], nCols;'
+  manual_section: '9.7.16.6.1 Tensorcore 5th Generation Instructions: tcgen05.alloc, tcgen05.dealloc, tcgen05.relinquish_alloc_permit'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.commit
+  kind: instruction
+  opcodes: [tcgen05.commit]
+  ptx_syntax: 'tcgen05.commit.cta_group.completion_mechanism{.shared::cluster}{.multicast}.b64'
+  manual_section: '9.7.16.11.1 TensorCore 5th Generation Instructions: tcgen05.commit'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.cp
+  kind: instruction
+  opcodes: [tcgen05.cp]
+  ptx_syntax: 'tcgen05.cp.cta_group.shape{.multicast}{.dst_fmt.src_fmt} [taddr], s-desc;'
+  manual_section: '9.7.16.8.2 Tensorcore 5th Generation Instructions: tcgen05.cp'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.fence
+  kind: instruction
+  opcodes: [tcgen05.fence]
+  ptx_syntax: 'tcgen05.fence::before_thread_sync ;'
+  manual_section: '9.7.16.10.1 TensorCore 5th Generation Instructions: tcgen05.fence'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.ld
+  kind: instruction
+  opcodes: [tcgen05.ld]
+  ptx_syntax: 'tcgen05.ld.sync.aligned.shape1.num{.pack}.b32 r, [taddr];'
+  manual_section: '9.7.16.7.3 Tensorcore 5th Generation Instructions: tcgen05.ld'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.mma
+  kind: instruction
+  opcodes: [tcgen05.mma]
+  ptx_syntax: 'tcgen05.mma.cta_group.kind [d-tmem], a-desc, b-desc, idesc,'
+  manual_section: '9.7.16.9.9.1 TensorCore 5th Generation Instructions: tcgen05.mma'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.mma.sp
+  kind: instruction
+  opcodes: [tcgen05.mma.sp]
+  ptx_syntax: 'tcgen05.mma.sp.cta_group.kind [d-tmem], a-desc, b-desc, [sp-meta-tmem] , idesc,'
+  manual_section: '9.7.16.9.9.2 TensorCore 5th Generation Instructions: tcgen05.mma.sp'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.mma.ws
+  kind: instruction
+  opcodes: [tcgen05.mma.ws]
+  ptx_syntax: 'tcgen05.mma.ws.cta_group::1.kind{.collector_usage} [d-tmem], a-desc, b-desc, idesc,'
+  manual_section: '9.7.16.9.9.3 TensorCore 5th Generation Instructions: tcgen05.mma.ws'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.mma.ws.sp
+  kind: instruction
+  opcodes: [tcgen05.mma.ws.sp]
+  ptx_syntax: 'tcgen05.mma.ws.sp.cta_group::1.kind{.collector_usage} [d-tmem], a-desc, b-desc,'
+  manual_section: '9.7.16.9.9.4 TensorCore 5th Generation Instructions: tcgen05.mma.ws.sp'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.shift
+  kind: instruction
+  opcodes: [tcgen05.shift]
+  ptx_syntax: 'tcgen05.shift.cta_group.down [taddr];'
+  manual_section: '9.7.16.8.3 Tensorcore 5th Generation Instructions: tcgen05.shift'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.st
+  kind: instruction
+  opcodes: [tcgen05.st]
+  ptx_syntax: 'tcgen05.st.sync.aligned.shape1.num{.unpack}.b32 [taddr], r;'
+  manual_section: '9.7.16.7.4 Tensorcore 5th Generation Instructions: tcgen05.st'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tcgen05.wait
+  kind: instruction
+  opcodes: [tcgen05.wait]
+  ptx_syntax: tcgen05.wait_operation.sync.aligned;
+  manual_section: '9.7.16.7.5 Tensorcore 5th Generation Instructions: tcgen05.wait'
+  introduced_ptx: '8.6'
+  min_target: sm_100a
+  family: Xkmmma
+  tier: 4
+  status: excluded
+  exclusion_reason: 'sm_100+ (Blackwell) feature, not on the H100: out of scope'
+  entry: ''
+- id: tensormap.cp_fenceproxy
+  kind: instruction
+  opcodes: [tensormap.cp_fenceproxy]
+  ptx_syntax: 'tensormap.cp_fenceproxy.cp_qualifiers.fence_qualifiers.sync.aligned [dst], [src], size;'
+  manual_section: '9.7.13.16 Parallel Synchronization and Communication Instructions: tensormap.cp_fenceproxy'
+  introduced_ptx: '8.3'
+  min_target: sm_90
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: tensormap.replace
+  kind: instruction
+  opcodes: [tensormap.replace]
+  ptx_syntax: 'tensormap.replace.mode.field1{.ss}.b1024.type [addr], new_val;'
+  manual_section: '9.7.9.26 Data Movement and Conversion Instructions: tensormap.replace'
+  introduced_ptx: '8.3'
+  min_target: sm_90a
+  family: Xkmasync
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: sm_90a only. clang 20 does not emit it.
+- id: testp
+  kind: instruction
+  opcodes: [testp]
+  ptx_syntax: 'testp.op.type p, a;'
+  manual_section: '9.7.3.1 Floating Point Instructions: testp'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: fclass.
+- id: tex
+  kind: instruction
+  opcodes: [tex]
+  ptx_syntax: 'tex.geom.v4.dtype.ctype d, [a, c] {, e} {, f};'
+  manual_section: '9.7.10.3 Texture Instructions: tex'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'texture: graphics, out of scope'
+  entry: ''
+- id: tld4
+  kind: instruction
+  opcodes: [tld4]
+  ptx_syntax: 'tld4.comp.2d.v4.dtype.f32 d[|p], [a, c] {, e} {, f};'
+  manual_section: '9.7.10.4 Texture Instructions: tld4'
+  introduced_ptx: '2.2'
+  min_target: sm_20
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'texture: graphics, out of scope'
+  entry: ''
+- id: trap
+  kind: instruction
+  opcodes: [trap]
+  ptx_syntax: trap;
+  manual_section: '9.7.19.4 Miscellaneous Instructions: trap'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: Aborts the kernel; the H100 run expects a launch error.
+- id: txq
+  kind: instruction
+  opcodes: [txq]
+  ptx_syntax: 'txq.tquery.b32 d, [a];'
+  manual_section: '9.7.10.5 Texture Instructions: txq'
+  introduced_ptx: '1.5'
+  min_target: all
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'texture: graphics, out of scope'
+  entry: ''
+- id: vadd.group
+  kind: instruction
+  opcodes: [vadd, vsub, vabsdiff, vmin, vmax]
+  ptx_syntax: 'vop.dtype.atype.btype{.sat} d, a{.asel}, b{.bsel};'
+  manual_section: '9.7.18.1.1 Scalar Video Instructions: vadd, vsub, vabsdiff, vmin, vmax'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'video instruction: legacy media operation, out of scope'
+  entry: ''
+- id: vadd2.group
+  kind: instruction
+  opcodes: [vadd2, vsub2, vavrg2, vabsdiff2, vmin2, vmax2]
+  ptx_syntax: 'vop2.dtype.atype.btype{.sat} d{.mask}, a{.asel}, b{.bsel}, c;'
+  manual_section: '9.7.18.2.1 SIMD Video Instructions: vadd2, vsub2, vavrg2, vabsdiff2, vmin2, vmax2'
+  introduced_ptx: '3.0'
+  min_target: sm_30
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'video instruction: legacy media operation, out of scope'
+  entry: ''
+- id: vadd4.group
+  kind: instruction
+  opcodes: [vadd4, vsub4, vavrg4, vabsdiff4, vmin4, vmax4]
+  ptx_syntax: 'vop4.dtype.atype.btype{.sat} d{.mask}, a{.asel}, b{.bsel}, c;'
+  manual_section: '9.7.18.2.3 SIMD Video Instructions: vadd4, vsub4, vavrg4, vabsdiff4, vmin4, vmax4'
+  introduced_ptx: '3.0'
+  min_target: sm_30
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'video instruction: legacy media operation, out of scope'
+  entry: ''
+- id: vmad
+  kind: instruction
+  opcodes: [vmad]
+  ptx_syntax: 'vmad.dtype.atype.btype{.sat}{.scale} d, {-}a{.asel}, {-}b{.bsel},'
+  manual_section: '9.7.18.1.3 Scalar Video Instructions: vmad'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'video instruction: legacy media operation, out of scope'
+  entry: ''
+- id: vote
+  kind: instruction
+  opcodes: [vote.all, vote.any, vote.uni, vote.ballot]
+  ptx_syntax: 'vote.mode.pred d, {!}a;'
+  manual_section: '9.7.13.8 Parallel Synchronization and Communication Instructions: vote (deprecated)'
+  introduced_ptx: '1.2'
+  min_target: sm_12
+  family: Xkmwarp
+  tier: 1
+  status: excluded
+  exclusion_reason: 'deprecated non-.sync form, not supported on sm_70 and later'
+  entry: ''
+- id: vote.sync.all
+  kind: modifier
+  opcodes: [vote.sync.all]
+  ptx_syntax: 'vote.sync.all.pred d, {!}a, membermask;'
+  manual_section: '9.7.13.9 Parallel Synchronization and Communication Instructions: vote.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: vote.sync.any
+  kind: modifier
+  opcodes: [vote.sync.any]
+  ptx_syntax: 'vote.sync.any.pred d, {!}a, membermask;'
+  manual_section: '9.7.13.9 Parallel Synchronization and Communication Instructions: vote.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: vote.sync.ballot
+  kind: modifier
+  opcodes: [vote.sync.ballot]
+  ptx_syntax: 'vote.sync.ballot.b32 d, {!}a, membermask;'
+  manual_section: '9.7.13.9 Parallel Synchronization and Communication Instructions: vote.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: vote.sync.uni
+  kind: modifier
+  opcodes: [vote.sync.uni]
+  ptx_syntax: 'vote.sync.uni.pred d, {!}a, membermask;'
+  manual_section: '9.7.13.9 Parallel Synchronization and Communication Instructions: vote.sync'
+  introduced_ptx: '6.0'
+  min_target: sm_30
+  family: Xkmwarp
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: vset
+  kind: instruction
+  opcodes: [vset]
+  ptx_syntax: 'vset.atype.btype.cmp d, a{.asel}, b{.bsel};'
+  manual_section: '9.7.18.1.4 Scalar Video Instructions: vset'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'video instruction: legacy media operation, out of scope'
+  entry: ''
+- id: vset2
+  kind: instruction
+  opcodes: [vset2]
+  ptx_syntax: 'vset2.atype.btype.cmp d{.mask}, a{.asel}, b{.bsel}, c;'
+  manual_section: '9.7.18.2.2 SIMD Video Instructions: vset2'
+  introduced_ptx: '3.0'
+  min_target: sm_30
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'video instruction: legacy media operation, out of scope'
+  entry: ''
+- id: vset4
+  kind: instruction
+  opcodes: [vset4]
+  ptx_syntax: 'vset4.atype.btype.cmp d{.mask}, a{.asel}, b{.bsel}, c;'
+  manual_section: '9.7.18.2.4 SIMD Video Instructions: vset4'
+  introduced_ptx: '3.0'
+  min_target: sm_30
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'video instruction: legacy media operation, out of scope'
+  entry: ''
+- id: vshl.group
+  kind: instruction
+  opcodes: [vshl, vshr]
+  ptx_syntax: 'vop.dtype.atype.u32{.sat}.mode d, a{.asel}, b{.bsel};'
+  manual_section: '9.7.18.1.2 Scalar Video Instructions: vshl, vshr'
+  introduced_ptx: '2.0'
+  min_target: sm_20
+  family: base
+  tier: 1
+  status: excluded
+  exclusion_reason: 'video instruction: legacy media operation, out of scope'
+  entry: ''
+- id: wgmma.commit_group
+  kind: instruction
+  opcodes: [wgmma.commit_group]
+  ptx_syntax: wgmma.commit_group.sync.aligned;
+  manual_section: '9.7.15.7.2 Asynchronous Multiply-and-Accumulate Instruction: wgmma.commit_group'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: wgmma.fence
+  kind: instruction
+  opcodes: [wgmma.fence]
+  ptx_syntax: wgmma.fence.sync.aligned;
+  manual_section: '9.7.15.7.1 Asynchronous Multiply-and-Accumulate Instruction: wgmma.fence'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: wgmma.mma_async
+  kind: instruction
+  opcodes: [wgmma.mma_async]
+  ptx_syntax: 'wgmma.mma_async.sync.aligned.shape.dtype.f16.f16 d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b, imm-trans-a, imm-trans-b;'
+  manual_section: '9.7.15.5.2 Asynchronous Multiply-and-Accumulate Instruction: wgmma.mma_async'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+  notes: 'f16/bf16, A and B from shared-memory descriptors. clang 20 does not emit it.'
+- id: wgmma.mma_async.b1
+  kind: modifier
+  ptx_syntax: 'wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;'
+  manual_section: '9.7.15.5.2 Asynchronous Multiply-and-Accumulate Instruction: wgmma.mma_async'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: .b1 .and.popc.
+- id: wgmma.mma_async.fp8
+  kind: modifier
+  ptx_syntax: 'wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;'
+  manual_section: '9.7.15.5.2 Asynchronous Multiply-and-Accumulate Instruction: wgmma.mma_async'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+  notes: .e4m3/.e5m2.
+- id: wgmma.mma_async.int8
+  kind: modifier
+  ptx_syntax: 'wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;'
+  manual_section: '9.7.15.5.2 Asynchronous Multiply-and-Accumulate Instruction: wgmma.mma_async'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+  notes: .s8/.u8.
+- id: wgmma.mma_async.rs
+  kind: modifier
+  ptx_syntax: 'wgmma.mma_async.sync.aligned.shape.dtype.f16.f16 d, a, b-desc, scale-d, imm-scale-a, imm-scale-b, imm-trans-b;'
+  manual_section: '9.7.15.5.2 Asynchronous Multiply-and-Accumulate Instruction: wgmma.mma_async'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+  notes: A from registers.
+- id: wgmma.mma_async.sp
+  kind: instruction
+  opcodes: [wgmma.mma_async.sp]
+  ptx_syntax: 'wgmma.mma_async.sp.sync.aligned.shape.dtype.f16.f16 d, a-desc, b-desc, sp-meta, sp-sel, scale-d, imm-scale-a, imm-scale-b, imm-trans-a, imm-trans-b;'
+  manual_section: '9.7.15.6.3 Asynchronous Multiply-and-Accumulate Instruction: wgmma.mma_async.sp'
+  introduced_ptx: '8.2'
+  min_target: sm_90a
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+- id: wgmma.mma_async.tf32
+  kind: modifier
+  ptx_syntax: 'wgmma.mma_async.sync.aligned.shape.dtype.atype.btype d, a-desc, b-desc, scale-d, imm-scale-a, imm-scale-b;'
+  manual_section: '9.7.15.5.2 Asynchronous Multiply-and-Accumulate Instruction: wgmma.mma_async'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+- id: wgmma.wait_group
+  kind: instruction
+  opcodes: [wgmma.wait_group]
+  ptx_syntax: wgmma.wait_group.sync.aligned N;
+  manual_section: '9.7.15.7.3 Asynchronous Multiply-and-Accumulate Instruction: wgmma.wait_group'
+  introduced_ptx: '8.0'
+  min_target: sm_90a
+  family: Xkmmma
+  tier: 4
+  route: inline-asm
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: wmma.load
+  kind: instruction
+  opcodes: [wmma.load]
+  ptx_syntax: 'wmma.load.a.sync.aligned.layout.shape{.ss}.atype r, [p] {, stride};'
+  manual_section: '9.7.14.4.3 Warp-level Matrix Load Instruction: wmma.load'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmmma
+  tier: 2
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: wmma.mma
+  kind: instruction
+  opcodes: [wmma.mma]
+  ptx_syntax: 'wmma.mma.sync.aligned.alayout.blayout.shape.dtype.ctype d, a, b, c;'
+  manual_section: '9.7.14.4.5 Warp-level Matrix Multiply-and-Accumulate Instruction: wmma.mma'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmmma
+  tier: 2
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: reduction
+- id: wmma.store
+  kind: instruction
+  opcodes: [wmma.store]
+  ptx_syntax: 'wmma.store.d.sync.aligned.layout.shape{.ss}.type [p], r {, stride};'
+  manual_section: '9.7.14.4.4 Warp-level Matrix Store Instruction: wmma.store'
+  introduced_ptx: '6.0'
+  min_target: sm_70
+  family: Xkmmma
+  tier: 2
+  route: builtin
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
+- id: xor
+  kind: instruction
+  opcodes: [xor]
+  ptx_syntax: 'xor.type d, a, b;'
+  manual_section: '9.7.8.3 Logic and Shift Instructions: xor'
+  introduced_ptx: '1.0'
+  min_target: all
+  family: base
+  tier: 1
+  route: cuda
+  status: in-scope
+  entry: ''
+  tolerance_class: exact
