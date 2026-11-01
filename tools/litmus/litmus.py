@@ -198,6 +198,27 @@ def parse_condition(text: str):
     return e
 
 
+_OPS = {"==": lambda a, b: a == b, "!=": lambda a, b: a != b, "<": lambda a, b: a < b, ">": lambda a, b: a > b,
+        "<=": lambda a, b: a <= b, ">=": lambda a, b: a >= b}
+
+
+def evaluate(e, env: dict[str, int]) -> bool:
+    """Evaluate a condition on final values. `env` maps `P1:r0` (registers) and `x` (locations) to integers."""
+    if isinstance(e, Cmp):
+        def val(t):
+            t = re.sub(r"^(\d+):", r"P\1:", t)
+            try:
+                return int(t, 0)
+            except ValueError:
+                return env[t]
+        return _OPS[e.op](val(e.lhs), val(e.rhs))
+    if isinstance(e, Not):
+        return not evaluate(e.arg, env)
+    if isinstance(e, And):
+        return all(evaluate(a, env) for a in e.args)
+    return any(evaluate(a, env) for a in e.args)
+
+
 def cond_atoms(e) -> list[Cmp]:
     if isinstance(e, Cmp):
         return [e]
