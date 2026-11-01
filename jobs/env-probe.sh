@@ -24,6 +24,9 @@ JOB_ID=${JOB_ID:-$(date -u +%Y%m%dT%H%M%SZ)${H100_JOB_ID:+-q$H100_JOB_ID}}
 OUT=${OUT:-$HOME/kamui-jobs/env-probe/$JOB_ID}
 PROBE_STEPS=${PROBE_STEPS:-versions jit nvbit sanitizer ncu}
 WORK=${WORK:-$(mktemp -d)}
+# The driver caches JIT results in the home directory; a cache hit returns an empty JIT log. Every load here
+# should compile, so the logs show what ptxas did.
+export CUDA_CACHE_DISABLE=1
 mkdir -p "$OUT"
 exec > >(tee -a "$OUT/job.log") 2>&1
 
