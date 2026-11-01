@@ -102,7 +102,7 @@ v = {"gpu": name, "driver": driver, "cuda_toolkit": sh("nvcc --version | tail -1
      "ncu": sh("ncu --version | tail -1")}
 for m in ("torch", "triton", "flash_attn", "flashinfer"):
     try:
-        v[m] = importlib.import_module(m).__version__
+        v[m] = str(importlib.import_module(m).__version__)
     except Exception as e:
         v[m] = f"not available ({type(e).__name__})"
 yaml.safe_dump(v, open(f"{out}/versions.yaml", "w"), sort_keys=False)
