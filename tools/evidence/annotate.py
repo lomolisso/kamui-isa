@@ -451,8 +451,15 @@ def apply_review(rec: dict, review: dict) -> dict:
 
 # ---------------------------------------------------------------- outputs
 
+def load_jit(path: Path = S.EVIDENCE / "jit-comparison.tsv") -> dict[str, str]:
+    """entry id -> match, from the comparison of the H100 JIT SASS with the offline SASS (jit_compare.py)."""
+    if not path.exists():
+        return {}
+    return {r["id"]: r["match"] for r in csv.DictReader(path.open(), delimiter="\t")}
+
+
 def build_records(rows: list[dict], build: Path = S.BUILD) -> list[dict]:
-    classes, review = load_classes(), load_review()
+    classes, review, jit = load_classes(), load_review(), load_jit()
     out = []
     for row in sorted(rows, key=lambda r: r["id"]):
         if row["status"] != "in-scope":
@@ -463,7 +470,9 @@ def build_records(rows: list[dict], build: Path = S.BUILD) -> list[dict]:
                        status="pending", notes="no corpus entry yet (pending in the catalog)")
             out.append(rec)
             continue
-        out.append(apply_review(annotate_row(row, classes, build), review))
+        rec = apply_review(annotate_row(row, classes, build), review)
+        rec["jit_matches_offline"] = jit.get(rec["entry"], "")
+        out.append(rec)
     return out
 
 

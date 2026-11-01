@@ -104,3 +104,6 @@ jobs:
 
       - name: SASS evidence covers every feature
         run: python tools/evidence/sass.py --check
+
+      - name: Goldens are current for every corpus entry
+        run: python tools/evidence/check_goldens.py

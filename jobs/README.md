@@ -8,6 +8,7 @@ the dev container. The full workflow, the job image and how results come back ar
 | Script | What it does | Results go to |
 |---|---|---|
 | `env-probe.sh` | Records the driver, toolkit and library versions; checks that the driver JIT accepts our PTX 8.7, and that NVBit, `compute-sanitizer` and `ncu` work in the job container | `evidence/env/` |
+| `goldens.sh` | Runs every corpus entry on the GPU (3 runs plus a poisoned run, compute-sanitizer, the JIT cubin dump) and writes the golden outputs | `tests/goldens/`, `evidence/jit-comparison.tsv` |
 
 ## Rules for a job script
 
