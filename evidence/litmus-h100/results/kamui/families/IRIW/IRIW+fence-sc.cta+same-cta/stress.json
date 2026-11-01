@@ -1,0 +1,17 @@
+{"instances": 1005312, "launches": 119, "config": "stress", "seed": 2305612860, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 8448}, "seconds": 0.176, "histogram": [
+  {"values": [1, 1, 1, 1, 1, 1], "class": "same-sm", "count": 30400},
+  {"values": [1, 0, 0, 0, 1, 1], "class": "same-sm", "count": 1568},
+  {"values": [0, 0, 0, 0, 1, 1], "class": "same-sm", "count": 301280},
+  {"values": [0, 0, 1, 0, 1, 1], "class": "same-sm", "count": 992},
+  {"values": [0, 1, 1, 1, 1, 1], "class": "same-sm", "count": 107392},
+  {"values": [1, 0, 0, 1, 1, 1], "class": "same-sm", "count": 13984},
+  {"values": [0, 0, 1, 1, 1, 1], "class": "same-sm", "count": 10752},
+  {"values": [0, 1, 1, 0, 1, 1], "class": "same-sm", "count": 9120},
+  {"values": [0, 1, 0, 0, 1, 1], "class": "same-sm", "count": 138176},
+  {"values": [1, 1, 0, 1, 1, 1], "class": "same-sm", "count": 124000},
+  {"values": [0, 1, 0, 1, 1, 1], "class": "same-sm", "count": 112640},
+  {"values": [1, 1, 0, 0, 1, 1], "class": "same-sm", "count": 14208},
+  {"values": [1, 1, 1, 0, 1, 1], "class": "same-sm", "count": 608},
+  {"values": [1, 0, 1, 1, 1, 1], "class": "same-sm", "count": 320},
+  {"values": [0, 0, 0, 1, 1, 1], "class": "same-sm", "count": 139872}
+]}

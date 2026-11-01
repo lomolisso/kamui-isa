@@ -28,3 +28,58 @@
     never synchronize. PTX ISA 8.7 section 8.7 applies the overlap condition only when both operations are
     memory operations, and section 8.8 lists `fence; st.relaxed [M]` and `ld.relaxed [M]; fence` as patterns,
     which would be useless if fences could not be morally strong. We follow Dartagnan: forbidden.
+
+# ---- H100 observations that the formal verdict forbids (tools/litmus/observed.py)
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq.cta+same-cta
+  model: plain
+  reason: &mbarrier_cta >-
+    Investigated finding, not a harness bug: with ptxas 12.8 and the R580 driver JIT on the H100, an acquire
+    mbarrier.test_wait/try_wait that returns True does not order the thread's next load after the writes that
+    preceded the matching mbarrier.arrive.release at .cta scope, for global or shared data. PTX ISA 8.7
+    section 9.7.13.15.16 says it must. SASS: STG/STS then SYNCS.ARRIVE with no MEMBAR, and SYNCS.PHASECHK then a
+    load with no dependency on the result. One MEMBAR.ALL.CTA (fence.acq_rel.cta) on either side removes the
+    outcome (MP+fence-rel+mbarrier-rel-acq and MP+mbarrier-rel-acq+fence-acq: 0 in 3 million instances each),
+    as do fences on both sides with relaxed mbarrier operations. The formal verdict stays forbidden; Kamui's
+    contract is the PTX model, so here it is stronger than the H100. Evidence: evidence/litmus-h100/.
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq.cta+same-cta
+  model: stress
+  reason: *mbarrier_cta
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq.cta+same-cta
+  model: shuffle
+  reason: *mbarrier_cta
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq-try_wait.cta+same-cta
+  model: plain
+  reason: *mbarrier_cta
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq-try_wait.cta+same-cta
+  model: stress
+  reason: *mbarrier_cta
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq-try_wait.cta+same-cta
+  model: shuffle
+  reason: *mbarrier_cta
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq-shared.cta+same-cta
+  model: plain
+  reason: *mbarrier_cta
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq-shared.cta+same-cta
+  model: stress
+  reason: *mbarrier_cta
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq-shared.cta+same-cta
+  model: shuffle
+  reason: *mbarrier_cta

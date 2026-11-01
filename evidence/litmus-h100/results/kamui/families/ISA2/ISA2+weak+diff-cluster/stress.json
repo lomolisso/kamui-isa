@@ -1,0 +1,10 @@
+{"instances": 1001088, "launches": 79, "config": "stress", "seed": 2714841036, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 12672}, "seconds": 0.161, "histogram": [
+  {"values": [1, 1, 0, 1, 1, 1], "class": "diff-cluster", "count": 4011},
+  {"values": [0, 1, 0, 1, 1, 1], "class": "diff-cluster", "count": 124309},
+  {"values": [1, 0, 1, 1, 1, 1], "class": "diff-cluster", "count": 54118},
+  {"values": [0, 0, 0, 1, 1, 1], "class": "diff-cluster", "count": 553862},
+  {"values": [1, 1, 1, 1, 1, 1], "class": "diff-cluster", "count": 20448},
+  {"values": [0, 1, 1, 1, 1, 1], "class": "diff-cluster", "count": 117871},
+  {"values": [1, 0, 0, 1, 1, 1], "class": "diff-cluster", "count": 60640},
+  {"values": [0, 0, 1, 1, 1, 1], "class": "diff-cluster", "count": 65829}
+]}
