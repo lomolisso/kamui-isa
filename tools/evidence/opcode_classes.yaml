@@ -14,7 +14,7 @@ classes:
   - {name: atomic, families: [base, Xkmscope], patterns: [ATOM, ATOMG, ATOMS, RED, REDG, REDAS]}
   - {name: warp, families: [Xkmwarp], patterns: [SHFL, VOTE, VOTEU, MATCH, REDUX, CREDUX, ELECT]}
   - {name: barrier, families: [Xkmbar], patterns: [BAR, WARPSYNC]}
-  - {name: convergence, families: [Xkmsimt], patterns: [BSSY, BSYNC, BREAK, BMOV]}
+  - {name: convergence, families: [Xkmsimt], patterns: [BSSY, BSYNC, BREAK, BMOV, ENDCOLLECTIVE]}
   - {name: branch, families: [base, Xkmsimt], patterns: [BRA, BRX, JMP, JMX, CALL, RET, EXIT, YIELD, NANOSLEEP, BPT, ACQBULK, PREEXIT]}
   - {name: mem_global, families: [base], patterns: [LDG, STG, LD, ST, LDGMC, STAS]}
   - {name: mem_shared, families: [base], patterns: [LDS, STS]}
@@ -27,5 +27,5 @@ classes:
   - {name: convert, families: [base, Xkmmisc], patterns: [F2F, F2I, I2F, F2FP, I2FP, I2I, I2IP]}
   - {name: move, families: [base, Xkmsimt], patterns: [MOV, S2R, CS2R, S2UR, R2UR, UMOV, R2P, P2R]}
   - {name: uniform, families: [Xkmsimt], patterns: ["U\\w+"]}
-  - {name: int_alu, families: [base, Xkmmisc], patterns: [IADD3, IADD, IMAD, IMUL, LOP3, PLOP3, SHF, LEA, ISETP, IMNMX, VIMNMX, VIADD, IABS, POPC, FLO, BREV, PRMT, SEL, SGXT, BMSK, IDP, VABSDIFF, QSPC]}
-  - {name: other, families: [], patterns: ["\\w+"]}
+  - {name: int_alu, families: [base, Xkmmisc], patterns: [IADD3, IADD, IMAD, IMUL, LOP3, PLOP3, SHF, LEA, ISETP, IMNMX, VIMNMX, VIADD, IABS, POPC, FLO, BREV, PRMT, SEL, SGXT, BMSK, IDP, VABSDIFF, QSPC, VIADDMNMX]}
+  - {name: other, families: [], patterns: ["\\w+"]}  # NOP (padding inside loops) and anything unknown

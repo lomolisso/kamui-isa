@@ -11,7 +11,9 @@
 | `evidence/sass.py` | `ptxas -v` and SASS of every corpus entry, and the per-feature SASS observations (see [evidence/README.md](../evidence/README.md)) |
 | `evidence/jit_compare.py` | Compare the SASS the H100 driver JIT produced with the offline SASS (`evidence/jit-comparison.tsv`) |
 | `evidence/check_goldens.py` | Check that every runnable corpus entry has a current golden in `tests/goldens/` (no GPU needed) |
-| `evidence/nvbit/` | Our NVBit tools, built in the H100 job image: `dump_cubin` writes the cubin the driver loaded |
+| `evidence/nvbit/` | Our NVBit tools, built in the H100 job image: `dump_cubin` writes the cubin the driver loaded; `kamui_sass_hist` counts executed SASS opcodes per kernel |
+| `evidence/classify.py` | Classify the NVBit histograms with `evidence/opcode_classes.yaml` and write `evidence/histograms/` |
+| `evidence/workloads/` | The workloads of the histograms: attention (FlashInfer, flash-attn 2) and two Triton kernels |
 | `runner/` | `runner.c` loads one corpus kernel through the CUDA driver API and writes its outputs; `run_all.py` builds the launch files, runs every entry and writes the goldens (see [tests/goldens/README.md](../tests/goldens/README.md)) |
 
 Both scripts are described in [docs/development.md](../docs/development.md). Python code targets Python 3.12 (the

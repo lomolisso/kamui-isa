@@ -21,8 +21,8 @@ used to understand PTX semantics.
   in git; the library, headers and example tools ship as release tarballs).
 - License: covered by the CUDA Toolkit EULA. **Do not commit NVBit headers,
   libraries or its example tools into kamui-isa.** Our own tool source
-  (planned under `tools/evidence/nvbit/`) is fine; it is built on the H100 job
-  image against the NVBit that the image provides.
+  (`tools/evidence/nvbit/`) is fine; it is built on the H100 job image against
+  the NVBit that the image provides (1.8.1, in `$NVBIT_PATH`).
 
 ## Where it runs
 
@@ -54,19 +54,12 @@ run it inside the job.
 
 ## Commands we use
 
-Building a tool (NVBit < 1.8.1, Makefile layout of the release tarball):
+Our tools are built with CMake against the NVBit release (1.8.1 uses CMake; its
+helper `add_nvbit_tool` needs an `inject_funcs.cu` next to the tool source):
 
 ```bash
-export NVBIT_PATH=/opt/nvbit_release      # wherever the image unpacks NVBit; the probe job finds it
-cd tools/evidence/nvbit/kamui_sass_hist
-make NVBIT_PATH=$NVBIT_PATH ARCH=90a      # produces kamui_sass_hist.so
-```
-
-Building with NVBit >= 1.8.1 (CMake):
-
-```bash
-cmake -S tools/evidence/nvbit/kamui_sass_hist -B build/nvbit -DNVBIT_PATH=$NVBIT_PATH
-cmake --build build/nvbit -j
+cmake -S tools/evidence/nvbit -B build/nvbit -G Ninja -DCMAKE_BUILD_TYPE=Release   # NVBIT_PATH from the image
+cmake --build build/nvbit       # build/nvbit/kamui_sass_hist/kamui_sass_hist.so, .../dump_cubin/dump_cubin.so
 ```
 
 Running: NVBit tools are injected with `LD_PRELOAD`. The tool `.so` is loaded
@@ -74,18 +67,20 @@ into the host process, intercepts the CUDA driver API, and instruments each
 `CUfunction` the first time it is launched.
 
 ```bash
-# Any CUDA program, including Python:
-LD_PRELOAD=$PWD/build/nvbit/kamui_sass_hist.so \
-  KAMUI_OUT=<RESULTS_DIR>/nvbit/cutlass_gemm.csv \
-  ./cutlass_gemm_binary --m=4096 --n=4096 --k=4096
+# Any CUDA program, including Python. KAMUI_KERNELS (a regex on the kernel name) selects the kernels to count.
+LD_PRELOAD=$PWD/build/nvbit/kamui_sass_hist/kamui_sass_hist.so \
+  KAMUI_OUT=gemm.csv KAMUI_WORKLOAD=cutlass_gemm_tf32_2048 KAMUI_KERNELS=device_kernel \
+  ./gemm48 --m=2048 --n=2048 --k=2048 --iterations=1
 
-LD_PRELOAD=$PWD/build/nvbit/kamui_sass_hist.so \
-  KAMUI_OUT=<RESULTS_DIR>/nvbit/triton_matmul.csv \
-  python3 tools/workloads/triton_matmul.py
+LD_PRELOAD=$PWD/build/nvbit/kamui_sass_hist/kamui_sass_hist.so \
+  KAMUI_OUT=matmul.csv KAMUI_WORKLOAD=triton_matmul_f16_2048 KAMUI_KERNELS=kamui_matmul \
+  python3 tools/evidence/workloads/triton_kernels.py matmul
 ```
 
+`jobs/nvbit-hist.sh` runs the five workloads this way on the H100 server.
+
 Common NVBit environment variables (read by the example tools through
-`GET_VAR_INT`; our tool should accept the same names):
+`GET_VAR_INT`; our tools use only `NOBANNER` and their own `KAMUI_*` variables):
 
 | Variable | Meaning |
 |---|---|
@@ -130,48 +125,41 @@ This counts by `getOpcodeShort()` only, which throws away the modifiers we
 care about (`.STRONG.GPU`, `.E.ADD.F32.FTZ.RN`, scopes, cache hints). That is
 why we write our own tool.
 
-### Our tool: `kamui_sass_hist` (planned)
+### Our tool: `kamui_sass_hist`
 
-Proposed CSV, one row per static SASS instruction per kernel launch, written
-to `$KAMUI_OUT`:
+Source: `tools/evidence/nvbit/kamui_sass_hist/`. It instruments the first launch
+of each selected kernel: before every SASS instruction (except those guarded by
+`@!PT`, which never run) a device function adds one warp issue, the number of
+active lanes, and the number of active lanes whose guard predicate is true.
+Later launches run uninstrumented. At exit it writes one row per kernel and SASS
+opcode (opcode with modifiers, operands dropped), so the output is a histogram,
+not an instruction trace:
 
-| Column | Type | Meaning |
-|---|---|---|
-| `workload` | str | Workload id passed in `KAMUI_WORKLOAD` (for example `cutlass_gemm_f16_4096`) |
-| `launch_id` | int | Kernel launch index in the process |
-| `kernel` | str | Mangled kernel name |
-| `pc` | hex | Offset of the instruction in the function |
-| `sass` | str | Full `getSass()` string |
-| `opcode` | str | `getOpcode()` (base plus modifiers) |
-| `opcode_short` | str | `getOpcodeShort()` |
-| `warp_execs` | int | Number of times a warp issued this instruction |
-| `thread_execs` | int | Sum over issues of active lanes |
-| `thread_execs_pred_on` | int | Sum over issues of active lanes whose guard predicate was true |
+| Column | Meaning |
+|---|---|
+| `workload` | `KAMUI_WORKLOAD` |
+| `kernel` | kernel name up to the first `(` or `<`, then `#` and a hash of the mangled name |
+| `sass_opcode` | `getOpcode()`: base opcode plus modifiers, for example `HGMMA.64x128x8.F32.TF32` |
+| `static_count` | how many instructions of the kernel have this opcode |
+| `warp_inst_executed` | warp-level issues (a predicated-off instruction still counts, as in ncu) |
+| `thread_inst_executed` | active lanes summed over the issues |
+| `thread_inst_executed_pred_true` | active lanes whose guard predicate was true |
 
-Classes (see "How kamui-isa uses it") are added offline by a classification
-script (planned as `tools/evidence/classify.py`), never inside the tool, so we
-can change the class map without rerunning on the H100.
+`tools/evidence/classify.py` adds the `opcode_class` column offline from
+`tools/evidence/opcode_classes.yaml` and writes `evidence/histograms/`, so the
+class map can change without another GPU run.
 
-## Worked example
+## Results
 
-**This runs on the H100 job image and has not been run yet.** The environment
-probe job ([h100-jobs.md](h100-jobs.md)) builds the stock `instr_count` and
-`opcode_hist` tools from the image's NVBit and runs them on the toy kernel
-from [clang-cuda.md](clang-cuda.md) loaded through our PTX runner:
-
-```bash
-cd $NVBIT_PATH/tools/opcode_hist && make ARCH=90a
-LD_PRELOAD=$NVBIT_PATH/tools/opcode_hist/opcode_hist.so NOBANNER=1 \
-  ./build/runner toy.ptx toy > <RESULTS_DIR>/nvbit/toy_opcode_hist.txt
-```
-
-Expected output shape (one block per kernel launch): the header line shown
-above, followed by lines such as `SHFL = <n>`, `BAR = <n>`, `ATOMS = <n>`,
-`REDG = <n>` (or `RED`), `VOTE = <n>`, `EXIT = <n>`. The SASS for the same
-kernel, produced in the dev container, is in [cuobjdump.md](cuobjdump.md);
-the opcode names in the histogram must match it. If they do not, the NVBit
-version is older than 1.7.5 or the driver JIT produced different SASS from
-the dev container's `ptxas` (record both).
+`evidence/histograms/` (job `20261101T172729Z-q000033`, GPU 3 of the H100
+server) holds the histograms of five workloads: CUTLASS example 48 (TF32
+`wgmma`, TMA, warp specialization), FlashInfer's Hopper prefill, flash-attn 2,
+and two Triton kernels of our own (matmul and softmax). The instrumented runs
+produced the same results as the uninstrumented ones. Nsight Compute on the
+CUTLASS kernel counted 8,300,178 warp instructions; NVBit counted 8,388,993
+(+1.07%, `evidence/histograms/ncu-crosscheck.csv`). The likely cause is that
+spin-wait loops run a few more iterations while the instrumented kernel is
+slower.
 
 ## How kamui-isa uses it
 
