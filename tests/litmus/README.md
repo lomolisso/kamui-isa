@@ -21,6 +21,10 @@ checked against.
 | `ptx/imported/dat3m/` | the 265 safety tests of Dat3M (`litmus/PTX/{Manual,Nvidia,Memalloy,Barrier}`), same paths as upstream |
 | `ptx/imported/mixedproxy/` | the 11 NVlabs/mixedproxy tests, expanded to 128 tests and translated to the Dat3M dialect; `src/` holds the originals |
 | `ptx/imported/origin.csv` | where every imported test comes from, its licence, its original quantifier and the upstream verdicts |
+| `ptx/kamui/families/` | 288 generated tests: 8 classic shapes x orderings x the 4 scopes x 3 thread placements (`tools/litmus/gen_families.py`) |
+| `ptx/kamui/hand/` | 10 hand-written tests for features no formal model covers: `mbarrier`, `barrier.cluster`, the async proxy, `.volatile` |
+| `alloy/` | the Alloy queries for the 2019 PTX model, generated from the tests (`tools/litmus/to_alloy.py`) |
+| `riscv/` | the naive RISC-V lowering of each test, for herd7 and RVWMO (`tools/litmus/to_riscv.py`) |
 | `expected.csv` | one verdict per (test, model, tool) |
 | `manual-reasoning.yaml` | verdicts argued by hand from the PTX manual, for tests no tool can decide |
 | `allowlist.yaml` | every known disagreement, with the reason |
@@ -54,8 +58,21 @@ exists
   `beq r1, 1, LC00`, `goto LC00`. `ld r0, 1` puts a constant in a register.
 - The last part is the question. **Every test here asks `exists C`**: can the final state satisfy `C`?
 
-Our own tests may also write `P0@cta 0,cluster 0,gpu 0` and use the `.cluster` scope, which Dartagnan does not
-parse; such tests get verdicts from the other models only.
+Our own tests also write `P0@cta 0,cluster 0,gpu 0` (thread 0 in CTA 0 of cluster 0) and may use the `.cluster`
+scope, which Dartagnan does not parse. Cluster placement alone is erased before a test goes to Dartagnan (it
+changes nothing when no instruction uses `.cluster`); tests with the `.cluster` scope get verdicts from the
+other models only. The hand-written tests use real PTX mnemonics (`mbarrier.arrive.release.cta b`,
+`barrier.cluster.wait`, `cp.async.bulk.global.shared::cta g, s`); no tool reads them, and their verdicts are
+argued in `manual-reasoning.yaml`.
+
+## Our test families
+
+`ptx/kamui/families/<shape>/<shape>+<ordering>[.<scope>]+<placement>.litmus`, for example
+`MP+rel-acq.gpu+same-cluster`: message passing where the flag is written with `st.release.gpu` and read with
+`ld.acquire.gpu`, by two threads in different CTAs of one cluster. Shapes: MP, SB, LB, IRIW, CoRR, WRC, ISA2,
+2+2W. Orderings: `weak`, `relaxed`, `rel-acq`, `fence-acq_rel`, `fence-sc`, and for MP `fence-rel-acq` (the PTX
+8.6 `fence.release`/`fence.acquire`). Placements: `same-cta`, `same-cluster` (one CTA per thread, one cluster),
+`diff-cluster` (one cluster per thread). The same tests are run on the H100 as evidence.
 
 ## How the imported tests were changed
 
@@ -92,26 +109,44 @@ that applies and writes this file; `--check` re-runs everything and fails if a r
 | `test` | path under `tests/litmus/`, without `.litmus` |
 | `source` | `dat3m`, `mixedproxy`, or `kamui` for our own tests |
 | `condition` | the `exists` condition the verdict answers |
-| `model` | `ptx-v7.5` (mixed-proxy PTX model, PTX ISA 7.5), `ptx-v6.0` (PTX ISA 6.0, no proxies), `manual-reasoning` |
+| `model` | see the table below |
 | `model_version` | the model file and its sha256 prefix, or the manual version |
-| `tool` | `dartagnan`, or `manual` |
-| `tool_version` | e.g. `4.4.1` |
+| `tool` | `dartagnan`, `alloy`, `herd7`, or `manual` |
+| `tool_version` | e.g. `4.4.1`, `4.2 (artifact jar)`, `7.58` |
 | `flags` | the exact tool flags |
 | `result` | `allowed` (some execution the model accepts satisfies the condition), `forbidden` (none does), `unknown` (the tool could not decide), `error` |
 | `runtime_s` | wall time of the tool run, in seconds |
 
-`ptx-v7.5` runs on every test without `.cluster`; `ptx-v6.0` only on tests without proxy features (it does not
-know proxies). Dartagnan runs with `--method=eager --bound=1 --solver=z3`, as in Dat3M's own tests.
+| Model | What it is | Runs on |
+|---|---|---|
+| `ptx-v7.5` | Dartagnan with Dat3M's `ptx-v7.5.cat`, the mixed-proxy PTX model (PTX ISA 7.5) | tests Dartagnan parses: no `.cluster` scope, no PTX 8.6 fence |
+| `ptx-v6.0` | Dartagnan with `ptx-v6.0.cat` (PTX ISA 6.0, no proxies) | the same, without proxy features |
+| `ptx-2019-alloy` | the 2019 Alloy model (`deps/ptx-memory-model/ptx.als`, PTX ISA 6.0) with its own driver and Alloy 4.2 jar | tests `to_alloy.py` can express: loads, stores, fences, simple barriers, no proxies or read-modify-writes |
+| `ptx-2019-alloy+ext` | the same model with our extensions: a cluster level in the scope tree, and `fence.acquire`/`fence.release` as the model's FenceAcq/FenceRel | tests with the `.cluster` scope or a PTX 8.6 fence |
+| `rvwmo` | herd7 7.58 with RISC-V's `riscv.cat`, on the naive RISC-V lowering in `riscv/` (scopes erased) | tests `to_riscv.py` can lower |
+| `manual-reasoning` | an argument from the PTX ISA 8.7 manual, in `manual-reasoning.yaml` | tests no tool decides |
 
-Today: 393 tests; `ptx-v7.5` says 240 allowed, 152 forbidden, 1 unknown; `ptx-v6.0` (142 tests) agrees with
-`ptx-v7.5` on every test both decide.
+Dartagnan runs with `--method=eager --bound=1 --solver=z3`, as in Dat3M's own tests. Alloy answers within a bound
+that covers every event of the test. The Alloy jar is copied into the build area before a run, because Alloy
+rewrites the jar it is started from (seen again here: the copy's checksum changes).
+
+`rvwmo` is a baseline, not a PTX verdict: it answers the question for a different program, the test lowered to
+plain RISC-V with C++-style fences (the mapping table is in `tools/litmus/to_riscv.py`).
+
+Today: 691 tests, 1711 rows. The four PTX models agree on every test that more than one of them decides (the
+2019 Alloy model on 367 tests, Dartagnan v7.5 on 606). On the 372 lowered tests, RVWMO forbids every outcome
+that PTX forbids, so the naive lowering is sound; it also forbids 86 outcomes that PTX allows, from two sources:
+scopes (for example `.cta` synchronization between different CTAs, which PTX does not order and RVWMO, having no
+scopes, does) and multi-copy atomicity (IRIW with release/acquire, allowed in PTX, forbidden in RVWMO).
 
 ## Checks
 
 `python tools/litmus/check_suite.py` (runs in CI, no Java needed) checks that every test parses and asks
 `exists`, that `origin.csv` and `expected.csv` are complete and well formed, and that verdicts agree: with the
 upstream verdict of each imported test (Dat3M's `PTXv7_5-expected.csv` and `PTXv6_0-expected.csv`, or the
-mixedproxy annotation), and between models. Every disagreement must be listed in `allowlist.yaml` with a
+mixedproxy annotation), and between the PTX models; and that the RVWMO lowering forbids whatever PTX forbids.
+`gen_families.py`, `to_alloy.py` and `to_riscv.py` each have a `--check` mode, also run in CI, that fails when a
+committed generated file is stale. Every disagreement must be listed in `allowlist.yaml` with a
 reason. Today all 264 Dat3M verdicts and 127 of the 128 mixedproxy annotations match; the exceptions are:
 
 - `Manual/MICRO24-Fig4b-correct` contains a compare-and-swap spin loop that Dartagnan can never unroll
@@ -122,6 +157,14 @@ reason. Today all 264 Dat3M verdicts and 127 of the 128 mixedproxy annotations m
   has no proxy, so a fence is never "morally strong" with another thread's operation, and release and acquire
   patterns built from a fence never synchronize. The PTX manual (sections 8.7 and 8.8) lets fences take part in
   such patterns, so we follow Dartagnan. Details in `allowlist.yaml`.
+
+## The Fence-SC question
+
+The 2019 Alloy model has no separate Fence-SC axiom ("the order of `fence.sc` operations cannot contradict
+causality", PTX 8.7 section 8.10.2), while the cat models do. It does not need one: the model puts the Fence-SC
+order `sc` inside `cause_base` and its Causality axiom makes `cause` irreflexive, so an `sc` edge against
+causality would be a `cause` cycle. The suite agrees: the 2019 model and Dartagnan give the same verdict on all 31
+of the 48 `fence.sc` tests the 2019 model can express.
 
 ## Origin and licences
 

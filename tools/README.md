@@ -15,7 +15,7 @@
 | `evidence/classify.py` | Classify the NVBit histograms with `evidence/opcode_classes.yaml` and write `evidence/histograms/` |
 | `evidence/report_tables.py` | Print the summary tables of the H100 evidence (SASS observations, goldens, JIT comparison, histograms) as Markdown |
 | `evidence/workloads/` | The workloads of the histograms: attention (FlashInfer, flash-attn 2) and two Triton kernels |
-| `litmus/` | The memory-model litmus suite: `litmus.py` (parser), `import_tests.py`, `run_formal.py` (Dartagnan verdicts into `expected.csv`), `check_suite.py` (see [tests/litmus/README.md](../tests/litmus/README.md)) |
+| `litmus/` | The memory-model litmus suite: `litmus.py` (parser), `import_tests.py`, `gen_families.py`, `to_alloy.py` (2019 Alloy model queries), `to_riscv.py` (RVWMO lowering), `run_formal.py` (Dartagnan, Alloy and herd7 verdicts into `expected.csv`), `check_suite.py` (see [tests/litmus/README.md](../tests/litmus/README.md)) |
 | `runner/` | `runner.c` loads one corpus kernel through the CUDA driver API and writes its outputs; `run_all.py` builds the launch files, runs every entry and writes the goldens (see [tests/goldens/README.md](../tests/goldens/README.md)) |
 
 Both scripts are described in [docs/development.md](../docs/development.md). Python code targets Python 3.12 (the

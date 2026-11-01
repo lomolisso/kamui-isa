@@ -309,11 +309,10 @@ check_r1: SAT, outcome permitted
 
 ## How kamui-isa uses it
 
-- **Litmus suite**: (a) second opinion on PTX verdicts for a subset of the suite (the
-  2019 model via hand-written or generated `.als` queries, mixedproxy via `.test` files),
-  to catch tool bugs such as the Dartagnan lazy-solver issue
-  ([dartagnan.md](dartagnan.md)); (b) the natural place to try a **cluster scope**
-  (deeper scope tree, no axiom change) and to sketch an **async proxy** extension of the
+- **Litmus suite**: (a) second opinion on PTX verdicts: `tools/litmus/to_alloy.py` writes a 2019-model query
+  for every test it can express (`tests/litmus/alloy/`) and `tools/litmus/run_formal.py` runs them, about
+  0.5 s each (see [tests/litmus/README.md](../../tests/litmus/README.md)); (b) the **cluster scope**, added as a
+  deeper scope tree with no axiom change (model `ptx-2019-alloy+ext` in `tests/litmus/expected.csv`), and to sketch an **async proxy** extension of the
   mixed-proxy model; (c) the format for the planned **PTX-to-Kamui mapping check**: copy
   the structure of `compile_src11_ptx.als` (`map` relation, `wf_map`, `compile_*`
   predicates, `reverse_map`, one `assert` per PTX axiom) with PTX as the source and the
@@ -325,7 +324,8 @@ check_r1: SAT, outcome permitted
 ## Limitations
 
 - Never run Alloy directly on `deps/ptx-memory-model/alloy4.2.jar`: the jar in `deps/`
-  was once found rewritten after a run. Copy it under `build/` first (as in the commands
+  was once found rewritten after a run, and the litmus runs confirm it (the checksum of the build-area copy
+  changes during a batch). Copy it under `build/` first (as in the commands
   above). If `git -C deps/ptx-memory-model status` shows it modified, restore it with
   `git -C deps/ptx-memory-model checkout -- alloy4.2.jar`.
 - Bounded: "no instance" only means none within the scope; the 2019 paper found one
