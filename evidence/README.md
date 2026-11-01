@@ -6,6 +6,7 @@ execution-model decisions and the conformance suite rest on.
 | Folder | Content | Produced by |
 |---|---|---|
 | `env/` | The H100 job environment: driver, toolkit and library versions, and whether the driver JIT, NVBit, `compute-sanitizer` and `ncu` work | `jobs/env-probe.sh` |
+| `litmus-h100/` | Outcome counts of the memory-model litmus tests on the H100, joined with the formal verdicts; the findings are in its README | `jobs/litmus-h100.sh`, `tools/litmus/observed.py` |
 | `ptxas/` | `ptxas -v` output of every corpus entry: registers, shared memory, stack | `tools/evidence/sass.py` (dev container) |
 | `sass/` | The SASS of every corpus entry (`cuobjdump -sass -res-usage`) | `tools/evidence/sass.py` (dev container) |
 | `sass-observations.csv` | One row per in-scope catalog feature: which SASS implements it, how its modifiers are encoded, and which hidden mechanisms appear | `tools/evidence/sass.py` |

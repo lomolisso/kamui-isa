@@ -1,0 +1,2279 @@
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126
+  driver: 580.126.20
+instances: 1000000
+configs:
+- plain
+- stress
+- shuffle
+tests: '*'
+shard: 0/2
+seconds: 382.9
+failed: 0
+runs:
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.9
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.65
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.04
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.03
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.88
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.65
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.79
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.93
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+fence-sc.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.84
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.04
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.61
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.69
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.16
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.87
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.87
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.9
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.99
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.7
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.08
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.68
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+relaxed.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.85
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+weak+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+weak+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+weak+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.93
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/2+2W/2+2W+weak+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+weak+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/2+2W/2+2W+weak+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.65
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.82
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.cta+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.07
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.cta+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.cta+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.96
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.61
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.74
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.gpu+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.93
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.gpu+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.gpu+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.sys+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.sys+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.sys+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.sys+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.08
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.sys+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.59
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/CoRR/CoRR+relaxed.sys+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/CoRR/CoRR+weak+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+weak+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/CoRR/CoRR+weak+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.87
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.75
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.84
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.73
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.89
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.82
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.06
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.68
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.87
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.88
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 1.0
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.94
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-acq_rel.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.97
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.19
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.91
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.0
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.17
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.65
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.04
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.76
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.03
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+fence-sc.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.84
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.93
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.02
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.84
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.03
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.68
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.94
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.9
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.84
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.64
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+rel-acq.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.1
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.64
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.92
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.05
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.0
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.97
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.83
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+relaxed.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.85
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+weak+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+weak+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+weak+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.75
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/IRIW/IRIW+weak+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.93
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+weak+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.82
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/IRIW/IRIW+weak+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.81
+  message: ok 1005312 instances in 119 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.11
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.cta+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.cta+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.cta+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.93
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.95
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.77
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.75
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.gpu+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.06
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.gpu+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.gpu+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.sys+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.05
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.sys+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.sys+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.9
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.sys+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.sys+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.79
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/ISA2/ISA2+rel-acq.sys+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/ISA2/ISA2+weak+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.06
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+weak+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/ISA2/ISA2+weak+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.17
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.85
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.95
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.79
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.69
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.98
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.05
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.97
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.63
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.9
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.82
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+fence-acq_rel.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.75
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.75
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.05
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.62
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.69
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.75
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.92
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.78
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.68
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+rel-acq.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.98
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.91
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+relaxed.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.79
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+relaxed.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+relaxed.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.99
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+relaxed.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.63
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+relaxed.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.78
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+relaxed.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.84
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+relaxed.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.87
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+weak+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+weak+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+weak+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/LB/LB+weak+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.99
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+weak+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.64
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/LB/LB+weak+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.68
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.08
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.76
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.cta+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.cta+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.cta+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.91
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.67
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.gpu+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.1
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.gpu+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.gpu+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.sys+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.02
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.sys+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.sys+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.9
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.sys+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.03
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.sys+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-acq_rel.sys+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.67
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.cta+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.cta+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.cta+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.79
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.93
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.86
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.gpu+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.gpu+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.gpu+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.sys+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.sys+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.sys+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.85
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.sys+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.26
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.sys+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-rel-acq.sys+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.81
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.82
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.76
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.cta+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.02
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.cta+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.cta+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.79
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.14
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.64
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.81
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.gpu+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.gpu+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.gpu+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.96
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.sys+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.87
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.sys+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.sys+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.84
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.sys+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.06
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.sys+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.77
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+fence-sc.sys+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.94
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.cta+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.cta+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.cta+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.84
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.63
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.7
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.gpu+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.04
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.gpu+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.gpu+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.99
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.sys+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.92
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.sys+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.84
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.sys+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.75
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.sys+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.05
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.sys+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.64
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+rel-acq.sys+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.86
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+relaxed.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.18
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.82
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 1.01
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.cta+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.76
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.cta+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.cta+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.82
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.98
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+relaxed.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+relaxed.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.76
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+relaxed.gpu+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.08
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.gpu+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.gpu+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.82
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.sys+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.08
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.sys+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.sys+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.94
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+relaxed.sys+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.91
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+relaxed.sys+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.76
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+relaxed.sys+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.69
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/MP/MP+weak+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.17
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+weak+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/MP/MP+weak+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.92
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.99
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.03
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.77
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.67
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.03
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.04
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.91
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.76
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.68
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-acq_rel.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.14
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.99
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.92
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.85
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.14
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 1.14
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.64
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.8
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.96
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+fence-sc.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 1.12
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.79
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.76
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.cluster+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.04
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+relaxed.cluster+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+relaxed.cluster+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.7
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+relaxed.cta+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.cta+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.cta+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.93
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.gpu+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.96
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.gpu+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.gpu+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.gpu+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.14
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+relaxed.gpu+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.68
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+relaxed.gpu+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.8
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+relaxed.sys+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.93
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.sys+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+relaxed.sys+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.87
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+weak+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.92
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+weak+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.99
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+weak+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.76
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/SB/SB+weak+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.03
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+weak+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.75
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/SB/SB+weak+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.68
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.1
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.87
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.cta+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.cta+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.cta+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.04
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.8
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.gpu+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.03
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.gpu+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.68
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.gpu+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.sys+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.97
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.sys+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.sys+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 1.4
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.sys+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.64
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.sys+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.79
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-acq_rel.sys+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.93
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.79
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.92
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.cta+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.94
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.cta+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.cta+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.87
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.97
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.79
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.68
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.gpu+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.13
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.gpu+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.gpu+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.sys+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.03
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.sys+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.sys+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.sys+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.0
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.sys+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+fence-sc.sys+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.83
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.93
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.84
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.cta+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 1.0
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.cta+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.cta+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.75
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.13
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.7
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.gpu+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.gpu+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.gpu+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.97
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.sys+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.9
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.sys+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.sys+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.75
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.sys+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.03
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.sys+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.68
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+rel-acq.sys+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.76
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/families/WRC/WRC+weak+same-cluster
+  config: plain
+  exit: 0
+  seconds: 1.15
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+weak+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/families/WRC/WRC+weak+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.84
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/hand/CoRR+volatile+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.97
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/hand/CoRR+volatile+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/hand/CoRR+volatile+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/hand/CoWR+fence.proxy.async+async-bulk+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.01
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/hand/CoWR+fence.proxy.async+async-bulk+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/hand/CoWR+fence.proxy.async+async-bulk+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.6
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/hand/MP+barrier.cluster-relaxed+fence+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.96
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/hand/MP+barrier.cluster-relaxed+fence+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/hand/MP+barrier.cluster-relaxed+fence+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/hand/MP+fence-rel+mbarrier-rel-acq.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 1.04
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+fence-rel+mbarrier-rel-acq.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+fence-rel+mbarrier-rel-acq.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.76
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+mbarrier-rel-acq-shared.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.83
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+mbarrier-rel-acq-shared.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.59
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+mbarrier-rel-acq-shared.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+mbarrier-rel-acq.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.64
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+mbarrier-rel-acq.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.89
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+mbarrier-rel-acq.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.82
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+mbarrier-relaxed.cta+same-cta
+  config: plain
+  exit: 0
+  seconds: 0.57
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+mbarrier-relaxed.cta+same-cta
+  config: stress
+  exit: 0
+  seconds: 0.99
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/hand/MP+mbarrier-relaxed.cta+same-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 40 launches

@@ -25,9 +25,10 @@ checked against.
 | `ptx/kamui/hand/` | 10 hand-written tests for features no formal model covers: `mbarrier`, `barrier.cluster`, the async proxy, `.volatile` |
 | `alloy/` | the Alloy queries for the 2019 PTX model, generated from the tests (`tools/litmus/to_alloy.py`) |
 | `riscv/` | the naive RISC-V lowering of each test, for herd7 and RVWMO (`tools/litmus/to_riscv.py`) |
+| `h100/` | one CUDA kernel per runnable test (`kernel.cu`, the compiled `kernel.ptx`, `spec.txt`), for the H100 runs (`tools/litmus/to_cuda.py`) |
 | `expected.csv` | one verdict per (test, model, tool) |
 | `manual-reasoning.yaml` | verdicts argued by hand from the PTX manual, for tests no tool can decide |
-| `allowlist.yaml` | every known disagreement, with the reason |
+| `allowlist.yaml` | every known disagreement (between tools, with upstream verdicts, or with the H100), with the reason |
 
 ## Test format
 
@@ -144,7 +145,8 @@ scopes, does) and multi-copy atomicity (IRIW with release/acquire, allowed in PT
 `python tools/litmus/check_suite.py` (runs in CI, no Java needed) checks that every test parses and asks
 `exists`, that `origin.csv` and `expected.csv` are complete and well formed, and that verdicts agree: with the
 upstream verdict of each imported test (Dat3M's `PTXv7_5-expected.csv` and `PTXv6_0-expected.csv`, or the
-mixedproxy annotation), and between the PTX models; and that the RVWMO lowering forbids whatever PTX forbids.
+mixedproxy annotation), and between the PTX models; that the RVWMO lowering forbids whatever PTX forbids; and
+that no outcome observed on the H100 is forbidden by the formal verdict, unless the allow-list explains it.
 `gen_families.py`, `to_alloy.py` and `to_riscv.py` each have a `--check` mode, also run in CI, that fails when a
 committed generated file is stale. Every disagreement must be listed in `allowlist.yaml` with a
 reason. Today all 264 Dat3M verdicts and 127 of the 128 mixedproxy annotations match; the exceptions are:
@@ -157,6 +159,29 @@ reason. Today all 264 Dat3M verdicts and 127 of the 128 mixedproxy annotations m
   has no proxy, so a fence is never "morally strong" with another thread's operation, and release and acquire
   patterns built from a fence never synchronize. The PTX manual (sections 8.7 and 8.8) lets fences take part in
   such patterns, so we follow Dartagnan. Details in `allowlist.yaml`.
+
+## Running the tests on the H100
+
+The formal verdicts are the reference; running a test on a GPU only shows which outcomes that GPU produces. We run
+our own tests (families and hand-written, 302) on the H100 to see which of the outcomes PTX allows the hardware
+really shows, and to catch anything it shows that PTX forbids. Results and findings:
+[evidence/litmus-h100/](../../evidence/litmus-h100/README.md).
+
+- `tools/litmus/to_cuda.py` writes one kernel per test. Each litmus thread is one `asm volatile` block holding the
+  test's exact PTX instructions (`st.release.gpu.global.u32`, `mbarrier.arrive.release.cta.shared::cta.b64`, ...),
+  so clang cannot change them; clang 20 compiles the kernel to PTX 8.7 (`kernel.ptx`, committed), which the GPU
+  driver compiles further when it loads it, as for any PTX program.
+- `tools/litmus/runner/litmus_runner.c` runs a kernel about a million times in batches: each launch is 66 clusters
+  of 4 CTAs of 256 threads, and the host decides which GPU thread plays which litmus thread of which instance,
+  following the test's placement (`same-cta`: different warps of one CTA; `same-cluster`: different CTAs of one
+  cluster; `diff-cluster`: different clusters). 64 threads of every CTA are stress threads. Every location of every
+  instance has its own 128-byte line. Three configurations: `plain` (no stress, fixed placement), `stress` (the
+  stress threads hammer a 64 MiB buffer), `shuffle` (stress, plus a new random placement, location layout and
+  per-thread start delay every launch; for tests with a cluster barrier whole warps are shuffled, because
+  `barrier.cluster.arrive.relaxed` needs a converged warp on the H100).
+- Every run records each final state with where its threads actually ran (same SM, same cluster, different
+  clusters). `tools/litmus/run_h100.py` drives the runs (`jobs/litmus-h100.sh` on the H100 server) and
+  `tools/litmus/observed.py` joins them with the formal verdicts.
 
 ## The Fence-SC question
 

@@ -116,3 +116,7 @@ jobs:
           python tools/litmus/gen_families.py --check
           python tools/litmus/to_alloy.py --check
           python tools/litmus/to_riscv.py --check
+          python tools/litmus/to_cuda.py --check
+
+      - name: H100 litmus evidence is current
+        run: python tools/litmus/observed.py

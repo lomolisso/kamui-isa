@@ -252,7 +252,7 @@ Fatal error: exception Failure("File \"ptx/MP+rel.gpu+acq.gpu.litmus\", line 2, 
   herd7's output format (state list plus Hash) is a convenient format for the
   simulator's litmus runner to emit, so results can be compared with `mcompare7`.
 
-## Running litmus tests on the H100 (sanity only)
+## Running litmus tests on the H100
 
 litmus7 cannot target GPUs, and herdtools7 7.58 has no PTX architecture (H3 above), even
 though `litmus/option.ml` still mentions `GPU_PTX`, a leftover of the GPU litmus support
@@ -264,46 +264,27 @@ that Alglave et al. used in 2015. Options surveyed:
 | Sorensen and Donaldson, PLDI 2016, "Exposing Errors Related to Weak Memory in GPU Applications" | systematic tuning of memory stress (which addresses, which access pattern) to raise weak-behaviour rates | design reference for the stress parameters |
 | GPUHarbor / MC Mutants (Levine et al., ISSTA 2023 and ASPLOS 2023) | WebGPU and Vulkan litmus harness with a large parameter space (testing workgroups, stress workgroups, stress patterns, memory strides, thread permutation); mutation testing measures how good a parameter set is | best modern design; it runs WGSL/SPIR-V, not PTX, so reuse the method, not the code |
 | Dartagnan / Alloy | formal tools | they are the oracle; they do not run hardware |
-| Hand-written CUDA harness with inline PTX | our own generator | **proposed** |
+| Hand-written CUDA harness with inline PTX | our own generator | **used** (below) |
 
-**Proposed harness** (a proposal, to be refined when the litmus suite is built):
+**Our harness** (tools/litmus/, described in [tests/litmus/README.md](../../tests/litmus/README.md)):
 
-1. **Generator** `tools/litmus/to_cuda.py` reads a test in the Dat3M PTX dialect and
-   writes one `.cu` file. Each litmus thread becomes a `__device__` function whose body is
-   `asm volatile(...)` with the exact PTX instruction from the test (for example
-   `st.release.gpu.global.u32 [%0], %1;`), so the instruction under test is the one in
-   the litmus file, not whatever clang would choose. Locations are `u32` slots in a
-   global buffer; registers are written to a per-instance result buffer.
-2. **Placement**: thread `P<i>@cta <c>` runs in block `c` of the instance, in a different
-   warp from the other litmus threads of the same block (warps in lockstep hide weak
-   behaviour). `.cluster` tests launch with `cudaLaunchKernelEx` and a cluster dimension
-   so CTAs that should share a cluster do. Remaining threads run stress loops.
-3. **Parallel instances**: one launch runs many independent instances (for example 4096),
-   each with its own locations at a randomized stride, and a randomized mapping from
-   instances to hardware threads (thread randomization). Each instance starts with a
-   device-side "go" flag rather than a barrier, so threads start close together.
-4. **Stress**: idle threads read and write a scratch region with a configurable pattern
-   (Sorensen and Donaldson; GPUHarbor). Run each test under 2 to 4 stress configurations.
-5. **Iterations**: aim for at least 1e6 instances per test per configuration (for
-   example 250 launches of 4096 instances). Published GPU studies report weak outcomes at
-   rates from about 1e-3 down to 1e-6 per instance, so fewer runs often see nothing.
-   An H100 run is a few seconds per test; budget the job by the number of tests.
-6. **Build**: clang 20 in the dev container compiles each `.cu` to PTX
-   (`--cuda-gpu-arch=sm_90a --cuda-feature=+ptx87`, see [clang-cuda.md](clang-cuda.md)) and
-   the PTX is committed next to the test. A small host runner (`tools/litmus/runner.cu`,
-   built in the job image) loads the PTX with the driver API (`cuModuleLoadData`), so the
-   GPU runs exactly the PTX we produced. The job script is `jobs/litmus-h100.sh`
-   ([h100-jobs.md](h100-jobs.md)).
-7. **Record**: one JSON per test in `evidence/litmus-h100/results/` with the outcome
-   histogram (register tuple to count), total instances, stress configuration, and the
-   environment (GPU, driver, CUDA, clang version, date), plus a summary
-   `evidence/litmus-h100/observed.csv` with columns `test, outcome, count, total, config,
-   observed_weak (yes/no), model_verdict`. Outcomes are joined to `expected.csv` by test
-   name.
-8. **Interpretation**: an outcome the formal model forbids but the H100 shows means a bug
-   in the harness, the test, the model, or the hardware, and must be investigated; it
-   never changes `expected.csv`. An allowed outcome that never shows up is normal and is
-   only reported.
+1. `tools/litmus/to_cuda.py` turns each test into one kernel (`tests/litmus/h100/<test>/kernel.cu`): every
+   litmus thread is one `asm volatile` block with the exact PTX of the test, so clang cannot change the
+   instructions under test. clang 20 compiles it to PTX 8.7 (committed as `kernel.ptx`), which the GPU driver JIT
+   loads, as a PTX loader would.
+2. `tools/litmus/runner/litmus_runner.c` launches a grid of 66 clusters of 4 CTAs of 256 threads. The host tells
+   every GPU thread whether it is "role k of instance i" or a stress thread, following the test's placement (same
+   CTA in different warps, different CTAs of one cluster, different clusters); 64 threads per CTA are always
+   stress threads. Every location of every instance has its own 128-byte line.
+3. Three configurations: `plain` (no stress, fixed placement), `stress` (the stress threads read and write a
+   64 MiB scratch buffer), `shuffle` (stress plus a new random placement, location layout and per-thread start
+   delay every launch). Each run counts every final state together with where the threads actually ran (same SM,
+   same cluster, different clusters), read from `%smid` and `%clusterid`.
+4. `jobs/litmus-h100.sh` runs it on the H100; `tools/litmus/observed.py` turns the histograms into
+   `evidence/litmus-h100/observed.csv` and `summary.csv`, joined with the formal verdicts.
+5. **Interpretation**: an outcome the formal model forbids but the H100 shows means a bug in the harness, the
+   test, the model, or the hardware, and must be investigated; it never changes `expected.csv`. An allowed outcome
+   that never shows up is normal and is only reported: the H100 is stronger than the PTX model.
 
 ## Limitations
 
