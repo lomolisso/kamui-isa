@@ -112,3 +112,10 @@ def test_opcode_classes(tmp_path):
     out = C.write(raw, ["job x"], classes, tmp_path / "out" if (tmp_path / "out").mkdir() is None else None)
     lines = out.read_text().splitlines()
     assert lines[0] == "# job x" and lines[2].startswith("w,k#1,EXIT,branch,1,20")
+
+
+def test_stats_prints_every_table(capsys):
+    import stats
+    assert stats.main() == 0
+    out = capsys.readouterr().out
+    assert out.count("### ") == 11 and "| all |" in out and "Nsight Compute" in out
