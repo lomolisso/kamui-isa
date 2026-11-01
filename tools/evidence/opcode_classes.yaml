@@ -1,0 +1,31 @@
+# SASS opcode classes for the instruction histograms (classify.py). Each class lists regular expressions matched
+# against the start of the opcode (with modifiers, as NVBit reports it); a match must end at a dot or at the end
+# of the opcode. The first class with a matching pattern wins, so the specific classes come first. `families`
+# names the Kamui extension families (docs/overview.md) that cover the class.
+
+classes:
+  - {name: wgmma, families: [Xkmmma], patterns: [HGMMA, QGMMA, IGMMA, BGMMA, WARPGROUP]}
+  - {name: mma, families: [Xkmmma], patterns: [HMMA, IMMA, DMMA, BMMA, LDSM, STSM, MOVM]}
+  - {name: tma, families: [Xkmasync], patterns: [UTMALDG, UTMASTG, UTMAPF, UTMAREDG, UTMACMDFLUSH, UTMACCTL, UBLKCP, UBLKPF, UBLKRED]}
+  - {name: mbarrier, families: [Xkmmbar], patterns: [SYNCS, ARRIVES]}
+  - {name: async_copy, families: [Xkmasync], patterns: [LDGSTS, LDGDEPBAR, DEPBAR]}
+  - {name: cluster, families: [Xkmcluster], patterns: ["UCGABAR_\\w+", CGAERRBAR]}
+  - {name: fence, families: [Xkmscope], patterns: [MEMBAR, FENCE, ERRBAR, CCTL]}
+  - {name: atomic, families: [base, Xkmscope], patterns: [ATOM, ATOMG, ATOMS, RED, REDG, REDAS]}
+  - {name: warp, families: [Xkmwarp], patterns: [SHFL, VOTE, VOTEU, MATCH, REDUX, CREDUX, ELECT]}
+  - {name: barrier, families: [Xkmbar], patterns: [BAR, WARPSYNC]}
+  - {name: convergence, families: [Xkmsimt], patterns: [BSSY, BSYNC, BREAK, BMOV, ENDCOLLECTIVE]}
+  - {name: branch, families: [base, Xkmsimt], patterns: [BRA, BRX, JMP, JMX, CALL, RET, EXIT, YIELD, NANOSLEEP, BPT, ACQBULK, PREEXIT]}
+  - {name: mem_global, families: [base], patterns: [LDG, STG, LD, ST, LDGMC, STAS]}
+  - {name: mem_shared, families: [base], patterns: [LDS, STS]}
+  - {name: mem_local, families: [base], patterns: [LDL, STL]}
+  - {name: mem_const, families: [base], patterns: [LDC, ULDC]}
+  - {name: mufu, families: [Xkmmufu], patterns: [MUFU]}
+  - {name: fp64, families: [base], patterns: [DADD, DMUL, DFMA, DSETP, DMNMX]}
+  - {name: fp16x2, families: [base], patterns: [HADD2, HMUL2, HFMA2, HMNMX2, HSETP2, HSET2]}
+  - {name: fp32, families: [base], patterns: [FADD, FMUL, FFMA, FSETP, FSET, FMNMX, FSEL, FCHK, FSWZADD, FRND]}
+  - {name: convert, families: [base, Xkmmisc], patterns: [F2F, F2I, I2F, F2FP, I2FP, I2I, I2IP]}
+  - {name: move, families: [base, Xkmsimt], patterns: [MOV, S2R, CS2R, S2UR, R2UR, UMOV, R2P, P2R]}
+  - {name: uniform, families: [Xkmsimt], patterns: ["U\\w+"]}
+  - {name: int_alu, families: [base, Xkmmisc], patterns: [IADD3, IADD, IMAD, IMUL, LOP3, PLOP3, SHF, LEA, ISETP, IMNMX, VIMNMX, VIADD, IABS, POPC, FLO, BREV, PRMT, SEL, SGXT, BMSK, IDP, VABSDIFF, QSPC, VIADDMNMX]}
+  - {name: other, families: [], patterns: ["\\w+"]}  # NOP (padding inside loops) and anything unknown

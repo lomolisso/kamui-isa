@@ -94,3 +94,21 @@ def test_jit_compare():
     m, diff = J.compare(a, [("", "LDG.E.CONSTANT", "R1,desc[UR4][R2.64]"), ("@P0", "EXIT", "")])
     assert m == "no" and diff == "at 0: LDG.E | LDG.E.CONSTANT"
     assert J.compare(a, a[:1]) == ("no", "at 1: @P0 EXIT | (end)")
+
+
+def test_opcode_classes(tmp_path):
+    import classify as C
+    classes = C.load_classes()
+    want = {"HGMMA.64x128x8.F32.TF32": "wgmma", "WARPGROUP.ARRIVE": "wgmma", "UTMALDG.2D": "tma",
+            "SYNCS.PHASECHK.TRANS64.TRYWAIT": "mbarrier", "UCGABAR_ARV": "cluster", "ULDC.64": "mem_const",
+            "UIADD3": "uniform", "S2UR": "move", "LDG.E.128": "mem_global", "LDGSTS.E.BYPASS.128": "async_copy",
+            "LDSM.16.M88.4": "mma", "FFMA": "fp32", "HFMA2.MMA": "fp16x2", "MUFU.EX2": "mufu", "BSSY": "convergence",
+            "BAR.SYNC.DEFER_BLOCKING": "barrier", "IMAD.WIDE": "int_alu", "REDG.E.ADD.STRONG.GPU": "atomic",
+            "CCTL.IVALL": "fence", "SHFL.BFLY": "warp", "F2FP.BF16.F32.PACK_AB": "convert", "XYZZY": "other"}
+    assert {op: C.classify(op, classes) for op in want} == want
+    raw = tmp_path / "w.csv"
+    raw.write_text("workload,kernel,sass_opcode,static_count,warp_inst_executed,thread_inst_executed,"
+                   "thread_inst_executed_pred_true\nw,k#1,FFMA,2,10,320,320\nw,k#1,EXIT,1,20,640,600\n")
+    out = C.write(raw, ["job x"], classes, tmp_path / "out" if (tmp_path / "out").mkdir() is None else None)
+    lines = out.read_text().splitlines()
+    assert lines[0] == "# job x" and lines[2].startswith("w,k#1,EXIT,branch,1,20")

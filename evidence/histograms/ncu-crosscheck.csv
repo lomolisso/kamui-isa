@@ -1,0 +1,6 @@
+# nvbit job 20261101T172729Z-q000033, ncu job 20261101T172845Z-q000034
+# kernel: void device_kernel of cutlass_gemm_tf32_2048
+count,ncu_metric,ncu,nvbit,difference_percent
+warp_inst_executed,smsp__inst_executed.sum,8300178,8388993,+1.07
+thread_inst_executed,smsp__thread_inst_executed.sum,239979966,242930490,+1.23
+thread_inst_executed_pred_true,smsp__thread_inst_executed_pred_on.sum,222800762,224310890,+0.68

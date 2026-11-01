@@ -15,6 +15,7 @@ All notable changes to this project are listed here. The format follows
 - H100 environment probe job and its results: driver, toolkit and library versions, and a confirmed PTX 8.7 JIT.
 - ptxas and SASS evidence for every corpus entry, and per-feature SASS observations with hidden mechanisms.
 - Corpus runner and H100 golden outputs for every runnable corpus entry, with sanitizer and JIT SASS checks.
+- NVBit instruction histograms of CUTLASS, FlashInfer, flash-attn 2 and Triton workloads on the H100.
 
 ## [0.1.0] - 2026-10-31
 

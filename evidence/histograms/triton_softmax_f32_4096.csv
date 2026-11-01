@@ -1,0 +1,40 @@
+# job 20261101T172729Z-q000033
+# gpu NVIDIA H100 NVL, driver 580.126.20
+# tool kamui_sass_hist (tools/evidence/nvbit), NVBit 1.8.1
+# cuda_toolkit Build cuda_12.9.r12.9/compiler.36037853_0, cutlass 4.4.2, torch 2.11.0+cu129, triton 3.6.0, flash_attn 2.8.3.post2, flashinfer 0.7.2.post1
+workload,kernel,sass_opcode,opcode_class,static_count,warp_inst_executed,thread_inst_executed,thread_inst_executed_pred_true
+triton_softmax_f32_4096,kamui_softmax#9b965a17,FMUL,fp32,50,3276800,104857600,33554432
+triton_softmax_f32_4096,kamui_softmax#9b965a17,FADD,fp32,24,1572864,50331648,50331648
+triton_softmax_f32_4096,kamui_softmax#9b965a17,SHFL.BFLY,warp,18,1179648,37748736,37748736
+triton_softmax_f32_4096,kamui_softmax#9b965a17,FMNMX,fp32,16,1048576,33554432,33554432
+triton_softmax_f32_4096,kamui_softmax#9b965a17,FSETP.GEU.AND,fp32,9,589824,18874368,18874368
+triton_softmax_f32_4096,kamui_softmax#9b965a17,MOV,move,8,524288,16777216,16777216
+triton_softmax_f32_4096,kamui_softmax#9b965a17,MUFU.EX2,mufu,8,524288,16777216,16777216
+triton_softmax_f32_4096,kamui_softmax#9b965a17,BAR.SYNC.DEFER_BLOCKING,barrier,5,327680,10485760,10485760
+triton_softmax_f32_4096,kamui_softmax#9b965a17,LOP3.LUT,int_alu,5,327680,10485760,10485760
+triton_softmax_f32_4096,kamui_softmax#9b965a17,IMAD.WIDE.U32,int_alu,4,262144,8388608,8388608
+triton_softmax_f32_4096,kamui_softmax#9b965a17,LDS,mem_shared,4,262144,8388608,4325376
+triton_softmax_f32_4096,kamui_softmax#9b965a17,STS,mem_shared,4,262144,8388608,139264
+triton_softmax_f32_4096,kamui_softmax#9b965a17,LDC.64,mem_const,3,196608,6291456,6291456
+triton_softmax_f32_4096,kamui_softmax#9b965a17,EXIT,branch,2,131072,4194304,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,IMAD.WIDE,int_alu,2,131072,4194304,4194304
+triton_softmax_f32_4096,kamui_softmax#9b965a17,ISETP.GE.AND,int_alu,2,131072,4194304,4194304
+triton_softmax_f32_4096,kamui_softmax#9b965a17,LDG.E.128,mem_global,2,131072,4194304,4194304
+triton_softmax_f32_4096,kamui_softmax#9b965a17,S2UR,move,2,131072,4194304,4194304
+triton_softmax_f32_4096,kamui_softmax#9b965a17,STG.E.128,mem_global,2,131072,4194304,4194304
+triton_softmax_f32_4096,kamui_softmax#9b965a17,FSETP.GT.AND,fp32,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,IADD3,int_alu,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,IMAD,int_alu,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,ISETP.GE.U32.AND,int_alu,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,ISETP.LT.U32.AND,int_alu,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,LDC,mem_const,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,LEA,int_alu,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,MUFU.RCP,mufu,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,S2R,move,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,SHF.L.U32,int_alu,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,SHF.R.U32.HI,int_alu,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,ULDC.64,mem_const,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,ULEA,uniform,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,UMOV,move,1,65536,2097152,2097152
+triton_softmax_f32_4096,kamui_softmax#9b965a17,BRA,branch,1,0,0,0
+triton_softmax_f32_4096,kamui_softmax#9b965a17,NOP,other,15,0,0,0

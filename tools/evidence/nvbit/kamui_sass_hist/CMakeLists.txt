@@ -1,0 +1,1 @@
+add_nvbit_tool(kamui_sass_hist)
