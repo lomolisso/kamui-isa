@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o shl.cubin tests/corpus/base/shl/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_shl' for 'sm_90a'
+ptxas info    : Function properties for k_shl
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 28 registers, used 0 barriers

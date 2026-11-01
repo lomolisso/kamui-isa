@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o add.cc.cubin tests/corpus/base/add.cc/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_add_cc' for 'sm_90a'
+ptxas info    : Function properties for k_add_cc
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, used 0 barriers

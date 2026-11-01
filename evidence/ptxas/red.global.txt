@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o red.global.cubin tests/corpus/base/red.global/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_red_global' for 'sm_90a'
+ptxas info    : Function properties for k_red_global
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 26 registers, used 0 barriers

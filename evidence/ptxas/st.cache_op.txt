@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o st.cache_op.cubin tests/corpus/base/st.cache_op/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_st_cache_op' for 'sm_90a'
+ptxas info    : Function properties for k_st_cache_op
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 20 registers, used 0 barriers

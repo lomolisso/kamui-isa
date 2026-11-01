@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o cp.reduce.async.bulk.cubin tests/corpus/xkmasync/cp.reduce.async.bulk/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_cp_reduce_async_bulk' for 'sm_90a'
+ptxas info    : Function properties for k_cp_reduce_async_bulk
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 11 registers, used 1 barriers, 2048 bytes smem

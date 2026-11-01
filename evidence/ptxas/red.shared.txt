@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o red.shared.cubin tests/corpus/base/red.shared/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_red_shared' for 'sm_90a'
+ptxas info    : Function properties for k_red_shared
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 13 registers, used 1 barriers, 24 bytes smem

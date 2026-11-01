@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -c -o dir.extern.cubin tests/corpus/base/dir.extern/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_dir_extern' for 'sm_90a'
+ptxas info    : Function properties for k_dir_extern
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 12 registers, used 0 barriers

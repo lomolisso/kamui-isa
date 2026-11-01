@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o mad24.cubin tests/corpus/base/mad24/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_mad24' for 'sm_90a'
+ptxas info    : Function properties for k_mad24
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, used 0 barriers

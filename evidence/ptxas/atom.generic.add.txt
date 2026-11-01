@@ -1,0 +1,8 @@
+# ptxas -arch=sm_90a -v -o atom.generic.add.cubin tests/corpus/base/atom.generic.add/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_atom_generic_add' for 'sm_90a'
+ptxas info    : Function properties for k_atom_generic_add
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, used 1 barriers, 4 bytes smem
+ptxas info    : Function properties for _Z4bumpPjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads

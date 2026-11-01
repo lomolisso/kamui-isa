@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o dp2a.cubin tests/corpus/xkmmisc/dp2a/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_dp2a' for 'sm_90a'
+ptxas info    : Function properties for k_dp2a
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 20 registers, used 0 barriers

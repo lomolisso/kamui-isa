@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o dir.maxclusterrank.cubin tests/corpus/xkmcluster/dir.maxclusterrank/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_dir_maxclusterrank' for 'sm_90a'
+ptxas info    : Function properties for k_dir_maxclusterrank
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, used 0 barriers

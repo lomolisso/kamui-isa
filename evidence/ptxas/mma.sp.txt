@@ -1,0 +1,7 @@
+# ptxas -arch=sm_90a -v -o mma.sp.cubin tests/corpus/xkmmma/mma.sp/kernel.ptx
+ptxas tests/corpus/xkmmma/mma.sp/kernel.ptx, line 60; info    : Advisory: Modifier '.sp::ordered_metadata' should be used on instruction 'mma' instead of modifier '.sp' as it is expected to have substantially reduced performance on some future architectures
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_mma_sp' for 'sm_90a'
+ptxas info    : Function properties for k_mma_sp
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 23 registers, used 0 barriers

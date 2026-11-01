@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o mbarrier.try_wait.cubin tests/corpus/xkmmbar/mbarrier.try_wait/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_mbarrier_try_wait' for 'sm_90a'
+ptxas info    : Function properties for k_mbarrier_try_wait
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 12 registers, used 1 barriers, 520 bytes smem

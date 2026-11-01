@@ -1,0 +1,14 @@
+# ptxas -arch=sm_90a -v -o call.indirect.cubin tests/corpus/base/call.indirect/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_call_indirect' for 'sm_90a'
+ptxas info    : Function properties for k_call_indirect
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, used 0 barriers
+ptxas info    : Function properties for _Z2f0i
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Function properties for _Z2f1i
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Function properties for _Z2f2i
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Function properties for _Z9select_fni
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads

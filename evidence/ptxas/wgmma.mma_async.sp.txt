@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o wgmma.mma_async.sp.cubin tests/corpus/xkmmma/wgmma.mma_async.sp/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_wgmma_mma_async_sp' for 'sm_90a'
+ptxas info    : Function properties for k_wgmma_mma_async_sp
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 31 registers, used 1 barriers, 2560 bytes smem

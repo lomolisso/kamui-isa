@@ -1,0 +1,234 @@
+# Which SASS instructions implement a PTX instruction, used by annotate.py to find the SASS of each catalog row.
+#
+# Keys are PTX opcode prefixes in whole dot components (types dropped), matched with the same rule as the
+# catalog's `opcodes` field; the longest matching key wins (`cp.async.bulk.tensor` before `cp.async.bulk` before
+# `cp.async`). Each value is a list of regular expressions matched against the start of the SASS opcode with its
+# modifiers (`ATOMG.E.ADD.STRONG.GPU`); a match must end at a dot or at the end of the opcode, so `LD` matches
+# `LD.E` but not `LDG.E`. The SASS names come from the cuobjdump output of the corpus (CUDA 12.8,
+# sm_90a); NVIDIA does not document them, so each list is what ptxas was observed to produce.
+#
+# `OPCODE@regex` also requires the operands to contain the regex (`LDC@c\\[0x3\\]`: constant bank 3, where
+# `.const` variables live; bank 0 holds kernel parameters and driver values).
+#
+# Special registers (`sreg.*`) and state spaces (`space.*`) are handled by name in annotate.py.
+
+classes:
+  # integer arithmetic
+  abs: [IABS, FADD, DADD, HADD2, LOP3, PRMT, SEL]
+  add: [IADD3, VIADD, "IMAD\\.IADD", FADD, DADD, HADD2, HFMA2, "IMAD\\.X"]
+  addc: [IADD3, VIADD, "IMAD\\.X"]
+  sub: [IADD3, VIADD, "IMAD\\.IADD", FADD, DADD, HADD2, HFMA2, "IMAD\\.X"]
+  subc: [IADD3, "IMAD\\.X"]
+  mul: [IMAD, IMUL, FMUL, DMUL, HMUL2, HFMA2]
+  mad: [IMAD, FFMA, DFMA, HFMA2]
+  madc: [IMAD, IADD3]
+  mul24: [IMAD, SGXT, PRMT, SHF]
+  mad24: [IMAD, SGXT, PRMT, SHF, IADD3]
+  sad: [VABSDIFF, IADD3]
+  div: [MUFU, FCHK, FFMA, DFMA, FMUL, DMUL, I2F, F2I, IMAD, IADD3, "CALL\\.REL"]
+  rem: [MUFU, I2F, F2I, IMAD, IADD3, "CALL\\.REL"]
+  neg: [IADD3, FADD, DADD, HADD2, LOP3, PRMT]
+  min: [VIMNMX, IMNMX, FMNMX, DSETP, HMNMX2, FSEL, SEL]
+  max: [VIMNMX, IMNMX, FMNMX, DSETP, HMNMX2, FSEL, SEL]
+  popc: [POPC]
+  clz: [FLO, IADD3]
+  bfind: [FLO]
+  fns: [POPC, BREV, FLO, SGXT, LOP3]
+  brev: [BREV]
+  bfe: [SGXT, SHF, PRMT, BMSK, LOP3]
+  bfi: [BMSK, SHF, LOP3, SGXT]
+  szext: [SGXT]
+  bmsk: [BMSK]
+  dp4a: ["IDP\\.4A"]
+  dp2a: ["IDP\\.2A"]
+  # floating point
+  testp: [LOP3, ISETP, FSETP, VIADD]
+  copysign: [LOP3]
+  fma: [FFMA, DFMA, HFMA2]
+  rcp: [MUFU, FFMA, DFMA, FCHK, "CALL\\.REL"]
+  sqrt: [MUFU, FFMA, DFMA, FMUL, "CALL\\.REL"]
+  rsqrt: [MUFU]
+  sin: ["MUFU\\.SIN", "FMUL\\.RZ"]
+  cos: ["MUFU\\.COS", "FMUL\\.RZ"]
+  lg2: ["MUFU\\.LG2"]
+  ex2: ["MUFU\\.EX2"]
+  tanh: ["MUFU\\.TANH"]
+  # comparison and selection
+  set: [FSET, ISETP, HSET2, DSETP, SEL]
+  setp: [ISETP, FSETP, DSETP, HSETP2]
+  selp: [SEL, FSEL]
+  slct: [FSETP, ISETP, SEL, FSEL]
+  # logic and shift
+  and: [LOP3, PLOP3]
+  or: [LOP3, PLOP3]
+  xor: [LOP3, PLOP3]
+  not: [LOP3, PLOP3]
+  cnot: [LOP3, ISETP, SEL]
+  lop3: [LOP3]
+  shf: [SHF]
+  shl: [SHF, "IMAD\\.SHL", LEA]
+  shr: [SHF]
+  # data movement and conversion
+  mov: [MOV, "IMAD\\.MOV", PRMT, LOP3, SEL]
+  prmt: [PRMT]
+  shfl.sync: [SHFL]
+  # Memory instructions are looked up by opcode and state space wherever the space appears in the PTX opcode
+  # (`ld.relaxed.sys.global.u32` uses `ld.global`); `ld` and `st` alone are generic addressing.
+  ld: [LD, LDG, LDS, LDL]
+  ld.global: [LDG]
+  ld.shared: [LDS, LDSM]
+  ld.shared::cluster: [LD]
+  ld.local: [LDL]
+  ld.param: ["LDC@c\\[0x0\\]", "ULDC@c\\[0x0\\]", MOV, "IMAD\\.MOV", LDL]
+  ld.const: ["LDC@c\\[0x3\\]", "ULDC@c\\[0x3\\]"]
+  ldu: [LDG, LD, LDC]
+  st: [ST, STG, STS, STL]
+  st.global: [STG]
+  st.shared: [STS, STSM]
+  st.shared::cluster: [ST]
+  st.local: [STL]
+  st.param: [MOV, "IMAD\\.MOV", STL]
+  st.async: ["ST\\.E", "SYNCS\\.ARRIVE", STAS]
+  multimem: [LDGMC, REDG, REDAS, STG]
+  prefetch: ["CCTL\\.E\\.PF\\d", CCTL]
+  prefetchu: ["CCTL\\.E\\.PF\\d", CCTL]
+  prefetch.tensormap: ["UTMACCTL\\.PF"]
+  applypriority: [CCTL]
+  discard: [CCTL]
+  createpolicy: [ULOP3, USHF, UMOV, LOP3, SHF, MOV]
+  isspacep: [QSPC, LOP3, ISETP]
+  cvta: [LOP3, IADD3, VIADD, PRMT, SEL, MOV]
+  cvt: [F2F, F2FP, F2I, I2F, I2FP, I2I, I2IP, FRND, PRMT, SGXT, LOP3, "HADD2\\.F32", FADD, FSETP]
+  cvt.pack: [I2IP]
+  mapa: [PRMT, LOP3, IADD3, MOV]
+  getctarank: [PRMT, SHF, LOP3, MOV]
+  cp.async: [LDGSTS, LDGDEPBAR, DEPBAR, "ARRIVES\\.LDGSTSBAR"]
+  cp.async.mbarrier.arrive: ["ARRIVES\\.LDGSTSBAR"]
+  cp.async.bulk: [UBLKCP, UBLKRED, "SYNCS\\.ARRIVE", UTMACMDFLUSH, DEPBAR, ELECT]
+  cp.async.bulk.prefetch: [UBLKPF]
+  cp.async.bulk.commit_group: [UTMACMDFLUSH]
+  cp.async.bulk.wait_group: [DEPBAR]
+  cp.reduce.async.bulk: [UBLKRED, UTMAREDG, UTMACMDFLUSH, ELECT]
+  cp.async.bulk.tensor: [UTMALDG, UTMASTG, UTMAREDG, "SYNCS\\.ARRIVE", UTMACMDFLUSH, ELECT]
+  cp.reduce.async.bulk.tensor: [UTMAREDG, UTMACMDFLUSH, ELECT]
+  cp.async.bulk.prefetch.tensor: [UTMAPF]
+  tensormap.replace: [STG, ST, LOP3]
+  # control flow
+  bra: [BRA, "BRA\\.U", BSSY, BSYNC]
+  brx.idx: [BRX, JMX]
+  call: ["CALL\\.REL", CALL, JMP]
+  ret: ["RET\\.REL", RET]
+  exit: [EXIT]
+  # synchronization and communication
+  bar.warp.sync: [WARPSYNC, NOP]
+  bar: [BAR]
+  barrier: [BAR, WARPSYNC]
+  barrier.cluster: ["UCGABAR_\\w+", "BAR\\.SYNC", MEMBAR, CCTL]
+  membar: [MEMBAR, ERRBAR, CGAERRBAR, "CCTL\\.IVALL"]
+  fence: [MEMBAR, ERRBAR, CGAERRBAR, "CCTL\\.IVALL", "FENCE\\.VIEW"]
+  fence.proxy.tensormap: ["UTMACCTL\\.IV", MEMBAR, ERRBAR, CGAERRBAR]
+  fence.mbarrier_init: [MEMBAR, ERRBAR, CGAERRBAR, "CCTL\\.IVALL", "FENCE\\.VIEW"]
+  atom: [ATOMG, ATOMS, ATOM, REDG, RED, REDUX, ATOMAS]
+  red: [REDG, RED, ATOMS, ATOM, REDUX, REDAS]
+  red.async: [REDAS, "SYNCS\\.ARRIVE"]
+  vote.sync: [VOTE]
+  match: [MATCH]
+  activemask: ["VOTE\\.ANY"]
+  redux.sync: [REDUX, CREDUX]
+  griddepcontrol: [ACQBULK, PREEXIT]
+  elect.sync: [ELECT]
+  mbarrier: [SYNCS]
+  mbarrier.pending_count: [POPC, SHF, LOP3, IADD3, SGXT]
+  tensormap.cp_fenceproxy: ["UTMACCTL\\.IV", ATOMG, STG, MEMBAR, DEPBAR]
+  # matrix multiply-accumulate
+  wmma.load: [LD, LDG, LDS, LDSM]
+  wmma.store: [ST, STG, STS]
+  wmma.mma: [HMMA, IMMA, DMMA, BMMA]
+  mma: [HMMA, IMMA, DMMA, BMMA]
+  ldmatrix: [LDSM]
+  stmatrix: [STSM]
+  movmatrix: [MOVM]
+  wgmma.mma_async: [HGMMA, IGMMA, QGMMA, BGMMA]
+  wgmma.fence: ["WARPGROUP\\.ARRIVE"]
+  wgmma.commit_group: [HGMMA, IGMMA, QGMMA, BGMMA]
+  wgmma.wait_group: ["WARPGROUP\\.DEPBAR"]
+  # stack and miscellaneous
+  stacksave: [MOV, IADD3, VIADD, LOP3]
+  stackrestore: [MOV, IADD3, VIADD]
+  alloca: [IADD3, VIADD, LOP3, MOV]
+  brkpt: [BPT]
+  trap: [BPT]
+  nanosleep: [NANOSLEEP]
+  setmaxnreg: [USETMAXREG]
+  pmevent: [PMTRIG]
+
+# Special registers: the SASS name ptxas reads each PTX register from, when it is a hardware register. Rows not
+# listed here (or whose register lives in constant bank 0) are found by the general rule in annotate.py: every
+# S2R/S2UR/CS2R that reads a special register other than the thread and block index used by every kernel, and
+# every load from the driver-written part of constant bank 0 (offsets below 0x208).
+sregs:
+  sreg.laneid: [SR_LANEID]
+  sreg.lanemask_eq: [SR_EQMASK]
+  sreg.lanemask_le: [SR_LEMASK]
+  sreg.lanemask_lt: [SR_LTMASK]
+  sreg.lanemask_ge: [SR_GEMASK]
+  sreg.lanemask_gt: [SR_GTMASK]
+  sreg.clock: [SR_CLOCKLO, SR_CLOCKHI]
+  sreg.clock64: [SR_CLOCKLO, SR_CLOCKHI]
+  sreg.globaltimer: [SR_GLOBALTIMERLO, SR_GLOBALTIMERHI, SR_GLOBALTIMER]
+  sreg.tid: [SR_TID]
+  sreg.ctaid: [SR_CTAID]
+
+# State spaces: the SASS memory instructions that access each space.
+spaces:
+  space.global: [LDG, STG, ATOMG, REDG]
+  space.shared: [LDS, STS, ATOMS, LDSM, STSM]
+  space.local: [LDL, STL]
+  space.const: ["LDC@c\\[0x3\\]", "ULDC@c\\[0x3\\]"]
+  space.param: [LDC, ULDC, MOV, "IMAD\\.MOV"]
+  space.shared::cluster: [LD, ST, ATOM, RED, QSPC]
+  space.reg: []
+
+# Rows whose PTX instruction ptxas implements as a sequence of ordinary instructions (no SASS instruction of its
+# own), from reading the SASS of each entry. annotate.py adds `software-sequence` to these rows; it also adds it
+# whenever the SASS calls a subroutine.
+emulated:
+  add.cc: "no carry-flag instruction: the carry chain becomes IADD3 with a predicate carry (IADD3.X)"
+  addc: "no carry-flag instruction: IADD3.X consumes the predicate carry of the previous IADD3"
+  sub.cc: "as add.cc, with negated operands"
+  subc: "as addc, with negated operands"
+  mul24: "no 24-bit multiplier: sign or zero extension (SGXT, PRMT) then a 32-bit IMAD"
+  mad24: "no 24-bit multiplier: SGXT or PRMT then IMAD"
+  fns: "no find-nth-set instruction: a loop of POPC, BREV and bit masks"
+  bfe: "64-bit and some 32-bit forms become shifts plus SGXT; only some 32-bit forms map to one instruction"
+  bfi: "BMSK plus shifts and LOP3"
+  cnot: "LOP3 or ISETP plus SEL"
+  testp: "bit tests on the exponent and mantissa with LOP3 and ISETP"
+  copysign: "a single LOP3 that merges the sign bit"
+  tensormap.replace: "plain global stores (STG, LOP3 for bit fields) into the 128-byte tensor map in memory"
+  stacksave: "arithmetic on the stack pointer register R1"
+  stackrestore: "arithmetic on the stack pointer register R1"
+  alloca: "arithmetic on the stack pointer register R1"
+  div.fp.approx: "MUFU.RCP plus FMUL, with range scaling around it"
+  div.fp.full: "MUFU.RCP plus FMUL, with range scaling around it"
+  sqrt.approx: "MUFU.SQRT with a denormal scaling FMUL"
+  createpolicy: "the cache-policy word is built with uniform ALU instructions"
+  mbarrier.pending_count: "read from the 64-bit mbarrier word with shifts and masks"
+  getctarank: "the rank is extracted from the shared::cluster address with PRMT and shifts"
+  mapa: "the peer address is formed with PRMT and LOP3 on the shared::cluster address"
+  cvta.shared::cluster: "address window arithmetic plus a QSPC space query"
+  isspacep: "QSPC space query plus compares"
+  isspacep.shared::cluster: "QSPC.E.D query plus compares"
+  sreg.smid: "bit field of SR_VIRTID"
+  sreg.warpid: "bit field of SR_VIRTID"
+  sreg.nsmid: "computed from SR_VIRTCFG and constant bank 0"
+  sreg.nwarpid: "computed from SR_VIRTCFG and constant bank 0"
+  sreg.gridid: "read from constant bank 0"
+  sreg.cluster_ctaid: "computed from SR_CgaCtaId and the cluster shape in constant bank 0"
+  sreg.cluster_ctarank: "computed from SR_CgaCtaId and the cluster shape in constant bank 0"
+  sreg.cluster_nctaid: "read from constant bank 0"
+  sreg.cluster_nctarank: "computed from the cluster shape in constant bank 0"
+  sreg.clusterid: "computed from the block index and the cluster shape in constant bank 0"
+  sreg.nclusterid: "computed from the grid and cluster shapes in constant bank 0"
+  sreg.is_explicit_cluster: "read from constant bank 0"
+  sreg.aggr_smem_size: "computed from SR_SMEMSZ and constant bank 0"

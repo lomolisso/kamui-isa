@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o dir.reqnctapercluster.cubin tests/corpus/xkmcluster/dir.reqnctapercluster/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_dir_reqnctapercluster' for 'sm_90a'
+ptxas info    : Function properties for k_dir_reqnctapercluster
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, used 0 barriers

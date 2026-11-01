@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o mma.b1.cubin tests/corpus/xkmmma/mma.b1/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_mma_b1' for 'sm_90a'
+ptxas info    : Function properties for k_mma_b1
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 22 registers, used 0 barriers

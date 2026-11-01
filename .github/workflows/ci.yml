@@ -101,3 +101,6 @@ jobs:
 
       - name: PTX corpus entries match their committed PTX
         run: python tools/corpus/build.py --all --lint
+
+      - name: SASS evidence covers every feature
+        run: python tools/evidence/sass.py --check

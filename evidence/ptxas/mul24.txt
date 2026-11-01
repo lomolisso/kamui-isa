@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o mul24.cubin tests/corpus/base/mul24/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_mul24' for 'sm_90a'
+ptxas info    : Function properties for k_mul24
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, used 0 barriers

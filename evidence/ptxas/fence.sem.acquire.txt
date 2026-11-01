@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o fence.sem.acquire.cubin tests/corpus/xkmscope/fence.sem.acquire/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_fence_sem_acquire' for 'sm_90a'
+ptxas info    : Function properties for k_fence_sem_acquire
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, used 0 barriers

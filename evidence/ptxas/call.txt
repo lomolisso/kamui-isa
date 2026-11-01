@@ -1,0 +1,8 @@
+# ptxas -arch=sm_90a -v -o call.cubin tests/corpus/base/call/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_call' for 'sm_90a'
+ptxas info    : Function properties for k_call
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, used 0 barriers
+ptxas info    : Function properties for _Z7combineiii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads

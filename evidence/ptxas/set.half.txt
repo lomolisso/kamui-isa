@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o set.half.cubin tests/corpus/base/set.half/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_set_half' for 'sm_90a'
+ptxas info    : Function properties for k_set_half
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, used 0 barriers

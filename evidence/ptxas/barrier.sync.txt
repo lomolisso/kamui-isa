@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o barrier.sync.cubin tests/corpus/xkmbar/barrier.sync/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_barrier_sync' for 'sm_90a'
+ptxas info    : Function properties for k_barrier_sync
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, used 1 barriers, 512 bytes smem
