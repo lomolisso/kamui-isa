@@ -1,0 +1,36 @@
+------------- NVBit (NVidia Binary Instrumentation Tool v1.8.1) Loaded --------------
+NVBit core environment variables (mostly for nvbit-devs):
+ACK_CTX_INIT_LIMITATION = 0 - if set, no warning will be printed for nvbit_at_ctx_init()
+            NVDISASM = nvdisasm - override default nvdisasm found in PATH
+            NOBANNER = 0 - if set, does not print this banner
+       NO_EAGER_LOAD = 1 - lazy module loading is now turned on by default. If you see deadlocks in your tool, set NO_EAGER_LOAD to 0
+---------------------------------------------------------------------------------
+         INSTR_BEGIN = 0 - Beginning of the instruction interval where to apply instrumentation
+           INSTR_END = 4294967295 - End of the instruction interval where to apply instrumentation
+      START_GRID_NUM = 0 - Beginning of the kernel gird launch interval where to apply instrumentation
+        END_GRID_NUM = 4294967295 - End of the kernel launch interval where to apply instrumentation
+    COUNT_WARP_LEVEL = 1 - Count warp level or thread level instructions
+    EXCLUDE_PRED_OFF = 0 - Exclude predicated off instruction from count
+   ACTIVE_FROM_START = 1 - Start instruction counting from start or wait for cuProfilerStart and cuProfilerStop
+       MANGLED_NAMES = 1 - Print kernel names mangled or not
+        TOOL_VERBOSE = 0 - Enable verbosity inside the tool
+WARNING: Do not call CUDA memory allocation in nvbit_at_ctx_init(). It will cause deadlocks. Do them in nvbit_tool_init(). If you encounter deadlocks, remove CUDA API calls to debug.
+ptx: tests/corpus/base/app.vecadd/kernel.ptx  version 8.7  target sm_90a  entry k_app_vecadd  sha256 088f34639a4558c86b3714c1f5e86464f6fc95525e5536d177e5d70357b9a493
+driver api version: 13.0  (13000)
+device 0: NVIDIA H100 NVL  compute capability 9.0
+cuModuleLoadDataEx: 0 (CUDA_SUCCESS)
+jit info log:
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_app_vecadd' for 'sm_90a'
+ptxas info    : Function properties for k_app_vecadd
+ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 12 registers, used 0 barriers
+ptxas info    : Compile time = 2.701 ms
+jit error log:
+(empty)
+launch: 1000/1000 elements match
+result: ok
+----------------------------------------------------------------------------------------------------
+
+kernel 0 - k_app_vecadd - #thread-blocks 4,  kernel instructions 640, total instructions 640
+Total app instructions: 640

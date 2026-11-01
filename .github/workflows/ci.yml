@@ -73,7 +73,7 @@ jobs:
           fi
 
       - name: Shell scripts pass shellcheck
-        run: shellcheck tools/*.sh tools/tests/*.sh tools/catalog/*.sh .devcontainer/*.sh .devcontainer/bin/*
+        run: shellcheck tools/*.sh tools/tests/*.sh tools/catalog/*.sh jobs/*.sh .devcontainer/*.sh .devcontainer/bin/*
 
   test:
     runs-on: ubuntu-24.04

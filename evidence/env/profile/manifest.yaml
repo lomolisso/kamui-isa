@@ -1,0 +1,32 @@
+job: env-probe
+job_id: 20261101T154155Z-q000028
+started: '2026-11-01T15:41:55+00:00'
+finished: '2026-11-01T15:41:58+00:00'
+git_commit: ff03ed7d5e9399f090073cfdf1bca3d2799230ca
+git_dirty: false
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126
+  pci_bus_id: 00000000:DA:00.0
+  driver: 580.126.20
+cuda_toolkit: Build cuda_12.9.r12.9/compiler.36037853_0
+steps:
+- jit
+- ncu
+results:
+- step: jit
+  check: vecadd
+  status: ok
+  detail: 'cuModuleLoadDataEx: 0 (CUDA_SUCCESS); launch: 1000/1000 elements match'
+- step: jit
+  check: bad-ptx
+  status: ok
+  detail: 'cuModuleLoadDataEx: 218 (CUDA_ERROR_INVALID_PTX)'
+- step: jit
+  check: offline-ptxas
+  status: ok
+  detail: Used 12 registers, used 0 barriers
+- step: ncu
+  check: metrics
+  status: ok
+  detail: CapEff=0000000000200000

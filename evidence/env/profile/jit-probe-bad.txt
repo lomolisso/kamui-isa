@@ -1,0 +1,10 @@
+ptx: docs/examples/cuda/bad.ptx  version 8.7  target sm_90a  entry bad  sha256 6559b8f1e8859730b9f030c6137794cf10b99fe7f0d7340b195bbf7ce358ba2d
+driver api version: 13.0  (13000)
+device 0: NVIDIA H100 NVL  compute capability 9.0
+cuModuleLoadDataEx: 218 (CUDA_ERROR_INVALID_PTX)
+jit info log:
+(empty)
+jit error log:
+ptxas application ptx input, line 11; error   : Arguments mismatch for instruction 'shfl'
+ptxas fatal   : Ptx assembly aborted due to errors
+result: ok, rejected as expected

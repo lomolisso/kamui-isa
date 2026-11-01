@@ -1,0 +1,5 @@
+step	check	status	detail
+jit	vecadd	ok	cuModuleLoadDataEx: 0 (CUDA_SUCCESS); launch: 1000/1000 elements match
+jit	bad-ptx	ok	cuModuleLoadDataEx: 218 (CUDA_ERROR_INVALID_PTX)
+jit	offline-ptxas	ok	Used 12 registers, used 0 barriers
+ncu	metrics	ok	CapEff=0000000000200000

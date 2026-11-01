@@ -1,0 +1,4 @@
+CUTLASS_PATH=/opt/cutlass
+#define CUTLASS_MAJOR 4
+#define CUTLASS_MINOR 4
+#define CUTLASS_PATCH 2

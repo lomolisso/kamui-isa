@@ -1,0 +1,60 @@
+job: env-probe
+job_id: 20261101T154126Z-q000027
+started: '2026-11-01T15:41:26+00:00'
+finished: '2026-11-01T15:41:49+00:00'
+git_commit: ff03ed7d5e9399f090073cfdf1bca3d2799230ca
+git_dirty: false
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126
+  pci_bus_id: 00000000:DA:00.0
+  driver: 580.126.20
+cuda_toolkit: Build cuda_12.9.r12.9/compiler.36037853_0
+steps:
+- versions
+- jit
+- nvbit
+- sanitizer
+- ncu
+results:
+- step: versions
+  check: record
+  status: ok
+  detail: NVIDIA H100 NVL, 580.126.20, GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, 00000000:DA:00.0
+- step: jit
+  check: vecadd
+  status: ok
+  detail: 'cuModuleLoadDataEx: 0 (CUDA_SUCCESS); launch: 1000/1000 elements match'
+- step: jit
+  check: bad-ptx
+  status: ok
+  detail: 'cuModuleLoadDataEx: 218 (CUDA_ERROR_INVALID_PTX)'
+- step: jit
+  check: offline-ptxas
+  status: ok
+  detail: Used 12 registers, used 0 barriers
+- step: nvbit
+  check: build
+  status: ok
+  detail: nvbit/instr_count/instr_count.so
+- step: nvbit
+  check: nvcc-app
+  status: ok
+  detail: total instructions 62588
+- step: nvbit
+  check: jit-ptx
+  status: ok
+  detail: total instructions 640
+- step: sanitizer
+  check: memcheck
+  status: ok
+  detail: '========= ERROR SUMMARY: 0 errors'
+- step: sanitizer
+  check: racecheck
+  status: ok
+  detail: '========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'
+- step: ncu
+  check: metrics
+  status: failed
+  detail: CapEff=0000000000000000; ==ERROR== ERR_NVGPUCTRPERM - The user does not have permission to access NVIDIA GPU Performance
+    Counters on the target device 0. For instructions on enabling permissions and to get more information see https://developer.nvidia.com/ERR_NVGPUCTRPERM

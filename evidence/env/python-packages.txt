@@ -1,0 +1,11 @@
+python 3.12.3
+torch 2.11.0+cu129
+triton 3.6.0
+flash_attn 2.8.3.post2
+flashinfer 0.7.2.post1
+cutlass 4.8.1
+numpy 2.5.4
+yaml 6.0.3
+pytest 9.1.1
+torch.version.cuda 12.9 cudnn 91701
+torch device NVIDIA H100 NVL (9, 0)
