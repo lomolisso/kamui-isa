@@ -281,7 +281,9 @@ def main(argv: list[str] | None = None) -> int:
         bad = [f"{r}: {e}" for r, e in res if e]
         for line in bad:
             print(f"skip {line}")
-        print(f"nvcc PTX for {len(dirs) - len(bad)} of {len(dirs)} entries in {BUILD_NVCC}")
+        cuda = sum(1 for d in dirs if (d / "kernel.cu").is_file())
+        print(f"nvcc PTX for {cuda - len(bad)} of {cuda} CUDA C++ entries in {BUILD_NVCC} "
+              f"({len(dirs) - cuda} LLVM IR entries skipped)")
         return 0
     if args.lint:
         results = map(lint_one, dirs)
