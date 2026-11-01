@@ -1,0 +1,10 @@
+id: sreg.cluster_ctarank
+kernel: k_sreg_cluster_ctarank
+compile: {extra_flags: []}
+launch: {grid: [4, 1, 1], block: [128, 1, 1], cluster: [2, 1, 1], dynamic_smem: 0}
+params:
+  - {name: d, kind: output, dtype: u32, count: 4096}
+expect_ptx: ['%cluster_ctarank', '%cluster_nctarank', '%clusterid\.x', '%nclusterid\.x', '%cluster_ctaid\.x', '%cluster_nctaid\.x', '%is_explicit_cluster', '%aggr_smem_size']
+deterministic: true
+tolerance_class: exact
+notes: 'Launched with clusters of 2 CTAs. aggr_smem_size depends on the driver''s reserved shared memory.'

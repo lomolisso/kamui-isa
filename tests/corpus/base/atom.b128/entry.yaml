@@ -1,0 +1,15 @@
+id: atom.b128
+kernel: k_atom_b128
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: cmp, kind: input, dtype: u64, count: 512, generator: {kind: random, seed: 604, low: 0, high: 3}}
+  - {name: val, kind: input, dtype: u64, count: 512, generator: {kind: random, seed: 605, low: 0, high: 18446744073709551615}}
+  - {name: cas, kind: inout, dtype: u64, count: 512, generator: {kind: random, seed: 606, low: 0, high: 3}}
+  - {name: ex, kind: inout, dtype: u64, count: 512, generator: {kind: random, seed: 607, low: 0, high: 18446744073709551615}}
+  - {name: old, kind: output, dtype: u64, count: 1024}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['atom\.global\.cas\.b128', 'atom\.global\.exch\.b128']
+deterministic: true
+tolerance_class: exact
+notes: 'One 16-byte slot per thread, so results are exact.'

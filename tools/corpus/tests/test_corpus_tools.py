@@ -68,6 +68,18 @@ def test_validate_rejects(tmp_path, change, message):
         build.load_entry(d)
 
 
+def test_tensormap_params(tmp_path):
+    tm = {"name": "tm", "kind": "tensormap", "of": "a", "dtype": "s32", "mode": "tile", "dims": [4], "box": [2]}
+    good = {**ENTRY, "params": ENTRY["params"] + [tm]}
+    assert build.load_entry(make_entry(tmp_path / "g", good))["params"][-1]["kind"] == "tensormap"
+    for bad, msg in (({"of": "zz"}, "earlier buffer"), ({"mode": "x"}, "mode"), ({"box": [2, 2]}, "dims and box")):
+        e = {**ENTRY, "params": ENTRY["params"] + [{**tm, **bad}]}
+        with pytest.raises(build.EntryError, match=msg):
+            build.load_entry(make_entry(tmp_path / msg.replace(" ", "_"), e))
+    # tensor maps are encoded by the runner: they are not part of inputs.bin
+    assert gen_inputs.inputs_bin(make_entry(tmp_path / "bin", good)) == gen_inputs.inputs_bin(make_entry(tmp_path / "bin2", ENTRY))
+
+
 def test_lint_checks_ptx(tmp_path):
     d = make_entry(tmp_path, {**ENTRY, "expect_ptx": [r"sub\.s32"]})
     assert "does not match" in build.lint_one(d)[1]

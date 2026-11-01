@@ -1,0 +1,15 @@
+id: tanh.half
+kernel: k_tanh_half
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: u16, count: 256, generator: {kind: random, seed: 557, low: 0, high: 17408}}
+  - {name: b, kind: input, dtype: u16, count: 256, generator: {kind: random, seed: 558, low: 0, high: 16512}}
+  - {name: d, kind: output, dtype: u16, count: 256}
+  - {name: d2, kind: output, dtype: u32, count: 256}
+  - {name: db, kind: output, dtype: u16, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['tanh\.approx\.f16\s', 'tanh\.approx\.f16x2', 'tanh\.approx\.bf16']
+deterministic: true
+tolerance_class: ulp:2
+notes: 'Inputs are raw f16 and bf16 bit patterns of positive values.'

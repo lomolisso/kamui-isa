@@ -1,0 +1,12 @@
+id: mbarrier.init
+kernel: k_mbarrier_init
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: s32, count: 256, generator: {kind: random, seed: 621, low: -1000, high: 1000}}
+  - {name: d, kind: output, dtype: s32, count: 256}
+  - {name: pc, kind: output, dtype: u32, count: 256}
+expect_ptx: ['mbarrier\.init\.shared(::cta)?\.b64', 'mbarrier\.arrive\.shared(::cta)?\.b64', 'mbarrier\.test_wait\.shared(::cta)?\.b64', 'mbarrier\.pending_count\.b64', 'mbarrier\.arrive_drop\.shared(::cta)?\.b64', 'mbarrier\.inval\.shared(::cta)?\.b64']
+deterministic: false
+tolerance_class: property:mbarrier
+notes: 'd is exact; pc (pending arrivals seen by each thread) depends on the arrival order.'

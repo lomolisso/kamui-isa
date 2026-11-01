@@ -1,0 +1,12 @@
+id: match.any.sync
+kernel: k_match_any_sync
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: v, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 501, low: 0, high: 4294967295}}
+  - {name: dv, kind: output, dtype: u32, count: 256}
+  - {name: d64, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['match\.any\.sync\.b32', 'match\.any\.sync\.b64']
+deterministic: true
+tolerance_class: exact

@@ -1,0 +1,11 @@
+id: st.scope.cta
+kernel: k_st_scope_cta
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 501, low: 0, high: 4294967295}}
+  - {name: d, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['st\.relaxed\.cta\.global\.u32']
+deterministic: true
+tolerance_class: exact

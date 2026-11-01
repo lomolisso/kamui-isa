@@ -1,0 +1,10 @@
+id: stmatrix
+kernel: k_stmatrix
+compile: {extra_flags: []}
+launch: {grid: [1, 1, 1], block: [64, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: u32, count: 256, generator: {kind: iota}}
+  - {name: d, kind: output, dtype: u16, count: 512}
+expect_ptx: ['stmatrix\.sync\.aligned\.m8n8\.x4\.shared\.b16']
+deterministic: true
+tolerance_class: exact

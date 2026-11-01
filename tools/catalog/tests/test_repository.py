@@ -7,6 +7,7 @@ import check_coverage as cc
 import common
 import gen_table
 import llvm_opcodes
+import stats
 import release_notes
 import toc
 
@@ -20,6 +21,17 @@ def test_committed_catalog_passes_every_check():
                cc.check_release_notes(rows, common.read_tsv(common.SNAPSHOTS / "release-notes.tsv"), sections, exc)]
     for r in results:
         assert r.ok(), (r.name, r.errors)
+
+
+def test_every_in_scope_row_has_an_entry():
+    r = cc.check_catalog(common.load_catalog(), require_entries=True)
+    assert r.ok(), r.errors
+
+
+def test_stats_print(capsys):
+    assert stats.main([]) == 0
+    text = capsys.readouterr().out
+    assert "### Rows per family and tier" in text and "| total | 208 |" in text
 
 
 def test_table_is_up_to_date():
