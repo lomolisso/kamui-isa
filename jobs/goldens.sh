@@ -27,8 +27,12 @@ cd "$REPO" || exit 1
 nvidia-smi --query-gpu=name,driver_version,uuid,pci.bus_id --format=csv,noheader | tee "$OUT/gpu.txt"
 
 # ---- build -------------------------------------------------------------------
-cmake -S tools/runner -B "$WORK/runner" -G Ninja -DCMAKE_BUILD_TYPE=Release > "$OUT/build.log" 2>&1 \
-    && cmake --build "$WORK/runner" >> "$OUT/build.log" 2>&1 || { echo "runner build failed"; tail -20 "$OUT/build.log"; exit 1; }
+if ! { cmake -S tools/runner -B "$WORK/runner" -G Ninja -DCMAKE_BUILD_TYPE=Release > "$OUT/build.log" 2>&1 \
+        && cmake --build "$WORK/runner" >> "$OUT/build.log" 2>&1; }; then
+    echo "runner build failed"
+    tail -20 "$OUT/build.log"
+    exit 1
+fi
 DUMP=
 if cmake -S tools/evidence/nvbit -B "$WORK/nvbit" -G Ninja -DCMAKE_BUILD_TYPE=Release >> "$OUT/build.log" 2>&1 \
     && cmake --build "$WORK/nvbit" >> "$OUT/build.log" 2>&1; then
