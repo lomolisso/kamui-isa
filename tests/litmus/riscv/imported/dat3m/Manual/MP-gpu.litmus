@@ -1,0 +1,12 @@
+RISCV MP-gpu
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/imported/dat3m/Manual/MP-gpu.litmus"
+{
+0:x5=x; 0:x6=y; 1:x5=y; 1:x6=x;
+}
+ P0          | P1           ;
+ ori x7,x0,1 | lw x11,0(x5) ;
+ sw x7,0(x5) | fence r,rw   ;
+ fence rw,w  | lw x12,0(x6) ;
+ ori x7,x0,1 |              ;
+ sw x7,0(x6) |              ;
+exists (1:x11=1 /\ ~(1:x12=1))

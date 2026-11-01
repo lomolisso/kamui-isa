@@ -18,6 +18,8 @@ All notable changes to this project are listed here. The format follows
 - NVBit instruction histograms of CUTLASS, FlashInfer, flash-attn 2 and Triton workloads on the H100.
 - `tools/evidence/report_tables.py`, which prints the summary tables of the H100 evidence.
 - PTX memory-model litmus suite (Dat3M and mixedproxy tests) with Dartagnan verdicts and consistency checks.
+- Litmus test families over scopes and placements, hand-reasoned tests for sm_90 features, 2019 Alloy model and
+  RVWMO baseline verdicts.
 
 ## [0.1.0] - 2026-10-31
 

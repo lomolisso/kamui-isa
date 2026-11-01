@@ -1,0 +1,11 @@
+RISCV IRWIW1
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/imported/dat3m/Memalloy/IRWIW1.litmus"
+{
+0:x5=x; 1:x5=x; 1:x6=y; 2:x5=x; 3:x5=x; 3:x6=y;
+}
+ P0           | P1           | P2           | P3           ;
+ ori x10,x0,2 | lw x10,0(x5) | ori x10,x0,2 | lw x10,0(x5) ;
+ sw x10,0(x5) | fence rw,rw  | sw x10,0(x5) | fence rw,rw  ;
+              | ori x12,x0,1 |              | ori x12,x0,1 ;
+              | sw x12,0(x6) |              | sw x12,0(x6) ;
+exists (x=2 /\ y=2 /\ 1:x10=2 /\ 3:x10=2)

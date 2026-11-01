@@ -110,3 +110,9 @@ jobs:
 
       - name: Litmus suite and verdicts are consistent
         run: python tools/litmus/check_suite.py
+
+      - name: Generated litmus files are current
+        run: |
+          python tools/litmus/gen_families.py --check
+          python tools/litmus/to_alloy.py --check
+          python tools/litmus/to_riscv.py --check

@@ -11,9 +11,18 @@ does), `unknown` (the tool could not decide, for example a loop it could not unr
 
 Models (column `model`):
 - `ptx-v7.5`: Dartagnan with `cat/ptx-v7.5.cat`, the mixed-proxy PTX model (PTX ISA 7.5). Every test without
-  `.cluster`.
+  the `.cluster` scope, PTX 8.6 fences or instructions Dartagnan does not parse (cluster placement is erased
+  before the run, which changes nothing when no instruction uses the `.cluster` scope).
 - `ptx-v6.0`: Dartagnan with `cat/ptx-v6.0.cat`, the PTX ISA 6.0 model (no proxies). Tests without `.cluster`
   and without proxy features.
+- `ptx-2019-alloy`: the 2019 Alloy model of PTX ISA 6.0 (deps/ptx-memory-model/ptx.als), run with the
+  artifact's own driver (RunAlloy) and Alloy 4.2 jar, on the queries tools/litmus/to_alloy.py writes to
+  tests/litmus/alloy/. Only the tests to_alloy can express.
+- `ptx-2019-alloy+ext`: the same model, for tests that use our extensions (the `.cluster` scope as an extra
+  scope level, `fence.acquire`/`fence.release` as the model's FenceAcq/FenceRel).
+- `rvwmo`: herd7 with RISC-V's `riscv.cat` (RVWMO), on the naive RISC-V lowering of the test that
+  tools/litmus/to_riscv.py writes to tests/litmus/riscv/. This judges a different program (scopes erased,
+  C++-style fences), so it is a baseline, not a PTX verdict.
 - `manual-reasoning`: a verdict argued by hand from the PTX ISA 8.7 manual, for tests no tool can decide. The
   argument is in tests/litmus/manual-reasoning.yaml; these rows are copied, not computed.
 Dartagnan runs as in Dat3M's own unit tests: `--method=eager` (the lazy method gives wrong answers for some
@@ -36,6 +45,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -44,6 +54,8 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import litmus  # noqa: E402
+import to_alloy  # noqa: E402
+import to_riscv  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 SUITE = ROOT / "tests" / "litmus"
@@ -80,7 +92,7 @@ class Dartagnan:
         self._version = None
 
     def applies(self, t: litmus.Litmus) -> bool:
-        if t.uses_cluster:
+        if not t.dartagnan_ok:
             return False
         return not (self.model == "ptx-v6.0" and t.uses_proxy)
 
@@ -99,6 +111,10 @@ class Dartagnan:
         flags = f"{DARTAGNAN_FLAGS} {extra}".strip()
         with tempfile.TemporaryDirectory(dir=_outdir()) as out:
             env = dict(os.environ, DAT3M_OUTPUT=out)
+            t = litmus.load(path)
+            if any(th.cluster is not None for th in t.threads):
+                path = Path(out) / path.name
+                path.write_text(t.without_clusters())
             t0 = time.monotonic()
             p = subprocess.run(["dartagnan", str(self.cat), *flags.split(), str(path)], capture_output=True,
                                text=True, env=env, timeout=600)
@@ -115,6 +131,101 @@ def _outdir() -> str:
     d = ROOT / "build" / "litmus" / "dat3m-output"
     d.mkdir(parents=True, exist_ok=True)
     return str(d)
+
+
+class Alloy2019:
+    """The 2019 PTX Alloy model. The jar is copied into the build area first: an Alloy run was once seen to
+    rewrite the jar it was started from."""
+
+    tool, tool_version = "alloy", "4.2 (artifact jar)"
+    src = ROOT / "deps" / "ptx-memory-model"
+
+    _lock = threading.Lock()
+    _ready = False
+
+    def __init__(self, model: str):
+        self.model = model
+
+    def applies(self, t: litmus.Litmus) -> bool:
+        try:
+            to_alloy.translate(t, "probe")
+        except to_alloy.Unsupported:
+            return False
+        return to_alloy.model_name(t) == self.model
+
+    @property
+    def model_version(self) -> str:
+        return f"ptx.als sha256:{file_sha(self.src / 'ptx.als')}"
+
+    def workdir(self) -> Path:
+        w = ROOT / "build" / "litmus" / "alloy2019"
+        with Alloy2019._lock:
+            if not Alloy2019._ready:
+                w.mkdir(parents=True, exist_ok=True)
+                for f in ("ptx.als", "util.als", "RunAlloy.java", "alloy4.2.jar"):
+                    (w / f).write_bytes((self.src / f).read_bytes())
+                subprocess.run(["javac", "-nowarn", "-classpath", "alloy4.2.jar", "RunAlloy.java"], cwd=w,
+                               check=True, capture_output=True)
+                Alloy2019._ready = True
+        return w
+
+    def run(self, path: Path, extra: str) -> tuple[str, float, str]:
+        tid = test_id(path)
+        query = to_alloy.als_path(tid)
+        flags = "-n 1 test"
+        w = self.workdir()
+        with tempfile.NamedTemporaryFile("w", suffix=".als", dir=w, delete=False) as f:
+            f.write(query.read_text())
+            name = f.name
+        try:
+            with tempfile.TemporaryDirectory(dir=w) as tmp:  # Alloy unpacks its libraries here; one per run
+                t0 = time.monotonic()
+                p = subprocess.run(["java", f"-Djava.io.tmpdir={tmp}", "-cp", ".:alloy4.2.jar", "RunAlloy", "-f",
+                                    name, *flags.split()], cwd=w, capture_output=True, text=True, timeout=600)
+                dt = time.monotonic() - t0
+        finally:
+            os.unlink(name)
+        if p.returncode != 0 or "<command" not in p.stdout:
+            sys.stderr.write(f"{tid} ({self.model}): {p.stderr[-400:]}\n")
+            return "error", dt, flags
+        return ("allowed" if "<instance" in p.stdout else "forbidden"), dt, flags
+
+
+class Herd7:
+    tool, model = "herd7", "rvwmo"
+    cat = Path("/opt/opam/default/share/herdtools7/herd/riscv.cat")
+    _version = None
+
+    def applies(self, t: litmus.Litmus) -> bool:
+        try:
+            to_riscv.translate(t)
+        except to_riscv.Unsupported:
+            return False
+        return True
+
+    @property
+    def model_version(self) -> str:
+        return f"riscv.cat sha256:{file_sha(self.cat)}"
+
+    @property
+    def tool_version(self) -> str:
+        if Herd7._version is None:
+            out = subprocess.run(["herd7", "-version"], capture_output=True, text=True).stdout.split(",")[0]
+            Herd7._version = out.strip() or "?"
+        return Herd7._version
+
+    def run(self, path: Path, extra: str) -> tuple[str, float, str]:
+        tid = test_id(path)
+        flags = "-model riscv.cat"
+        t0 = time.monotonic()
+        p = subprocess.run(["herd7", *flags.split(), str(to_riscv.riscv_path(tid))], capture_output=True, text=True,
+                           timeout=600)
+        dt = time.monotonic() - t0
+        m = re.search(r"^Observation \S+ (Never|Sometimes|Always)", p.stdout, re.M)
+        if not m:
+            sys.stderr.write(f"{tid} (rvwmo): {p.stdout[-300:]}{p.stderr[-300:]}\n")
+            return "error", dt, flags
+        return ("forbidden" if m.group(1) == "Never" else "allowed"), dt, flags
 
 
 class Manual:
@@ -139,6 +250,9 @@ class Manual:
 MODELS = {
     "ptx-v7.5": Dartagnan("ptx-v7.5", "ptx-v7.5.cat"),
     "ptx-v6.0": Dartagnan("ptx-v6.0", "ptx-v6.0.cat"),
+    "ptx-2019-alloy": Alloy2019("ptx-2019-alloy"),
+    "ptx-2019-alloy+ext": Alloy2019("ptx-2019-alloy+ext"),
+    "rvwmo": Herd7(),
     "manual-reasoning": Manual(),
 }
 TOOLS = {m.tool for m in MODELS.values()}

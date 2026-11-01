@@ -37,6 +37,9 @@ QUANTIFIERS = ("exists", "~exists", "forall")
 SCOPES = ("cta", "cluster", "gpu", "sys")
 ORDERINGS = ("weak", "relaxed", "acquire", "release", "acq_rel", "sc", "volatile")
 PROXY_OPS = ("tld", "suld", "sust", "cold", "suatom", "sured")
+# Mnemonics Dartagnan's PTX front end knows (LitmusPTX.g4 in Dat3M 4.4.1).
+DAT3M_OPS = {"ld", "st", "atom", "red", "fence", "bar", "label", "add", "sub", "mul", "div", "goto",
+             "beq", "bne", "blt", "bgt", "ble", "bge", *PROXY_OPS}
 
 
 class LitmusError(ValueError):
@@ -242,6 +245,29 @@ class Litmus:
     @property
     def uses_cluster(self) -> bool:
         return any(t.cluster is not None for t in self.threads) or any(i.scope == "cluster" for _, i in self.instrs())
+
+    @property
+    def uses_cluster_scope(self) -> bool:
+        """True if an instruction uses the `.cluster` scope (placement alone does not count)."""
+        return any(i.scope == "cluster" for _, i in self.instrs())
+
+    @property
+    def uses_ptx86_fences(self) -> bool:
+        """`fence.acquire` and `fence.release` (PTX ISA 8.6), which no published formal model covers."""
+        return any(i.op == "fence" and i.order in ("acquire", "release") for _, i in self.instrs())
+
+    @property
+    def dartagnan_ok(self) -> bool:
+        """Can Dartagnan's PTX models (v6.0, v7.5) answer this test? Not with `.cluster`, PTX 8.6 fences or
+        instructions its parser does not know. Cluster placement alone is fine: it is erased before the run."""
+        if self.uses_cluster_scope or self.uses_ptx86_fences:
+            return False
+        return all(i.op in DAT3M_OPS and i.order != "volatile" and not any("::" in q for q in i.quals)
+                   for _, i in self.instrs())
+
+    def without_clusters(self) -> str:
+        """The test text with cluster placement removed (for Dartagnan, which does not parse it)."""
+        return re.sub(r",\s*cluster\s+\d+\s*,", ",", self.text)
 
     @property
     def uses_proxy(self) -> bool:

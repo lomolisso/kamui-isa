@@ -1,0 +1,12 @@
+PTX MP+barrier.cluster-relaxed+same-cluster
+"As MP+barrier.cluster, but P0 arrives with .relaxed: its earlier store is not ordered by the barrier."
+{
+x=0;
+P1:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0       | P1@cta 1,cluster 0,gpu 0 ;
+ st.weak x, 1                   | barrier.cluster.arrive   ;
+ barrier.cluster.arrive.relaxed | barrier.cluster.wait     ;
+ barrier.cluster.wait           | ld.weak r0, x            ;
+exists
+(P1:r0 == 0)

@@ -1,0 +1,14 @@
+RISCV Release-acquire-pattern
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/imported/dat3m/Nvidia/Release-acquire-pattern.litmus"
+{
+0:x5=y; 0:x6=x; 1:x5=x; 1:x6=y;
+}
+ P0          | P1           ;
+ ori x7,x0,1 | lw x11,0(x5) ;
+ sw x7,0(x5) | fence.tso    ;
+ fence rw,w  | lw x12,0(x6) ;
+ ori x7,x0,1 |              ;
+ sw x7,0(x6) |              ;
+ ori x7,x0,2 |              ;
+ sw x7,0(x6) |              ;
+exists (1:x11=2 /\ 1:x12=0)

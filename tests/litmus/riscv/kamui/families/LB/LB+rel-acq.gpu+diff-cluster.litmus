@@ -1,0 +1,12 @@
+RISCV LB+rel-acq.gpu+diff-cluster
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/families/LB/LB+rel-acq.gpu+diff-cluster.litmus"
+{
+0:x5=x; 0:x6=y; 1:x5=y; 1:x6=x;
+}
+ P0           | P1           ;
+ lw x10,0(x5) | lw x11,0(x5) ;
+ fence r,rw   | fence r,rw   ;
+ fence rw,w   | fence rw,w   ;
+ ori x7,x0,1  | ori x7,x0,1  ;
+ sw x7,0(x6)  | sw x7,0(x6)  ;
+exists (0:x10=1 /\ 1:x11=1)
