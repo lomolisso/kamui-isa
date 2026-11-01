@@ -16,3 +16,85 @@
     which is 1. Dartagnan answers `unknown` at every loop bound (1, 2, 3, 5 tried) because the CAS loop can never
     be fully unrolled; the unsound variant MICRO24-Fig4b (fence.sc.cta in different CTAs) is found `allowed` at
     bound 1.
+
+# ---- our own tests for features no formal model covers (tests/litmus/ptx/kamui/hand/)
+
+- test: ptx/kamui/hand/MP+mbarrier-rel-acq.cta+same-cta
+  result: forbidden
+  argument: >-
+    mbarrier.arrive.release on b is a release pattern and mbarrier.test_wait.acquire on b is an acquire pattern
+    (8.8 lists both as examples). When the test returns true (r0 == 1) it observes the phase completion caused
+    by P0's arrive (the count is 1, so P0's arrive completes phase 0); both are strong .cta operations of one
+    CTA on the same object, so they are morally strong (8.7) and the patterns synchronize (8.9.4). P0's store to
+    x precedes P1's load of x in causality order (8.9.5), so by Causality (8.10.6) the load cannot read the
+    initial value.
+
+- test: ptx/kamui/hand/MP+mbarrier-relaxed.cta+same-cta
+  result: allowed
+  argument: >-
+    With .relaxed, the arrive is not a release operation and the test is not an acquire operation, and there is
+    no fence, so neither forms a release or acquire pattern (8.8). Nothing orders P0's weak store before P1's
+    weak load in causality order, so the load may read the initial value.
+
+- test: ptx/kamui/hand/MP+mbarrier-relaxed+fences.cta+same-cta
+  result: forbidden
+  argument: >-
+    The relaxed arrive is a strong write on b (an atomic update of the mbarrier) and the relaxed test a strong
+    read of b, both at .cta scope. `fence.acq_rel.cta; mbarrier.arrive.relaxed` is a release pattern (a fence
+    followed by a strong write) and `mbarrier.test_wait.relaxed; fence.acq_rel.cta` an acquire pattern (a strong
+    read followed by a fence), 8.8. The two fences are morally strong, so the patterns synchronize (8.9.4) and
+    the stale read is forbidden, as in MP+mbarrier-rel-acq.
+
+- test: ptx/kamui/hand/MP+barrier.cluster+same-cluster
+  result: forbidden
+  argument: >-
+    barrier.cluster.arrive is .release and barrier.cluster.wait is .acquire by default (9.7.13.3), and "a
+    barrier.cluster.arrive operation synchronizes with a barrier.cluster.wait operation" (8.9.4). P0's store
+    precedes its arrive in program order and P1's wait precedes its load, so the store precedes the load in
+    causality order; 9.7.13.3 also says that when barrier.cluster.wait completes, memory accesses requested
+    before the preceding arrive by all threads in the cluster are complete and visible.
+
+- test: ptx/kamui/hand/MP+barrier.cluster-relaxed+same-cluster
+  result: allowed
+  argument: >-
+    "The optional .relaxed qualifier on barrier.cluster.arrive specifies that there are no memory ordering and
+    visibility guarantees provided for the memory accesses performed prior to barrier.cluster.arrive"
+    (9.7.13.3). P0's store is therefore not ordered before P1's load.
+
+- test: ptx/kamui/hand/MP+barrier.cluster-relaxed+fence+same-cluster
+  result: forbidden
+  argument: >-
+    This is the pattern the manual gives for a relaxed cluster arrive ("use memory fence prior to arrive for
+    relaxed barrier", 9.7.13.3 examples). fence.acq_rel.cluster before the arrive makes the store visible at
+    cluster scope before the arrive, and P1's barrier.cluster.wait is .acquire by default, so the arrive/wait
+    synchronization (8.9.4) orders the store before the load.
+
+- test: ptx/kamui/hand/CoWR+async-bulk+same-cta
+  result: allowed
+  argument: >-
+    cp.async.bulk reads s through the async proxy (9.7.9.25.2). Accesses to one location through different
+    proxies are not morally strong (8.7), and causality between them is only preserved through a proxy fence
+    (proxy-preserved base causality, 8.9.5); "for the async proxy, fence.proxy.async should be used"
+    (9.7.9.25.2). Without it, the copy may read the old value of s, so g may stay 0 even after the wait.
+
+- test: ptx/kamui/hand/CoWR+fence.proxy.async+async-bulk+same-cta
+  result: forbidden
+  argument: >-
+    fence.proxy.async.shared::cta orders the generic-proxy store to s before the async-proxy read of s by the
+    later cp.async.bulk (9.7.13.4, 9.7.9.25.2). The copy then writes 1 to g; the wait_group makes its result
+    available to the thread, and the completion is followed by an implicit generic-async proxy fence
+    (9.7.9.25.1.1, 9.7.9.25.2), so the generic load of g reads 1.
+
+- test: ptx/kamui/hand/MP+volatile+diff-cluster
+  result: allowed
+  argument: >-
+    A volatile operation has the semantics of a relaxed operation at system scope (8.4.2), so this test has the
+    verdict of MP+relaxed.sys+diff-cluster, which every formal model gives as allowed: relaxed accesses do not
+    form release or acquire patterns.
+
+- test: ptx/kamui/hand/CoRR+volatile+diff-cluster
+  result: forbidden
+  argument: >-
+    Volatile is relaxed at system scope (8.4.2), so the three accesses are strong and morally strong with each
+    other; SC-per-location (8.10.5) forbids reading the new value and then the older one. Same verdict as
+    CoRR+relaxed.sys+diff-cluster in every formal model.

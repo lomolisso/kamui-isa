@@ -1,0 +1,10 @@
+RISCV SB-weak
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/imported/dat3m/Manual/SB-weak.litmus"
+{
+0:x5=x; 0:x6=y; 1:x5=y; 1:x6=x;
+}
+ P0           | P1           ;
+ ori x7,x0,1  | ori x7,x0,1  ;
+ sw x7,0(x5)  | sw x7,0(x5)  ;
+ lw x11,0(x6) | lw x12,0(x6) ;
+exists (~(0:x11=1) /\ ~(1:x12=1))

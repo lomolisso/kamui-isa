@@ -1,0 +1,9 @@
+RISCV NoThinAir-location
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/imported/dat3m/Manual/LB+NoThinAir-location_.litmus"
+{
+0:x5=x; 0:x6=y; 1:x5=y; 1:x6=x;
+}
+ P0           | P1           ;
+ lw x10,0(x5) | lw x11,0(x5) ;
+ sw x10,0(x6) | sw x11,0(x6) ;
+exists (x=42 /\ y=42)

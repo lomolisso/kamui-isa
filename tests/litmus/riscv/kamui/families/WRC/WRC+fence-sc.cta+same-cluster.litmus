@@ -1,0 +1,11 @@
+RISCV WRC+fence-sc.cta+same-cluster
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/families/WRC/WRC+fence-sc.cta+same-cluster.litmus"
+{
+0:x5=x; 1:x5=x; 1:x6=y; 2:x5=y; 2:x6=x;
+}
+ P0          | P1           | P2           ;
+ ori x7,x0,1 | lw x10,0(x5) | lw x11,0(x5) ;
+ sw x7,0(x5) | fence rw,rw  | fence rw,rw  ;
+             | ori x7,x0,1  | lw x12,0(x6) ;
+             | sw x7,0(x6)  |              ;
+exists (1:x10=1 /\ 2:x11=1 /\ 2:x12=0)

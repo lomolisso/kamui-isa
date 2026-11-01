@@ -1,0 +1,12 @@
+RISCV CoWR-R
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/imported/dat3m/Manual/CoWR-R.litmus"
+{
+0:x5=x; 1:x5=x;
+}
+ P0          | P1           ;
+ fence rw,w  | fence rw,w   ;
+ ori x7,x0,1 | ori x7,x0,2  ;
+ sw x7,0(x5) | sw x7,0(x5)  ;
+             | lw x11,0(x5) ;
+             | lw x12,0(x5) ;
+exists (1:x11=1 /\ 1:x12=2)

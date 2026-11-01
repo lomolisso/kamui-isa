@@ -8,10 +8,12 @@ Checks:
 1. Every `.litmus` file under tests/litmus/ptx/ parses and its condition is an `exists` condition.
 2. tests/litmus/ptx/imported/origin.csv lists exactly the imported tests.
 3. expected.csv: known columns, known results, no duplicate (test, model, tool) row, no row for a missing test,
-   and every test without `.cluster` has a `ptx-v7.5` row.
+   every test Dartagnan can parse (no `.cluster` scope, no PTX 8.6 fence) has a `ptx-v7.5` row, and every other
+   test has at least one row.
 4. Agreement: an imported test's `ptx-v7.5` and `ptx-v6.0` results equal the upstream verdicts in origin.csv
-   (Dat3M's expected CSVs, or the permit/assert annotation of a mixedproxy test); results of different models
+   (Dat3M's expected CSVs, or the permit/assert annotation of a mixedproxy test); results of different PTX models
    for the same test agree; no result is `unknown` or `error`.
+5. Lowering: when the PTX models forbid an outcome, the naive RVWMO lowering (`rvwmo`) forbids it too.
 Every exception to check 4 must be listed in tests/litmus/allowlist.yaml with a reason. An allow-list entry that
 no longer matches anything is also an error, so the list stays current.
 """
@@ -37,6 +39,7 @@ ALLOWLIST = SUITE / "allowlist.yaml"
 FIELDS = ["test", "source", "condition", "model", "model_version", "tool", "tool_version", "flags", "result",
           "runtime_s"]
 RESULTS = {"allowed", "forbidden", "unknown", "error"}
+BASELINES = {"rvwmo"}  # models of a lowered program, not of the PTX test itself
 UPSTREAM_COLUMN = {"ptx-v7.5": "upstream_ptx_v7_5", "ptx-v6.0": "upstream_ptx_v6_0"}
 
 
@@ -87,8 +90,10 @@ def findings(suite: Path = SUITE) -> tuple[list[str], list[tuple[str, str, str, 
             errors.append(f"expected.csv: bad result {r['result']!r} for {key}")
         by_test[r["test"]][r["model"]] = r["result"]
     for tid, t in tests.items():
-        if not t.uses_cluster and "ptx-v7.5" not in by_test.get(tid, {}):
+        if t.dartagnan_ok and "ptx-v7.5" not in by_test.get(tid, {}):
             errors.append(f"{tid}: no ptx-v7.5 row in expected.csv")
+        if not by_test.get(tid):
+            errors.append(f"{tid}: no verdict in expected.csv")
 
     dis: list[tuple[str, str, str, str]] = []
     for tid, res in sorted(by_test.items()):
@@ -99,10 +104,12 @@ def findings(suite: Path = SUITE) -> tuple[list[str], list[tuple[str, str, str, 
             up = origin.get(tid, {}).get(col, "") if col else ""
             if up and result != up:
                 dis.append(("upstream", tid, model, f"{result} vs upstream {up}"))
-        decided = {m: v for m, v in res.items() if v in ("allowed", "forbidden")}
+        decided = {m: v for m, v in res.items() if v in ("allowed", "forbidden") and m not in BASELINES}
         if len(set(decided.values())) > 1:
             detail = ", ".join(f"{m}={v}" for m, v in sorted(decided.items()))
             dis.append(("models", tid, "*", detail))
+        if decided and set(decided.values()) == {"forbidden"} and res.get("rvwmo") == "allowed":
+            dis.append(("lowering", tid, "rvwmo", "PTX forbids the outcome, the RVWMO lowering allows it"))
     return errors, dis
 
 

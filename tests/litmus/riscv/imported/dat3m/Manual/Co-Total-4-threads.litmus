@@ -1,0 +1,12 @@
+RISCV Co-Total-4-threads
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/imported/dat3m/Manual/Co-Total-4-threads.litmus"
+{
+0:x5=x; 0:x6=f1; 1:x5=x; 1:x6=f2; 2:x5=f1; 2:x6=f2; 2:x28=x; 3:x5=f1; 3:x6=f2; 3:x28=x;
+}
+ P0          | P1          | P2            | P3            ;
+ ori x7,x0,1 | ori x7,x0,2 | lw x10,0(x5)  | lw x13,0(x5)  ;
+ sw x7,0(x5) | sw x7,0(x5) | fence r,rw    | fence r,rw    ;
+ fence rw,w  | fence rw,w  | lw x11,0(x6)  | lw x14,0(x6)  ;
+ ori x7,x0,1 | ori x7,x0,1 | fence r,rw    | fence r,rw    ;
+ sw x7,0(x6) | sw x7,0(x6) | lw x12,0(x28) | lw x15,0(x28) ;
+exists (2:x10=1 /\ 2:x11=1 /\ 2:x12=1 /\ 3:x13=1 /\ 3:x14=1 /\ 3:x15=2)
