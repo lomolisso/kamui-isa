@@ -4,7 +4,8 @@
 # Inputs (committed): tests/corpus/**/{kernel.ptx,entry.yaml}, tools/runner/, tools/corpus/gen_inputs.py,
 #                     tools/evidence/nvbit/dump_cubin/
 # Outputs (under $OUT): goldens/<id>/{outputs.bin,golden.yaml}, goldens/manifest.yaml, jit-sass/<id>.json
-#                       (nvdisasm -json of the code the driver JIT produced), run.log, manifest.yaml, job.log
+#                       (nvdisasm -json of the code the driver JIT produced), sanitizer/<id>.<tool>.txt (full
+#                       output of every sanitizer run that was not clean), run.log, manifest.yaml, job.log
 # Runs on: the H100 job image with one GPU visible as device 0. See docs/tools/h100-jobs.md.
 #
 # Each entry runs 3 times with zeroed output buffers and once with 0xA5-filled ones (run_all.py), once under
@@ -44,6 +45,7 @@ ARGS=(--runner "$WORK/runner/runner" --out "$WORK/run" --job-id "$JOB_ID" --runs
 python3 tools/runner/run_all.py "${SELECT[@]}" "${ARGS[@]}" | tee "$OUT/run.log"
 RC=${PIPESTATUS[0]}
 cp -r "$WORK/run/goldens" "$OUT/goldens"
+[[ -d "$WORK/run/sanitizer" ]] && cp -r "$WORK/run/sanitizer" "$OUT/sanitizer"
 
 # ---- manifest ----------------------------------------------------------------
 python3 - "$OUT" "$REPO" "$JOB_ID" "$STARTED" "$RC" <<'EOF'

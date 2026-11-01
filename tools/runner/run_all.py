@@ -153,8 +153,8 @@ def run(cmd: list[str], timeout: float, env: dict | None = None) -> tuple[str, s
     return word, detail.strip(), time.monotonic() - t
 
 
-def sanitizer(tool: str, runner: str, lf: Path, timeout: float, env: dict) -> str:
-    """One line summarising a compute-sanitizer run."""
+def sanitizer(tool: str, runner: str, lf: Path, timeout: float, env: dict, log: Path) -> str:
+    """One line summarising a compute-sanitizer run; the full output is kept in `log` unless the run is clean."""
     cmd = ["compute-sanitizer", "--tool", tool, "--error-exitcode", "9", runner, str(lf)]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout * 10, env=env)
@@ -162,7 +162,11 @@ def sanitizer(tool: str, runner: str, lf: Path, timeout: float, env: dict) -> st
         return "timeout"
     out = r.stdout + r.stderr
     m = re.search(r"(ERROR SUMMARY: .*|RACECHECK SUMMARY: .*)", out)
-    return m.group(1).strip() if m else f"exit {r.returncode}"
+    line = m.group(1).strip() if m else f"exit {r.returncode}"
+    if not re.search(r"SUMMARY: 0 (errors|hazards)", line):
+        log.parent.mkdir(parents=True, exist_ok=True)
+        log.write_text(out)
+    return line
 
 
 def unwritten(a: bytes, b: bytes) -> int:
@@ -252,7 +256,8 @@ def run_entry(d: Path, args, work: Path, gold: Path, env: dict, gpu: dict) -> di
         if m:
             golden["jit_registers"] = int(m.group(1))
     if args.sanitizer:
-        golden["sanitizer"] = {t: sanitizer(t, args.runner, files[0][0], args.timeout, env) for t in args.sanitizer}
+        golden["sanitizer"] = {t: sanitizer(t, args.runner, files[0][0], args.timeout, env,
+                                            Path(args.out) / "sanitizer" / f"{eid}.{t}.txt") for t in args.sanitizer}
     if args.nvbit_dump and first[0] == "ok":
         dump = w / "cubin"
         dump.mkdir(exist_ok=True)
@@ -265,7 +270,7 @@ def run_entry(d: Path, args, work: Path, gold: Path, env: dict, gpu: dict) -> di
             if r.returncode == 0:
                 (Path(args.jit_sass_dir) / f"{eid}.json").write_text(r.stdout)
         golden["jit_cubin_dumped"] = bool(cubins)
-    (g / "golden.yaml").write_text(yaml.safe_dump(golden, sort_keys=False, width=120))
+    (g / "golden.yaml").write_text(yaml.safe_dump(golden, sort_keys=False, width=120, default_flow_style=None))
     rec["golden"] = golden
     return rec
 
