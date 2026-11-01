@@ -107,7 +107,7 @@ def emit(i: litmus.Instr, ops: dict[str, str]) -> list[str]:
         return [f"{i.text};"]
     if i.op == "mbarrier" and i.quals[0] == "arrive":
         return [f"mbarrier.{'.'.join(i.quals)}.shared::cta.b64 _, [{ops[i.args[0]]}];"]
-    if i.op == "mbarrier" and i.quals[0] == "test_wait":
+    if i.op == "mbarrier" and i.quals[0] in ("test_wait", "try_wait"):
         r, b, parity = i.args
         return [f"mbarrier.{'.'.join(i.quals)}.shared::cta.b64 p, [{ops[b]}], {parity};",
                 f"selp.u32 {ops[r]}, 1, 0, p;"]

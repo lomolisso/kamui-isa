@@ -1,0 +1,14 @@
+PTX MP+fence-rel+mbarrier-rel-acq.cta+same-cta
+"As MP+mbarrier-rel-acq, with fence.acq_rel.cta before the arrive on the release side only."
+{
+x=0;
+b=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0      | P1@cta 0,cluster 0,gpu 0                       ;
+ st.weak x, 1                  | mbarrier.test_wait.parity.acquire.cta r0, b, 0 ;
+ fence.acq_rel.cta             | ld.weak r1, x                                  ;
+ mbarrier.arrive.release.cta b |                                                ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)
