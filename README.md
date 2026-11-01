@@ -32,6 +32,7 @@ their own repositories and depend on this one. Start with [docs/overview.md](doc
 | `deps/` | Third-party dependencies as shallow submodules (`sail-riscv`, `riscv-opcodes`, `ptx-memory-model`) |
 | `spec/` | The ISA specification; today the generated PTX side of the two-way table `spec/ptx-table.md` |
 | `tests/corpus/` | The PTX feature catalog (`catalog.yaml`) and, feature by feature, its micro-kernels |
+| `tests/litmus/` | PTX memory-model litmus tests and their verdicts from the formal models |
 | `tools/` | Development scripts (`dev.sh`, `build-area.sh`), the catalog scripts (`tools/catalog/`) and their tests |
 | `.devcontainer/` | The development image |
 | `.github/` | Continuous integration |

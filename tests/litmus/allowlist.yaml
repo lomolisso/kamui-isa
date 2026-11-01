@@ -1,0 +1,30 @@
+# Known disagreements, checked by tools/litmus/check_suite.py. Each entry names the kind of disagreement
+# (`upstream`: our result differs from the verdict shipped with the test; `models`: two models differ;
+# `unknown` or `error`: a tool gave no verdict), the test, the model (`*` for `models`), and the reason.
+# An entry that no longer matches anything is reported as stale.
+
+- kind: unknown
+  test: ptx/imported/dat3m/Manual/MICRO24-Fig4b-correct
+  model: ptx-v7.5
+  reason: >-
+    A CAS spin loop that Dartagnan cannot unroll completely; it reports UNKNOWN at loop bounds 1, 2, 3 and 5
+    (no violation found). Dat3M's own expected file has no row for this test. The manual-reasoning row gives
+    the verdict (forbidden).
+
+- kind: unknown
+  test: ptx/imported/dat3m/Manual/MICRO24-Fig4b-correct
+  model: ptx-v6.0
+  reason: Same loop as the ptx-v7.5 row; the manual-reasoning row gives the verdict (forbidden).
+
+- kind: upstream
+  test: ptx/imported/mixedproxy/Release_acquire_pattern
+  model: ptx-v7.5
+  reason: >-
+    The mixedproxy file annotates the outcome `permit`, and mixedproxy's own Alloy model agrees (SAT). Dartagnan
+    (ptx-v7.5 and ptx-v6.0) says forbidden, and so does Dat3M's NVIDIA-licensed copy of the same test
+    (Nvidia/Release-acquire-pattern). The difference is in "morally strong": in mixedproxy's ptx.als the proxy
+    is a field of memory operations only (lines 53-56) and strong_r requires the same proxy (line 292), so a
+    fence is never morally strong with another thread's operation and fence-based release and acquire patterns
+    never synchronize. PTX ISA 8.7 section 8.7 applies the overlap condition only when both operations are
+    memory operations, and section 8.8 lists `fence; st.relaxed [M]` and `ld.relaxed [M]; fence` as patterns,
+    which would be useless if fences could not be morally strong. We follow Dartagnan: forbidden.

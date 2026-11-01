@@ -1,0 +1,394 @@
+test,source,upstream,upstream_ref,licence,quantifier,upstream_ptx_v7_5,upstream_ptx_v6_0,note
+ptx/imported/dat3m/Manual/Atom-minus-location_,dat3m,litmus/PTX/Manual/Atom-minus-location_.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/Atom-plus-location-weak_,dat3m,litmus/PTX/Manual/Atom-plus-location-weak_.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/Atom-plus-location_,dat3m,litmus/PTX/Manual/Atom-plus-location_.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/Atom-plus-register,dat3m,litmus/PTX/Manual/Atom-plus-register.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/Cause-base-strong,dat3m,litmus/PTX/Manual/Cause-base-strong.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/Cause-base-weak,dat3m,litmus/PTX/Manual/Cause-base-weak.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/Co-Total-3-threads-scope-same,dat3m,litmus/PTX/Manual/Co-Total-3-threads-scope-same.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/Co-Total-4-threads,dat3m,litmus/PTX/Manual/Co-Total-4-threads.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/CoRR-acquire-weak,dat3m,litmus/PTX/Manual/CoRR-acquire-weak.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/CoRR-relaxed-acquire-weak,dat3m,litmus/PTX/Manual/CoRR-relaxed-acquire-weak.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/CoRR-weak-acquire-weak,dat3m,litmus/PTX/Manual/CoRR-weak-acquire-weak.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/CoRR-weak-acquire,dat3m,litmus/PTX/Manual/CoRR-weak-acquire.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/CoRR-weak-weak,dat3m,litmus/PTX/Manual/CoRR-weak-weak.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/CoRW-R,dat3m,litmus/PTX/Manual/CoRW-R.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/CoRW-WW,dat3m,litmus/PTX/Manual/CoRW-WW.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/CoRW_,dat3m,litmus/PTX/Manual/CoRW_.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/CoWR-R,dat3m,litmus/PTX/Manual/CoWR-R.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/CoWR_,dat3m,litmus/PTX/Manual/CoWR_.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/CoWW-R,dat3m,litmus/PTX/Manual/CoWW-R.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/CoWW-RR,dat3m,litmus/PTX/Manual/CoWW-RR.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/CoWW_,dat3m,litmus/PTX/Manual/CoWW_.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/Coherence-weak,dat3m,litmus/PTX/Manual/Coherence-weak.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/Coherence,dat3m,litmus/PTX/Manual/Coherence.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/LB+NoThinAir-location_,dat3m,litmus/PTX/Manual/LB+NoThinAir-location_.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/LB+NoThinAir-register,dat3m,litmus/PTX/Manual/LB+NoThinAir-register.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/LB+RMW-a,dat3m,litmus/PTX/Manual/LB+RMW-a.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/LB+RMW-b,dat3m,litmus/PTX/Manual/LB+RMW-b.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/LB+RMW-c,dat3m,litmus/PTX/Manual/LB+RMW-c.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-1,dat3m,litmus/PTX/Manual/LB-dlb-no-fence-1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-2,dat3m,litmus/PTX/Manual/LB-dlb-no-fence-2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/LB-dlb,dat3m,litmus/PTX/Manual/LB-dlb.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/MICRO24-Fig4a-correct,dat3m,litmus/PTX/Manual/MICRO24-Fig4a-correct.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/MICRO24-Fig4a,dat3m,litmus/PTX/Manual/MICRO24-Fig4a.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/MICRO24-Fig4b-correct,dat3m,litmus/PTX/Manual/MICRO24-Fig4b-correct.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,,,
+ptx/imported/dat3m/Manual/MICRO24-Fig4b,dat3m,litmus/PTX/Manual/MICRO24-Fig4b.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/MP+RMW,dat3m,litmus/PTX/Manual/MP+RMW.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/MP-3-transitive,dat3m,litmus/PTX/Manual/MP-3-transitive.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/MP-cta-gpu,dat3m,litmus/PTX/Manual/MP-cta-gpu.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/MP-cta,dat3m,litmus/PTX/Manual/MP-cta.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/MP-dlb-no-fence-1,dat3m,litmus/PTX/Manual/MP-dlb-no-fence-1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/MP-dlb-no-fence-2,dat3m,litmus/PTX/Manual/MP-dlb-no-fence-2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/MP-dlb,dat3m,litmus/PTX/Manual/MP-dlb.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/MP-gpu,dat3m,litmus/PTX/Manual/MP-gpu.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/MP-relaxed,dat3m,litmus/PTX/Manual/MP-relaxed.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/MP-sys-fence,dat3m,litmus/PTX/Manual/MP-sys-fence.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/MP-sys,dat3m,litmus/PTX/Manual/MP-sys.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/PC-bar-sync-arrive,dat3m,litmus/PTX/Manual/PC-bar-sync-arrive.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/PC-bar-sync-sync-1,dat3m,litmus/PTX/Manual/PC-bar-sync-sync-1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/PC-bar-sync-sync-2,dat3m,litmus/PTX/Manual/PC-bar-sync-sync-2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/PC-bar-sync-sync-3,dat3m,litmus/PTX/Manual/PC-bar-sync-sync-3.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/PC-bar-sync-sync-4,dat3m,litmus/PTX/Manual/PC-bar-sync-sync-4.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/Red-minus-location_,dat3m,litmus/PTX/Manual/Red-minus-location_.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/Red-plus-location_,dat3m,litmus/PTX/Manual/Red-plus-location_.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+acq_rel-cta,dat3m,litmus/PTX/Manual/SB+acq_rel-cta.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/SB+bar-const-diff,dat3m,litmus/PTX/Manual/SB+bar-const-diff.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,allowed,allowed,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+bar-const-equal,dat3m,litmus/PTX/Manual/SB+bar-const-equal.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,dat3m,litmus/PTX/Manual/SB+bar-diff-cta.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,allowed,allowed,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,dat3m,litmus/PTX/Manual/SB+named-bar-dyn-reg-const.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,allowed,allowed,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff,dat3m,litmus/PTX/Manual/SB+named-bar-reg-const-diff.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,allowed,allowed,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-equal,dat3m,litmus/PTX/Manual/SB+named-bar-reg-const-equal.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+named-bar-reg-diff,dat3m,litmus/PTX/Manual/SB+named-bar-reg-diff.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,allowed,allowed,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+named-bar-reg-equal,dat3m,litmus/PTX/Manual/SB+named-bar-reg-equal.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,dat3m,litmus/PTX/Manual/SB+named-bar-sta-reg-const.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,dat3m,litmus/PTX/Manual/SB+sc-cta-outScope.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/SB+sc-cta,dat3m,litmus/PTX/Manual/SB+sc-cta.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,dat3m,litmus/PTX/Manual/SB+sc-gpu-multiFence-TotalOrder.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,renamed from SB+sc-gpu-multiFence (name used twice upstream)
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,dat3m,litmus/PTX/Manual/SB+sc-gpu-multiFence.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+sc-gpu,dat3m,litmus/PTX/Manual/SB+sc-gpu.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/SB+sc-sys-gpu,dat3m,litmus/PTX/Manual/SB+sc-sys-gpu.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/SB+sc-sys,dat3m,litmus/PTX/Manual/SB+sc-sys.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/SB+twice-bars-diff,dat3m,litmus/PTX/Manual/SB+twice-bars-diff.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,allowed,allowed,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB+twice-bars,dat3m,litmus/PTX/Manual/SB+twice-bars.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/SB-weak,dat3m,litmus/PTX/Manual/SB-weak.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/SL-cas-minus,dat3m,litmus/PTX/Manual/SL-cas-minus.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/SL-cas-plus,dat3m,litmus/PTX/Manual/SL-cas-plus.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/SL-future-minus,dat3m,litmus/PTX/Manual/SL-future-minus.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/SL-future-plus,dat3m,litmus/PTX/Manual/SL-future-plus.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/Ticketlock-acq2rlx-1,dat3m,litmus/PTX/Manual/Ticketlock-acq2rlx-1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/Ticketlock-acq2rlx-2,dat3m,litmus/PTX/Manual/Ticketlock-acq2rlx-2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/Ticketlock-diff-gpu,dat3m,litmus/PTX/Manual/Ticketlock-diff-gpu.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/Ticketlock-rel2rlx,dat3m,litmus/PTX/Manual/Ticketlock-rel2rlx.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/Ticketlock-same-gpu,dat3m,litmus/PTX/Manual/Ticketlock-same-gpu.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/XF-Barrier-relacq,dat3m,litmus/PTX/Manual/XF-Barrier-relacq.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Manual/XF-Barrier-rlx,dat3m,litmus/PTX/Manual/XF-Barrier-rlx.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/XF-Barrier-weak,dat3m,litmus/PTX/Manual/XF-Barrier-weak.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,dat3m,litmus/PTX/Manual/barrier-instance-id-exists.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,dat3m,litmus/PTX/Manual/barrier-instance-id-forall.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,dat3m,litmus/PTX/Manual/barrier-logical-id-exists.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,dat3m,litmus/PTX/Manual/barrier-logical-id-forall.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/counter-atomic-store-rmw,dat3m,litmus/PTX/Manual/counter-atomic-store-rmw.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/counter-plain-store-atomic-load,dat3m,litmus/PTX/Manual/counter-plain-store-atomic-load.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/counter-plain-store-plain-load,dat3m,litmus/PTX/Manual/counter-plain-store-plain-load.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/counter-plain-store-rmw,dat3m,litmus/PTX/Manual/counter-plain-store-rmw.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,forbidden,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/proxy/Proxy-Alias-AliasFence,dat3m,litmus/PTX/Manual/proxy/Proxy-Alias-AliasFence.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/proxy/Proxy-Const-ConstFence,dat3m,litmus/PTX/Manual/proxy/Proxy-Const-ConstFence.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/proxy/Proxy-Const-MP-cause-different-cta,dat3m,litmus/PTX/Manual/proxy/Proxy-Const-MP-cause-different-cta.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,,
+ptx/imported/dat3m/Manual/proxy/Proxy-Const-MP-cause1,dat3m,litmus/PTX/Manual/proxy/Proxy-Const-MP-cause1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/proxy/Proxy-Const-MP-cause2,dat3m,litmus/PTX/Manual/proxy/Proxy-Const-MP-cause2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Manual/proxy/Proxy-SingleThread-rf-surW-surF-conF-conR,dat3m,litmus/PTX/Manual/proxy/Proxy-SingleThread-rf-surW-surF-conF-conR.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Manual/proxy/Proxy-SingleThread-rf-surW-surF-genR,dat3m,litmus/PTX/Manual/proxy/Proxy-SingleThread-rf-surW-surF-genR.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Nvidia/Atom-SB-ld,dat3m,litmus/PTX/Nvidia/Atom-SB-ld.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,allowed,
+ptx/imported/dat3m/Nvidia/Atom-SB,dat3m,litmus/PTX/Nvidia/Atom-SB.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,dat3m,litmus/PTX/Nvidia/Co-Total-3-threads-scope-diff.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,allowed,
+ptx/imported/dat3m/Nvidia/Release-acquire-pattern,dat3m,litmus/PTX/Nvidia/Release-acquire-pattern.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,forbidden,forbidden,
+ptx/imported/dat3m/Nvidia/SB-cta,dat3m,litmus/PTX/Nvidia/SB-cta.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctOrder,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctOrder.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctOrder1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctOrder1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctOrder2,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctOrder2.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctOrder3,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctOrder3.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctThread,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctThread.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctThread1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-correctThread1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-wrongOrder,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-wrongOrder.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-wrongOrder1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-wrongOrder1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-wrongOrder2,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-wrongOrder2.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-wrongOrder3,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-aliasFence+proxyFence-wrongOrder3.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-noFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-noFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-noFence1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-noFence1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence10,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence10.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence11,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence11.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence12,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence12.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence13,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence13.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence2,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence2.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence3,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence3.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence4,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence4.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence5,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence5.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence6,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence6.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence7,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence7.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence8,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence8.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence9,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+diffProxy-proxyFence9.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+sameProxy-aliasFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+sameProxy-aliasFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+sameProxy-aliasFence1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+sameProxy-aliasFence1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+sameProxy-noFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+sameProxy-noFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-Alias+sameProxy-noFence1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-Alias+sameProxy-noFence1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym10,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym10.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym11,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym11.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym12,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym12.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym13,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym13.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym14,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym14.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym15,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym15.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym16,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym16.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym17,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym17.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym18,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym18.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym19,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym19.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym2,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym2.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym20,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym20.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym21,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym21.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym22,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym22.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym23,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym23.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym24,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym24.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym25,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym25.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym26,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym26.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym27,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym27.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym28,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym28.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym29,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym29.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym3,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym3.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym30,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym30.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym31,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym31.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym32,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym32.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym33,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym33.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym34,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym34.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym35,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym35.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym36,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym36.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym37,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym37.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym38,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym38.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym39,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym39.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym4,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym4.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym40,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym40.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym41,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym41.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym42,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym42.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym43,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym43.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym44,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym44.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym45,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym45.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym46,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym46.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym5,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym5.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym6,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym6.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym7,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym7.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym8,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym8.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-cta-synonym9,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-cta-synonym9.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen-sur-no-proxyFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gen-sur-no-proxyFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen-sur-surfaceFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gen-sur-surfaceFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen-sur-surfaceFence1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gen-sur-surfaceFence1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gen.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu10,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu10.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu11,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu11.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu12,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu12.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu13,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu13.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu14,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu14.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu15,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu15.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu16,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu16.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu17,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu17.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu18,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu18.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu2,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu2.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu3,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu3.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu4,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu4.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu5,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu5.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu6,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu6.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu7,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu7.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu8,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu8.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu9,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-gpu9.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-gen-no-proxyFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-gen-no-proxyFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-gen-surfaceFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-gen-surfaceFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-gen-surfaceFence1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-gen-surfaceFence1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-sur-no-proxyFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-sur-no-proxyFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-tex-fenceCorrectOrder,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-tex-fenceCorrectOrder.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-tex-fenceCorrectThread,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-tex-fenceCorrectThread.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-tex-fenceWrongOrder,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-tex-fenceWrongOrder.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-tex-fenceWrongOrder1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-tex-fenceWrongOrder1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-tex-fenceWrongThread,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-tex-fenceWrongThread.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-tex-surF-texF-correctOrder1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-tex-surF-texF-correctOrder1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),~exists,forbidden,,~exists C rewritten as exists C
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-tex-surfaceFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-tex-surfaceFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-tex-surfaceFence1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-tex-surfaceFence1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-tex-textureFence,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-tex-textureFence.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-sur-tex-textureFence1,dat3m,litmus/PTX/Nvidia/proxy/Proxy-MP-sur-tex-textureFence1.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-genW-genR,dat3m,litmus/PTX/Nvidia/proxy/Proxy-SingleThread-rf-genW-genR.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),forall,forbidden,,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-genW-surF-surR,dat3m,litmus/PTX/Nvidia/proxy/Proxy-SingleThread-rf-genW-surF-surR.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),forall,forbidden,,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-genW-surR,dat3m,litmus/PTX/Nvidia/proxy/Proxy-SingleThread-rf-genW-surR.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-surW-genR,dat3m,litmus/PTX/Nvidia/proxy/Proxy-SingleThread-rf-surW-genR.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-surW-surF-texR,dat3m,litmus/PTX/Nvidia/proxy/Proxy-SingleThread-rf-surW-surF-texR.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-surW-surR,dat3m,litmus/PTX/Nvidia/proxy/Proxy-SingleThread-rf-surW-surR.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),forall,forbidden,,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-surW-surxF-texF-texR,dat3m,litmus/PTX/Nvidia/proxy/Proxy-SingleThread-rf-surW-surxF-texF-texR.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),forall,forbidden,,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-surW-texF-surF-texR,dat3m,litmus/PTX/Nvidia/proxy/Proxy-SingleThread-rf-surW-texF-surF-texR.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-surW-texF-texR,dat3m,litmus/PTX/Nvidia/proxy/Proxy-SingleThread-rf-surW-texF-texR.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-surW-texR-genR,dat3m,litmus/PTX/Nvidia/proxy/Proxy-SingleThread-rf-surW-texR-genR.litmus,Dat3M 4.4.1 (d8de5e8),BSD-3-Clause (NVIDIA 2019),exists,allowed,,
+ptx/imported/dat3m/Memalloy/IRIW1,dat3m,litmus/PTX/Memalloy/IRIW1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/IRIW2,dat3m,litmus/PTX/Memalloy/IRIW2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,dat3m,litmus/PTX/Memalloy/IRIW_gl_cta.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,dat3m,litmus/PTX/Memalloy/IRIW_uniproc.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/IRRWIW1,dat3m,litmus/PTX/Memalloy/IRRWIW1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/IRRWIW2,dat3m,litmus/PTX/Memalloy/IRRWIW2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/IRRWIW3,dat3m,litmus/PTX/Memalloy/IRRWIW3.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/IRRWIW4,dat3m,litmus/PTX/Memalloy/IRRWIW4.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,dat3m,litmus/PTX/Memalloy/IRRWIW_uniproc.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/IRWIW1,dat3m,litmus/PTX/Memalloy/IRWIW1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Memalloy/IRWIW2,dat3m,litmus/PTX/Memalloy/IRWIW2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,dat3m,litmus/PTX/Memalloy/IRWIW_gl_cta.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/RWC1,dat3m,litmus/PTX/Memalloy/RWC1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/RWC2,dat3m,litmus/PTX/Memalloy/RWC2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/RWC_uniproc,dat3m,litmus/PTX/Memalloy/RWC_uniproc.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/WRC1,dat3m,litmus/PTX/Memalloy/WRC1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/WRC2,dat3m,litmus/PTX/Memalloy/WRC2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/WRR+2W,dat3m,litmus/PTX/Memalloy/WRR+2W.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/WRR+2W1,dat3m,litmus/PTX/Memalloy/WRR+2W1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/WRR+2W2,dat3m,litmus/PTX/Memalloy/WRR+2W2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Memalloy/WRW+2W1,dat3m,litmus/PTX/Memalloy/WRW+2W1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Memalloy/WRW+2W2,dat3m,litmus/PTX/Memalloy/WRW+2W2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Memalloy/WRW+WR1,dat3m,litmus/PTX/Memalloy/WRW+WR1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Memalloy/WRW+WR2,dat3m,litmus/PTX/Memalloy/WRW+WR2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Memalloy/WWC1,dat3m,litmus/PTX/Memalloy/WWC1.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Memalloy/WWC2,dat3m,litmus/PTX/Memalloy/WWC2.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Barrier/barrier-inscope,dat3m,litmus/PTX/Barrier/barrier-inscope.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,forbidden,forbidden,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Barrier/barrier-not-inscope,dat3m,litmus/PTX/Barrier/barrier-not-inscope.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),forall,allowed,allowed,forall C rewritten as exists ~(C)
+ptx/imported/dat3m/Barrier/quorum1-fail,dat3m,litmus/PTX/Barrier/quorum1-fail.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Barrier/quorum1-hang,dat3m,litmus/PTX/Barrier/quorum1-hang.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Barrier/quorum1-pass,dat3m,litmus/PTX/Barrier/quorum1-pass.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Barrier/quorum2-fail,dat3m,litmus/PTX/Barrier/quorum2-fail.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Barrier/quorum2-hang,dat3m,litmus/PTX/Barrier/quorum2-hang.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Barrier/quorum2-pass,dat3m,litmus/PTX/Barrier/quorum2-pass.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Barrier/quorum3-fail,dat3m,litmus/PTX/Barrier/quorum3-fail.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Barrier/quorum3-pass,dat3m,litmus/PTX/Barrier/quorum3-pass.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/dat3m/Barrier/quorum4-fail,dat3m,litmus/PTX/Barrier/quorum4-fail.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,forbidden,forbidden,
+ptx/imported/dat3m/Barrier/quorum4-pass,dat3m,litmus/PTX/Barrier/quorum4-pass.litmus,Dat3M 4.4.1 (d8de5e8),CeCILL-B (Dat3M litmus/),exists,allowed,allowed,
+ptx/imported/mixedproxy/CoMP_volatile,mixedproxy,tests/CoMP_volatile.test,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,volatile translated as relaxed.sys (PTX ISA 8.7 section 8.4.2)
+ptx/imported/mixedproxy/CoWR+00,mixedproxy,tests/CoWR.test row 0,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/CoWR+01,mixedproxy,tests/CoWR.test row 1,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/CoWR+02,mixedproxy,tests/CoWR.test row 2,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/CoWR+03,mixedproxy,tests/CoWR.test row 3,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/CoWR+04,mixedproxy,tests/CoWR.test row 4,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/CoWR+05,mixedproxy,tests/CoWR.test row 5,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/CoWR+06,mixedproxy,tests/CoWR.test row 6,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/CoWR+07,mixedproxy,tests/CoWR.test row 7,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/CoWR+08,mixedproxy,tests/CoWR.test row 8,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/CoWR+09,mixedproxy,tests/CoWR.test row 9,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/ISA2,mixedproxy,tests/ISA2.test,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta+00,mixedproxy,tests/MP_cta.test row 0,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta+01,mixedproxy,tests/MP_cta.test row 1,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta+02,mixedproxy,tests/MP_cta.test row 2,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta+03,mixedproxy,tests/MP_cta.test row 3,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta+04,mixedproxy,tests/MP_cta.test row 4,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta+05,mixedproxy,tests/MP_cta.test row 5,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta+06,mixedproxy,tests/MP_cta.test row 6,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta+07,mixedproxy,tests/MP_cta.test row 7,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta+08,mixedproxy,tests/MP_cta.test row 8,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta+09,mixedproxy,tests/MP_cta.test row 9,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta+10,mixedproxy,tests/MP_cta.test row 10,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta+11,mixedproxy,tests/MP_cta.test row 11,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta+12,mixedproxy,tests/MP_cta.test row 12,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta+13,mixedproxy,tests/MP_cta.test row 13,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta+14,mixedproxy,tests/MP_cta.test row 14,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta+15,mixedproxy,tests/MP_cta.test row 15,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta+16,mixedproxy,tests/MP_cta.test row 16,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta+17,mixedproxy,tests/MP_cta.test row 17,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+00,mixedproxy,tests/MP_cta_synonym.test row 0,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+01,mixedproxy,tests/MP_cta_synonym.test row 1,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+02,mixedproxy,tests/MP_cta_synonym.test row 2,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+03,mixedproxy,tests/MP_cta_synonym.test row 3,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+04,mixedproxy,tests/MP_cta_synonym.test row 4,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+05,mixedproxy,tests/MP_cta_synonym.test row 5,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+06,mixedproxy,tests/MP_cta_synonym.test row 6,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+07,mixedproxy,tests/MP_cta_synonym.test row 7,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+08,mixedproxy,tests/MP_cta_synonym.test row 8,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+09,mixedproxy,tests/MP_cta_synonym.test row 9,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+10,mixedproxy,tests/MP_cta_synonym.test row 10,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+11,mixedproxy,tests/MP_cta_synonym.test row 11,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+12,mixedproxy,tests/MP_cta_synonym.test row 12,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+13,mixedproxy,tests/MP_cta_synonym.test row 13,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+14,mixedproxy,tests/MP_cta_synonym.test row 14,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+15,mixedproxy,tests/MP_cta_synonym.test row 15,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+16,mixedproxy,tests/MP_cta_synonym.test row 16,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+17,mixedproxy,tests/MP_cta_synonym.test row 17,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+18,mixedproxy,tests/MP_cta_synonym.test row 18,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+19,mixedproxy,tests/MP_cta_synonym.test row 19,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+20,mixedproxy,tests/MP_cta_synonym.test row 20,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+21,mixedproxy,tests/MP_cta_synonym.test row 21,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+22,mixedproxy,tests/MP_cta_synonym.test row 22,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+23,mixedproxy,tests/MP_cta_synonym.test row 23,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+24,mixedproxy,tests/MP_cta_synonym.test row 24,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+25,mixedproxy,tests/MP_cta_synonym.test row 25,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+26,mixedproxy,tests/MP_cta_synonym.test row 26,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+27,mixedproxy,tests/MP_cta_synonym.test row 27,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+28,mixedproxy,tests/MP_cta_synonym.test row 28,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+29,mixedproxy,tests/MP_cta_synonym.test row 29,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+30,mixedproxy,tests/MP_cta_synonym.test row 30,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+31,mixedproxy,tests/MP_cta_synonym.test row 31,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+32,mixedproxy,tests/MP_cta_synonym.test row 32,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+33,mixedproxy,tests/MP_cta_synonym.test row 33,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+34,mixedproxy,tests/MP_cta_synonym.test row 34,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+35,mixedproxy,tests/MP_cta_synonym.test row 35,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+36,mixedproxy,tests/MP_cta_synonym.test row 36,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+37,mixedproxy,tests/MP_cta_synonym.test row 37,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+38,mixedproxy,tests/MP_cta_synonym.test row 38,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+39,mixedproxy,tests/MP_cta_synonym.test row 39,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+40,mixedproxy,tests/MP_cta_synonym.test row 40,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+41,mixedproxy,tests/MP_cta_synonym.test row 41,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+42,mixedproxy,tests/MP_cta_synonym.test row 42,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+43,mixedproxy,tests/MP_cta_synonym.test row 43,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_cta_synonym+44,mixedproxy,tests/MP_cta_synonym.test row 44,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_cta_synonym+45,mixedproxy,tests/MP_cta_synonym.test row 45,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+00,mixedproxy,tests/MP_gpu.test row 0,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu+01,mixedproxy,tests/MP_gpu.test row 1,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+02,mixedproxy,tests/MP_gpu.test row 2,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+03,mixedproxy,tests/MP_gpu.test row 3,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+04,mixedproxy,tests/MP_gpu.test row 4,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+05,mixedproxy,tests/MP_gpu.test row 5,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu+06,mixedproxy,tests/MP_gpu.test row 6,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+07,mixedproxy,tests/MP_gpu.test row 7,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+08,mixedproxy,tests/MP_gpu.test row 8,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+09,mixedproxy,tests/MP_gpu.test row 9,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+10,mixedproxy,tests/MP_gpu.test row 10,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+11,mixedproxy,tests/MP_gpu.test row 11,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu+12,mixedproxy,tests/MP_gpu.test row 12,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu+13,mixedproxy,tests/MP_gpu.test row 13,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+14,mixedproxy,tests/MP_gpu.test row 14,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+15,mixedproxy,tests/MP_gpu.test row 15,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+16,mixedproxy,tests/MP_gpu.test row 16,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu+17,mixedproxy,tests/MP_gpu.test row 17,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+00,mixedproxy,tests/MP_gpu_synonym.test row 0,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+01,mixedproxy,tests/MP_gpu_synonym.test row 1,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+02,mixedproxy,tests/MP_gpu_synonym.test row 2,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+03,mixedproxy,tests/MP_gpu_synonym.test row 3,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+04,mixedproxy,tests/MP_gpu_synonym.test row 4,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+05,mixedproxy,tests/MP_gpu_synonym.test row 5,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+06,mixedproxy,tests/MP_gpu_synonym.test row 6,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+07,mixedproxy,tests/MP_gpu_synonym.test row 7,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+08,mixedproxy,tests/MP_gpu_synonym.test row 8,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+09,mixedproxy,tests/MP_gpu_synonym.test row 9,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+10,mixedproxy,tests/MP_gpu_synonym.test row 10,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+11,mixedproxy,tests/MP_gpu_synonym.test row 11,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+12,mixedproxy,tests/MP_gpu_synonym.test row 12,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+13,mixedproxy,tests/MP_gpu_synonym.test row 13,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+14,mixedproxy,tests/MP_gpu_synonym.test row 14,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+15,mixedproxy,tests/MP_gpu_synonym.test row 15,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+16,mixedproxy,tests/MP_gpu_synonym.test row 16,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+17,mixedproxy,tests/MP_gpu_synonym.test row 17,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+18,mixedproxy,tests/MP_gpu_synonym.test row 18,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu_synonym+19,mixedproxy,tests/MP_gpu_synonym.test row 19,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu_synonym+20,mixedproxy,tests/MP_gpu_synonym.test row 20,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+21,mixedproxy,tests/MP_gpu_synonym.test row 21,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu_synonym+22,mixedproxy,tests/MP_gpu_synonym.test row 22,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu_synonym+23,mixedproxy,tests/MP_gpu_synonym.test row 23,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+24,mixedproxy,tests/MP_gpu_synonym.test row 24,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu_synonym+25,mixedproxy,tests/MP_gpu_synonym.test row 25,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu_synonym+26,mixedproxy,tests/MP_gpu_synonym.test row 26,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/MP_gpu_synonym+27,mixedproxy,tests/MP_gpu_synonym.test row 27,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu_synonym+28,mixedproxy,tests/MP_gpu_synonym.test row 28,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/MP_gpu_synonym+29,mixedproxy,tests/MP_gpu_synonym.test row 29,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/Release_acquire_pattern,mixedproxy,tests/Release_acquire_pattern.test,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
+ptx/imported/mixedproxy/SB_cta,mixedproxy,tests/SB_cta.test,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/SB_rmw,mixedproxy,tests/SB_rmw.test,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,forbidden,,
+ptx/imported/mixedproxy/SB_rmw_2,mixedproxy,tests/SB_rmw_2.test,NVlabs/mixedproxy 0807da2,BSD-3-Clause (NVIDIA),exists,allowed,,
