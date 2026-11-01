@@ -236,51 +236,11 @@ This is the issue #1039 behaviour and the reason for `--method=eager`.
 
 ### The PTX litmus suite
 
-1. Import the 265 safety tests from Dat3M's `litmus/PTX/{Manual,Nvidia,Memalloy,Barrier}`
-   (in the dev container under `/opt/dat3m/litmus/PTX/`) into
-   `tests/litmus/ptx/imported/dat3m/`, keeping the BSD license of `Nvidia/` and noting
-   the origin of each file.
-2. Write new tests for what our pin adds and the models lack: `.cluster` scope,
-   `fence.acquire` and `fence.release`, `.volatile`, `mbarrier` and async-proxy patterns.
-   These get the verdict from the PTX 8.7 manual text and are marked
-   `model=manual-reasoning` until a formal model exists. Open question: which formal model
-   covers these features.
-3. Run every test through `ptx-v7.5.cat` and `ptx-v6.0.cat` with `--method=eager`, record
-   the results in `tests/litmus/expected.csv`, and flag disagreements between models and
-   between Dartagnan and Alloy ([alloy.md](alloy.md)).
-
-Proposed layout (a **proposal**, to be confirmed when the suite is built):
-
-```
-tests/litmus/
-  README.md               how to run, how to read expected.csv
-  ptx/
-    imported/dat3m/...    copied tests, original paths kept
-    imported/mixedproxy/  translated mixedproxy tests
-    kamui/                our tests (cluster, fence.acquire/release, volatile, ...)
-  riscv/                  RVWMO tests (herd7 syntax): mapping targets of the PTX tests
-  kamui/                  the same shapes lowered to Kamui assembly (tier 2)
-  h100/                   CUDA harness sources and observed histograms (sanity only)
-  expected.csv
-```
-
-`tests/litmus/expected.csv` (proposal):
-
-| Column | Meaning | Example |
-|---|---|---|
-| `test` | path under `tests/litmus/` | `ptx/kamui/MP+rel.gpu+acq.gpu.litmus` |
-| `source` | where the test comes from | `dat3m:litmus/PTX/Manual/MP-cta.litmus@b81ec6c`, `kamui`, `ptx-isa-8.7:8.10.6` |
-| `condition` | the condition, normalized to `exists` form | `exists (P1:r0==1 /\ P1:r1==0)` |
-| `model` | model file | `ptx-v7.5.cat`, `ptx-v6.0.cat`, `ptx.als(2019)`, `riscv.cat` |
-| `model_version` | release or commit of the model | `dat3m-4.4.1`, `PTXMemoryModel@f0dc6b7` |
-| `tool` | `dartagnan`, `herd7`, `alloy` | `dartagnan` |
-| `tool_version` | exact version | `4.4.1`, `7.58`, `4.2-artifact`, `6.2.0` |
-| `result` | `allowed`, `forbidden`, `unknown`, `error` for the outcome in `condition` | `forbidden` |
-| `runtime_s` | wall time of the tool run | `0.96` |
-| `flags` (suggested extra) | exact flags | `--method=eager --bound=1` |
-
-One row per (test, model, tool). Normalizing `~exists C` and `forall C` to `exists C`
-plus a verdict makes the column mean the same thing for every tool.
+The suite lives in [tests/litmus/](../../tests/litmus/README.md): the 265 Dat3M safety tests and the expanded
+NVlabs/mixedproxy tests, every condition rewritten as an `exists` condition, and `tests/litmus/expected.csv`
+with one verdict (allowed or forbidden) per test and model. `tools/litmus/run_formal.py` runs Dartagnan exactly
+as Dat3M's unit tests do (`--method=eager --bound=1 --solver=z3`), about 35 s for the whole suite on 32 cores
+of the build host. The README explains the layout, the columns and every known disagreement.
 
 ### Full `Xkmscope` (tier 2)
 
