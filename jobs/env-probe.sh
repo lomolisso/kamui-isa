@@ -13,7 +13,7 @@
 #   nvbit      NVBit's instr_count tool builds and counts instructions, both in an nvcc-built program
 #              and in a kernel the driver JIT-compiled from our PTX
 #   sanitizer  compute-sanitizer memcheck and racecheck on app.vecadd
-#   ncu        Nsight Compute collects two metrics on app.vecadd (needs CAP_SYS_ADMIN on hosts where
+#   ncu        Nsight Compute collects instruction metrics on app.vecadd (needs CAP_SYS_ADMIN on hosts where
 #              profiling is restricted to administrators; the check records the error otherwise)
 #
 # The job fails (exit 1) only when the jit check fails; every other result is recorded in results.tsv.
@@ -153,11 +153,11 @@ fi
 if has_step ncu; then
     cap=$(awk '/^CapEff/ {print $2}' /proc/self/status)
     if ncu --clock-control none --csv --page raw --print-units base \
-        --metrics smsp__inst_executed.sum,sass__inst_executed_per_opcode "${PROBE[@]}" > "$OUT/ncu.txt" 2>&1 \
-        && grep -q 'smsp__inst_executed.sum' "$OUT/ncu.txt"; then
+        --metrics smsp__inst_executed.sum,sass__inst_executed_per_opcode "${PROBE[@]}" > "$OUT/ncu-metrics.txt" 2>&1 \
+        && grep -q 'smsp__inst_executed.sum' "$OUT/ncu-metrics.txt"; then
         result ncu metrics ok "CapEff=$cap"
     else
-        result ncu metrics failed "CapEff=$cap; $(grep -m1 -E 'ERR_|==ERROR==' "$OUT/ncu.txt")"
+        result ncu metrics failed "CapEff=$cap; $(grep -m1 -E 'ERR_|==ERROR==' "$OUT/ncu-metrics.txt")"
     fi
 fi
 
