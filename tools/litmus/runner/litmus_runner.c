@@ -18,6 +18,7 @@
  *   plain    no stress, fixed placement and location layout
  *   stress   threads with no role read and write a 64 MiB scratch buffer while the test runs
  *   shuffle  stress, plus a fresh random placement, location layout and per-thread start delay every launch
+ *            (for tests with a cluster barrier, whole warps are shuffled, never single lanes: see make_assign)
  *
  * Every location of every instance has its own 128-byte line. After each launch the host reads each instance's
  * registers, final location values and the SM and cluster of each role, and counts the outcome together with a
@@ -135,7 +136,16 @@ static unsigned make_assign(const struct spec *s, int random, unsigned *assign) 
     for (unsigned c = 0; c < CLUSTERS; c++) {
         for (unsigned k = 0; k < n; k++) {
             identity(sperm[k], THREADS);
-            if (random) shuffle(sperm[k], THREADS);
+            if (random && s->cluster_barrier) {
+                /* Shuffle whole warps only: barrier.cluster.arrive.relaxed compiles to WARPSYNC.ALL; UCGABAR_ARV,
+                 * so a warp whose lanes reach different barrier.cluster instructions deadlocks. */
+                unsigned w[THREADS / 32];
+                identity(w, THREADS / 32);
+                shuffle(w, THREADS / 32);
+                for (unsigned t = 0; t < THREADS; t++) sperm[k][t] = w[t / 32] * 32 + t % 32;
+            } else if (random) {
+                shuffle(sperm[k], THREADS);
+            }
         }
         for (unsigned t = 0; t < ROLE_THREADS; t++, inst++)
             for (unsigned k = 0; k < n; k++) {
