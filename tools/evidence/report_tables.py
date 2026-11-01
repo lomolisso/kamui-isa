@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Print the tables that summarise the H100 evidence, as Markdown. Reads only committed files; no GPU, no CUDA.
 
-    python tools/evidence/stats.py
+    python tools/evidence/report_tables.py
 
 Tables: SASS instructions per PTX instruction, per family; hidden mechanisms and the features that show them;
 scope, ordering and cache-operator encodings; special registers by source; registers per thread; goldens; the

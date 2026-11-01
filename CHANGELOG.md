@@ -16,7 +16,7 @@ All notable changes to this project are listed here. The format follows
 - ptxas and SASS evidence for every corpus entry, and per-feature SASS observations with hidden mechanisms.
 - Corpus runner and H100 golden outputs for every runnable corpus entry, with sanitizer and JIT SASS checks.
 - NVBit instruction histograms of CUTLASS, FlashInfer, flash-attn 2 and Triton workloads on the H100.
-- `tools/evidence/stats.py`, which prints the summary tables of the H100 evidence.
+- `tools/evidence/report_tables.py`, which prints the summary tables of the H100 evidence.
 
 ## [0.1.0] - 2026-10-31
 

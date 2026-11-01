@@ -115,7 +115,7 @@ def test_opcode_classes(tmp_path):
 
 
 def test_stats_prints_every_table(capsys):
-    import stats
-    assert stats.main() == 0
+    import report_tables
+    assert report_tables.main() == 0
     out = capsys.readouterr().out
     assert out.count("### ") == 11 and "| all |" in out and "Nsight Compute" in out
