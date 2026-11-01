@@ -1,0 +1,2 @@
+name, driver_version, compute_cap, clocks.max.sm [MHz], clocks.max.memory [MHz], memory.total [MiB], power.limit [W], ecc.mode.current, mig.mode.current
+NVIDIA H100 NVL, 580.126.20, 9.0, 1785 MHz, 2619 MHz, 95830 MiB, 400.00 W, Enabled, Disabled

@@ -1,0 +1,17 @@
+========= COMPUTE-SANITIZER
+ptx: tests/corpus/base/app.vecadd/kernel.ptx  version 8.7  target sm_90a  entry k_app_vecadd  sha256 088f34639a4558c86b3714c1f5e86464f6fc95525e5536d177e5d70357b9a493
+driver api version: 13.0  (13000)
+device 0: NVIDIA H100 NVL  compute capability 9.0
+cuModuleLoadDataEx: 0 (CUDA_SUCCESS)
+jit info log:
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_app_vecadd' for 'sm_90a'
+ptxas info    : Function properties for k_app_vecadd
+ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 12 registers, used 0 barriers
+ptxas info    : Compile time = 2.881 ms
+jit error log:
+(empty)
+launch: 1000/1000 elements match
+result: ok
+========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)

@@ -15,26 +15,40 @@ kernels (with tolerances for `.approx`, `.ftz` and reduction order). It is
 **not** the memory-model oracle; the formal PTX model is (see
 [dartagnan.md](dartagnan.md)).
 
-The cluster-specific parts are unknown at the time of writing and appear as
-placeholders. Replace
-them in this file once, when the maintainers provide them:
+The names used in the rest of this file:
 
-| Placeholder | Meaning |
+| Name | On the lab's H100 server |
 |---|---|
-| `<SUBMIT_CMD>` | Command that submits a job script (for example an `sbatch`-like or a custom CLI) |
-| `<IMAGE>` | Name or tag of the H100 job container image |
-| `<RESULTS_DIR>` | Directory where a job's artifacts land and from which we copy them back |
-| `<REPO_IN_JOB>` | Path at which the repository (or a copy of it) is visible inside the job |
-| `<JOB_ID>` | Identifier returned by `<SUBMIT_CMD>` |
+| `<SUBMIT_CMD>` | `h100 submit --gpu 3 --`, the lab's per-user job queue. It returns a job id; `h100 wait <id>` waits for it, `h100 log <id>` shows its output, `h100 queue` shows the queue. Add `--profile` only for `ncu` (see below) |
+| `<IMAGE>` | the one job image of the queue, `h100:cuda12.9.1-<hash>` (the tag is a hash of its Dockerfile). Each job is a fresh container of it, removed afterwards |
+| `<REPO_IN_JOB>` | a clone of this repository in the server's home directory, checked out at the commit under test. Only the home directory is mounted in the job container; the job starts in the directory it was submitted from |
+| `<RESULTS_DIR>` | `$HOME/kamui-jobs` on the server; each job writes to `$HOME/kamui-jobs/<job>/<JOB_ID>/` |
+| `<JOB_ID>` | a UTC timestamp plus the queue's job id, for example `20261101T143905Z-q25` |
+
+All jobs run on **GPU 3** of the server, an H100 NVL, so that every result
+comes from the same card. The job container sees only that GPU, as device 0,
+and its `manifest.yaml` records the card's UUID.
 
 ## Where it runs
 
-On the H100 job image. Known contents: CUDA 12.x toolkit
-(`nvcc`, `ptxas`, `nvdisasm`, `cuobjdump`, `cuda-gdb`, `compute-sanitizer`),
-Nsight Compute (`ncu`), Nsight Systems (`nsys`), NVBit, clang-20 with NVPTX,
-CUTLASS source, PyTorch with CUDA, Triton, FlashAttention, Python 3 with
-`pytest` and `pyyaml`. Exact versions are unknown until the environment probe
-job below has run.
+On the H100 job image. The environment probe (`jobs/env-probe.sh`) records
+its exact contents in `evidence/env/`. In short: CUDA 12.9.1 toolkit (`nvcc`,
+`ptxas`, `nvdisasm`, `cuobjdump`, `cuda-gdb`, `compute-sanitizer`), Nsight
+Compute (`ncu`), Nsight Systems (`nsys`), NVBit 1.8.1, clang 20, CUTLASS
+v4.4.2 source, PyTorch, Triton, flash-attn, FlashInfer, Python 3.12 with
+`pytest` and `pyyaml`. The driver is R580.
+
+Three toolchains produce machine code from our PTX, and they are not the same
+version:
+
+| Where | ptxas | Used for |
+|---|---|---|
+| dev container | CUDA 12.8 | the SASS and `ptxas -v` files in `evidence/` |
+| job image | CUDA 12.9 | offline cubins inside jobs (cross-checks only) |
+| driver JIT | the one inside the R580 driver | everything that actually runs: goldens, NVBit, sanitizer |
+
+When it matters that the SASS in `evidence/` is the SASS that ran, a job
+dumps the JIT's cubin (NVBit `nvbit_dump_cubin`) and compares the two.
 
 ## Version pinned
 
@@ -48,6 +62,10 @@ driver (CUDA 12.8 Update 1 lists `>= 570.124.06` on Linux; 12.8 GA lists
 `>= 570.117`). If the probe shows an older driver, stop and tell the
 maintainers.
 
+**Confirmed** on 2026-11-01: the server's driver is 580.126.20 (CUDA 13.0
+driver API) and it JIT-compiles and runs our `.version 8.7`, `.target sm_90a`
+PTX (`evidence/env/jit-probe.txt`).
+
 ## Workflow
 
 1. **Write** the job script in the dev container: `jobs/<name>.sh`
@@ -57,9 +75,11 @@ maintainers.
 2. **Prepare inputs** in the dev container and commit them first: PTX files,
    cubins if needed, YAML descriptors, input data generators (with seeds).
    The job should not need clang unless the job's purpose requires it.
-3. **Submit**: `<SUBMIT_CMD> jobs/<name>.sh`. A contributor writes the job
-   script; the maintainers submit it (or give contributors the submit
-   command).
+3. **Submit** from the clone on the server, at the commit under test:
+   `h100 submit --gpu 3 -- bash jobs/<name>.sh`. Wait with `h100 wait <id>`.
+   The queue runs one GPU job at a time and stops by itself if someone else
+   starts using the GPU; a stopped job reruns from the start, so job scripts
+   must be safe to rerun.
 4. **Copy back**: the H100 host does **not** share the NFS home with the
    development machines (the machine where you edit and the build host), so
    results are copied back over ssh. Copy `<RESULTS_DIR>/<name>/<JOB_ID>/`
@@ -90,9 +110,9 @@ Rules:
 # Runs on: <IMAGE> with one H100.
 set -euo pipefail
 
-REPO=${REPO:-<REPO_IN_JOB>}
-JOB_ID=${JOB_ID:-$(date +%Y%m%d-%H%M%S)}
-OUT=${OUT:-<RESULTS_DIR>/<name>/$JOB_ID}
+REPO=${REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}
+JOB_ID=${JOB_ID:-$(date -u +%Y%m%dT%H%M%SZ)${H100_JOB_ID:+-q$H100_JOB_ID}}
+OUT=${OUT:-$HOME/kamui-jobs/<name>/$JOB_ID}
 mkdir -p "$OUT"
 exec > >(tee "$OUT/job.log") 2>&1
 
@@ -126,67 +146,52 @@ echo "done: $(date -Is)"
 
 ## The first job: environment probe (`jobs/env-probe.sh`)
 
-Purpose: record everything later work depends on, and confirm the PTX pin.
-Outputs go to `$OUT/` and are copied back to `evidence/env/`.
-
-Work section of the template:
+Purpose: record everything later jobs depend on, and confirm the PTX pin.
+The results are committed in [evidence/env/](../../evidence/env/README.md).
 
 ```bash
-E="$OUT"
-nvidia-smi                                   > "$E/nvidia-smi.txt"
-nvidia-smi -q                                > "$E/nvidia-smi-q.txt"
-nvidia-smi --query-gpu=name,driver_version,compute_cap,clocks.max.sm,memory.total --format=csv > "$E/gpu.csv"
-cat /proc/driver/nvidia/version              > "$E/driver-version.txt" 2>&1 || true
-nvcc --version                               > "$E/nvcc.txt" 2>&1
-ptxas --version                              > "$E/ptxas.txt" 2>&1
-nvdisasm --version                           > "$E/nvdisasm.txt" 2>&1
-cuobjdump --version                          > "$E/cuobjdump.txt" 2>&1
-compute-sanitizer --version                  > "$E/compute-sanitizer.txt" 2>&1
-ncu --version                                > "$E/ncu.txt" 2>&1
-nsys --version                               > "$E/nsys.txt" 2>&1 || true
-(clang++-20 --version || clang++ --version)  > "$E/clang.txt" 2>&1
-ls -d /opt/nvbit* /usr/local/nvbit* 2>/dev/null > "$E/nvbit-path.txt" || true
-find / -maxdepth 4 -name 'nvbit.h' 2>/dev/null | head -5 >> "$E/nvbit-path.txt" || true
-grep -rh "NVBIT_VERSION\|define NVBIT_VER" $(dirname $(head -1 "$E/nvbit-path.txt"))/ 2>/dev/null | head -5 > "$E/nvbit-version.txt" || true
-python3 - > "$E/python-packages.txt" 2>&1 <<'EOF'
-import importlib, sys
-print("python", sys.version.replace("\n", " "))
-for m in ["torch", "triton", "flash_attn", "flash_attn_interface", "cutlass", "numpy", "yaml", "pytest"]:
-    try:
-        mod = importlib.import_module(m)
-        print(m, getattr(mod, "__version__", "?"), getattr(mod, "__file__", ""))
-    except Exception as e:
-        print(m, "NOT AVAILABLE", type(e).__name__)
-try:
-    import torch
-    print("torch.version.cuda", torch.version.cuda, "cudnn", torch.backends.cudnn.version())
-    print("device", torch.cuda.get_device_name(0), torch.cuda.get_device_capability(0))
-except Exception as e:
-    print("torch cuda check failed", e)
-EOF
-# CUTLASS source location and version
-find / -maxdepth 4 -type d -name cutlass 2>/dev/null | head -5 > "$E/cutlass-path.txt" || true
-for d in $(cat "$E/cutlass-path.txt"); do
-  [ -f "$d/include/cutlass/version.h" ] && grep -E "CUTLASS_(MAJOR|MINOR|PATCH)" "$d/include/cutlass/version.h" >> "$E/cutlass-version.txt"
-done
-# PTX JIT check: does the driver accept .version 8.7 for sm_90a?
-# toy.ptx is compiled in the dev container from docs/examples/cuda/toy.cu and committed before the job runs.
-python3 tools/env/jit_probe.py tests/corpus/examples/toy.ptx > "$E/jit-probe.txt" 2>&1 || true
+# on the H100 server, in the clone, at the commit under test
+h100 submit --gpu 3 -- bash jobs/env-probe.sh
+h100 submit --profile --gpu 3 -- env PROBE_STEPS="jit ncu" bash jobs/env-probe.sh   # ncu with counter access
 ```
 
-`tools/env/jit_probe.py` (planned; about 30 lines) uses `ctypes` on
-`libcuda.so` to call `cuInit`, `cuDeviceGet`, `cuCtxCreate`,
-`cuModuleLoadDataEx` on the PTX text with the JIT log options, and prints the
-CUresult code, the JIT info log and the JIT error log. Success proves the
-driver understands PTX 8.7 for sm_90a; `CUDA_ERROR_UNSUPPORTED_PTX_VERSION`
-(222) means the driver is too old.
+It runs five steps and writes one line per check to `results.tsv`:
 
-Expected output shape (**this runs on the H100 job image and has not been run
-yet**): `gpu.csv` with a row like `NVIDIA H100 80GB HBM3, 570.xx.xx, 9.0, ...`;
-`nvcc.txt` ending in `Cuda compilation tools, release 12.N, V12.N.xx`;
-`python-packages.txt` with one line per package; `jit-probe.txt` with
-`cuModuleLoadDataEx: 0 (CUDA_SUCCESS)` and an info log such as
-`ptxas info : Used 14 registers ...`.
+| Step | What it checks |
+|---|---|
+| `versions` | `nvidia-smi`, driver, toolkit tools, NVBit, CUTLASS, Python packages, the image's package list |
+| `jit` | [tools/env/jit_probe.py](../../tools/env/jit_probe.py) loads `tests/corpus/base/app.vecadd/kernel.ptx` through the driver JIT, runs it and checks `c = a + b` on all 1000 elements; `docs/examples/cuda/bad.ptx` must be rejected |
+| `nvbit` | builds NVBit's `instr_count` tool and preloads it into an nvcc-built program and into the JIT-loaded `app.vecadd` |
+| `sanitizer` | `compute-sanitizer` memcheck and racecheck on `app.vecadd` |
+| `ncu` | `ncu` collects instruction metrics on `app.vecadd` |
+
+`jit_probe.py` uses `ctypes` on `libcuda.so.1`, so it needs neither the
+toolkit nor a Python CUDA package:
+
+```
+$ python3 tools/env/jit_probe.py tests/corpus/base/app.vecadd/kernel.ptx --launch-vecadd
+ptx: tests/corpus/base/app.vecadd/kernel.ptx  version 8.7  target sm_90a  entry k_app_vecadd  sha256 088f3463...
+driver api version: 13.0  (13000)
+device 0: NVIDIA H100 NVL  compute capability 9.0
+cuModuleLoadDataEx: 0 (CUDA_SUCCESS)
+jit info log:
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_app_vecadd' for 'sm_90a'
+...
+ptxas info    : Used 12 registers, used 0 barriers
+launch: 1000/1000 elements match
+result: ok
+```
+
+`CUDA_ERROR_UNSUPPORTED_PTX_VERSION` (222) would mean the driver is too old
+for PTX 8.7. `bad.ptx` gives `CUDA_ERROR_INVALID_PTX` (218), the same error
+the offline `ptxas` reports (see [ptxas.md](ptxas.md)).
+
+Results (2026-11-01, job `20261101T154126Z-q000027`): every check passes
+except `ncu` without `--profile`, which fails with `ERR_NVGPUCTRPERM`
+because the server restricts GPU performance counters to administrators.
+With `--profile` it works, and on `app.vecadd` `ncu` and NVBit count the same
+640 warp-level instructions.
 
 ## Loading our PTX on the H100
 
@@ -262,14 +267,18 @@ exact; text dumps are generated for humans only.
 
 ## Limitations and gotchas
 
-- The job system's queueing time is unknown; batch many corpus entries per
-  job.
-- If the job image's CUDA is newer than 12.8, its `ptxas`/`nvdisasm` differ
-  from the dev container's. SASS evidence comes from the dev container; JIT
-  SASS on the H100 comes from the driver. Record both versions.
-- `ncu` and NVBit need permissions the job may not have (performance
-  counters, `LD_PRELOAD`). The probe job should try a trivial `ncu` run and
-  report the error message if it fails.
+- One GPU job runs at a time in the queue; batch many corpus entries per job.
+- The job image's CUDA (12.9) is newer than the dev container's (12.8), and
+  the driver JIT is newer still. SASS evidence comes from the dev container;
+  the SASS that runs comes from the driver. Record both versions.
+- The driver caches JIT results in the home directory. A cache hit returns an
+  empty JIT log, so jobs set `CUDA_CACHE_DISABLE=1` when they need the log.
+- `ncu` needs `h100 submit --profile` (the server sets
+  `RmProfilingAdminOnly=1`); without it every metric fails with
+  `ERR_NVGPUCTRPERM`. Use `--clock-control none`. NVBit (`LD_PRELOAD`) needs no
+  special permission.
+- Only the home directory is visible in a job; the container's `/tmp` is a
+  RAM disk that disappears with the job. Write results under `$OUT`.
 - Clocks vary. Nothing in the tier 1 ISA work depends on timing.
 
 ## References

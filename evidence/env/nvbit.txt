@@ -1,0 +1,2 @@
+NVBIT_PATH=/opt/nvbit
+#define NVBIT_VERSION "1.8.1"

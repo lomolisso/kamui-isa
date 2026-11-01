@@ -1,0 +1,11 @@
+step	check	status	detail
+versions	record	ok	NVIDIA H100 NVL, 580.126.20, GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, 00000000:DA:00.0
+jit	vecadd	ok	cuModuleLoadDataEx: 0 (CUDA_SUCCESS); launch: 1000/1000 elements match
+jit	bad-ptx	ok	cuModuleLoadDataEx: 218 (CUDA_ERROR_INVALID_PTX)
+jit	offline-ptxas	ok	Used 12 registers, used 0 barriers
+nvbit	build	ok	nvbit/instr_count/instr_count.so
+nvbit	nvcc-app	ok	total instructions 62588
+nvbit	jit-ptx	ok	total instructions 640
+sanitizer	memcheck	ok	========= ERROR SUMMARY: 0 errors
+sanitizer	racecheck	ok	========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)
+ncu	metrics	failed	CapEff=0000000000000000; ==ERROR== ERR_NVGPUCTRPERM - The user does not have permission to access NVIDIA GPU Performance Counters on the target device 0. For instructions on enabling permissions and to get more information see https://developer.nvidia.com/ERR_NVGPUCTRPERM

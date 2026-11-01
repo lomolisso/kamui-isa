@@ -1,0 +1,7 @@
+job: env-probe  id: 20261101T154155Z-q000028  start: 2026-11-01T15:41:55+00:00  steps: jit ncu
+NVIDIA H100 NVL, 580.126.20, GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, 00000000:DA:00.0
+== jit/vecadd: ok (cuModuleLoadDataEx: 0 (CUDA_SUCCESS); launch: 1000/1000 elements match)
+== jit/bad-ptx: ok (cuModuleLoadDataEx: 218 (CUDA_ERROR_INVALID_PTX))
+== jit/offline-ptxas: ok (Used 12 registers, used 0 barriers)
+== ncu/metrics: ok (CapEff=0000000000200000)
+done: 2026-11-01T15:41:58+00:00  jit: ok  results: /home/rid2/kamui-jobs/env-probe/20261101T154155Z-q000028/results.tsv
