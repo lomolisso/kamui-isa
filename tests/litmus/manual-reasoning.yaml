@@ -1,0 +1,18 @@
+# Verdicts argued by hand from the PTX ISA 8.7 manual (chapter 8), for tests that no tool can decide.
+# tools/litmus/run_formal.py copies each entry into expected.csv as model `manual-reasoning`.
+# Every entry: the test id, the result for its `exists` condition, and the argument with manual sections.
+
+- test: ptx/imported/dat3m/Manual/MICRO24-Fig4b-correct
+  result: forbidden
+  argument: >-
+    The condition asks for P1 to leave its loop (r1 == 1, so its CAS read flag == 1) and then to read a value of
+    sum other than 1. The only write of 1 to flag is P0's atom.exch, so P1's successful CAS reads from it; both
+    are strong .gpu operations on one location in the same GPU, so they are morally strong (8.7) and the CAS
+    observes the exch (8.9.2). P0's `fence.sc.gpu; atom.exch flag` is a release pattern on flag (fence followed
+    by a strong write, 8.8) and P1's `atom.cas flag; fence.sc.gpu` is an acquire pattern (strong read followed
+    by a fence, 8.8); the first and last operations, two .gpu fences, are morally strong, so the pattern
+    synchronizes (8.9.4). P0's atom.add on sum therefore precedes P1's atom.add on sum in causality order
+    (8.9.5), and by Coherence (8.10.1) and Causality (8.10.6) P1's add must read the value written by P0's add,
+    which is 1. Dartagnan answers `unknown` at every loop bound (1, 2, 3, 5 tried) because the CAS loop can never
+    be fully unrolled; the unsound variant MICRO24-Fig4b (fence.sc.cta in different CTAs) is found `allowed` at
+    bound 1.
