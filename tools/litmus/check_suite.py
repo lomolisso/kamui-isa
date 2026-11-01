@@ -14,6 +14,8 @@ Checks:
    (Dat3M's expected CSVs, or the permit/assert annotation of a mixedproxy test); results of different PTX models
    for the same test agree; no result is `unknown` or `error`.
 5. Lowering: when the PTX models forbid an outcome, the naive RVWMO lowering (`rvwmo`) forbids it too.
+6. Hardware: no outcome observed on the H100 (evidence/litmus-h100/summary.csv) is forbidden by the formal
+   verdict, unless the allow-list explains it (kind `h100`, model = the run configuration).
 Every exception to check 4 must be listed in tests/litmus/allowlist.yaml with a reason. An allow-list entry that
 no longer matches anything is also an error, so the list stays current.
 """
@@ -110,6 +112,11 @@ def findings(suite: Path = SUITE) -> tuple[list[str], list[tuple[str, str, str, 
             dis.append(("models", tid, "*", detail))
         if decided and set(decided.values()) == {"forbidden"} and res.get("rvwmo") == "allowed":
             dis.append(("lowering", tid, "rvwmo", "PTX forbids the outcome, the RVWMO lowering allows it"))
+    summary = suite.parents[1] / "evidence" / "litmus-h100" / "summary.csv"
+    if summary.exists():
+        for r in read_csv(summary):
+            if r["status"] == "forbidden-observed":
+                dis.append(("h100", r["test"], r["config"], f"{r['weak']} of {r['instances']} instances"))
     return errors, dis
 
 
