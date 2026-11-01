@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o bra.uni.cubin tests/corpus/base/bra.uni/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_bra_uni' for 'sm_90a'
+ptxas info    : Function properties for k_bra_uni
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 12 registers, used 0 barriers

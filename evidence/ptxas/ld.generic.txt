@@ -1,0 +1,10 @@
+# ptxas -arch=sm_90a -v -o ld.generic.cubin tests/corpus/base/ld.generic/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_ld_generic' for 'sm_90a'
+ptxas info    : Function properties for k_ld_generic
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 18 registers, used 1 barriers, 512 bytes smem
+ptxas info    : Function properties for _Z12load_genericPKi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Function properties for _Z13store_genericPii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads

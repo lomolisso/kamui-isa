@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o copysign.cubin tests/corpus/base/copysign/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_copysign' for 'sm_90a'
+ptxas info    : Function properties for k_copysign
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, used 0 barriers

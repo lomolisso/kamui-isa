@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o fp.rounding.cubin tests/corpus/base/fp.rounding/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_fp_rounding' for 'sm_90a'
+ptxas info    : Function properties for k_fp_rounding
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 29 registers, used 0 barriers

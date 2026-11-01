@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o atom.global.and.cubin tests/corpus/base/atom.global.and/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_atom_global_and' for 'sm_90a'
+ptxas info    : Function properties for k_atom_global_and
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 22 registers, used 0 barriers

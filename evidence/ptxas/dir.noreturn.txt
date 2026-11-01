@@ -1,0 +1,8 @@
+# ptxas -arch=sm_90a -v -o dir.noreturn.cubin tests/corpus/base/dir.noreturn/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_dir_noreturn' for 'sm_90a'
+ptxas info    : Function properties for k_dir_noreturn
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, used 0 barriers
+ptxas info    : Function properties for _Z3diev
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads

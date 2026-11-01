@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o st.scope.sys.cubin tests/corpus/xkmscope/st.scope.sys/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_st_scope_sys' for 'sm_90a'
+ptxas info    : Function properties for k_st_scope_sys
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, used 0 barriers

@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o shfl.sync.down.cubin tests/corpus/xkmwarp/shfl.sync.down/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_shfl_sync_down' for 'sm_90a'
+ptxas info    : Function properties for k_shfl_sync_down
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 22 registers, used 0 barriers

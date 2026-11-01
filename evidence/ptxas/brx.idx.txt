@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o brx.idx.cubin tests/corpus/xkmsimt/brx.idx/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_brx_idx' for 'sm_90a'
+ptxas info    : Function properties for k_brx_idx
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 15 registers, used 0 barriers

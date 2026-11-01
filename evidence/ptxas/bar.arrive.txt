@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o bar.arrive.cubin tests/corpus/xkmbar/bar.arrive/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_bar_arrive' for 'sm_90a'
+ptxas info    : Function properties for k_bar_arrive
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, used 2 barriers, 128 bytes smem

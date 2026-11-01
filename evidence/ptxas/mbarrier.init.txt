@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o mbarrier.init.cubin tests/corpus/xkmmbar/mbarrier.init/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_mbarrier_init' for 'sm_90a'
+ptxas info    : Function properties for k_mbarrier_init
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, used 1 barriers, 520 bytes smem

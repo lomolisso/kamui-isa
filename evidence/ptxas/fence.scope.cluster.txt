@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o fence.scope.cluster.cubin tests/corpus/xkmscope/fence.scope.cluster/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_fence_scope_cluster' for 'sm_90a'
+ptxas info    : Function properties for k_fence_scope_cluster
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 12 registers, used 0 barriers

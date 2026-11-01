@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o cp.async.cubin tests/corpus/xkmasync/cp.async/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_cp_async' for 'sm_90a'
+ptxas info    : Function properties for k_cp_async
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 20 registers, used 1 barriers, 3584 bytes smem

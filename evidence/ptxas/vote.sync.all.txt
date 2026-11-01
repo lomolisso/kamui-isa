@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o vote.sync.all.cubin tests/corpus/xkmwarp/vote.sync.all/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_vote_sync_all' for 'sm_90a'
+ptxas info    : Function properties for k_vote_sync_all
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 12 registers, used 0 barriers

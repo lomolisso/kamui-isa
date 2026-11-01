@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o testp.cubin tests/corpus/base/testp/kernel.ptx
+ptxas info    : 32 bytes gmem
+ptxas info    : Compiling entry function 'k_testp' for 'sm_90a'
+ptxas info    : Function properties for k_testp
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, used 0 barriers

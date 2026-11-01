@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o sreg.tid.cubin tests/corpus/xkmsimt/sreg.tid/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_sreg_tid' for 'sm_90a'
+ptxas info    : Function properties for k_sreg_tid
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 18 registers, used 0 barriers

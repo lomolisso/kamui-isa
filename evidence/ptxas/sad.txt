@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o sad.cubin tests/corpus/base/sad/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_sad' for 'sm_90a'
+ptxas info    : Function properties for k_sad
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 20 registers, used 0 barriers

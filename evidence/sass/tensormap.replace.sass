@@ -1,0 +1,62 @@
+# cuobjdump -sass -res-usage tensormap.replace.cubin
+
+Resource usage:
+ Common:
+  GLOBAL:0
+ Function k_tensormap_replace:
+  REG:12 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:544 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+	code for sm_90a
+		Function : k_tensormap_replace
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_ACCELERATORS EF_CUDA_SM90 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM90)"
+        /*0000*/                   LDC R1, c[0x0][0x28] ;                  /* 0x00000a00ff017b82 */
+                                                                           /* 0x000e220000000800 */
+        /*0010*/                   S2R R0, SR_TID.X ;                      /* 0x0000000000007919 */
+                                                                           /* 0x000e640000002100 */
+        /*0020*/                   ISETP.NE.AND P0, PT, R0, RZ, PT ;       /* 0x000000ff0000720c */
+                                                                           /* 0x002fda0003f05270 */
+        /*0030*/               @P0 EXIT ;                                  /* 0x000000000000094d */
+                                                                           /* 0x000fea0003800000 */
+        /*0040*/                   LDC.64 R2, c[0x0][0x210] ;              /* 0x00008400ff027b82 */
+                                                                           /* 0x000e620000000a00 */
+        /*0050*/                   ULDC.64 UR4, c[0x0][0x208] ;            /* 0x0000820000047ab9 */
+                                                                           /* 0x000fce0000000a00 */
+        /*0060*/                   LDC.64 R4, c[0x0][0x218] ;              /* 0x00008600ff047b82 */
+                                                                           /* 0x000ea20000000a00 */
+        /*0070*/                   LDG.E R0, desc[UR4][R2.64+0x8] ;        /* 0x0000080402007981 */
+                                                                           /* 0x002ee2000c1e1900 */
+        /*0080*/                   IMAD.MOV.U32 R7, RZ, RZ, 0x70 ;         /* 0x00000070ff077424 */
+                                                                           /* 0x000fe400078e00ff */
+        /*0090*/                   IMAD.MOV.U32 R9, RZ, RZ, 0x3f ;         /* 0x0000003fff097424 */
+                                                                           /* 0x000fca00078e00ff */
+        /*00a0*/                   STG.E desc[UR4][R2.64+0x20], R9 ;       /* 0x0000200902007986 */
+                                                                           /* 0x000fe8000c101904 */
+        /*00b0*/                   STG.E.64 desc[UR4][R2.64], R4 ;         /* 0x0000000402007986 */
+                                                                           /* 0x004fe2000c101b04 */
+        /*00c0*/                   LOP3.LUT R7, R0, 0x10, R7, 0xd8, !PT ;  /* 0x0000001000077812 */
+                                                                           /* 0x008fca00078ed807 */
+        /*00d0*/                   STG.E desc[UR4][R2.64+0x8], R7 ;        /* 0x0000080702007986 */
+                                                                           /* 0x000fe2000c101904 */
+        /*00e0*/                   EXIT ;                                  /* 0x000000000000794d */
+                                                                           /* 0x000fea0003800000 */
+        /*00f0*/                   BRA 0xf0;                               /* 0xfffffffc00fc7947 */
+                                                                           /* 0x000fc0000383ffff */
+        /*0100*/                   NOP;                                    /* 0x0000000000007918 */
+                                                                           /* 0x000fc00000000000 */
+        /*0110*/                   NOP;                                    /* 0x0000000000007918 */
+                                                                           /* 0x000fc00000000000 */
+        /*0120*/                   NOP;                                    /* 0x0000000000007918 */
+                                                                           /* 0x000fc00000000000 */
+        /*0130*/                   NOP;                                    /* 0x0000000000007918 */
+                                                                           /* 0x000fc00000000000 */
+        /*0140*/                   NOP;                                    /* 0x0000000000007918 */
+                                                                           /* 0x000fc00000000000 */
+        /*0150*/                   NOP;                                    /* 0x0000000000007918 */
+                                                                           /* 0x000fc00000000000 */
+        /*0160*/                   NOP;                                    /* 0x0000000000007918 */
+                                                                           /* 0x000fc00000000000 */
+        /*0170*/                   NOP;                                    /* 0x0000000000007918 */
+                                                                           /* 0x000fc00000000000 */
+		..........
+
+

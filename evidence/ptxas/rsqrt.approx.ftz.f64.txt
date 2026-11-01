@@ -1,0 +1,6 @@
+# ptxas -arch=sm_90a -v -o rsqrt.approx.ftz.f64.cubin tests/corpus/xkmmufu/rsqrt.approx.ftz.f64/kernel.ptx
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function 'k_rsqrt_approx_ftz_f64' for 'sm_90a'
+ptxas info    : Function properties for k_rsqrt_approx_ftz_f64
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 12 registers, used 0 barriers

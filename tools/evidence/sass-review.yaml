@@ -1,0 +1,25 @@
+# Decisions from reading the SASS of rows that annotate.py flags, or whose automatic match is wrong. Each entry
+# replaces the computed fields it names and sets the row's status to `reviewed`. `note` is required.
+
+bar.warp.sync:
+  sass_sequence: ""
+  sass_len: 0
+  sass_per_ptx: "0.00"
+  hidden_mechanism: none
+  note: >-
+    ptxas replaces `bar.warp.sync -1` with a NOP in the middle of the kernel (offset 0x130): every lane of the
+    warp is already converged at that point, so nothing has to be done. A partial mask in divergent code would
+    give WARPSYNC.
+ctrl.block:
+  sass_sequence: ""
+  sass_len: 0
+  sass_per_ptx: "0.00"
+  hidden_mechanism: none
+  note: >-
+    `{ }` only scopes register declarations in PTX; it has no SASS of its own. The entry is shared with `call`,
+    whose call sequence is wrapped in braces by clang.
+space.shared::cluster:
+  note: >-
+    The mapa entry reaches distributed shared memory through generic ld and st on the address that mapa
+    returns; ptxas emits LD.E and ST.E (generic addressing), not a dedicated shared::cluster opcode. The
+    shared::cluster window is recognised by the address, not by the instruction.
