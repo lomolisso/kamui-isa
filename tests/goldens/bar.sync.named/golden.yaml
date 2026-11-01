@@ -1,0 +1,24 @@
+feature: bar.sync.named
+entry: tests/corpus/xkmbar/bar.sync.named
+ptx_sha256: 6e182d01b05ac7278a2e046554460a89c30b92fe6b2c85155db71ce091b7e66d
+inputs_sha256: ef70f1d787ed43bf3b1612570bbf4d5e2b28f76df2d636a7788e0eed11f6238a
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: c8c062649ebbbada56732d17e5e930d7f949d38a9f3fdddbb413800fc0276d66
+outputs:
+- {name: d, dtype: s32, count: 256, offset: 0, bytes: 1024, sha256: c8c062649ebbbada56732d17e5e930d7f949d38a9f3fdddbb413800fc0276d66,
+  unwritten_bytes: 0}
+jit_registers: 12
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

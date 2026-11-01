@@ -1,0 +1,40 @@
+feature: cvt.fp
+entry: tests/corpus/base/cvt.fp
+ptx_sha256: b7ad782804dcb6bed34b9efe29d0101f9f41d7c088a2ac8652d0a7b41526a4c3
+inputs_sha256: c83458af8ba9ac24ea14fde12726be9aaa328c20e082b5ecdc47c86bdf4a39ad
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 94a01db154820b95378a51169024d13fe9e1d4a45debcb9da3389dd389e3fdab
+outputs:
+- {name: di, dtype: s32, count: 256, offset: 0, bytes: 1024, sha256: 84c30472bca4a7689164f2955631c0e75ee9838d7218c14a0b8c84d1cb657062,
+  unwritten_bytes: 0}
+- {name: du, dtype: u32, count: 256, offset: 1024, bytes: 1024, sha256: 4ae8c616ca59b568e8a66dc70325b72caeb8f6fe7c56f682d10232a5b37cc05a,
+  unwritten_bytes: 0}
+- {name: dfi, dtype: f32, count: 256, offset: 2048, bytes: 1024, sha256: fdf92ccd7671fc98f4308811ba0616b416a1e40008c1ba4fe678ec2590521622,
+  unwritten_bytes: 0}
+- {name: dd, dtype: f64, count: 256, offset: 3072, bytes: 2048, sha256: 86ea2732df50a032180cbfe82e8c3b1192c2efbd718957517f1818687bac0326,
+  unwritten_bytes: 0}
+- {name: dfd, dtype: f32, count: 256, offset: 5120, bytes: 1024, sha256: dbfd8db2c8a0b33f07d63eb78a73708e35f9e6a079c8cfe7c71672b36916c6f8,
+  unwritten_bytes: 0}
+- {name: dtr, dtype: f32, count: 256, offset: 6144, bytes: 1024, sha256: cb8ad71fbb5d9d7f431e2f7bb7527197b2e9fccb72afdbb0bfe1563b1cd0eca0,
+  unwritten_bytes: 0}
+- {name: drn, dtype: f32, count: 256, offset: 7168, bytes: 1024, sha256: a7045ea67cf468a90495a9f0660a83669b3091cdb91cba2bb32abe2fc8ae6d8d,
+  unwritten_bytes: 0}
+- {name: dfl, dtype: f32, count: 256, offset: 8192, bytes: 1024, sha256: aa25be5fa87203b7eae8b10542e6de89a07a17a4d2ab2616fbc0a611a87d77c8,
+  unwritten_bytes: 0}
+- {name: dce, dtype: f32, count: 256, offset: 9216, bytes: 1024, sha256: 300fe681d1a6aee934379dac47a57579597095e024009de06650e3c053226444,
+  unwritten_bytes: 0}
+jit_registers: 30
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

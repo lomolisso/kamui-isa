@@ -1,0 +1,24 @@
+feature: rcp.approx.ftz.f64
+entry: tests/corpus/xkmmufu/rcp.approx.ftz.f64
+ptx_sha256: e0428850c867b2ed8e57371a7053d89136618ba0ce02fb485796ba1086efe519
+inputs_sha256: c46cf6109065fd7f30efe9615fc120c83fce513f661a80d65a694d71178dd8fb
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: ulp:1
+outputs_sha256: 78d3bc51e81c60ce24abb17acf76d17726ade1a66c7eafe140ac74d4142b234d
+outputs:
+- {name: d, dtype: f64, count: 256, offset: 0, bytes: 2048, sha256: 78d3bc51e81c60ce24abb17acf76d17726ade1a66c7eafe140ac74d4142b234d,
+  unwritten_bytes: 0}
+jit_registers: 12
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

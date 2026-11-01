@@ -1,0 +1,24 @@
+feature: app.shfl_reduce
+entry: tests/corpus/xkmwarp/app.shfl_reduce
+ptx_sha256: 044ff6ff91c31389694cbb4051bd6e6140e2ac47247483ce257cb453b67f6db9
+inputs_sha256: c79fc16b4afc532c5b745c5b7017cab1e6661d35c11592d769acf2f435a344dc
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: c6b1b4aa6f93c5a3c29e096c329acc963286410684d26b297a1dc36ffa9c43cb
+outputs:
+- {name: out, dtype: s32, count: 8, offset: 0, bytes: 32, sha256: c6b1b4aa6f93c5a3c29e096c329acc963286410684d26b297a1dc36ffa9c43cb,
+  unwritten_bytes: 0}
+jit_registers: 14
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

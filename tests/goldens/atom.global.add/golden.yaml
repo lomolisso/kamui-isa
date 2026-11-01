@@ -1,0 +1,32 @@
+feature: atom.global.add
+entry: tests/corpus/base/atom.global.add
+ptx_sha256: c208038fa0760f2ea46fce1b7cbc9ca127fac0db9c32a7bef46102481a35e698
+inputs_sha256: 60927bebd91847731e9d0059e115f533f7be01bf7af8c9af1d644d70d7ccd83c
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 3
+runs_identical: false
+tolerance: property:atomic
+outputs_sha256: 0101c787b82cc477fd3292d5948844d7264e9978791527be755987b674fccd19
+outputs:
+- {name: acc, dtype: u32, count: 1, offset: 0, bytes: 4, sha256: 09177f7f1ad79be66589a729c8a31650dbe651ccbe101a163215cee0c85b3b21}
+- {name: arr, dtype: u32, count: 256, offset: 4, bytes: 1024, sha256: 5ee0609b3394b0bf49061b205d41a24cb35d07e8665b5819634635c069b1fad3}
+- {name: old_same, dtype: u32, count: 256, offset: 1028, bytes: 1024, sha256: e0c680685bb6d4377312fb76d9357e1939ef8ec6cb7629625c3d1bb3193484e9}
+- {name: old_dist, dtype: u32, count: 256, offset: 2052, bytes: 1024, sha256: 5b3948587b04e719755f7763d1fd152a4d52f0cb397acf3892835ccff86d29b0}
+- {name: acc64, dtype: u64, count: 1, offset: 3076, bytes: 8, sha256: 610227005d9b997ce3c50740a03dd0e8e594fdd6ef2f5975ffa7d341c82a5172}
+- {name: old64, dtype: u64, count: 256, offset: 3084, bytes: 2048, sha256: 54e4bd6e6ef6983f9f53799afeb70b9e09a3aad3c879578310d526d4bc14e26a}
+- {name: accf, dtype: f32, count: 1, offset: 5132, bytes: 4, sha256: 23dda3b97164b87cba1a37eda0d97622cf4aa0a879ac51077c4205514177c33b}
+- {name: oldf, dtype: f32, count: 256, offset: 5136, bytes: 1024, sha256: d853c5de6247b97850ca0eb1fac3192694c424614014bfc331f1159fbb6b20fa}
+- {name: accd, dtype: f64, count: 1, offset: 6160, bytes: 8, sha256: bf1d5a7792f2bf6c32b163645f8278fc20feec7e9325e4b9078330521187d4c5}
+- {name: oldd, dtype: f64, count: 256, offset: 6168, bytes: 2048, sha256: 9f54a43ee40d38ee000849a8560135efe334e408d344c1ef99cba487614321a3}
+jit_registers: 24
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

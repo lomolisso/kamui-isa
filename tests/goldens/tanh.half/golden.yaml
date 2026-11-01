@@ -1,0 +1,28 @@
+feature: tanh.half
+entry: tests/corpus/xkmmufu/tanh.half
+ptx_sha256: 89028b9a1a212c1f972ba50a5dd257341766befe9287fed53c32d609df28e196
+inputs_sha256: 5952fd42dc511d5878fdfa2abe459150a67155cd2adc399c4d4243829c6234e0
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: ulp:2
+outputs_sha256: cd21a6399eb4adbb09e5df72a133cd93fac8be8c9649b5b32299bc1d6b64c863
+outputs:
+- {name: d, dtype: u16, count: 256, offset: 0, bytes: 512, sha256: 404b09e82290ae6efc5b19407be794cd87df5ac8d7c62759eb2249c4bc100310,
+  unwritten_bytes: 0}
+- {name: d2, dtype: u32, count: 256, offset: 512, bytes: 1024, sha256: 06134f36491cdc52cb976f5c296757cd3a7c1fcda4805642ed185daeeca8a859,
+  unwritten_bytes: 0}
+- {name: db, dtype: u16, count: 256, offset: 1536, bytes: 512, sha256: c6c6ccbfaa5587f6a5250e9ba06e0bd18405ce7b0d5f87bdcf2b011c50a61d63,
+  unwritten_bytes: 0}
+jit_registers: 22
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

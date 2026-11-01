@@ -1,0 +1,24 @@
+feature: fp.rounding
+entry: tests/corpus/base/fp.rounding
+ptx_sha256: 2cf65d73f8b8f1e5ad7ffe30d1206e9ed5f7af2100a72f344de2625485661742
+inputs_sha256: b7a6ed1b30920220067efb0cd1fa2457710e0aa86d58c16a81bbe39776b033d8
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 6aa48805575eb017572892b0ab49a391d58f051de6193cbe6c7e7b23fa0279d2
+outputs:
+- {name: d, dtype: f32, count: 3328, offset: 0, bytes: 13312, sha256: 6aa48805575eb017572892b0ab49a391d58f051de6193cbe6c7e7b23fa0279d2,
+  unwritten_bytes: 0}
+jit_registers: 29
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

@@ -1,0 +1,24 @@
+feature: stmatrix
+entry: tests/corpus/xkmmma/stmatrix
+ptx_sha256: 495bbf6f7ca92ba6feaa2a2edbdf7f97b06128948f916453c658cd9072fa0eda
+inputs_sha256: 8808405eec6fbe306fe3369f88daed79dd5613ddbb5e801f632b01d6218c5f08
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [1, 1, 1]
+  block: [64, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 3da52b8262f581e7ef087a6b1a283ec514086f8dd835bd7940d3f405ee710da4
+outputs:
+- {name: d, dtype: u16, count: 512, offset: 0, bytes: 1024, sha256: 3da52b8262f581e7ef087a6b1a283ec514086f8dd835bd7940d3f405ee710da4,
+  unwritten_bytes: 0}
+jit_registers: 18
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

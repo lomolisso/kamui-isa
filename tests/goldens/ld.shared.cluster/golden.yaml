@@ -1,0 +1,24 @@
+feature: ld.shared::cluster
+entry: tests/corpus/xkmcluster/ld.shared.cluster
+ptx_sha256: 00c9e1983344a9862c0a0b44485c44651740ae13f82e880d11eac35916645504
+inputs_sha256: 42014b2e8e0229b63dc6ff54fa50afc250ee5fe342faea967c0b8ec42ba7b736
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [4, 1, 1]
+  block: [128, 1, 1]
+  cluster: [2, 1, 1]
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 421b45ce695d6acb284097231aa05176640285a0f18647af83b6215ca64c8818
+outputs:
+- {name: d, dtype: s32, count: 512, offset: 0, bytes: 2048, sha256: 421b45ce695d6acb284097231aa05176640285a0f18647af83b6215ca64c8818,
+  unwritten_bytes: 0}
+jit_registers: 18
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

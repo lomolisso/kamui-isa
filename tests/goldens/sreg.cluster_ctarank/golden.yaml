@@ -1,0 +1,24 @@
+feature: sreg.cluster_ctarank
+entry: tests/corpus/xkmsimt/sreg.cluster_ctarank
+ptx_sha256: dac9f8f98f316dc422b0895d4a4936d459d157c29982cfeaec59fcaf1a687536
+inputs_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [4, 1, 1]
+  block: [128, 1, 1]
+  cluster: [2, 1, 1]
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 7371719ea01ae58622295d205658300eab66c5cd4737f076b969b7b873f4eda4
+outputs:
+- {name: d, dtype: u32, count: 4096, offset: 0, bytes: 16384, sha256: 7371719ea01ae58622295d205658300eab66c5cd4737f076b969b7b873f4eda4,
+  unwritten_bytes: 0}
+jit_registers: 22
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

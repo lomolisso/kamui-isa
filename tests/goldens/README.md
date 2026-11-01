@@ -9,6 +9,11 @@ the conformance suite are compared against. One folder per corpus entry, named a
 | `<id>/outputs.bin` | the final contents of the entry's `output` and `inout` buffers, in the order of `params` in its `entry.yaml`, raw little-endian, no padding |
 | `<id>/golden.yaml` | how the golden was made and what it holds (below) |
 | `manifest.yaml` | the job id, the GPU, and the sha256 of every `golden.yaml` and `outputs.bin` |
+| `job.yaml` | the job that produced the committed goldens: commit, GPU, driver, toolkit, start and end time |
+
+The committed goldens come from job `20261101T164620Z-q000031` on GPU 3 of the lab's H100 server (an H100 NVL,
+driver 580.126.20): 252 entries ran correctly and `trap` failed as it should; every deterministic entry gave the
+same bytes in all three runs, and memcheck and racecheck found nothing in any kernel except the intended trap.
 
 The inputs are not stored: `tools/corpus/gen_inputs.py` regenerates them from the seeds in `entry.yaml`, and
 `golden.yaml` records their sha256. Compile-only entries (`run: false`) have no golden.

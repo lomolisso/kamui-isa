@@ -1,0 +1,24 @@
+feature: atom.scope.cta
+entry: tests/corpus/xkmscope/atom.scope.cta
+ptx_sha256: 04f2ac2e8600cad20c315d206114269b9c42d58ec48f320f41dadd3f8223481c
+inputs_sha256: c2df6cf38e0194fd6cab258cd373170bdfda4af742c549d5c36575e9aa913e71
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 3
+runs_identical: true
+tolerance: property:atomic
+outputs_sha256: a76ed8090d3de850f9ebb1dab6aab5fa0972dcb410b3161725914b0dd196ee30
+outputs:
+- {name: acc, dtype: u32, count: 2, offset: 0, bytes: 8, sha256: 91509536babbdc8566b59ed218271f1ceb02c2a7dff4967f6904c273fb0ef162}
+- {name: old, dtype: u32, count: 256, offset: 8, bytes: 1024, sha256: 81783ddb688fce55b27b09720d09a47a3986a678c5a6a5fa54948b05cd2af30b}
+jit_registers: 16
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

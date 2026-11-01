@@ -1,0 +1,24 @@
+feature: mul.half
+entry: tests/corpus/base/mul.half
+ptx_sha256: 8c1b7f8aa36a7a0203f5fd222b447dda06f32b141d30672c44a40222b036de29
+inputs_sha256: e56324d6d2effa194089bec91c98ccba8ba201697d964f5c03917a4358513cc7
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 299a8202e0486895ed396d3af8b1030f379059a77a82f64995d438048bb6a369
+outputs:
+- {name: d, dtype: f16, count: 256, offset: 0, bytes: 512, sha256: 299a8202e0486895ed396d3af8b1030f379059a77a82f64995d438048bb6a369,
+  unwritten_bytes: 0}
+jit_registers: 12
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

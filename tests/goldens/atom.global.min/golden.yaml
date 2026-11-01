@@ -1,0 +1,30 @@
+feature: atom.global.min
+entry: tests/corpus/base/atom.global.min
+ptx_sha256: e1c62757dc0d5c0a12e8ac2d82da02337f7b9729433fed6ac6d39b929cbf0134
+inputs_sha256: 5d90ee67497058550d3c17419c2737e01420862e532cdd4dbe290a5994dd8a13
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 3
+runs_identical: false
+tolerance: property:atomic
+outputs_sha256: 96d6856b4d614d9e7af1edcbbadbf9e663c084094c25c88668bde49d02ca1cd6
+outputs:
+- {name: acc, dtype: u32, count: 1, offset: 0, bytes: 4, sha256: ad497f997ead95db601f7d7ed72a7a624ba52ce6f4145a6dc7ec10d1f03876a9}
+- {name: arr, dtype: u32, count: 256, offset: 4, bytes: 1024, sha256: 124dbac98ddeacd74864990370e1949dee86144f164698a85c6a069c66a3f5bb}
+- {name: old_same, dtype: u32, count: 256, offset: 1028, bytes: 1024, sha256: e00bdf439c98a89c096ed1f841e2e0361ecf044285c96a5c15bb9ac2402e98dd}
+- {name: old_dist, dtype: u32, count: 256, offset: 2052, bytes: 1024, sha256: 5b3948587b04e719755f7763d1fd152a4d52f0cb397acf3892835ccff86d29b0}
+- {name: acc64, dtype: s64, count: 1, offset: 3076, bytes: 8, sha256: 4d53f6b1ca86d2c25cc6a31bd7a0b473020513f5a774fe76606495c6aea934a2}
+- {name: old64, dtype: s64, count: 256, offset: 3084, bytes: 2048, sha256: cc451fd24bfdafd9e02bd6a9c0c9cc65b59460254cd3cfd5b36edd85e0165c0c}
+- {name: accs, dtype: s32, count: 1, offset: 5132, bytes: 4, sha256: 0c115dcd5f8b0d839f80dd3f18b3da5ac9ede8446a9c025db9ea97fb243db905}
+- {name: olds, dtype: s32, count: 256, offset: 5136, bytes: 1024, sha256: 4c62c11f735e063b93e77b2f9a329b5161cc427c53c05d5b84bc7bb844f5624d}
+jit_registers: 22
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true
