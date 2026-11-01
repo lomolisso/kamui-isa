@@ -1,0 +1,30 @@
+feature: add.cc
+entry: tests/corpus/base/add.cc
+ptx_sha256: 7159d041b3bfd0c8d60159f636e9e9993545d0096df8dcdb84b812a14f1668ed
+inputs_sha256: 1b4d6a11cd276258933e22be54acf2a687fc0280798f040427a48c09d3a6ac3e
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: e072f54760250c9415ed4ce148630aae52bb1ca770eb92de64524a3a285b1f1d
+outputs:
+- {name: slo, dtype: u64, count: 256, offset: 0, bytes: 2048, sha256: 6aed9d95819aecbaea8ce7ef79756ebab177dcfec8b59968241ee92aba329e17,
+  unwritten_bytes: 0}
+- {name: shi, dtype: u64, count: 256, offset: 2048, bytes: 2048, sha256: feec76d965b07f43f8305d538881699418c8aecd7e025f4e8f3c95b6fb91e244,
+  unwritten_bytes: 0}
+- {name: dlo, dtype: u64, count: 256, offset: 4096, bytes: 2048, sha256: b47096e99e14bc8be26fd5560cf2bac6cb72b44dfd3bc9ec43bc9914dbb800a4,
+  unwritten_bytes: 0}
+- {name: dhi, dtype: u64, count: 256, offset: 6144, bytes: 2048, sha256: 1889f9a27f6a3b83c69af8bd9a9dbf2f49e1f06cbd69f7dc7ef3168b1a508a3a,
+  unwritten_bytes: 0}
+jit_registers: 24
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

@@ -1,0 +1,24 @@
+feature: app.vecadd
+entry: tests/corpus/base/app.vecadd
+ptx_sha256: 088f34639a4558c86b3714c1f5e86464f6fc95525e5536d177e5d70357b9a493
+inputs_sha256: e8201a0c20f64302bd4972e17b011794a44f6abc8cc4c8445b34d3cbde8d9e47
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [4, 1, 1]
+  block: [256, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 7529f22010aa39ec915c8753d8539ff8f62673342507e3cfa8b4abc689edf3fe
+outputs:
+- {name: c, dtype: f32, count: 1000, offset: 0, bytes: 4000, sha256: 7529f22010aa39ec915c8753d8539ff8f62673342507e3cfa8b4abc689edf3fe,
+  unwritten_bytes: 0}
+jit_registers: 12
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

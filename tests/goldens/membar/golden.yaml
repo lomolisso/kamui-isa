@@ -1,0 +1,26 @@
+feature: membar
+entry: tests/corpus/xkmscope/membar
+ptx_sha256: 02293fcaa5e177f8a92abdc094b70c86860806bfd246868571295b5ce5f7e7c8
+inputs_sha256: 31838e33e1964e7b278ecf7b180ac31d58218970921f31c44db28cc7f97aa980
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 5840a994ce5a04b1dfda0550cc17866daee003f67e8341bc77800ac06948089e
+outputs:
+- {name: data, dtype: s32, count: 256, offset: 0, bytes: 1024, sha256: c59e90e463a8fa2d5a71ebba6e52ac1708d3198673adb214e7dcc42148cfcee8,
+  unwritten_bytes: 0}
+- {name: flag, dtype: s32, count: 256, offset: 1024, bytes: 1024, sha256: f77885d0a4a69e550ce7da228bdcc61b3355f56e39284d2d857c5aa2c0d2c406,
+  unwritten_bytes: 0}
+jit_registers: 12
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

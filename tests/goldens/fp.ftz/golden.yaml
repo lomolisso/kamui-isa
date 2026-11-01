@@ -1,0 +1,28 @@
+feature: fp.ftz
+entry: tests/corpus/base/fp.ftz
+ptx_sha256: 1d66687353d931451d46e1ff35edb012721043d73ec93a395675f3a68c68aa70
+inputs_sha256: 8c0aac2d6c5742fac16eed45fcccffba4024d1f439b5e98b7cb428c05c67059f
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: ftz
+outputs_sha256: 649c9b0f8b83a8fbd8b6b38c10b50a010f120303e957f0acb4a2995baeb118f7
+outputs:
+- {name: d_add, dtype: f32, count: 256, offset: 0, bytes: 1024, sha256: 8ac8c6f52baebcae722604193d50c95f4c3f9822908009213414990a6244efd8,
+  unwritten_bytes: 0}
+- {name: d_mul, dtype: f32, count: 256, offset: 1024, bytes: 1024, sha256: b9006b7398c1606dd3becd2768bf430457593a98fadc684ca3d0f19102fbc648,
+  unwritten_bytes: 0}
+- {name: d_fma, dtype: f32, count: 256, offset: 2048, bytes: 1024, sha256: 53656c9e77ab11f019949c718f5b7cb4612e306d3e1b40f0f13e7b791b90af18,
+  unwritten_bytes: 0}
+jit_registers: 20
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

@@ -1,0 +1,24 @@
+feature: red.shared
+entry: tests/corpus/base/red.shared
+ptx_sha256: 686e95657174cebe2da901964dc04af32e5b3c929eb0a9eeddccaaa8cf5fe91b
+inputs_sha256: b887d3c710abeed3cac16c93cc1117bf6238729899614b9db95ab1bd793d71a2
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: b1a47f18e7ebd272aa2eec71273fbddc2663e538111c7f0282fc4594c5c87f97
+outputs:
+- {name: fin, dtype: u32, count: 12, offset: 0, bytes: 48, sha256: b1a47f18e7ebd272aa2eec71273fbddc2663e538111c7f0282fc4594c5c87f97,
+  unwritten_bytes: 0}
+jit_registers: 13
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

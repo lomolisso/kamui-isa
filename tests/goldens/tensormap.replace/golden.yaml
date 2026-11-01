@@ -1,0 +1,24 @@
+feature: tensormap.replace
+entry: tests/corpus/xkmasync/tensormap.replace
+ptx_sha256: 2b14d648e6f9b9f2c64508c98dad702e430d79692bd67e703500ec8b831c18b5
+inputs_sha256: 38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: d3d7bb2716aff2c70bd386450d164778753b18f4d3baee3e9ace356973e09187
+outputs:
+- {name: tmb, dtype: u64, count: 16, offset: 0, bytes: 128, sha256: d3d7bb2716aff2c70bd386450d164778753b18f4d3baee3e9ace356973e09187,
+  unwritten_bytes: 0}
+jit_registers: 12
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

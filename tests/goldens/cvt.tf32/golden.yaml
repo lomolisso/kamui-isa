@@ -1,0 +1,24 @@
+feature: cvt.tf32
+entry: tests/corpus/xkmmisc/cvt.tf32
+ptx_sha256: 48894bc49f2620232cf82f20c06ec5bd8caa5dcba16dbcafb8fbba5e86150d60
+inputs_sha256: 0c15fe64b3507904ae87d9f1c63a3d04e4e5f417333abf72f4ea6969fb15e4b6
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: c919a433a55fa9047b46566a6670399baaa91d8b15fe3e5b6e0e41e0685d47c3
+outputs:
+- {name: d, dtype: u32, count: 256, offset: 0, bytes: 1024, sha256: c919a433a55fa9047b46566a6670399baaa91d8b15fe3e5b6e0e41e0685d47c3,
+  unwritten_bytes: 0}
+jit_registers: 12
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

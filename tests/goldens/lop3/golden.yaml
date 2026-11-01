@@ -1,0 +1,30 @@
+feature: lop3
+entry: tests/corpus/xkmmisc/lop3
+ptx_sha256: 5d59ae465a91f65e695afd40154477c850a0f3ddc5c80c12ea24d842e21c12bf
+inputs_sha256: c172f0887716316e2fc150a3a7ece718cf298aaa58e67a982daff49f1c31d4ae
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 87368f3fe5ac3e5e7e829dabc27efcd68fe228bddfead5d69ceb324543884de3
+outputs:
+- {name: d0, dtype: u32, count: 256, offset: 0, bytes: 1024, sha256: 7d0b3484457ce2db23375158c9407d3feb0b3369b191189e8f1a08566913dfba,
+  unwritten_bytes: 0}
+- {name: d1, dtype: u32, count: 256, offset: 1024, bytes: 1024, sha256: bfee2b2af40c8841a3c593cdfd4cdfb9a658e42ae08f0580ad47b5cc9654a488,
+  unwritten_bytes: 0}
+- {name: d2, dtype: u32, count: 256, offset: 2048, bytes: 1024, sha256: 9db64520d1828ee2c322629bd9dc9d8ca2126547a79ac9824afac2f229eacb34,
+  unwritten_bytes: 0}
+- {name: d3, dtype: u32, count: 256, offset: 3072, bytes: 1024, sha256: f6f5dddb40f3776f1c5d1533956ff68a3adfa23eebda6a6c9c29b5f7f2b79549,
+  unwritten_bytes: 0}
+jit_registers: 26
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

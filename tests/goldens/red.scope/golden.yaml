@@ -1,0 +1,24 @@
+feature: red.scope
+entry: tests/corpus/xkmscope/red.scope
+ptx_sha256: 2aacfd232ff89c1e1f349b9cf49ff7bbec075398c29108554d65d4d914b1f651
+inputs_sha256: 00e3586a276a0ef58dbd0c3efe1a22879bc0f378d1f3a1a9a1425b8cb49395be
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 8868acdbfabdc24ff9077c81e83bc3ed0a090ae9765e93b6b1e298b9e0e1526a
+outputs:
+- {name: acc, dtype: u32, count: 3, offset: 0, bytes: 12, sha256: 8868acdbfabdc24ff9077c81e83bc3ed0a090ae9765e93b6b1e298b9e0e1526a,
+  unwritten_bytes: 0}
+jit_registers: 14
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

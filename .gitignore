@@ -10,8 +10,9 @@
 .worktrees/
 build/
 
-# Corpus entry directories named after a feature id (atom.scope.gpu) are not compiler intermediates
+# Corpus entry and golden directories named after a feature id (atom.scope.gpu) are not compiler intermediates
 !tests/corpus/*/*.gpu/
+!tests/goldens/*.gpu/
 
 # PTX that the project commits on purpose
 !tests/**/*.ptx

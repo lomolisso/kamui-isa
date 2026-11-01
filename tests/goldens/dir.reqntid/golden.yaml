@@ -1,0 +1,24 @@
+feature: dir.reqntid
+entry: tests/corpus/base/dir.reqntid
+ptx_sha256: fd83cb63ee529f036164fde893db2c378de7896773d7d4ff6417f678a850896b
+inputs_sha256: 1374d1e6544d7248fc2fbf53123f62d31bccd59d8a0d7cf0bbb2ce48621dd2a5
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: be6c7d9a88b74536073c8504ccaa3f465214e53038a83f7c0f010a0376b6d24a
+outputs:
+- {name: d, dtype: s32, count: 256, offset: 0, bytes: 1024, sha256: be6c7d9a88b74536073c8504ccaa3f465214e53038a83f7c0f010a0376b6d24a,
+  unwritten_bytes: 0}
+jit_registers: 10
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

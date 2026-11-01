@@ -1,0 +1,23 @@
+feature: sreg.dynamic_smem_size
+entry: tests/corpus/xkmsimt/sreg.dynamic_smem_size
+ptx_sha256: 2881681e4bfe8da818857c8e8be43533116296d46ca52ad94678f914f0971013
+inputs_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 1024
+result: ok
+deterministic: false
+runs: 3
+runs_identical: true
+tolerance: property:range
+outputs_sha256: aa0fe7952f58121ff90b4a160fcc910438be5823a2290a22b65ba0dcad6b825a
+outputs:
+- {name: d, dtype: u32, count: 512, offset: 0, bytes: 2048, sha256: aa0fe7952f58121ff90b4a160fcc910438be5823a2290a22b65ba0dcad6b825a}
+jit_registers: 10
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

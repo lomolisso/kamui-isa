@@ -1,0 +1,24 @@
+feature: cp.async.bulk.tensor.store
+entry: tests/corpus/xkmasync/cp.async.bulk.tensor.store
+ptx_sha256: 31441cb053ed2caa8281a7a22050d3bbf24413578d4050dfc93018a9c247a4b6
+inputs_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [8, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: eea638b90e806cf35021700379ec94fda9dd3939234864918ca1ef16460c6999
+outputs:
+- {name: g, dtype: u32, count: 2048, offset: 0, bytes: 8192, sha256: eea638b90e806cf35021700379ec94fda9dd3939234864918ca1ef16460c6999,
+  unwritten_bytes: 0}
+jit_registers: 7
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

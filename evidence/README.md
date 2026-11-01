@@ -9,6 +9,7 @@ execution-model decisions and the conformance suite rest on.
 | `ptxas/` | `ptxas -v` output of every corpus entry: registers, shared memory, stack | `tools/evidence/sass.py` (dev container) |
 | `sass/` | The SASS of every corpus entry (`cuobjdump -sass -res-usage`) | `tools/evidence/sass.py` (dev container) |
 | `sass-observations.csv` | One row per in-scope catalog feature: which SASS implements it, how its modifiers are encoded, and which hidden mechanisms appear | `tools/evidence/sass.py` |
+| `jit-comparison.tsv` | For every kernel run on the H100: whether the driver JIT produced the same SASS as the offline ptxas (columns in `tools/evidence/jit_compare.py`) | `jobs/goldens.sh` + `tools/evidence/jit_compare.py` |
 
 ## sass-observations.csv
 

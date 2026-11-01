@@ -1,0 +1,24 @@
+feature: tensormap.cp_fenceproxy
+entry: tests/corpus/xkmasync/tensormap.cp_fenceproxy
+ptx_sha256: 473a9e6dd0677773197902a8d0342134f23de283153c14822ae7c97b1df78db0
+inputs_sha256: 834029204173cf3694a8de5809c4c9eb62ee23dfa58e86e74c4d2c8d70d7f1a0
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 834029204173cf3694a8de5809c4c9eb62ee23dfa58e86e74c4d2c8d70d7f1a0
+outputs:
+- {name: dst, dtype: u64, count: 16, offset: 0, bytes: 128, sha256: 834029204173cf3694a8de5809c4c9eb62ee23dfa58e86e74c4d2c8d70d7f1a0,
+  unwritten_bytes: 0}
+jit_registers: 12
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

@@ -1,0 +1,24 @@
+feature: wmma.load
+entry: tests/corpus/xkmmma/wmma.load
+ptx_sha256: 8d945914f3ce35d10b67cdcc9608aed26a08390eb4632167d599f963505b5556
+inputs_sha256: a32207bca3fc4d259aaaba72e8618030b9ab327ec0049ce86c22f4b1ed253075
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [1, 1, 1]
+  block: [64, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: reduction
+outputs_sha256: fc8da3f4dd0a0076ab966518a8cf151a629078b9b59736f83767afbef92f95e6
+outputs:
+- {name: d, dtype: f32, count: 512, offset: 0, bytes: 2048, sha256: fc8da3f4dd0a0076ab966518a8cf151a629078b9b59736f83767afbef92f95e6,
+  unwritten_bytes: 0}
+jit_registers: 30
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

@@ -84,3 +84,13 @@ def test_compile_time_is_dropped():
 
 def test_committed_evidence_is_complete():
     assert A.check(common.load_catalog()) == 0
+
+
+def test_jit_compare():
+    import jit_compare as J
+    a = [("", "LDG.E", "R1,desc[UR4][R2.64]"), ("@P0", "EXIT", "")]
+    assert J.compare(a, list(a)) == ("yes", "")
+    assert J.compare(a, [("", "LDG.E", "R5,desc[UR4][R2.64]"), ("@P0", "EXIT", "")])[0] == "opcodes"
+    m, diff = J.compare(a, [("", "LDG.E.CONSTANT", "R1,desc[UR4][R2.64]"), ("@P0", "EXIT", "")])
+    assert m == "no" and diff == "at 0: LDG.E | LDG.E.CONSTANT"
+    assert J.compare(a, a[:1]) == ("no", "at 1: @P0 EXIT | (end)")

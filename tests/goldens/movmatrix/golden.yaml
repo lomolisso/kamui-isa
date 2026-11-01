@@ -1,0 +1,24 @@
+feature: movmatrix
+entry: tests/corpus/xkmmma/movmatrix
+ptx_sha256: be5dbea53455e7f812da3971e9559920d7b2a915e8e6466cad8ec495ad9da565
+inputs_sha256: fea7b32778ecbdd7adee1941e98c89cf96bbc762f5f1beb0be24e36a456fbbc5
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [1, 1, 1]
+  block: [64, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: f41c85088f47ac0579a9752d7ccdd734af08c4b7f45f947e3f28fcbc3f53afe6
+outputs:
+- {name: d, dtype: u32, count: 64, offset: 0, bytes: 256, sha256: f41c85088f47ac0579a9752d7ccdd734af08c4b7f45f947e3f28fcbc3f53afe6,
+  unwritten_bytes: 0}
+jit_registers: 12
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

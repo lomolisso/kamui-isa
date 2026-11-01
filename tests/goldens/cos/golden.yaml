@@ -1,0 +1,24 @@
+feature: cos
+entry: tests/corpus/xkmmufu/cos
+ptx_sha256: 0366600828a5056aaee3d5a50f52e66032d160247dcf745863256d906d8f47c9
+inputs_sha256: c7d6930d23d90ddf763a68b58d5dfbba7e3bf7037c48a1a7ee30b3267cfabb98
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: ulp:2
+outputs_sha256: 5fe8c1e4eb165d39f398fdec9dc27cbba37f439df7caefdcb30300fe192b3331
+outputs:
+- {name: d, dtype: f32, count: 256, offset: 0, bytes: 1024, sha256: 5fe8c1e4eb165d39f398fdec9dc27cbba37f439df7caefdcb30300fe192b3331,
+  unwritten_bytes: 0}
+jit_registers: 12
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

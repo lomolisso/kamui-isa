@@ -1,0 +1,24 @@
+feature: min.fp.nan
+entry: tests/corpus/base/min.fp.nan
+ptx_sha256: 5ece2440444574abd195825e3db86261eb169e2b72ffc436c6c31138e6262ba4
+inputs_sha256: 1d0b525c176b8f68a8fdd970124f076c079e9428a35c532aca6f663d99fca630
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: b6cc57c2847f14164626cd0d61cd90688749b08aaf64bbc2ffa845e6ebc8d801
+outputs:
+- {name: d, dtype: f32, count: 1024, offset: 0, bytes: 4096, sha256: b6cc57c2847f14164626cd0d61cd90688749b08aaf64bbc2ffa845e6ebc8d801,
+  unwritten_bytes: 0}
+jit_registers: 16
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

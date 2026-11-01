@@ -28,6 +28,8 @@
 	shl.b32 	%r13, %r12, 7;
 	add.s32 	%r14, %r13, %r11;
 	mov.u32 	%r8, %cluster_ctarank;
+	barrier.cluster.arrive;
+	barrier.cluster.wait;
 	mov.u64 	%rd5, _ZZ19k_ld_shared_clusterE1s;
 	shl.b32 	%r15, %r11, 2;
 	cvt.u64.u32 	%rd6, %r15;

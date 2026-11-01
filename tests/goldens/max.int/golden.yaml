@@ -1,0 +1,28 @@
+feature: max.int
+entry: tests/corpus/base/max.int
+ptx_sha256: cf4166ad14e77c6d5e827cd680ffa2e6f37cfff2df406e79336056667f54f027
+inputs_sha256: 67c2cf74bd26e62c2ccf6df978c243ee070e1930daf5ae0b6eb8e29c87c96a7c
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261101T164620Z-q000031
+launch:
+  grid: [2, 1, 1]
+  block: [128, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: true
+runs: 3
+runs_identical: true
+tolerance: exact
+outputs_sha256: 637791b9de68345d23d839db2af98f312bed93cdb04c9827d9e61df17a65ff59
+outputs:
+- {name: d32, dtype: s32, count: 256, offset: 0, bytes: 1024, sha256: 660236024cdc2ec2a032e111482861b55684ab46fb22dbd788d4db4a62c95c9a,
+  unwritten_bytes: 0}
+- {name: du32, dtype: u32, count: 256, offset: 1024, bytes: 1024, sha256: 66803ccb9ef5d007528196531caf2e86476e63c38077fc365441df6e7b808a62,
+  unwritten_bytes: 0}
+- {name: d64, dtype: s64, count: 256, offset: 2048, bytes: 2048, sha256: 6eb2a04480467a278f16f0871b7ae8ce262180f9e30dbf3a4f575d901f0941c7,
+  unwritten_bytes: 0}
+jit_registers: 20
+sanitizer: {memcheck: 'ERROR SUMMARY: 0 errors', racecheck: 'RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)'}
+jit_cubin_dumped: true

@@ -18,10 +18,11 @@ extern "C" __global__ void k_cp_async_bulk_tensor_multicast(const unsigned *g,
   if (t == 0) {
     asm volatile("mbarrier.init.shared::cta.b64 [%0], 1;" :: "r"(b) : "memory");
     asm volatile("fence.mbarrier_init.release.cluster;" ::: "memory");
-    asm volatile("mbarrier.arrive.expect_tx.shared::cta.b64 _, [%0], 1024;" :: "r"(b) : "memory");
   }
   __nvvm_barrier_cluster_arrive();
   __nvvm_barrier_cluster_wait();
+  // After the barrier: the transaction count may go below zero if the peer's copy lands first, which is allowed.
+  if (t == 0) asm volatile("mbarrier.arrive.expect_tx.shared::cta.b64 _, [%0], 1024;" :: "r"(b) : "memory");
   if (rank == 0 && t == 0)
     asm volatile("cp.async.bulk.tensor.2d.shared::cluster.global.tile.mbarrier::complete_tx::bytes.multicast::cluster"
                  " [%0], [%1, {%2, %3}], [%4], %5;"
