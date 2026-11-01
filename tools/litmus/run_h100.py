@@ -8,7 +8,9 @@ For each test with a kernel in tests/litmus/h100/ (matching --tests, a glob over
 'ptx/kamui/families/MP/*') and each configuration, it runs tools/litmus/runner/litmus_runner and keeps its JSON
 as OUT/results/<test path>/<config>.json. The seed is derived from the test id and the configuration, so a run
 can be repeated. --shard K/N runs every N-th test starting at K (0-based), to split the work into several jobs.
---dry-run prints the commands without running them (no GPU needed).
+--dry-run prints the commands without running them (no GPU needed). --resume skips every run whose result file
+already exists in OUT with at least the requested number of instances, so an interrupted job can be finished
+by running it again with the same OUT.
 
 OUT/run.yaml records, for every run: the test, the configuration, the exit status and the time. Turning the
 results into evidence/litmus-h100/observed.csv is tools/litmus/observed.py's job.
@@ -19,6 +21,7 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import hashlib
+import json
 import os
 import subprocess
 import sys
@@ -43,6 +46,13 @@ def kernels() -> list[tuple[str, Path]]:
     return out
 
 
+def complete(path: Path, instances: int) -> bool:
+    try:
+        return json.loads(path.read_text())["instances"] >= instances
+    except (OSError, ValueError, KeyError):
+        return False
+
+
 def seed_of(tid: str, config: str) -> int:
     return int.from_bytes(hashlib.sha256(f"{tid}|{config}".encode()).digest()[:4], "little") or 1
 
@@ -57,6 +67,7 @@ def main() -> int:
     ap.add_argument("--shard", default="0/1")
     ap.add_argument("--timeout", type=int, default=600)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--resume", action="store_true", help="skip runs whose complete result already exists")
     a = ap.parse_args()
     k, n = (int(x) for x in a.shard.split("/"))
     todo = [(tid, d) for tid, d in kernels() if fnmatch.fnmatch(tid, a.tests)][k::n]
@@ -69,6 +80,9 @@ def main() -> int:
             dest = a.out / "results" / tid.removeprefix("ptx/") / f"{c}.json"
             cmd = [str(a.runner), str(d / "spec.txt"), str(d / "kernel.ptx"), str(dest),
                    "--instances", str(a.instances), "--config", c, "--seed", str(seed_of(tid, c))]
+            if a.resume and complete(dest, a.instances):
+                runs.append({"test": tid, "config": c, "exit": 0, "seconds": 0, "message": "reused"})
+                continue
             if a.dry_run:
                 print(" ".join(cmd))
                 continue

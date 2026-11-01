@@ -57,3 +57,12 @@ def test_observed_build(tmp_path, monkeypatch):
     assert "P1:r0=1 P1:r1=0,2,10,yes,forbidden" in obs
     bad = observed.forbidden_observed(summ)
     assert len(bad) == 1 and bad[0]["weak"] == "2" and bad[0]["rate"] == "0.2"
+
+
+def test_complete(tmp_path):
+    f = tmp_path / "r.json"
+    assert not run_h100.complete(f, 10)
+    f.write_text('{"instances": 12}')
+    assert run_h100.complete(f, 10) and not run_h100.complete(f, 20)
+    f.write_text('{"instances": 1')
+    assert not run_h100.complete(f, 10)
