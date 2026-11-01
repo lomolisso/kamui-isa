@@ -11,6 +11,7 @@ Scripts that build and check the PTX feature catalog (`tests/corpus/catalog.yaml
 | `release_notes.py` | Chapter 12 of the manual to `snapshots/release-notes.tsv`: every feature the release notes name |
 | `check_coverage.py` | Checks A (manual), B (`--llvm`), C (`--release-notes`) and the catalog's fields (`--validate`); `--all` runs everything |
 | `gen_table.py` | Writes `spec/ptx-table.md`; `--check` fails if it is out of date |
+| `stats.py` | Prints the tables of the catalog and corpus as Markdown (counts per family, tier and route, exclusions, pending entries, coverage results, features per PTX version); `--nvcc` adds a comparison with nvcc's PTX |
 | `coverage-exceptions.yaml` | Accepted mismatches of checks B and C, each with a reason |
 | `tests/` | Unit tests (`python -m pytest tools/`) |
 

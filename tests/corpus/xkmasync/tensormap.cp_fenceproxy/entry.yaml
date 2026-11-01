@@ -1,0 +1,10 @@
+id: tensormap.cp_fenceproxy
+kernel: k_tensormap_cp_fenceproxy
+compile: {extra_flags: []}
+launch: {grid: [1, 1, 1], block: [32, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: src, kind: input, dtype: u64, count: 16, generator: {kind: random, seed: 641, low: 0, high: 18446744073709551615}}
+  - {name: dst, kind: output, dtype: u64, count: 16}
+expect_ptx: ['tensormap\.cp_fenceproxy\.global\.shared::cta\.tensormap::generic\.release\.gpu', 'fence\.proxy\.tensormap::generic\.acquire\.gpu', 'fence\.proxy\.tensormap::generic\.release\.gpu']
+deterministic: true
+tolerance_class: exact

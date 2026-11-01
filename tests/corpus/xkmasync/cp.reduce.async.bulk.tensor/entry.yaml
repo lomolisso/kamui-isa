@@ -1,0 +1,11 @@
+id: cp.reduce.async.bulk.tensor
+kernel: k_cp_reduce_async_bulk_tensor
+compile: {extra_flags: []}
+launch: {grid: [8, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: g, kind: inout, dtype: u32, count: 2048, generator: {kind: iota}}
+  - {name: tm, kind: tensormap, of: g, dtype: u32, mode: tile, dims: [64, 32], box: [32, 8]}
+expect_ptx: ['cp\.reduce\.async\.bulk\.tensor\.2d\.global\.shared::cta\.add\.tile']
+deterministic: true
+tolerance_class: exact
+notes: 'Pairs of CTAs add into the same boxes; integer sums are order-independent.'

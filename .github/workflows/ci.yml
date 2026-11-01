@@ -94,7 +94,7 @@ jobs:
         run: python -m pytest -q tools/
 
       - name: PTX catalog coverage checks
-        run: python tools/catalog/check_coverage.py --all
+        run: python tools/catalog/check_coverage.py --all --require-entries
 
       - name: PTX table is up to date
         run: python tools/catalog/gen_table.py --check

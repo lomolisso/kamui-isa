@@ -1,0 +1,10 @@
+id: dir.reqnctapercluster
+kernel: k_dir_reqnctapercluster
+compile: {extra_flags: []}
+launch: {grid: [4, 1, 1], block: [128, 1, 1], cluster: [2, 1, 1], dynamic_smem: 0}
+params:
+  - {name: d, kind: output, dtype: u32, count: 512}
+expect_ptx: ['\.reqnctapercluster 2, 1, 1', '\.explicitcluster']
+deterministic: true
+tolerance_class: exact
+notes: 'clang 20 ignores __cluster_dims__ (unknown attribute); the cluster_dim nvvm annotations reach the PTX.'

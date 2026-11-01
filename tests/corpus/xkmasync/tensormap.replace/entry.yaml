@@ -1,0 +1,11 @@
+id: tensormap.replace
+kernel: k_tensormap_replace
+compile: {extra_flags: []}
+launch: {grid: [1, 1, 1], block: [32, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: tmb, kind: inout, dtype: u64, count: 16, generator: {kind: const, value: 0}}
+  - {name: addr, kind: scalar, dtype: u64, value: 65536}
+expect_ptx: ['tensormap\.replace\.tile\.global_address\.global\.b1024\.b64', 'tensormap\.replace\.tile\.rank', 'tensormap\.replace\.tile\.global_dim']
+deterministic: true
+tolerance_class: exact
+notes: 'The 128-byte buffer starts zeroed; its final bytes are the H100''s encoding of the replaced fields.'

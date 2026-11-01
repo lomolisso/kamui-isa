@@ -2,7 +2,8 @@
 """Write inputs.bin for corpus entries from the seeded generators in their entry.yaml.
 
 inputs.bin holds the initial contents of every `input` and `inout` buffer, in the order of `params`, as raw
-little-endian data with no padding. Generators run only here; the H100 runner, the simulator and the
+little-endian data with no padding. Scalars and tensor maps are not in it: the runner passes scalars by value and
+encodes tensor maps on the host from their descriptor. Generators run only here; the H100 runner, the simulator and the
 conformance runner read inputs.bin and never reimplement them.
 
 Generators:

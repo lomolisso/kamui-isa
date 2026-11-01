@@ -1,0 +1,10 @@
+id: movmatrix
+kernel: k_movmatrix
+compile: {extra_flags: []}
+launch: {grid: [1, 1, 1], block: [64, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: u32, count: 64, generator: {kind: iota}}
+  - {name: d, kind: output, dtype: u32, count: 64}
+expect_ptx: ['movmatrix\.sync\.aligned\.m8n8\.trans\.b16']
+deterministic: true
+tolerance_class: exact

@@ -1,0 +1,10 @@
+id: cp.async.bulk.shared_to_global
+kernel: k_cp_async_bulk_shared_to_global
+compile: {extra_flags: []}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: in, kind: input, dtype: s32, count: 1024, generator: {kind: random, seed: 632, low: -1000, high: 1000}}
+  - {name: d, kind: output, dtype: s32, count: 1024}
+expect_ptx: ['cp\.async\.bulk\.global\.shared::cta\.bulk_group', 'fence\.proxy\.async\.shared::cta', 'cp\.async\.bulk\.commit_group', 'cp\.async\.bulk\.wait_group 0']
+deterministic: true
+tolerance_class: exact

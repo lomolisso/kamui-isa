@@ -11,6 +11,7 @@ All notable changes to this project are listed here. The format follows
 - PTX 8.7 feature catalog with coverage checks against the manual, clang 20 and the release notes, and the
   generated PTX side of `spec/ptx-table.md`.
 - PTX corpus build tools and the tier 1 micro-kernels, one per feature, compiled by clang 20.
+- Tier 2 to 4 micro-kernels (memory model, MMA, wgmma, mbarrier, TMA, clusters), completing the PTX corpus.
 - H100 environment probe job and its results: driver, toolkit and library versions, and a confirmed PTX 8.7 JIT.
 
 ## [0.1.0] - 2026-10-31

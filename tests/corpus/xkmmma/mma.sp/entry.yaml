@@ -1,0 +1,14 @@
+id: mma.sp
+kernel: k_mma_sp
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [1, 1, 1], block: [64, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 511, low: 0, high: 1006648320}}
+  - {name: b, kind: input, dtype: u32, count: 256, generator: {kind: random, seed: 512, low: 0, high: 1006648320}}
+  - {name: c, kind: input, dtype: f32, count: 256, generator: {kind: random, seed: 522, low: -1.0, high: 1.0}}
+  - {name: dd, kind: output, dtype: f32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 64}
+expect_ptx: ['mma\.sp\.sync\.aligned\.m16n8k32\.row\.col\.f32\.f16\.f16\.f32']
+deterministic: true
+tolerance_class: reduction
+notes: 'Metadata 0x44444444 keeps elements 0 and 1 of every group of four.'

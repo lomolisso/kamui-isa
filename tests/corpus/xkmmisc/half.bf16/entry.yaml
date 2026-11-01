@@ -1,0 +1,18 @@
+id: half.bf16
+kernel: k_half_bf16
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [2, 1, 1], block: [128, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: u16, count: 256, generator: {kind: random, seed: 564, low: 16128, high: 16640}}
+  - {name: b, kind: input, dtype: u16, count: 256, generator: {kind: random, seed: 565, low: 16128, high: 16640}}
+  - {name: c, kind: input, dtype: u16, count: 256, generator: {kind: random, seed: 566, low: 16128, high: 16640}}
+  - {name: dadd, kind: output, dtype: u16, count: 256}
+  - {name: dmul, kind: output, dtype: u16, count: 256}
+  - {name: dfma, kind: output, dtype: u16, count: 256}
+  - {name: dmin, kind: output, dtype: u16, count: 256}
+  - {name: dsub2, kind: output, dtype: u32, count: 256}
+  - {name: n, kind: scalar, dtype: s32, value: 256}
+expect_ptx: ['add\.rn\.bf16', 'mul\.rn\.bf16', 'fma\.rn\.bf16', 'min\.bf16', 'sub\.rn\.bf16x2']
+deterministic: true
+tolerance_class: exact
+notes: 'Inputs are raw bf16 bit patterns in [0.5, 8).'

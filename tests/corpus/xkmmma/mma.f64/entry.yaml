@@ -1,0 +1,14 @@
+id: mma.f64
+kernel: k_mma_f64
+compile: {extra_flags: [-ffp-contract=off, -fno-cuda-flush-denormals-to-zero]}
+launch: {grid: [1, 1, 1], block: [64, 1, 1], cluster: null, dynamic_smem: 0}
+params:
+  - {name: a, kind: input, dtype: f64, count: 64, generator: {kind: random, seed: 517, low: -1.0, high: 1.0}}
+  - {name: b, kind: input, dtype: f64, count: 64, generator: {kind: random, seed: 518, low: -1.0, high: 1.0}}
+  - {name: c, kind: input, dtype: f64, count: 128, generator: {kind: random, seed: 518, low: -1.0, high: 1.0}}
+  - {name: dd, kind: output, dtype: f64, count: 128}
+  - {name: n, kind: scalar, dtype: s32, value: 64}
+expect_ptx: ['mma\.sync\.aligned\.m8n8k4\.row\.col\.f64\.f64\.f64\.f64']
+deterministic: true
+tolerance_class: reduction
+notes: 'Two warps; each thread''s fragment registers are consecutive elements of a, b, c and dd.'

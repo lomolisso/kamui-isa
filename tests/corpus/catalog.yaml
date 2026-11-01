@@ -116,7 +116,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/add.int.packed
   tolerance_class: exact
   notes: Packed .u16x2/.s16x2 add (sm_90).
 - id: add.mixed
@@ -232,7 +232,7 @@ features:
   tier: 3
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/applypriority
   tolerance_class: exact
   notes: L2 cache hint.
 - id: atom.b128
@@ -245,7 +245,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/atom.b128
   tolerance_class: exact
   notes: 128-bit exch and cas.
 - id: atom.generic.add
@@ -410,10 +410,10 @@ features:
   min_target: sm_70
   family: base
   tier: 2
-  route: cuda
+  route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: reduction
+  entry: tests/corpus/base/atom.half
+  tolerance_class: property:atomic
   notes: 'f16, f16x2 (sm_70), bf16, bf16x2 (sm_90) add.'
 - id: atom.scope.cluster
   kind: modifier
@@ -426,8 +426,8 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmscope/atom.scope.cluster
+  tolerance_class: property:atomic
 - id: atom.scope.cta
   kind: modifier
   opcodes: [atom.cta]
@@ -439,8 +439,8 @@ features:
   tier: 2
   route: builtin
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmscope/atom.scope.cta
+  tolerance_class: property:atomic
   notes: '__nvvm_atom_cta_*.'
 - id: atom.scope.gpu
   kind: modifier
@@ -467,8 +467,8 @@ features:
   tier: 2
   route: builtin
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmscope/atom.scope.sys
+  tolerance_class: property:atomic
   notes: '__nvvm_atom_sys_*.'
 - id: atom.sem.acq_rel
   kind: modifier
@@ -481,8 +481,8 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmscope/atom.sem.acq_rel
+  tolerance_class: property:atomic
   notes: clang 20 drops orderings on atomic RMW.
 - id: atom.sem.acquire
   kind: modifier
@@ -495,8 +495,8 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmscope/atom.sem.acquire
+  tolerance_class: property:atomic
   notes: clang 20 drops orderings on atomic RMW.
 - id: atom.sem.relaxed
   kind: modifier
@@ -509,8 +509,8 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmscope/atom.sem.relaxed
+  tolerance_class: property:atomic
 - id: atom.sem.release
   kind: modifier
   opcodes: [atom.release]
@@ -522,8 +522,8 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmscope/atom.sem.release
+  tolerance_class: property:atomic
   notes: clang 20 drops orderings on atomic RMW.
 - id: atom.shared.add
   kind: modifier
@@ -549,8 +549,8 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmcluster/atom.shared.cluster.add
+  tolerance_class: property:atomic
 - id: atom.vector
   kind: modifier
   ptx_syntax: 'atom.global.v2.f32.add d, [a], b;'
@@ -561,8 +561,8 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/base/atom.vector
+  tolerance_class: property:atomic
   notes: 'Vector float atomics (.v2/.v4/.v8 of f32, f16, bf16).'
 - id: bar.arrive
   kind: modifier
@@ -643,7 +643,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/mapa
   tolerance_class: exact
   notes: 'Kernel covers arrive, arrive.relaxed and wait.'
 - id: barrier.sync
@@ -657,7 +657,7 @@ features:
   tier: 2
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmbar/barrier.sync
   tolerance_class: exact
   notes: 'Non-aligned barrier: threads may reach it from different code (independent thread scheduling).'
 - id: bfe
@@ -711,7 +711,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/bmsk
   tolerance_class: exact
   notes: clang 20 does not emit it. A plain RV64 sequence may suffice; decided with the specification.
 - id: bra
@@ -900,7 +900,7 @@ features:
   tier: 3
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async
   tolerance_class: exact
   notes: 'Asynchronous global to shared copy (4, 8, 16 bytes).'
 - id: cp.async.bulk.commit_group
@@ -914,7 +914,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.shared_to_global
   tolerance_class: exact
 - id: cp.async.bulk.global_to_shared
   kind: modifier
@@ -929,7 +929,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.global_to_shared
   tolerance_class: exact
 - id: cp.async.bulk.multicast
   kind: modifier
@@ -941,7 +941,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.multicast
   tolerance_class: exact
   notes: Optimised only on sm_90a.
 - id: cp.async.bulk.prefetch
@@ -955,7 +955,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.prefetch
   tolerance_class: exact
 - id: cp.async.bulk.prefetch.tensor
   kind: instruction
@@ -968,7 +968,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.prefetch.tensor
   tolerance_class: exact
 - id: cp.async.bulk.shared_to_cluster
   kind: modifier
@@ -982,7 +982,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.shared_to_cluster
   tolerance_class: exact
 - id: cp.async.bulk.shared_to_global
   kind: modifier
@@ -995,7 +995,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.shared_to_global
   tolerance_class: exact
 - id: cp.async.bulk.tensor.im2col
   kind: modifier
@@ -1007,7 +1007,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.tensor.im2col
   tolerance_class: exact
 - id: cp.async.bulk.tensor.multicast
   kind: modifier
@@ -1019,7 +1019,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.tensor.multicast
   tolerance_class: exact
 - id: cp.async.bulk.tensor.store
   kind: modifier
@@ -1031,7 +1031,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.tensor.store
   tolerance_class: exact
   notes: TMA store.
 - id: cp.async.bulk.tensor.tile
@@ -1045,7 +1045,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.tensor.tile
   tolerance_class: exact
   notes: 'TMA load, tile mode, 1d to 5d; needs a tensor map built on the host.'
 - id: cp.async.bulk.wait_group
@@ -1059,7 +1059,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.shared_to_global
   tolerance_class: exact
   notes: Kernel covers .read.
 - id: cp.async.commit_group
@@ -1073,7 +1073,7 @@ features:
   tier: 3
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async
   tolerance_class: exact
 - id: cp.async.mbarrier.arrive
   kind: instruction
@@ -1086,7 +1086,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/cp.async.mbarrier.arrive
   tolerance_class: exact
 - id: cp.async.wait_group
   kind: instruction
@@ -1099,7 +1099,7 @@ features:
   tier: 3
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async
   tolerance_class: exact
 - id: cp.reduce.async.bulk
   kind: instruction
@@ -1112,7 +1112,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.reduce.async.bulk
   tolerance_class: exact
 - id: cp.reduce.async.bulk.tensor
   kind: instruction
@@ -1125,7 +1125,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.reduce.async.bulk.tensor
   tolerance_class: exact
 - id: createpolicy
   kind: instruction
@@ -1138,7 +1138,7 @@ features:
   tier: 3
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/createpolicy
   tolerance_class: exact
   notes: 'Builds a cache-policy operand for .L2::cache_hint.'
 - id: ctrl.block
@@ -1177,7 +1177,7 @@ features:
   tier: 3
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/cvt.bf16
   tolerance_class: exact
 - id: cvt.fp
   kind: modifier
@@ -1213,7 +1213,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/cvt.fp8
   tolerance_class: exact
   notes: .e4m3x2 and .e5m2x2 to and from f32 and f16x2.
 - id: cvt.half
@@ -1254,7 +1254,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/cvt.pack
   tolerance_class: exact
 - id: cvt.tf32
   kind: modifier
@@ -1266,7 +1266,7 @@ features:
   tier: 3
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/cvt.tf32
   tolerance_class: exact
 - id: cvta
   kind: instruction
@@ -1292,7 +1292,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/isspacep.shared.cluster
   tolerance_class: exact
 - id: dir.address_size
   kind: directive
@@ -1421,7 +1421,7 @@ features:
   tier: 4
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/dir.reqnctapercluster
   tolerance_class: exact
 - id: dir.extern
   kind: directive
@@ -1485,7 +1485,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/dir.maxclusterrank
   tolerance_class: exact
   notes: Launch with a larger cluster must fail (H100 job).
 - id: dir.maxnctapersm
@@ -1584,9 +1584,9 @@ features:
   min_target: sm_90
   family: Xkmcluster
   tier: 4
-  route: cuda
+  route: llvm-ir
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/dir.reqnctapercluster
   tolerance_class: exact
   notes: __cluster_dims__.
 - id: dir.reqntid
@@ -1677,7 +1677,7 @@ features:
   tier: 3
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/discard
   tolerance_class: exact
   notes: L2 cache hint; contents become undefined.
 - id: div.fp.approx
@@ -1772,7 +1772,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/elect.sync
   tolerance_class: exact
 - id: ex2
   kind: instruction
@@ -1797,8 +1797,8 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/ex2.half
+  tolerance_class: ulp:2
 - id: exit
   kind: instruction
   opcodes: [exit]
@@ -1824,7 +1824,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/st.async
   tolerance_class: exact
 - id: fence.proxy.alias
   kind: modifier
@@ -1837,7 +1837,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/fence.proxy.alias
   tolerance_class: exact
 - id: fence.proxy.async
   kind: modifier
@@ -1850,7 +1850,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.shared_to_global
   tolerance_class: exact
   notes: 'Orders generic-proxy accesses before async-proxy (TMA, wgmma) accesses.'
 - id: fence.proxy.tensormap
@@ -1865,7 +1865,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/tensormap.cp_fenceproxy
   tolerance_class: exact
 - id: fence.scope.cluster
   kind: modifier
@@ -1877,7 +1877,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/fence.scope.cluster
   tolerance_class: exact
 - id: fence.scope.cta
   kind: modifier
@@ -1889,7 +1889,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/fence.scope.cta
   tolerance_class: exact
 - id: fence.scope.gpu
   kind: modifier
@@ -1901,7 +1901,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/fence.scope.gpu
   tolerance_class: exact
 - id: fence.scope.sys
   kind: modifier
@@ -1911,9 +1911,9 @@ features:
   min_target: sm_70
   family: Xkmscope
   tier: 2
-  route: cuda
+  route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/fence.scope.sys
   tolerance_class: exact
 - id: fence.sem.acq_rel
   kind: modifier
@@ -1926,7 +1926,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/fence.sem.acq_rel
   tolerance_class: exact
 - id: fence.sem.acquire
   kind: modifier
@@ -1939,7 +1939,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/fence.sem.acquire
   tolerance_class: exact
 - id: fence.sem.release
   kind: modifier
@@ -1952,7 +1952,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/fence.sem.acquire
   tolerance_class: exact
 - id: fence.sem.sc
   kind: modifier
@@ -1965,7 +1965,7 @@ features:
   tier: 2
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/fence.sem.sc
   tolerance_class: exact
 - id: fence.sync_restrict
   kind: modifier
@@ -1977,7 +1977,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/fence.sync_restrict
   tolerance_class: exact
 - id: fma.fp
   kind: instruction
@@ -2080,7 +2080,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/mapa
   tolerance_class: exact
 - id: griddepcontrol
   kind: instruction
@@ -2093,7 +2093,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/griddepcontrol
   tolerance_class: exact
   notes: Programmatic dependent launch; without the launch attribute it behaves as a no-op.
 - id: half.bf16
@@ -2106,7 +2106,7 @@ features:
   tier: 3
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/half.bf16
   tolerance_class: exact
   notes: 'Scalar and packed bf16 arithmetic; add/sub/mul need sm_90, fma/min/max sm_80.'
 - id: half.packed
@@ -2146,7 +2146,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/isspacep.shared.cluster
   tolerance_class: exact
 - id: istypep
   kind: instruction
@@ -2170,7 +2170,7 @@ features:
   tier: 3
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/createpolicy
   tolerance_class: exact
   notes: Eviction priority and L2 cache-policy hints (sm_70/sm_80); may be ignored.
 - id: ld.cache_op
@@ -2265,7 +2265,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.mmio
   tolerance_class: exact
 - id: ld.param
   kind: modifier
@@ -2291,7 +2291,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.scope.cluster
   tolerance_class: exact
 - id: ld.scope.cta
   kind: modifier
@@ -2303,7 +2303,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.scope.cta
   tolerance_class: exact
 - id: ld.scope.gpu
   kind: modifier
@@ -2315,7 +2315,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.scope.gpu
   tolerance_class: exact
 - id: ld.scope.sys
   kind: modifier
@@ -2325,9 +2325,9 @@ features:
   min_target: sm_70
   family: Xkmscope
   tier: 2
-  route: cuda
+  route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.scope.sys
   tolerance_class: exact
 - id: ld.sem.acquire
   kind: modifier
@@ -2340,7 +2340,7 @@ features:
   tier: 2
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.sem.acquire
   tolerance_class: exact
   notes: C++ acquire load gives ld.acquire.sys.
 - id: ld.sem.relaxed
@@ -2354,7 +2354,7 @@ features:
   tier: 2
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.sem.relaxed
   tolerance_class: exact
   notes: C++ relaxed atomic load gives ld.relaxed.sys.
 - id: ld.shared
@@ -2383,7 +2383,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/ld.shared.cluster
   tolerance_class: exact
   notes: 'Load from another CTA''s shared memory (distributed shared memory).'
 - id: ld.volatile
@@ -2410,7 +2410,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/ldmatrix
   tolerance_class: exact
 - id: ldu
   kind: instruction
@@ -2529,7 +2529,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/mapa
   tolerance_class: exact
 - id: match.all.sync
   kind: modifier
@@ -2542,7 +2542,7 @@ features:
   tier: 2
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/match.all.sync
   tolerance_class: exact
 - id: match.any.sync
   kind: modifier
@@ -2555,7 +2555,7 @@ features:
   tier: 2
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/match.any.sync
   tolerance_class: exact
 - id: max.fp
   kind: instruction
@@ -2579,7 +2579,7 @@ features:
   tier: 3
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/min.fp.nan
   tolerance_class: exact
 - id: max.half
   kind: instruction
@@ -2591,7 +2591,7 @@ features:
   tier: 3
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/min.half
   tolerance_class: exact
 - id: max.int
   kind: instruction
@@ -2616,7 +2616,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/add.int.packed
   tolerance_class: exact
   notes: Packed .u16x2/.s16x2 and .relu forms (sm_90).
 - id: mbarrier.arrive
@@ -2630,7 +2630,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/mbarrier.init
   tolerance_class: exact
 - id: mbarrier.arrive.expect_tx
   kind: modifier
@@ -2643,7 +2643,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/mbarrier.try_wait
   tolerance_class: exact
 - id: 'mbarrier.arrive.shared::cluster'
   kind: modifier
@@ -2655,7 +2655,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/red.async
   tolerance_class: exact
   notes: Arrive on an mbarrier of another CTA in the cluster.
 - id: mbarrier.arrive_drop
@@ -2669,7 +2669,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/mbarrier.init
   tolerance_class: exact
 - id: mbarrier.complete_tx
   kind: instruction
@@ -2682,7 +2682,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/mbarrier.try_wait
   tolerance_class: exact
 - id: mbarrier.expect_tx
   kind: instruction
@@ -2695,7 +2695,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/mbarrier.try_wait
   tolerance_class: exact
 - id: mbarrier.init
   kind: instruction
@@ -2708,8 +2708,8 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmmbar/mbarrier.init
+  tolerance_class: property:mbarrier
   notes: sm_80 form; tier 4 with the rest of Xkmmbar.
 - id: mbarrier.inval
   kind: instruction
@@ -2722,7 +2722,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/mbarrier.init
   tolerance_class: exact
 - id: mbarrier.pending_count
   kind: instruction
@@ -2735,7 +2735,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/mbarrier.init
   tolerance_class: exact
 - id: mbarrier.scope.cluster
   kind: modifier
@@ -2747,7 +2747,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/st.async
   tolerance_class: exact
   notes: .acquire/.release/.relaxed with .cta or .cluster scope.
 - id: mbarrier.test_wait
@@ -2761,7 +2761,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/mbarrier.init
   tolerance_class: exact
 - id: mbarrier.try_wait
   kind: modifier
@@ -2774,7 +2774,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/mbarrier.try_wait
   tolerance_class: exact
 - id: mbarrier.wait.parity
   kind: modifier
@@ -2786,7 +2786,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmbar/mbarrier.try_wait
   tolerance_class: exact
 - id: membar
   kind: instruction
@@ -2824,7 +2824,7 @@ features:
   tier: 3
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/min.fp.nan
   tolerance_class: exact
   notes: NaN-propagating min and .xorsign.abs (sm_86).
 - id: min.half
@@ -2835,9 +2835,9 @@ features:
   min_target: sm_80
   family: base
   tier: 3
-  route: builtin
+  route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/min.half
   tolerance_class: exact
 - id: min.int
   kind: instruction
@@ -2862,7 +2862,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/add.int.packed
   tolerance_class: exact
   notes: Packed .u16x2/.s16x2 and .relu forms (sm_90).
 - id: mma.b1
@@ -2875,7 +2875,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/mma.b1
   tolerance_class: exact
   notes: .b1 with .xor.popc or .and.popc.
 - id: mma.bf16
@@ -2888,7 +2888,7 @@ features:
   tier: 3
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/mma.bf16
   tolerance_class: reduction
 - id: mma.block_scale
   kind: modifier
@@ -2912,7 +2912,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/mma.f16
   tolerance_class: reduction
   notes: 'm8n8k4, m16n8k8, m16n8k16 with f16 or f32 accumulators.'
 - id: mma.f64
@@ -2925,7 +2925,7 @@ features:
   tier: 3
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/mma.f64
   tolerance_class: reduction
   notes: 'm8n8k4 (and m16n8k* on sm_90).'
 - id: mma.fp8
@@ -2938,7 +2938,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/mma.fp8
   tolerance_class: reduction
   notes: '.e4m3/.e5m2, m16n8k32.'
 - id: mma.int4
@@ -2951,7 +2951,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/mma.int4
   tolerance_class: exact
   notes: .s4/.u4.
 - id: mma.int8
@@ -2964,7 +2964,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/mma.int8
   tolerance_class: exact
   notes: '.s8/.u8, m8n8k16 and m16n8k32.'
 - id: mma.sp
@@ -2978,7 +2978,7 @@ features:
   tier: 3
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/mma.sp
   tolerance_class: reduction
 - id: 'mma.sp::ordered_metadata'
   kind: modifier
@@ -2992,7 +2992,7 @@ features:
   tier: 3
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/mma.sp.ordered_metadata
   tolerance_class: reduction
 - id: mma.tf32
   kind: modifier
@@ -3004,7 +3004,7 @@ features:
   tier: 3
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/mma.tf32
   tolerance_class: reduction
 - id: mov
   kind: instruction
@@ -3043,7 +3043,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/movmatrix
   tolerance_class: exact
   notes: clang 20 does not emit it.
 - id: mul.fp
@@ -3108,7 +3108,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/multimem
   tolerance_class: exact
   notes: Needs a multicast memory object (NVLink multicast); cannot run on one H100. Candidate for exclusion.
 - id: nanosleep
@@ -3122,8 +3122,8 @@ features:
   tier: 2
   route: builtin
   status: in-scope
-  entry: ''
-  tolerance_class: 'property:completes'
+  entry: tests/corpus/xkmmisc/nanosleep
+  tolerance_class: property:completes
 - id: neg.fp
   kind: instruction
   ptx_syntax: 'neg{.ftz}.f32 d, a;'
@@ -3237,7 +3237,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/cp.async.bulk.tensor.tile
   tolerance_class: exact
 - id: prefetchu
   kind: instruction
@@ -3318,7 +3318,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/red.async
   tolerance_class: exact
   notes: clang 20 does not emit it.
 - id: red.generic
@@ -3359,7 +3359,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/red.scope
   tolerance_class: exact
   notes: 'Kernel covers .cta, .gpu and .sys.'
 - id: red.scope.cluster
@@ -3373,7 +3373,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/atom.scope.cluster
   tolerance_class: exact
 - id: red.sem.release
   kind: modifier
@@ -3386,7 +3386,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/red.sem.release
   tolerance_class: exact
 - id: red.shared
   kind: modifier
@@ -3411,7 +3411,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/atom.shared.cluster.add
   tolerance_class: exact
 - id: red.vector
   kind: modifier
@@ -3423,7 +3423,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/base/atom.vector
   tolerance_class: exact
 - id: redux.sync
   kind: instruction
@@ -3436,7 +3436,7 @@ features:
   tier: 3
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmwarp/redux.sync
   tolerance_class: exact
   notes: 'Integer add, min, max, and, or, xor.'
 - id: redux.sync.f32
@@ -3566,7 +3566,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/setmaxnreg
   tolerance_class: exact
   notes: sm_90a only; register-allocation hint (open decision 1).
 - id: setp
@@ -3812,7 +3812,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/mapa
   tolerance_class: exact
   notes: 'Distributed shared memory: shared memory of any CTA in the cluster.'
 - id: space.sreg
@@ -3876,7 +3876,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.cluster_ctarank
   tolerance_class: exact
 - id: sreg.clock
   kind: special-register
@@ -3913,7 +3913,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.cluster_ctarank
   tolerance_class: exact
 - id: sreg.cluster_ctarank
   kind: special-register
@@ -3925,7 +3925,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.cluster_ctarank
   tolerance_class: exact
 - id: sreg.cluster_nctaid
   kind: special-register
@@ -3937,7 +3937,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.cluster_ctarank
   tolerance_class: exact
 - id: sreg.cluster_nctarank
   kind: special-register
@@ -3949,7 +3949,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.cluster_ctarank
   tolerance_class: exact
 - id: sreg.clusterid
   kind: special-register
@@ -3961,7 +3961,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.cluster_ctarank
   tolerance_class: exact
 - id: sreg.ctaid
   kind: special-register
@@ -4048,7 +4048,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.cluster_ctarank
   tolerance_class: exact
 - id: sreg.laneid
   kind: special-register
@@ -4132,7 +4132,7 @@ features:
   tier: 4
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmsimt/sreg.cluster_ctarank
   tolerance_class: exact
 - id: sreg.nctaid
   kind: special-register
@@ -4214,8 +4214,8 @@ features:
   tier: 3
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'property:range'
+  entry: tests/corpus/xkmsimt/sreg.reserved_smem_offset
+  tolerance_class: property:range
   notes: '_begin, _end, _cap, _<2>.'
 - id: sreg.smid
   kind: special-register
@@ -4276,7 +4276,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/st.async
   tolerance_class: exact
   notes: Store to remote shared memory with mbarrier complete_tx. clang 20 does not emit it.
 - id: st.bulk
@@ -4355,7 +4355,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.mmio
   tolerance_class: exact
 - id: st.param
   kind: modifier
@@ -4381,7 +4381,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.scope.cluster
   tolerance_class: exact
 - id: st.scope.cta
   kind: modifier
@@ -4393,7 +4393,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/st.scope.cta
   tolerance_class: exact
 - id: st.scope.gpu
   kind: modifier
@@ -4405,7 +4405,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/st.scope.gpu
   tolerance_class: exact
 - id: st.scope.sys
   kind: modifier
@@ -4415,9 +4415,9 @@ features:
   min_target: sm_70
   family: Xkmscope
   tier: 2
-  route: cuda
+  route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/st.scope.sys
   tolerance_class: exact
 - id: st.sem.relaxed
   kind: modifier
@@ -4430,7 +4430,7 @@ features:
   tier: 2
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.sem.relaxed
   tolerance_class: exact
 - id: st.sem.release
   kind: modifier
@@ -4443,7 +4443,7 @@ features:
   tier: 2
   route: cuda
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmscope/ld.sem.acquire
   tolerance_class: exact
   notes: C++ release store gives st.release.sys.
 - id: st.shared
@@ -4472,7 +4472,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmcluster/ld.shared.cluster
   tolerance_class: exact
   notes: 'Store to another CTA''s shared memory.'
 - id: st.volatile
@@ -4526,7 +4526,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/stmatrix
   tolerance_class: exact
   notes: clang 20 does not emit it.
 - id: sub.cc
@@ -4662,7 +4662,7 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmisc/szext
   tolerance_class: exact
   notes: clang 20 does not emit it. A plain RV64 shift pair may suffice; decided with the specification.
 - id: tanh
@@ -4676,8 +4676,8 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/tanh
+  tolerance_class: ulp:2
   notes: clang 20 does not emit tanh.approx.
 - id: tanh.half
   kind: instruction
@@ -4689,8 +4689,8 @@ features:
   tier: 2
   route: inline-asm
   status: in-scope
-  entry: ''
-  tolerance_class: 'ulp:2'
+  entry: tests/corpus/xkmmufu/tanh.half
+  tolerance_class: ulp:2
 - id: tcgen05.alloc
   kind: instruction
   opcodes: [tcgen05.alloc, tcgen05.dealloc, tcgen05.relinquish_alloc_permit]
@@ -4846,7 +4846,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/tensormap.cp_fenceproxy
   tolerance_class: exact
 - id: tensormap.replace
   kind: instruction
@@ -4859,7 +4859,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmasync/tensormap.replace
   tolerance_class: exact
   notes: sm_90a only. clang 20 does not emit it.
 - id: testp
@@ -5097,7 +5097,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wgmma.mma_async
   tolerance_class: exact
 - id: wgmma.fence
   kind: instruction
@@ -5110,7 +5110,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wgmma.mma_async
   tolerance_class: exact
 - id: wgmma.mma_async
   kind: instruction
@@ -5123,7 +5123,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wgmma.mma_async
   tolerance_class: reduction
   notes: 'f16/bf16, A and B from shared-memory descriptors. clang 20 does not emit it.'
 - id: wgmma.mma_async.b1
@@ -5136,7 +5136,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wgmma.mma_async.b1
   tolerance_class: exact
   notes: .b1 .and.popc.
 - id: wgmma.mma_async.fp8
@@ -5149,7 +5149,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wgmma.mma_async.fp8
   tolerance_class: reduction
   notes: .e4m3/.e5m2.
 - id: wgmma.mma_async.int8
@@ -5162,7 +5162,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wgmma.mma_async.int8
   tolerance_class: exact
   notes: .s8/.u8.
 - id: wgmma.mma_async.rs
@@ -5175,7 +5175,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wgmma.mma_async.rs
   tolerance_class: reduction
   notes: A from registers.
 - id: wgmma.mma_async.sp
@@ -5189,7 +5189,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wgmma.mma_async.sp
   tolerance_class: reduction
 - id: wgmma.mma_async.tf32
   kind: modifier
@@ -5201,7 +5201,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wgmma.mma_async.tf32
   tolerance_class: reduction
 - id: wgmma.wait_group
   kind: instruction
@@ -5214,7 +5214,7 @@ features:
   tier: 4
   route: inline-asm
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wgmma.mma_async
   tolerance_class: exact
 - id: wmma.load
   kind: instruction
@@ -5227,8 +5227,8 @@ features:
   tier: 2
   route: builtin
   status: in-scope
-  entry: ''
-  tolerance_class: exact
+  entry: tests/corpus/xkmmma/wmma.load
+  tolerance_class: reduction
 - id: wmma.mma
   kind: instruction
   opcodes: [wmma.mma]
@@ -5240,7 +5240,7 @@ features:
   tier: 2
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wmma.load
   tolerance_class: reduction
 - id: wmma.store
   kind: instruction
@@ -5253,7 +5253,7 @@ features:
   tier: 2
   route: builtin
   status: in-scope
-  entry: ''
+  entry: tests/corpus/xkmmma/wmma.load
   tolerance_class: exact
 - id: xor
   kind: instruction
