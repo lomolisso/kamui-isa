@@ -5,6 +5,9 @@ extern "C" __global__ void k_ld_shared_cluster(const int *in, int *d) {
   __shared__ int s[128];
   int t = threadIdx.x, i = blockIdx.x * 128 + t;
   unsigned rank = __nvvm_read_ptx_sreg_cluster_ctarank(), remote;
+  // The peer CTA must be running before anyone touches its shared memory: a cluster barrier guarantees it.
+  __nvvm_barrier_cluster_arrive();
+  __nvvm_barrier_cluster_wait();
   asm volatile("mapa.shared::cluster.u32 %0, %1, %2;" : "=r"(remote) : "r"(smem(&s[t])), "r"(rank ^ 1));
   asm volatile("st.shared::cluster.u32 [%0], %1;" :: "r"(remote), "r"(in[i] * 3) : "memory");
   __nvvm_barrier_cluster_arrive();

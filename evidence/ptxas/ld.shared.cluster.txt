@@ -3,4 +3,4 @@ ptxas info    : 0 bytes gmem
 ptxas info    : Compiling entry function 'k_ld_shared_cluster' for 'sm_90a'
 ptxas info    : Function properties for k_ld_shared_cluster
     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
-ptxas info    : Used 16 registers, used 1 barriers, 512 bytes smem
+ptxas info    : Used 18 registers, used 1 barriers, 512 bytes smem
