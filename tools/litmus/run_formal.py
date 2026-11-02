@@ -20,6 +20,9 @@ Models (column `model`):
   tests/litmus/alloy/. Only the tests to_alloy can express.
 - `ptx-2019-alloy+ext`: the same model, for tests that use our extensions (the `.cluster` scope as an extra
   scope level, `fence.acquire`/`fence.release` as the model's FenceAcq/FenceRel).
+- `ptx-v8.7-alloy`: the PTX ISA 8.7 model (models/ptx87/ptx87.als) on Alloy 6.2.0, on the queries
+  tools/litmus/to_alloy87.py writes to tests/litmus/alloy-ptx87/. Each query also asks whether the program has
+  any execution; if not, the result is `forbidden` and the flags end in `(no execution)`.
 - `rvwmo`: herd7 with RISC-V's `riscv.cat` (RVWMO), on the naive RISC-V lowering of the test that
   tools/litmus/to_riscv.py writes to tests/litmus/riscv/. This judges a different program (scopes erased,
   C++-style fences), so it is a baseline, not a PTX verdict.

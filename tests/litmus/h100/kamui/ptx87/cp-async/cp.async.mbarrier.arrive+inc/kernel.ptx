@@ -24,49 +24,59 @@
 .maxntid 256, 1, 1
 {
 	.reg .pred 	%p<11>;
-	.reg .b32 	%r<61>;
-	.reg .b64 	%rd<46>;
+	.reg .b32 	%r<62>;
+	.reg .b64 	%rd<60>;
 	// demoted variable
 	.shared .align 16 .b8 _ZZ6litmusE4mbar[4096];
 	// demoted variable
 	.shared .align 16 .b8 _ZZ6litmusE4sbuf[16384];
 // %bb.0:
-	ld.param.u64 	%rd7, [litmus_param_5];
-	cvta.to.global.u64 	%rd1, %rd7;
-	ld.param.u64 	%rd8, [litmus_param_1];
-	ld.param.u64 	%rd9, [litmus_param_3];
-	cvta.to.global.u64 	%rd10, %rd9;
-	ld.param.u64 	%rd11, [litmus_param_2];
-	cvta.to.global.u64 	%rd2, %rd11;
-	cvta.to.global.u64 	%rd3, %rd8;
+	ld.param.u64 	%rd10, [litmus_param_0];
+	ld.param.u64 	%rd11, [litmus_param_5];
+	cvta.to.global.u64 	%rd1, %rd11;
+	ld.param.u64 	%rd12, [litmus_param_1];
+	ld.param.u64 	%rd13, [litmus_param_4];
+	cvta.to.global.u64 	%rd2, %rd13;
+	ld.param.u64 	%rd14, [litmus_param_2];
+	ld.param.u64 	%rd15, [litmus_param_3];
+	cvta.to.global.u64 	%rd16, %rd15;
+	cvta.to.global.u64 	%rd3, %rd14;
+	cvta.to.global.u64 	%rd4, %rd12;
+	cvta.to.global.u64 	%rd5, %rd10;
 	mov.u32 	%r21, %ctaid.x;
 	mov.u32 	%r22, %ntid.x;
 	mov.u32 	%r23, %tid.x;
 	mad.lo.s32 	%r1, %r21, %r22, %r23;
-	mul.wide.u32 	%rd12, %r1, 4;
-	add.s64 	%rd13, %rd10, %rd12;
-	ld.global.u32 	%r2, [%rd13];
+	mul.wide.u32 	%rd17, %r1, 4;
+	add.s64 	%rd18, %rd16, %rd17;
+	ld.global.u32 	%r2, [%rd18];
 	and.b32  	%r3, %r2, 7;
 	bfe.u32 	%r4, %r2, 3, 8;
+	shr.u32 	%r5, %r2, 11;
 	setp.ne.s32 	%p1, %r3, 0;
-	shl.b32 	%r56, %r4, 2;
-	mov.u64 	%rd43, _ZZ6litmusE4sbuf;
-	mul.wide.u32 	%rd44, %r4, 8;
-	mov.u64 	%rd45, _ZZ6litmusE4mbar;
+	mul.wide.u32 	%rd56, %r5, 4;
+	shl.b32 	%r57, %r4, 2;
+	mov.u64 	%rd57, _ZZ6litmusE4sbuf;
+	mul.wide.u32 	%rd58, %r4, 8;
+	mov.u64 	%rd59, _ZZ6litmusE4mbar;
 	@%p1 bra 	$L__BB0_2;
 // %bb.1:
-	mul.wide.u32 	%rd16, %r56, 4;
-	add.s64 	%rd18, %rd43, %rd16;
-	mov.b32 	%r26, 0;
-	st.shared.u32 	[%rd18], %r26;
-	mov.b32 	%r27, 1;
-	st.shared.u32 	[%rd18+4096], %r27;
-	cvta.shared.u64 	%rd21, %rd45;
-	add.s64 	%rd15, %rd21, %rd44;
+	add.s64 	%rd22, %rd2, %rd56;
+	ld.global.u32 	%r25, [%rd22];
+	mul.wide.u32 	%rd23, %r25, 4;
+	add.s64 	%rd24, %rd5, %rd23;
+	mov.b32 	%r26, 1;
+	st.global.u32 	[%rd24], %r26;
+	mul.wide.u32 	%rd25, %r57, 4;
+	add.s64 	%rd27, %rd57, %rd25;
+	mov.b32 	%r28, 0;
+	st.shared.u32 	[%rd27], %r28;
+	cvta.shared.u64 	%rd30, %rd59;
+	add.s64 	%rd20, %rd30, %rd58;
 	// begin inline asm
-	cvta.to.shared.u64 %rd14, %rd15;
+	cvta.to.shared.u64 %rd19, %rd20;
 	// end inline asm
-	cvt.u32.u64 	%r24, %rd14;
+	cvt.u32.u64 	%r24, %rd19;
 	// begin inline asm
 	mbarrier.init.shared::cta.b64 [%r24], 1;
 	// end inline asm
@@ -80,36 +90,38 @@ $L__BB0_2:
 	bra.uni 	$L__BB0_3;
 $L__BB0_9:
 	ld.param.u32 	%r20, [litmus_param_8];
-	mul.lo.s32 	%r28, %r1, -2048144777;
-	shr.u32 	%r29, %r28, 13;
-	and.b32  	%r59, %r20, %r29;
-	setp.eq.s32 	%p3, %r59, 0;
+	mul.lo.s32 	%r29, %r1, -2048144777;
+	shr.u32 	%r30, %r29, 13;
+	and.b32  	%r60, %r20, %r30;
+	setp.eq.s32 	%p3, %r60, 0;
 	@%p3 bra 	$L__BB0_10;
 $L__BB0_13:                             // =>This Inner Loop Header: Depth=1
 	// begin inline asm
 	// end inline asm
-	add.s32 	%r59, %r59, -1;
-	setp.eq.s32 	%p4, %r59, 0;
+	add.s32 	%r60, %r60, -1;
+	setp.eq.s32 	%p4, %r60, 0;
 	@%p4 bra 	$L__BB0_10;
 	bra.uni 	$L__BB0_13;
 $L__BB0_10:
-	shr.u32 	%r5, %r2, 11;
-	cvta.shared.u64 	%rd29, %rd43;
-	mul.wide.u32 	%rd30, %r56, 4;
-	add.s64 	%rd23, %rd29, %rd30;
+	add.s64 	%rd38, %rd2, %rd56;
+	ld.global.u32 	%r31, [%rd38];
+	mul.wide.u32 	%rd39, %r31, 4;
+	add.s64 	%rd32, %rd10, %rd39;
 	// begin inline asm
-	cvta.to.shared.u64 %rd22, %rd23;
+	cvta.to.global.u64 %rd31, %rd32;
 	// end inline asm
-	add.s64 	%rd25, %rd23, 4096;
+	cvta.shared.u64 	%rd41, %rd57;
+	mul.wide.u32 	%rd42, %r57, 4;
+	add.s64 	%rd34, %rd41, %rd42;
 	// begin inline asm
-	cvta.to.shared.u64 %rd24, %rd25;
+	cvta.to.shared.u64 %rd33, %rd34;
 	// end inline asm
-	cvta.shared.u64 	%rd33, %rd45;
-	add.s64 	%rd27, %rd33, %rd44;
+	cvta.shared.u64 	%rd45, %rd59;
+	add.s64 	%rd36, %rd45, %rd58;
 	// begin inline asm
-	cvta.to.shared.u64 %rd26, %rd27;
+	cvta.to.shared.u64 %rd35, %rd36;
 	// end inline asm
-	cvt.u32.u64 	%r14, %rd26;
+	cvt.u32.u64 	%r14, %rd35;
 	setp.eq.s32 	%p5, %r3, 0;
 	@%p5 bra 	$L__BB0_14;
 // %bb.11:
@@ -117,17 +129,18 @@ $L__BB0_10:
 	@%p6 bra 	$L__BB0_12;
 	bra.uni 	$L__BB0_15;
 $L__BB0_12:
-	mul.wide.u32 	%rd34, %r5, 4;
-	add.s64 	%rd35, %rd3, %rd34;
+	cvt.u64.u32 	%rd6, %r5;
+	shl.b64 	%rd46, %rd6, 2;
+	add.s64 	%rd47, %rd4, %rd46;
 	// begin inline asm
 	{
 	.reg .u32 t;
 	.reg .pred p;
 	mbarrier.test_wait.parity.acquire.cta.shared::cta.b64 p, [%r14], 0;
-	selp.u32 %r31, 1, 0, p;
+	selp.u32 %r33, 1, 0, p;
 	}
 	// end inline asm
-	st.global.u32 	[%rd35], %r31;
+	st.global.u32 	[%rd47], %r33;
 	bra.uni 	$L__BB0_15;
 $L__BB0_3:
 	ld.param.u32 	%r19, [litmus_param_7];
@@ -135,71 +148,70 @@ $L__BB0_3:
 	@%p7 bra 	$L__BB0_16;
 // %bb.4:
 	ld.param.u32 	%r18, [litmus_param_6];
-	mul.lo.s32 	%r60, %r1, -1640531535;
+	mul.lo.s32 	%r61, %r1, -1640531535;
 	and.b32  	%r7, %r19, 1;
 	setp.eq.s32 	%p8, %r19, 1;
 	@%p8 bra 	$L__BB0_7;
 // %bb.5:
-	and.b32  	%r57, %r19, -2;
+	and.b32  	%r58, %r19, -2;
 $L__BB0_6:                              // =>This Inner Loop Header: Depth=1
-	mad.lo.s32 	%r42, %r60, 1664525, 1013904223;
-	shr.u32 	%r43, %r42, 8;
-	and.b32  	%r44, %r43, %r18;
-	mul.wide.u32 	%rd38, %r44, 4;
-	add.s64 	%rd39, %rd1, %rd38;
-	ld.volatile.global.u32 	%r45, [%rd39];
-	add.s32 	%r46, %r45, 1;
-	st.volatile.global.u32 	[%rd39], %r46;
-	mad.lo.s32 	%r60, %r60, 389569705, 1196435762;
-	shr.u32 	%r47, %r60, 8;
-	and.b32  	%r48, %r47, %r18;
-	mul.wide.u32 	%rd40, %r48, 4;
-	add.s64 	%rd41, %rd1, %rd40;
-	ld.volatile.global.u32 	%r49, [%rd41];
-	add.s32 	%r50, %r49, 1;
-	st.volatile.global.u32 	[%rd41], %r50;
-	add.s32 	%r57, %r57, -2;
-	setp.eq.s32 	%p9, %r57, 0;
+	mad.lo.s32 	%r43, %r61, 1664525, 1013904223;
+	shr.u32 	%r44, %r43, 8;
+	and.b32  	%r45, %r44, %r18;
+	mul.wide.u32 	%rd51, %r45, 4;
+	add.s64 	%rd52, %rd1, %rd51;
+	ld.volatile.global.u32 	%r46, [%rd52];
+	add.s32 	%r47, %r46, 1;
+	st.volatile.global.u32 	[%rd52], %r47;
+	mad.lo.s32 	%r61, %r61, 389569705, 1196435762;
+	shr.u32 	%r48, %r61, 8;
+	and.b32  	%r49, %r48, %r18;
+	mul.wide.u32 	%rd53, %r49, 4;
+	add.s64 	%rd54, %rd1, %rd53;
+	ld.volatile.global.u32 	%r50, [%rd54];
+	add.s32 	%r51, %r50, 1;
+	st.volatile.global.u32 	[%rd54], %r51;
+	add.s32 	%r58, %r58, -2;
+	setp.eq.s32 	%p9, %r58, 0;
 	@%p9 bra 	$L__BB0_7;
 	bra.uni 	$L__BB0_6;
 $L__BB0_7:
 	setp.eq.s32 	%p10, %r7, 0;
 	@%p10 bra 	$L__BB0_16;
 // %bb.8:
-	mad.lo.s32 	%r51, %r60, 1664525, 1013904223;
-	shr.u32 	%r52, %r51, 8;
-	and.b32  	%r53, %r52, %r18;
-	mul.wide.u32 	%rd42, %r53, 4;
-	add.s64 	%rd6, %rd1, %rd42;
-	ld.volatile.global.u32 	%r54, [%rd6];
-	add.s32 	%r55, %r54, 1;
-	st.volatile.global.u32 	[%rd6], %r55;
+	mad.lo.s32 	%r52, %r61, 1664525, 1013904223;
+	shr.u32 	%r53, %r52, 8;
+	and.b32  	%r54, %r53, %r18;
+	mul.wide.u32 	%rd55, %r54, 4;
+	add.s64 	%rd9, %rd1, %rd55;
+	ld.volatile.global.u32 	%r55, [%rd9];
+	add.s32 	%r56, %r55, 1;
+	st.volatile.global.u32 	[%rd9], %r56;
 	bra.uni 	$L__BB0_16;
 $L__BB0_14:
-	cvt.u32.u64 	%r34, %rd24;
-	cvt.u32.u64 	%r33, %rd22;
+	cvt.u32.u64 	%r35, %rd33;
 	// begin inline asm
 	{
 	.reg .u32 t;
 	.reg .pred p;
-	cp.async.ca.shared.global [%r33], [%r34], 4;
+	cp.async.ca.shared.global [%r35], [%rd31], 4;
 	cp.async.mbarrier.arrive.shared::cta.b64 [%r14];
 	}
 	// end inline asm
 $L__BB0_15:
 	// begin inline asm
-	mov.u32 %r36, %clusterid.x;
+	mov.u32 %r37, %clusterid.x;
 	// end inline asm
-	shl.b32 	%r38, %r36, 8;
+	shl.b32 	%r39, %r37, 8;
 	// begin inline asm
-	mov.u32 %r37, %smid;
+	mov.u32 %r38, %smid;
 	// end inline asm
-	or.b32  	%r39, %r38, %r37;
-	shl.b32 	%r40, %r5, 1;
-	add.s32 	%r41, %r40, %r3;
-	mul.wide.u32 	%rd36, %r41, 4;
-	add.s64 	%rd37, %rd2, %rd36;
-	st.global.u32 	[%rd37], %r39;
+	or.b32  	%r40, %r39, %r38;
+	shl.b32 	%r41, %r5, 1;
+	add.s32 	%r42, %r41, %r3;
+	mul.wide.u32 	%rd49, %r42, 4;
+	add.s64 	%rd50, %rd3, %rd49;
+	st.global.u32 	[%rd50], %r40;
 $L__BB0_16:
 	ret;
                                         // -- End function

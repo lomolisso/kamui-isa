@@ -44,7 +44,7 @@ __device__ __forceinline__ unsigned sreg_clusterid() {
 struct L {
     unsigned long long h;
     unsigned d;
-    unsigned g;
+    unsigned long long g;
     unsigned b;
 };
 
@@ -52,7 +52,7 @@ struct L {
 __device__ __forceinline__ void role0(L &l, unsigned *out) {
     unsigned long long a_h = l.h;
     unsigned a_d = l.d;
-    unsigned a_g = l.g;
+    unsigned long long a_g = l.g;
     unsigned a_b = l.b;
     asm volatile("{\n\t"
         ".reg .u32 t;\n\t"
@@ -63,7 +63,7 @@ __device__ __forceinline__ void role0(L &l, unsigned *out) {
         "cp.async.mbarrier.arrive.noinc.shared::cta.b64 [%3];\n\t"
         "}"
         : 
-        : "l"(a_h), "r"(a_d), "r"(a_g), "r"(a_b)
+        : "l"(a_h), "r"(a_d), "l"(a_g), "r"(a_b)
         : "memory");
 }
 
@@ -87,7 +87,7 @@ __device__ __forceinline__ void role1(L &l, unsigned *out) {
     out[1] = r_r1;
 }
 
-#define NGLOC 1
+#define NGLOC 2
 #define NREGS 2
 #define NROLES 2
 
@@ -102,8 +102,8 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     unsigned role = a & 7, lslot = (a >> 3) & 255, inst = a >> 11;
     if (a != NONE && role == 0) {
         const unsigned *lo = locoff + inst * NGLOC;
+        mem[lo[1]] = 1u;
         sbuf[(0 * 256 + lslot) * 4] = 0u;
-        sbuf[(1 * 256 + lslot) * 4] = 1u;
         asm volatile("mbarrier.init.shared::cta.b64 [%0], 1;" :: "r"(to_shared(&mbar[0 * 256 + lslot])) : "memory");
         asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
     }
@@ -124,8 +124,8 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     unsigned *out = res + inst * NREGS;
     L l;
     l.h = to_global(mem + lo[0]);
+    l.g = to_global(mem + lo[1]);
     l.d = to_shared(&sbuf[(0 * 256 + lslot) * 4]);
-    l.g = to_shared(&sbuf[(1 * 256 + lslot) * 4]);
     l.b = to_shared(&mbar[0 * 256 + lslot]);
     switch (role) {
     case 0: role0(l, out); break;

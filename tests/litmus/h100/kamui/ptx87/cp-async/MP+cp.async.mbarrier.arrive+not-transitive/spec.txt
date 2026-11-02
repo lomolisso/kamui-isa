@@ -3,8 +3,9 @@ kernel litmus
 roles 2
 placement same-cta
 nregs 2
-ngloc 1
+ngloc 2
 cluster_barrier 0
 reg 0 P1:r0
 reg 1 P1:r1
 gloc 0 h
+gloc 1 g

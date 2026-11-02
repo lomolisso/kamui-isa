@@ -51,16 +51,16 @@ __device__ __forceinline__ unsigned sreg_clusterid() {
 struct L {
     unsigned s;
     unsigned t;
-    unsigned g;
-    unsigned h;
+    unsigned long long g;
+    unsigned long long h;
 };
 
 // P0: st.weak.shared::cta s, 1 ; st.weak.shared::cta t, 1 ; fence.proxy.async.shared::cta ; cp.async.bulk.global.shared::cta.bulk_group g, s ; cp.async.bulk.commit_group ; cp.async.bulk.global.shared::cta.bulk_group h, t ; cp.async.bulk.commit_group ; cp.async.bulk.wait_group 1 ; ld.weak.global r0, g ; ld.weak.global r1, h
 __device__ __forceinline__ void role0(L &l, unsigned *out) {
     unsigned a_s = l.s;
     unsigned a_t = l.t;
-    unsigned a_g = l.g;
-    unsigned a_h = l.h;
+    unsigned long long a_g = l.g;
+    unsigned long long a_h = l.h;
     unsigned r_r0 = 0;
     unsigned r_r1 = 0;
     asm volatile("{\n\t"
@@ -76,17 +76,17 @@ __device__ __forceinline__ void role0(L &l, unsigned *out) {
         "cp.async.bulk.global.shared::cta.bulk_group [%5], [%3], 16;\n\t"
         "cp.async.bulk.commit_group;\n\t"
         "cp.async.bulk.wait_group 1;\n\t"
-        "ld.weak.shared::cta.u32 %0, [%4];\n\t"
-        "ld.weak.shared::cta.u32 %1, [%5];\n\t"
+        "ld.weak.global.u32 %0, [%4];\n\t"
+        "ld.weak.global.u32 %1, [%5];\n\t"
         "}"
         : "=r"(r_r0), "=r"(r_r1)
-        : "r"(a_s), "r"(a_t), "r"(a_g), "r"(a_h)
+        : "r"(a_s), "r"(a_t), "l"(a_g), "l"(a_h)
         : "memory");
     out[0] = r_r0;
     out[1] = r_r1;
 }
 
-#define NGLOC 1
+#define NGLOC 2
 #define NREGS 2
 #define NROLES 1
 
@@ -103,8 +103,6 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
         const unsigned *lo = locoff + inst * NGLOC;
         sbuf[(0 * 256 + lslot) * 4] = 0u;
         sbuf[(1 * 256 + lslot) * 4] = 0u;
-        sbuf[(2 * 256 + lslot) * 4] = 0u;
-        sbuf[(3 * 256 + lslot) * 4] = 0u;
         asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
     }
     __syncthreads();
@@ -123,10 +121,10 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     const unsigned *lo = locoff + inst * NGLOC;
     unsigned *out = res + inst * NREGS;
     L l;
+    l.g = to_global(mem + lo[0]);
+    l.h = to_global(mem + lo[1]);
     l.s = to_shared(&sbuf[(0 * 256 + lslot) * 4]);
     l.t = to_shared(&sbuf[(1 * 256 + lslot) * 4]);
-    l.g = to_shared(&sbuf[(2 * 256 + lslot) * 4]);
-    l.h = to_shared(&sbuf[(3 * 256 + lslot) * 4]);
     switch (role) {
     case 0: role0(l, out); break;
     }

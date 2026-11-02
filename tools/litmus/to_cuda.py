@@ -331,13 +331,13 @@ def _locs87(t: litmus.Litmus):
             if k == "mbar":
                 kinds[n] = "mbar"
                 continue
-            shared = "shared" in q or "shared::cta" in q
-            if i.op == "cp" and n == i.args[0] and ("shared" in q[1:3] or "shared::cluster" in q[2:3]):
-                shared = True
-            if i.op == "cp" and "bulk" in q and n == i.args[1] and q[2:4] == ["global", "shared::cta"]:
-                shared = True
-            if i.op == "cp" and "reduce" in q and n == i.args[1]:
-                shared = True
+            if i.op == "cp":
+                # copies name the destination space, then the source space: cp.async.ca.shared.global d, g
+                spaces = [x for x in q if x in ("shared", "shared::cta", "shared::cluster", "global")]
+                pos = i.args.index(n)
+                shared = pos < len(spaces) and spaces[pos] != "global"
+            else:
+                shared = "shared" in q or "shared::cta" in q
             kinds[n] = "shared" if shared or kinds.get(n) == "shared" else kinds.get(n, "global")
     return kinds, {n: v for n, (_, v) in init.items()}
 

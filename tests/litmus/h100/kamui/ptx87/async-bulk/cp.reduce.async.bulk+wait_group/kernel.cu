@@ -43,13 +43,13 @@ __device__ __forceinline__ unsigned sreg_clusterid() {
 }
 struct L {
     unsigned s;
-    unsigned g;
+    unsigned long long g;
 };
 
 // P0: st.weak.shared::cta s, 1 ; fence.proxy.async.shared::cta ; cp.reduce.async.bulk.global.shared::cta.bulk_group.add.u32 g, s ; cp.async.bulk.commit_group ; cp.async.bulk.wait_group 0 ; ld.weak.global r0, g
 __device__ __forceinline__ void role0(L &l, unsigned *out) {
     unsigned a_s = l.s;
-    unsigned a_g = l.g;
+    unsigned long long a_g = l.g;
     unsigned r_r0 = 0;
     asm volatile("{\n\t"
         ".reg .u32 t;\n\t"
@@ -60,10 +60,10 @@ __device__ __forceinline__ void role0(L &l, unsigned *out) {
         "cp.reduce.async.bulk.global.shared::cta.bulk_group.add.u32 [%2], [%1], 16;\n\t"
         "cp.async.bulk.commit_group;\n\t"
         "cp.async.bulk.wait_group 0;\n\t"
-        "ld.weak.shared::cta.u32 %0, [%2];\n\t"
+        "ld.weak.global.u32 %0, [%2];\n\t"
         "}"
         : "=r"(r_r0)
-        : "r"(a_s), "r"(a_g)
+        : "r"(a_s), "l"(a_g)
         : "memory");
     out[0] = r_r0;
 }
@@ -83,8 +83,8 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     unsigned role = a & 7, lslot = (a >> 3) & 255, inst = a >> 11;
     if (a != NONE && role == 0) {
         const unsigned *lo = locoff + inst * NGLOC;
+        mem[lo[0]] = 2u;
         sbuf[(0 * 256 + lslot) * 4] = 0u;
-        sbuf[(1 * 256 + lslot) * 4] = 2u;
         asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
     }
     __syncthreads();
@@ -103,8 +103,8 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     const unsigned *lo = locoff + inst * NGLOC;
     unsigned *out = res + inst * NREGS;
     L l;
+    l.g = to_global(mem + lo[0]);
     l.s = to_shared(&sbuf[(0 * 256 + lslot) * 4]);
-    l.g = to_shared(&sbuf[(1 * 256 + lslot) * 4]);
     switch (role) {
     case 0: role0(l, out); break;
     }
