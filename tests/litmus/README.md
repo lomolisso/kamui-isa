@@ -155,7 +155,8 @@ and the vendored mixedproxy files; `--check` verifies the committed files.
 
 ## expected.csv
 
-`python tools/litmus/run_formal.py` (dev container, about 35 s on 32 cores) runs every test through every model
+`python tools/litmus/run_formal.py` (dev container, about 10 minutes on 56 cores, most of it for the PTX 8.7
+model) runs every test through every model
 that applies and writes this file; `--check` re-runs everything and fails if a row would change (ignoring
 `runtime_s`).
 
@@ -189,11 +190,14 @@ rewrites the jar it is started from (seen again here: the copy's checksum change
 `rvwmo` is a baseline, not a PTX verdict: it answers the question for a different program, the test lowered to
 plain RISC-V with C++-style fences (the mapping table is in `tools/litmus/to_riscv.py`).
 
-Today: 691 tests, 1711 rows. The four PTX models agree on every test that more than one of them decides (the
-2019 Alloy model on 367 tests, Dartagnan v7.5 on 606). On the 372 lowered tests, RVWMO forbids every outcome
-that PTX forbids, so the naive lowering is sound; it also forbids 86 outcomes that PTX allows, from two sources:
-scopes (for example `.cta` synchronization between different CTAs, which PTX does not order and RVWMO, having no
-scopes, does) and multi-copy atomicity (IRIW with release/acquire, allowed in PTX, forbidden in RVWMO).
+Today: 812 tests, 2536 rows. The PTX 8.7 model (`ptx-v8.7-alloy`) decides 793 tests (every test without a
+loop). Wherever two PTX models decide the same test they agree, with four exceptions: Dat3M barrier tests in
+which a thread can never complete its barrier, which Dartagnan counts and the PTX 8.7 model does not (decision D9
+of `models/ptx87/decisions.md`, explained in `allowlist.yaml`). Dartagnan v7.5 decides 612 tests, the 2019 Alloy
+model 372. On the 383 lowered tests, RVWMO forbids every outcome that PTX forbids, so the naive lowering is sound;
+it also forbids outcomes that PTX allows, from two sources: scopes (for example `.cta` synchronization between
+different CTAs, which PTX does not order and RVWMO, having no scopes, does) and multi-copy atomicity (IRIW with
+release/acquire, allowed in PTX, forbidden in RVWMO).
 
 ## Checks
 

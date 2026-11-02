@@ -147,6 +147,12 @@ atomicity_5: check src11_ptx87_legal_atomicity for 5
 sc_4: check src11_ptx87_legal_sc for 4
 sc_5: check src11_ptx87_legal_sc for 5
 
+// the paper's size (5 C++ events) with room for a cluster level in the scope tree: sys, gpu, cluster, two CTAs,
+// two threads (7 nodes; `for 5` alone allows only 5)
+coherence_5e7s: check src11_ptx87_legal_coherence for 5 but 7 hw/Scope, 7 sw/Scope
+atomicity_5e7s: check src11_ptx87_legal_atomicity for 5 but 7 hw/Scope, 7 sw/Scope
+sc_5e7s: check src11_ptx87_legal_sc for 5 but 7 hw/Scope, 7 sw/Scope
+
 ////////////////////////////////////////////////////////////////////////////////
 // Sanity: the checks are not vacuous (each run must find an instance)
 
