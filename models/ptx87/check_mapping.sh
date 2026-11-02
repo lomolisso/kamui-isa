@@ -15,7 +15,7 @@ jar="$alloy_home/lib/app/org.alloytools.alloy.dist.jar"
 cmds=("$@")
 if [ ${#cmds[@]} -eq 0 ]; then
   cmds=(src11_ptx87_legal_coherence src11_ptx87_legal_atomicity src11_ptx87_legal_sc src11_ptx87_legal_no_thin_air
-        sanity MP MP_cluster)
+        coherence_4 coherence_5 atomicity_4 atomicity_5 sc_4 sc_5 sanity MP MP_cluster)
 fi
 base="$root/build/ptx87-mapping"
 mkdir -p "$base"

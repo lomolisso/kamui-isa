@@ -186,7 +186,7 @@ def translate_mixedproxy(text: str, name: str) -> tuple[str, str, str]:
         arch="PTX", name=name, comments=f'"Translated from NVlabs/mixedproxy ({kind} in the original)"',
         init=init, threads=[], quantifier="exists", cond_text=final, condition=None)
     for k, (place, cells) in enumerate(threads):
-        _, cta, _, gpu = litmus._PLACE.fullmatch(place).groups()
+        _, cta, _, gpu = litmus._PLACE.fullmatch(place).groups()[:4]
         t.threads.append(litmus.Thread(k, int(cta), int(gpu), instrs=[litmus.parse_instr(c) for c in cells]))
     out = t.format()
     litmus.parse(out, name)

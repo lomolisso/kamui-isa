@@ -139,6 +139,14 @@ check src11_ptx87_legal_sc for 6 but 5 sw/Event
 assert src11_ptx87_legal_no_thin_air { compile_src11_ptx87 => sw/no_thin_air }
 check src11_ptx87_legal_no_thin_air for 6
 
+// the same checks at smaller bounds (every signature at most 4 or 5 atoms)
+coherence_4: check src11_ptx87_legal_coherence for 4
+coherence_5: check src11_ptx87_legal_coherence for 5
+atomicity_4: check src11_ptx87_legal_atomicity for 4
+atomicity_5: check src11_ptx87_legal_atomicity for 5
+sc_4: check src11_ptx87_legal_sc for 4
+sc_5: check src11_ptx87_legal_sc for 5
+
 ////////////////////////////////////////////////////////////////////////////////
 // Sanity: the checks are not vacuous (each run must find an instance)
 

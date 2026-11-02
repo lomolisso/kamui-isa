@@ -172,3 +172,91 @@
   model: ptx-v8.7-alloy
   reason: >-
     Written to have no execution: a barrier waits for 3 threads and only 2 arrive (D9).
+
+# ---- H100: the mbarrier wait gap in the PTX 8.7 tests (job 20261102T022710Z-q000042)
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread
+  model: plain
+  reason: &mbarrier_gap_ptx87 >-
+    The same H100 behaviour as MP+mbarrier-rel-acq.cta+same-cta above: an acquire mbarrier.test_wait at .cta scope
+    that returns True does not order the thread's later loads, here after the complete-tx of a bulk copy
+    (TMA-load+*), the asynchronous arrive of cp.async.mbarrier.arrive, or several arrivals (MP2+*). The variant of
+    each test with one fence.acq_rel.cta after the wait (+fence-acq) shows the outcome in 0 of about 3 million
+    instances, and the copy sources are fenced to the async proxy before the test starts, so the harness is not
+    the cause. PTX ISA 8.7 section 9.7.13.15.16 forbids the outcome; the model follows the manual.
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread
+  model: stress
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread
+  model: plain
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread
+  model: stress
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior
+  model: plain
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior
+  model: stress
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive
+  model: plain
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive
+  model: stress
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta
+  model: plain
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta
+  model: stress
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side
+  model: shuffle
+  reason: *mbarrier_gap_ptx87

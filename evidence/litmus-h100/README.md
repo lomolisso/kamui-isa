@@ -13,6 +13,7 @@ outcome the formal model forbids but the H100 showed is a finding to investigate
 | GPU | NVIDIA H100 NVL, GPU 3 of the lab server (`GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126`), not clock-locked (nothing is timed) |
 | Driver, toolkit | 580.126.20 (the PTX is JIT-compiled by the driver), CUDA 12.9.1 job image |
 | Work | 302 tests x 3 configurations x 1,013,760 instances (about 1e6) = 906 runs, 9.2e8 instances, about 15 minutes of GPU time |
+| PTX 8.7 tests | job `20261102T022710Z-q000042` (commit `3efb161`): the 52 runnable tests of `tests/litmus/ptx/kamui/ptx87/`, 156 runs, about 3 minutes; command `h100 submit --gpu 3 -- env TESTS='ptx/kamui/ptx87/*' bash jobs/litmus-h100.sh`. Two earlier runs of the same tests were replaced: one stopped by the queue's watchdog, one with a kernel bug in the copy tests (fixed in `tools/litmus/to_cuda.py`) |
 
 ## Files
 
@@ -53,6 +54,11 @@ Tables: `python tools/litmus/report_tables.py --table h100` and `--table h100-fa
   (release) arrive or a fence before the relaxed arrive never did; `cp.async.bulk` reading shared memory written
   just before by the same thread without `fence.proxy.async` copied the old value in 3 of 3e6 instances, never
   with the fence.
+- **PTX 8.7 tests (`kamui/ptx87/`)**: of 52 tests, 156 runs, 37 show an allowed weak outcome and 16 a forbidden
+  one. All 16 are the mbarrier case below, met again through a bulk copy's complete-tx (`TMA-load+*`), the
+  asynchronous arrive of `cp.async.mbarrier.arrive`, and several arrivals (`MP2+*`): with one
+  `fence.acq_rel.cta` after the wait, each shows the outcome in 0 of about 3 million instances. The tests that need
+  distributed shared memory, wgmma, tensor maps, multimem or grids have no kernel (formal verdicts only).
 - **One forbidden outcome observed, in three tests: `MP+mbarrier-rel-acq`** (and its `try_wait` and shared-memory
   variants), 0.13% to 1.1% of the instances. A thread whose `mbarrier.test_wait.acquire` (or `try_wait`) returns
   True can still read data older than what the arriving thread wrote before its `mbarrier.arrive.release`; PTX

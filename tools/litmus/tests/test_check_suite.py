@@ -31,18 +31,39 @@ def row(model, result):
     return {"test": "ptx/imported/dat3m/MP", "model": model, "tool": "dartagnan", "result": result}
 
 
+def alloy87(result):
+    return {"test": "ptx/imported/dat3m/MP", "model": "ptx-v8.7-alloy", "tool": "alloy", "result": result}
+
+
+def suite_errors(errors):
+    """Errors about the suite itself (the coverage check reads the repository's catalog, not the tmp suite)."""
+    return [e for e in errors if not e.startswith("coverage:")]
+
+
 def test_clean_suite(tmp_path):
     s = make_suite(tmp_path)
-    write_expected(s, [row("ptx-v7.5", "forbidden"), row("ptx-v6.0", "forbidden")])
+    write_expected(s, [row("ptx-v7.5", "forbidden"), row("ptx-v6.0", "forbidden"), alloy87("forbidden")])
     errors, dis = check_suite.findings(s)
-    assert errors == [] and dis == []
+    assert suite_errors(errors) == [] and dis == []
+
+
+def test_missing_ptx87_row_and_no_execution(tmp_path):
+    s = make_suite(tmp_path)
+    write_expected(s, [row("ptx-v7.5", "forbidden"), row("ptx-v6.0", "forbidden")])
+    errors, _ = check_suite.findings(s)
+    assert any("no ptx-v8.7-alloy row" in e for e in errors)
+    r = alloy87("forbidden")
+    r["flags"] = "exec -n -s glucose -c * (no execution)"
+    write_expected(s, [row("ptx-v7.5", "forbidden"), row("ptx-v6.0", "forbidden"), r])
+    _, dis = check_suite.findings(s)
+    assert [d[0] for d in dis] == ["no-execution"]
 
 
 def test_upstream_and_model_disagreements(tmp_path):
     s = make_suite(tmp_path)
-    write_expected(s, [row("ptx-v7.5", "allowed"), row("ptx-v6.0", "forbidden")])
+    write_expected(s, [row("ptx-v7.5", "allowed"), row("ptx-v6.0", "forbidden"), alloy87("forbidden")])
     errors, dis = check_suite.findings(s)
-    assert errors == []
+    assert suite_errors(errors) == []
     kinds = sorted(d[0] for d in dis)
     assert kinds == ["models", "upstream"]
 
