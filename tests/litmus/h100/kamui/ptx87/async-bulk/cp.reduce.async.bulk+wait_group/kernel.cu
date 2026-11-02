@@ -85,7 +85,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
         const unsigned *lo = locoff + inst * NGLOC;
         mem[lo[0]] = 2u;
         sbuf[(0 * 256 + lslot) * 4] = 0u;
-        asm volatile("fence.proxy.async.shared::cta;" ::: "memory");
+        asm volatile("fence.proxy.async;" ::: "memory");
     }
     __syncthreads();
     if (a == NONE) {

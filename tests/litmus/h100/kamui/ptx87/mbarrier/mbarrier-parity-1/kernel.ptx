@@ -60,7 +60,7 @@
 	mbarrier.init.shared::cta.b64 [%r24], 1;
 	// end inline asm
 	// begin inline asm
-	fence.proxy.async.shared::cta;
+	fence.proxy.async;
 	// end inline asm
 $L__BB0_2:
 	bar.sync 	0;

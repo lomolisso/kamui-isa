@@ -55,7 +55,7 @@
 	mov.b32 	%r25, 0;
 	st.shared.u32 	[%rd5], %r25;
 	// begin inline asm
-	fence.proxy.async.shared::cta;
+	fence.proxy.async;
 	// end inline asm
 $L__BB0_2:
 	bar.sync 	0;

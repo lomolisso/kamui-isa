@@ -48,7 +48,7 @@
 	@%p1 bra 	$L__BB0_2;
 // %bb.1:
 	// begin inline asm
-	fence.proxy.async.shared::cta;
+	fence.proxy.async;
 	// end inline asm
 $L__BB0_2:
 	bar.sync 	0;
