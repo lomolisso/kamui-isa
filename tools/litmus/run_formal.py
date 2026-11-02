@@ -42,6 +42,7 @@ import hashlib
 import io
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -55,6 +56,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import litmus  # noqa: E402
 import to_alloy  # noqa: E402
+import to_alloy87  # noqa: E402
 import to_riscv  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -191,6 +193,57 @@ class Alloy2019:
         return ("allowed" if "<instance" in p.stdout else "forbidden"), dt, flags
 
 
+class Alloy6:
+    """The PTX 8.7 model (models/ptx87/ptx87.als) on Alloy 6.2.0, on the queries tools/litmus/to_alloy87.py
+    writes to tests/litmus/alloy-ptx87/. Each run gets its own directory (model files, query, Alloy's output and
+    its temporary files) in the build area."""
+
+    tool = "alloy"
+    model = to_alloy87.MODEL_NAME
+    home = Path(os.environ.get("ALLOY6_HOME", "/opt/alloy/alloy-6.2.0"))
+    jar = home / "lib" / "app" / "org.alloytools.alloy.dist.jar"
+    native = home / "lib" / "runtime" / "lib"  # libglucose.so, libminisat.so
+    flags = "exec -n -s glucose"
+    files = ("ptx87.als", "util.als")
+    _version = None
+
+    def applies(self, t: litmus.Litmus) -> bool:
+        try:
+            to_alloy87.translate(t, "probe")
+        except to_alloy87.Unsupported:
+            return False
+        return True
+
+    @property
+    def model_version(self) -> str:
+        h = hashlib.sha256(b"".join((to_alloy87.MODEL / f).read_bytes() for f in self.files)).hexdigest()[:12]
+        return f"ptx87.als+util.als sha256:{h}"
+
+    @property
+    def tool_version(self) -> str:
+        return "6.2.0 (glucose)"
+
+    def run(self, path: Path, extra: str) -> tuple[str, float, str]:
+        tid = test_id(path)
+        query = to_alloy87.als_path(tid)
+        base = ROOT / "build" / "litmus" / "alloy87"
+        base.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=base) as w:
+            for f in self.files:
+                shutil.copyfile(to_alloy87.MODEL / f, Path(w) / f)
+            shutil.copyfile(query, Path(w) / "q.als")
+            t0 = time.monotonic()
+            p = subprocess.run(["java", f"-Djava.io.tmpdir={w}", f"-Djava.library.path={self.native}", "-jar", str(self.jar), *self.flags.split(), "-f",
+                                "-o", str(Path(w) / "out"), "q.als"], cwd=w, capture_output=True, text=True,
+                               timeout=3600)
+            dt = time.monotonic() - t0
+        m = re.search(r"\d+\.\s+run\s+test\b[^\n]*?\b(UNSAT|SAT)\b", p.stdout + p.stderr)
+        if not m:
+            sys.stderr.write(f"{tid} ({self.model}): {p.stdout[-600:]}{p.stderr[-600:]}\n")
+            return "error", dt, self.flags
+        return ("allowed" if m.group(1) == "SAT" else "forbidden"), dt, self.flags
+
+
 class Herd7:
     tool, model = "herd7", "rvwmo"
     cat = Path("/opt/opam/default/share/herdtools7/herd/riscv.cat")
@@ -252,6 +305,7 @@ MODELS = {
     "ptx-v6.0": Dartagnan("ptx-v6.0", "ptx-v6.0.cat"),
     "ptx-2019-alloy": Alloy2019("ptx-2019-alloy"),
     "ptx-2019-alloy+ext": Alloy2019("ptx-2019-alloy+ext"),
+    to_alloy87.MODEL_NAME: Alloy6(),
     "rvwmo": Herd7(),
     "manual-reasoning": Manual(),
 }
