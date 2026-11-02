@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_restrict_MP_fence_restrict_cluster_shared
 open ptx87
 
 // PTX MP+fence-restrict-cluster+shared
-// "fence.acquire.sync_restrict::shared::cluster orders P1's later load of its own CTA's shared memory after the flag (the shared::cluster space contains the CTA's own shared memory, D17). Expected: forbidden."
+// "fence.acquire.sync_restrict::shared::cluster orders P1's later load of its own CTA's shared memory after the flag (the shared::cluster space contains the CTA's own shared memory, D18). Expected: forbidden."
 // {
 // s=0 @cta 1;
 // f=0;

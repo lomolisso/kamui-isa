@@ -1,5 +1,5 @@
 PTX MP+ldu
-"ldu loads read-only data like ld.global.nc (9.7.9.10, D23). Expected: allowed."
+"ldu loads read-only data like ld.global.nc (9.7.9.10, D29). Expected: allowed."
 {
 x=0;
 f=0;

@@ -111,6 +111,7 @@ class Dartagnan:
 
     def run(self, path: Path, extra: str) -> tuple[str, float, str]:
         flags = f"{DARTAGNAN_FLAGS} {extra}".strip()
+        tid = test_id(path)
         with tempfile.TemporaryDirectory(dir=_outdir()) as out:
             env = dict(os.environ, DAT3M_OUTPUT=out)
             t = litmus.load(path)
@@ -125,7 +126,7 @@ class Dartagnan:
         word = m.group(1) if m else "ERROR"
         result = {"PASS": "allowed", "FAIL": "forbidden", "UNKNOWN": "unknown"}.get(word, "error")
         if result == "error":
-            sys.stderr.write(f"{test_id(path)} ({self.model}): {p.stdout[-400:]}{p.stderr[-400:]}\n")
+            sys.stderr.write(f"{tid} ({self.model}): {p.stdout[-400:]}{p.stderr[-400:]}\n")
         return result, dt, flags
 
 

@@ -1,0 +1,685 @@
+# How the PTX 8.7 model treats each memory-related feature of the catalog (tests/corpus/catalog.yaml): every
+# in-scope feature of the state spaces (5.1), data movement (9.7.9), synchronization (9.7.13), ldmatrix and
+# stmatrix, and wgmma (9.7.15). kind: modelled (the model has events for it; `tests` names litmus tests under
+# tests/litmus/ptx/), no-effect (it creates no memory event), outside (the model does not apply). D<n>: the
+# interpretation decisions in decisions.md. tools/litmus/check_suite.py checks that no feature is missing.
+- feature: activemask
+  kind: no-effect
+  how: 'a warp-level register operation: no memory operation (D27)'
+- feature: applypriority
+  kind: no-effect
+  how: 'a performance hint: no memory operation (D27)'
+- feature: atom.b128
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.generic.add
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.global.add
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.global.and
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.global.cas
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.global.dec
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.global.exch
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.global.inc
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.global.max
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.global.min
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.global.or
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.global.xor
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.half
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.scope.cluster
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.scope.cta
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.scope.gpu
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.scope.sys
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.sem.acq_rel
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.sem.acquire
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.sem.relaxed
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.sem.release
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.shared.add
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.shared::cluster.add
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: atom.vector
+  kind: modelled
+  how: a read-modify-write with values; atomicity for morally strong pairs (8.10.3); default .relaxed .gpu
+  tests: kamui/ptx87/rmw/*
+- feature: bar.arrive
+  kind: modelled
+  how: barrier generations with resource ids and thread counts (D9, D10)
+  tests: kamui/ptx87/bar/*
+- feature: bar.red
+  kind: modelled
+  how: as bar.sync for memory ordering; the reduction result (a register) is not modelled (D9)
+  tests: imported/dat3m/Barrier/*
+- feature: bar.sync
+  kind: modelled
+  how: barrier generations with resource ids and thread counts (D9, D10)
+  tests: kamui/ptx87/bar/*
+- feature: bar.sync.named
+  kind: modelled
+  how: barrier generations with resource ids and thread counts (D9, D10)
+  tests: kamui/ptx87/bar/*
+- feature: bar.warp.sync
+  kind: modelled
+  how: a barrier among the member threads (D30)
+  tests: kamui/ptx87/bar/MP+bar.warp.sync*
+- feature: barrier.cluster
+  kind: modelled
+  how: cluster barrier generations; release and relaxed arrive, acquire wait (D11)
+  tests: kamui/ptx87/barrier-cluster/*
+- feature: barrier.sync
+  kind: modelled
+  how: barrier generations with resource ids and thread counts (D9, D10)
+  tests: kamui/ptx87/bar/*
+- feature: cp.async
+  kind: modelled
+  how: a weak read and a weak write of the generic proxy in an asynchronous unit (D22)
+  tests: kamui/ptx87/cp-async/*
+- feature: cp.async.bulk.commit_group
+  kind: modelled
+  how: bulk async-groups; wait_group and wait_group.read (D20)
+  tests: kamui/ptx87/async-bulk/TMA-store+*
+- feature: cp.async.bulk.global_to_shared
+  kind: modelled
+  how: async-proxy reads and writes in asynchronous units, implicit proxy fences, completion by mbarrier complete-tx or bulk async-group (D20, D21)
+  tests: kamui/ptx87/async-bulk/*
+- feature: cp.async.bulk.multicast
+  kind: modelled
+  how: async-proxy reads and writes in asynchronous units, implicit proxy fences, completion by mbarrier complete-tx or bulk async-group (D20, D21)
+  tests: kamui/ptx87/async-bulk/*
+- feature: cp.async.bulk.prefetch
+  kind: no-effect
+  how: 'a prefetch: no memory operation (D27)'
+- feature: cp.async.bulk.prefetch.tensor
+  kind: no-effect
+  how: 'a prefetch: no memory operation (D27)'
+- feature: cp.async.bulk.shared_to_cluster
+  kind: modelled
+  how: async-proxy reads and writes in asynchronous units, implicit proxy fences, completion by mbarrier complete-tx or bulk async-group (D20, D21)
+  tests: kamui/ptx87/async-bulk/*
+- feature: cp.async.bulk.shared_to_global
+  kind: modelled
+  how: async-proxy reads and writes in asynchronous units, implicit proxy fences, completion by mbarrier complete-tx or bulk async-group (D20, D21)
+  tests: kamui/ptx87/async-bulk/*
+- feature: cp.async.bulk.tensor.im2col
+  kind: modelled
+  how: as cp.async.bulk, plus a tensormap-proxy read of the tensor map (D21)
+  tests: kamui/ptx87/tensormap/*
+- feature: cp.async.bulk.tensor.multicast
+  kind: modelled
+  how: as cp.async.bulk, plus a tensormap-proxy read of the tensor map (D21)
+  tests: kamui/ptx87/tensormap/*
+- feature: cp.async.bulk.tensor.store
+  kind: modelled
+  how: as cp.async.bulk, plus a tensormap-proxy read of the tensor map (D21)
+  tests: kamui/ptx87/tensormap/*
+- feature: cp.async.bulk.tensor.tile
+  kind: modelled
+  how: as cp.async.bulk, plus a tensormap-proxy read of the tensor map (D21)
+  tests: kamui/ptx87/tensormap/*
+- feature: cp.async.bulk.wait_group
+  kind: modelled
+  how: bulk async-groups; wait_group and wait_group.read (D20)
+  tests: kamui/ptx87/async-bulk/TMA-store+*
+- feature: cp.async.commit_group
+  kind: modelled
+  how: async-groups; a wait makes the completed copies precede it in base causality (D20)
+  tests: kamui/ptx87/cp-async/*
+- feature: cp.async.mbarrier.arrive
+  kind: modelled
+  how: an asynchronous arrive ordering the thread's earlier cp.async operations (D19, D22)
+  tests: kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive*
+- feature: cp.async.wait_group
+  kind: modelled
+  how: async-groups; a wait makes the completed copies precede it in base causality (D20)
+  tests: kamui/ptx87/cp-async/*
+- feature: cp.reduce.async.bulk
+  kind: modelled
+  how: async-proxy reads and .relaxed.gpu read-modify-writes in asynchronous units (D25)
+  tests: kamui/ptx87/async-bulk/*cp.reduce*
+- feature: cp.reduce.async.bulk.tensor
+  kind: modelled
+  how: async-proxy reads and .relaxed.gpu read-modify-writes in asynchronous units (D25)
+  tests: kamui/ptx87/async-bulk/*cp.reduce*
+- feature: createpolicy
+  kind: no-effect
+  how: 'a performance hint: no memory operation (D27)'
+- feature: cvt.bf16
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: cvt.fp
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: cvt.fp8
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: cvt.half
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: cvt.int
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: cvt.pack
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: cvt.tf32
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: cvta
+  kind: no-effect
+  how: 'an address computation: no memory operation (D27)'
+- feature: cvta.shared::cluster
+  kind: no-effect
+  how: 'an address computation: no memory operation (D27)'
+- feature: dir.ptr
+  kind: no-effect
+  how: a parameter attribute (alignment and space of a pointer); no memory operation (D27)
+- feature: discard
+  kind: modelled
+  how: a weak write of an undetermined value (17690)
+  tests: kamui/ptx87/ld-st/CoWR+discard
+- feature: elect.sync
+  kind: no-effect
+  how: 'a warp-level register operation: no memory operation (D27)'
+- feature: fence.op_restrict
+  kind: modelled
+  how: restricted release and acquire, not transitive on the restricted side (D18, D19)
+  tests: kamui/ptx87/restrict/*
+- feature: fence.proxy.alias
+  kind: modelled
+  how: proxy fences in proxy-preserved base causality (D2)
+  tests: kamui/ptx87/async-bulk/*
+- feature: fence.proxy.async
+  kind: modelled
+  how: proxy fences in proxy-preserved base causality (D2)
+  tests: kamui/ptx87/async-bulk/*
+- feature: fence.proxy.tensormap
+  kind: modelled
+  how: proxy fences in proxy-preserved base causality (D2)
+  tests: kamui/ptx87/async-bulk/*
+- feature: fence.scope.cluster
+  kind: modelled
+  how: 'memory fences: Fence-SC order, release and acquire patterns (8.8, 8.9.2)'
+  tests: kamui/families/*
+- feature: fence.scope.cta
+  kind: modelled
+  how: 'memory fences: Fence-SC order, release and acquire patterns (8.8, 8.9.2)'
+  tests: kamui/families/*
+- feature: fence.scope.gpu
+  kind: modelled
+  how: 'memory fences: Fence-SC order, release and acquire patterns (8.8, 8.9.2)'
+  tests: kamui/families/*
+- feature: fence.scope.sys
+  kind: modelled
+  how: 'memory fences: Fence-SC order, release and acquire patterns (8.8, 8.9.2)'
+  tests: kamui/families/*
+- feature: fence.sem.acq_rel
+  kind: modelled
+  how: 'memory fences: Fence-SC order, release and acquire patterns (8.8, 8.9.2)'
+  tests: kamui/families/*
+- feature: fence.sem.acquire
+  kind: modelled
+  how: fences that end an acquire pattern or start a release pattern only (D5)
+  tests: kamui/families/*fence-rel-acq*
+- feature: fence.sem.release
+  kind: modelled
+  how: fences that end an acquire pattern or start a release pattern only (D5)
+  tests: kamui/families/*fence-rel-acq*
+- feature: fence.sem.sc
+  kind: modelled
+  how: 'memory fences: Fence-SC order, release and acquire patterns (8.8, 8.9.2)'
+  tests: kamui/families/*
+- feature: fence.sync_restrict
+  kind: modelled
+  how: restricted release and acquire, not transitive on the restricted side (D18, D19)
+  tests: kamui/ptx87/restrict/*
+- feature: getctarank
+  kind: no-effect
+  how: 'an address computation: no memory operation (D27)'
+- feature: griddepcontrol
+  kind: modelled
+  how: 'wait: synchronizes with the completion of the prerequisite grid; launch_dependents: no effect (D32)'
+  tests: kamui/ptx87/griddep/*
+- feature: isspacep
+  kind: no-effect
+  how: 'an address computation: no memory operation (D27)'
+- feature: isspacep.shared::cluster
+  kind: no-effect
+  how: 'an address computation: no memory operation (D27)'
+- feature: ld.cache_hint
+  kind: no-effect
+  how: cache operators and eviction hints are performance hints only (15572, 15696, D27)
+  tests: kamui/ptx87/ld-st/MP+cache-operators
+- feature: ld.cache_op
+  kind: no-effect
+  how: cache operators and eviction hints are performance hints only (15572, 15696, D27)
+  tests: kamui/ptx87/ld-st/MP+cache-operators
+- feature: ld.const
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: ld.generic
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: ld.global
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: ld.global.nc
+  kind: modelled
+  how: a read through a non-generic proxy that no PTX 8.7 fence reaches (6521, D29)
+  tests: kamui/ptx87/ld-st/*nc*
+- feature: ld.local
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: ld.mmio
+  kind: modelled
+  how: a strong relaxed operation at system scope (D28)
+  tests: kamui/ptx87/ld-st/*mmio*
+- feature: ld.param
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: ld.scope.cluster
+  kind: modelled
+  how: the scope node of a strong access in the scope tree (8.5)
+  tests: kamui/families/*
+- feature: ld.scope.cta
+  kind: modelled
+  how: the scope node of a strong access in the scope tree (8.5)
+  tests: kamui/families/*
+- feature: ld.scope.gpu
+  kind: modelled
+  how: the scope node of a strong access in the scope tree (8.5)
+  tests: kamui/families/*
+- feature: ld.scope.sys
+  kind: modelled
+  how: the scope node of a strong access in the scope tree (8.5)
+  tests: kamui/families/*
+- feature: ld.sem.acquire
+  kind: modelled
+  how: strong reads and writes; Acquire and Release events (8.4, 8.8)
+  tests: kamui/families/*
+- feature: ld.sem.relaxed
+  kind: modelled
+  how: strong reads and writes; Acquire and Release events (8.4, 8.8)
+  tests: kamui/families/*
+- feature: ld.shared
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: ld.shared::cluster
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: ld.volatile
+  kind: modelled
+  how: relaxed at system scope (8.4.2, D28)
+  tests: kamui/hand/*volatile*
+- feature: ldmatrix
+  kind: modelled
+  how: weak shared-memory accesses of each participating thread (D33)
+  tests: kamui/ptx87/ld-st/MP+ldmatrix+bar.sync
+- feature: ldu
+  kind: modelled
+  how: a read through a non-generic proxy that no PTX 8.7 fence reaches (6521, D29)
+  tests: kamui/ptx87/ld-st/*nc*
+- feature: mapa
+  kind: no-effect
+  how: 'an address computation: no memory operation (D27)'
+- feature: match.all.sync
+  kind: no-effect
+  how: 'a warp-level register operation: no memory operation (D27)'
+- feature: match.any.sync
+  kind: no-effect
+  how: 'a warp-level register operation: no memory operation (D27)'
+- feature: mbarrier.arrive
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.arrive.expect_tx
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.arrive.shared::cluster
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.arrive_drop
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.complete_tx
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.expect_tx
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.init
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.inval
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.pending_count
+  kind: no-effect
+  how: 'computes a register from a state token: no memory operation'
+- feature: mbarrier.scope.cluster
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.test_wait
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.try_wait
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: mbarrier.wait.parity
+  kind: modelled
+  how: a read, write or read-modify-write of the mbarrier state (D12 to D16)
+  tests: kamui/ptx87/mbarrier/*
+- feature: membar
+  kind: modelled
+  how: 'memory fences: Fence-SC order, release and acquire patterns (8.8, 8.9.2)'
+  tests: kamui/families/*
+- feature: mov
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: mov.packing
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: multimem
+  kind: modelled
+  how: one operation per location of the multicast object, in a free order (D31)
+  tests: kamui/ptx87/multimem/*
+- feature: prefetch
+  kind: no-effect
+  how: 'a performance hint: no memory operation (D27)'
+- feature: prefetch.tensormap
+  kind: no-effect
+  how: 'a performance hint: no memory operation (D27)'
+- feature: prefetchu
+  kind: no-effect
+  how: 'a performance hint: no memory operation (D27)'
+- feature: prmt
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: red.async
+  kind: modelled
+  how: a reduction in an asynchronous unit with mbarrier complete-tx, or a release reduction (D23)
+  tests: kamui/ptx87/st-async/MP+red.async
+- feature: red.generic
+  kind: modelled
+  how: a read-modify-write whose read returns nothing (D34)
+  tests: kamui/ptx87/rmw/red+final
+- feature: red.global
+  kind: modelled
+  how: a read-modify-write whose read returns nothing (D34)
+  tests: kamui/ptx87/rmw/red+final
+- feature: red.scope
+  kind: modelled
+  how: a read-modify-write whose read returns nothing (D34)
+  tests: kamui/ptx87/rmw/red+final
+- feature: red.scope.cluster
+  kind: modelled
+  how: a read-modify-write whose read returns nothing (D34)
+  tests: kamui/ptx87/rmw/red+final
+- feature: red.sem.release
+  kind: modelled
+  how: a read-modify-write whose read returns nothing (D34)
+  tests: kamui/ptx87/rmw/red+final
+- feature: red.shared
+  kind: modelled
+  how: a read-modify-write whose read returns nothing (D34)
+  tests: kamui/ptx87/rmw/red+final
+- feature: red.shared::cluster
+  kind: modelled
+  how: a read-modify-write whose read returns nothing (D34)
+  tests: kamui/ptx87/rmw/red+final
+- feature: red.vector
+  kind: modelled
+  how: a read-modify-write whose read returns nothing (D34)
+  tests: kamui/ptx87/rmw/red+final
+- feature: redux.sync
+  kind: no-effect
+  how: 'a warp-level register operation: no memory operation (D27)'
+- feature: shfl.sync.bfly
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: shfl.sync.down
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: shfl.sync.idx
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: shfl.sync.up
+  kind: no-effect
+  how: 'a register operation: no memory operation (D27)'
+- feature: space.const
+  kind: modelled
+  how: 'read-only state spaces Const and Param: no writes, loads return the initial value'
+  tests: kamui/ptx87/ld-st/ld.const+initial
+- feature: space.global
+  kind: modelled
+  how: state space Global of a location
+  tests: kamui/families/*
+- feature: space.local
+  kind: modelled
+  how: state space Local, owned by one thread
+  tests: kamui/ptx87/ld-st/CoWR+local
+- feature: space.param
+  kind: modelled
+  how: 'read-only state spaces Const and Param: no writes, loads return the initial value'
+  tests: kamui/ptx87/ld-st/ld.const+initial
+- feature: space.reg
+  kind: no-effect
+  how: registers are not memory
+- feature: space.shared
+  kind: modelled
+  how: state space Shared, owned by a CTA; ::cta and ::cluster are windows onto one location (D17)
+  tests: kamui/ptx87/spaces/*
+- feature: space.shared::cluster
+  kind: modelled
+  how: state space Shared, owned by a CTA; ::cta and ::cluster are windows onto one location (D17)
+  tests: kamui/ptx87/spaces/*
+- feature: space.sreg
+  kind: no-effect
+  how: registers are not memory
+- feature: st.async
+  kind: modelled
+  how: a weak store in an asynchronous unit of the destination CTA with mbarrier complete-tx, or a release store (D23)
+  tests: kamui/ptx87/st-async/*
+- feature: st.cache_op
+  kind: no-effect
+  how: cache operators and eviction hints are performance hints only (15572, 15696, D27)
+  tests: kamui/ptx87/ld-st/MP+cache-operators
+- feature: st.generic
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: st.global
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: st.local
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: st.mmio
+  kind: modelled
+  how: a strong relaxed operation at system scope (D28)
+  tests: kamui/ptx87/ld-st/*mmio*
+- feature: st.param
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: st.scope.cluster
+  kind: modelled
+  how: the scope node of a strong access in the scope tree (8.5)
+  tests: kamui/families/*
+- feature: st.scope.cta
+  kind: modelled
+  how: the scope node of a strong access in the scope tree (8.5)
+  tests: kamui/families/*
+- feature: st.scope.gpu
+  kind: modelled
+  how: the scope node of a strong access in the scope tree (8.5)
+  tests: kamui/families/*
+- feature: st.scope.sys
+  kind: modelled
+  how: the scope node of a strong access in the scope tree (8.5)
+  tests: kamui/families/*
+- feature: st.sem.relaxed
+  kind: modelled
+  how: strong reads and writes; Acquire and Release events (8.4, 8.8)
+  tests: kamui/families/*
+- feature: st.sem.release
+  kind: modelled
+  how: strong reads and writes; Acquire and Release events (8.4, 8.8)
+  tests: kamui/families/*
+- feature: st.shared
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: st.shared::cluster
+  kind: modelled
+  how: memory events with the state space of their location (generic addressing reaches the same location)
+  tests: kamui/ptx87/spaces/*
+- feature: st.volatile
+  kind: modelled
+  how: relaxed at system scope (8.4.2, D28)
+  tests: kamui/hand/*volatile*
+- feature: stmatrix
+  kind: modelled
+  how: weak shared-memory accesses of each participating thread (D33)
+  tests: kamui/ptx87/ld-st/MP+ldmatrix+bar.sync
+- feature: tensormap.cp_fenceproxy
+  kind: modelled
+  how: a generic copy followed by fence.proxy.tensormap::generic.release
+  tests: kamui/ptx87/tensormap/MP+tensormap.cp_fenceproxy
+- feature: tensormap.replace
+  kind: modelled
+  how: a generic write to the tensor map
+  tests: kamui/ptx87/tensormap/*
+- feature: vote.sync.all
+  kind: no-effect
+  how: 'a warp-level register operation: no memory operation (D27)'
+- feature: vote.sync.any
+  kind: no-effect
+  how: 'a warp-level register operation: no memory operation (D27)'
+- feature: vote.sync.ballot
+  kind: no-effect
+  how: 'a warp-level register operation: no memory operation (D27)'
+- feature: vote.sync.uni
+  kind: no-effect
+  how: 'a warp-level register operation: no memory operation (D27)'
+- feature: wgmma.commit_group
+  kind: modelled
+  how: wgmma.fence orders later wgmma.mma_async; groups complete them (D24)
+  tests: kamui/ptx87/wgmma/*
+- feature: wgmma.fence
+  kind: modelled
+  how: wgmma.fence orders later wgmma.mma_async; groups complete them (D24)
+  tests: kamui/ptx87/wgmma/*
+- feature: wgmma.mma_async
+  kind: modelled
+  how: async-proxy reads of the shared-memory operands in an asynchronous unit; registers are not modelled (D24)
+  tests: kamui/ptx87/wgmma/*
+- feature: wgmma.mma_async.b1
+  kind: modelled
+  how: async-proxy reads of the shared-memory operands in an asynchronous unit; registers are not modelled (D24)
+  tests: kamui/ptx87/wgmma/*
+- feature: wgmma.mma_async.fp8
+  kind: modelled
+  how: async-proxy reads of the shared-memory operands in an asynchronous unit; registers are not modelled (D24)
+  tests: kamui/ptx87/wgmma/*
+- feature: wgmma.mma_async.int8
+  kind: modelled
+  how: async-proxy reads of the shared-memory operands in an asynchronous unit; registers are not modelled (D24)
+  tests: kamui/ptx87/wgmma/*
+- feature: wgmma.mma_async.rs
+  kind: modelled
+  how: async-proxy reads of the shared-memory operands in an asynchronous unit; registers are not modelled (D24)
+  tests: kamui/ptx87/wgmma/*
+- feature: wgmma.mma_async.sp
+  kind: modelled
+  how: async-proxy reads of the shared-memory operands in an asynchronous unit; registers are not modelled (D24)
+  tests: kamui/ptx87/wgmma/*
+- feature: wgmma.mma_async.tf32
+  kind: modelled
+  how: async-proxy reads of the shared-memory operands in an asynchronous unit; registers are not modelled (D24)
+  tests: kamui/ptx87/wgmma/*
+- feature: wgmma.wait_group
+  kind: modelled
+  how: wgmma.fence orders later wgmma.mma_async; groups complete them (D24)
+  tests: kamui/ptx87/wgmma/*

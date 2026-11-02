@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_mbarrier_MP_fence_restrict_cta_mbarrier_relaxed_remote
 open ptx87
 
 // PTX MP+fence-restrict-cta+mbarrier-relaxed-remote
-// "The manual's release idiom (22753): fence.release.sync_restrict::shared::cta then a relaxed remote arrive; the consumer waits with acquire at cluster scope (D17). Expected: forbidden."
+// "The manual's release idiom (22753): fence.release.sync_restrict::shared::cta then a relaxed remote arrive; the consumer waits with acquire at cluster scope (D18). Expected: forbidden."
 // {
 // b=mbarrier(1) @cta 1;
 // s=0 @cta 0;

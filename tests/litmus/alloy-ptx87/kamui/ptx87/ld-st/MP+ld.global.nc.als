@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_ld_st_MP_ld_global_nc
 open ptx87
 
 // PTX MP+ld.global.nc
-// "ld.global.nc reads through the non-coherent read-only path, which the memory model does not cover (6521): even after an acquire it may return stale data (D23). Expected: allowed."
+// "ld.global.nc reads through the non-coherent read-only path, which the memory model does not cover (6521): even after an acquire it may return stale data (D29). Expected: allowed."
 // {
 // x=0;
 // f=0;

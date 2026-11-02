@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_ld_st_MP_ldmatrix_bar_sync
 open ptx87
 
 // PTX MP+ldmatrix+bar.sync
-// "stmatrix and ldmatrix are weak shared-memory accesses of each participating thread (D31): a CTA barrier orders them. Expected: forbidden."
+// "stmatrix and ldmatrix are weak shared-memory accesses of each participating thread (D33): a CTA barrier orders them. Expected: forbidden."
 // {
 // s=0 @cta 0;
 // P1:r0=0;

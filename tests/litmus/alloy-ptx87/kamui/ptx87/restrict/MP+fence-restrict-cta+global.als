@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_restrict_MP_fence_restrict_cta_global
 open ptx87
 
 // PTX MP+fence-restrict-cta+global
-// "As MP+fence-restrict-cta+shared with the data in global memory: the restricted fence orders only operations on the CTA's shared memory (22626, D17). Expected: allowed."
+// "As MP+fence-restrict-cta+shared with the data in global memory: the restricted fence orders only operations on the CTA's shared memory (22626, D18). Expected: allowed."
 // {
 // d=0;
 // f=0;

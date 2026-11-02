@@ -1,5 +1,5 @@
 PTX TMA-load+complete-tx-not-transitive
-"The complete-tx orders only the copy's own operations, not the issuing thread's earlier store to h (6897, D18): P1, waiting on the mbarrier, may read h stale. Here P0 arrives before the store, so its arrive does not order h either. Expected: allowed."
+"The complete-tx orders only the copy's own operations, not the issuing thread's earlier store to h (6897, D19): P1, waiting on the mbarrier, may read h stale. Here P0 arrives before the store, so its arrive does not order h either. Expected: allowed."
 {
 g=5;
 h=0;

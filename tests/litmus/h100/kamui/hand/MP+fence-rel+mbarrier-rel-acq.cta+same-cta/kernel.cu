@@ -3,7 +3,7 @@
 // "As MP+mbarrier-rel-acq, with fence.acq_rel.cta before the arrive on the release side only."
 // {
 // x=0;
-// b=0;
+// b=mbarrier(1);
 // P1:r0=0;
 // P1:r1=0;
 // }

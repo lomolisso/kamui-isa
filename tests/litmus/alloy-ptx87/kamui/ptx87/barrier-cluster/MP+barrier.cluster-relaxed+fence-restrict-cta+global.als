@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_barrier_cluster_MP_barrier_cluster_relaxed_fence_restrict
 open ptx87
 
 // PTX MP+barrier.cluster-relaxed+fence-restrict-cta+global
-// "As MP+barrier.cluster-relaxed+fence-restrict-cta with global data: not ordered (D17). Expected: allowed."
+// "As MP+barrier.cluster-relaxed+fence-restrict-cta with global data: not ordered (D18). Expected: allowed."
 // {
 // d=0;
 // P1:r0=0;

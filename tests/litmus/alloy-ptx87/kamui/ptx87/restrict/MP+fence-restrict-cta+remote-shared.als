@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_restrict_MP_fence_restrict_cta_remote_shared
 open ptx87
 
 // PTX MP+fence-restrict-cta+remote-shared
-// "As MP+fence-restrict-cta+shared with the data in the shared memory of the other CTA: not the executing CTA's shared::cta space, so not ordered (D17). Expected: allowed."
+// "As MP+fence-restrict-cta+shared with the data in the shared memory of the other CTA: not the executing CTA's shared::cta space, so not ordered (D18). Expected: allowed."
 // {
 // s=0 @cta 1;
 // f=0;

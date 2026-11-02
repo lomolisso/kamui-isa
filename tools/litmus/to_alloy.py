@@ -62,6 +62,8 @@ def _const(v: str) -> int | None:
 
 
 def translate(t: litmus.Litmus, name: str) -> str:
+    if t.uses_ptx87_syntax:
+        raise Unsupported("PTX 8.7 litmus syntax (models/ptx87 only)")
     if t.uses_proxy:
         raise Unsupported("proxies (the 2019 model has none)")
     if t.has_loops:

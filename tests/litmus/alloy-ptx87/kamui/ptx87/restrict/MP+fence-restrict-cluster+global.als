@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_restrict_MP_fence_restrict_cluster_global
 open ptx87
 
 // PTX MP+fence-restrict-cluster+global
-// "As MP+fence-restrict-cluster+shared with the data in global memory: not ordered by the restricted acquire fence (D17). Expected: allowed."
+// "As MP+fence-restrict-cluster+shared with the data in global memory: not ordered by the restricted acquire fence (D18). Expected: allowed."
 // {
 // d=0;
 // f=0;

@@ -2404,7 +2404,6 @@ ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1,kamui,(P0:r1 == 0),ptx-v8.7-al
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1+older,kamui,(P0:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,77.2
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,45.9
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+source-reuse,kamui,(g == 2),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,39.3
-ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+atomic,kamui,(g == 1 /\ P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose,allowed,31.1
 ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic,kamui,(g == 1 /\ P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,43.1
 ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+wait_group,kamui,(P0:r0 != 3),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,46.6
 ptx/kamui/ptx87/bar/MP+bar.arrive+bar.sync,kamui,(P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,19.8
@@ -2428,15 +2427,23 @@ ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older,kamui,(P0:r0 == 0),ptx-v8.7
 ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc,kamui,(P1:r0 == 1),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,45.8
 ptx/kamui/ptx87/griddep/MP+griddepcontrol+no-wait,kamui,(P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,30.0
 ptx/kamui/ptx87/griddep/MP+griddepcontrol.wait,kamui,(P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,25.8
+ptx/kamui/ptx87/ld-st/CoRR+mmio,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-2019-alloy,ptx.als sha256:e11cd668dbe8,alloy,4.2 (artifact jar),-n 1 test,forbidden,0.4
 ptx/kamui/ptx87/ld-st/CoRR+mmio,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,30.8
+ptx/kamui/ptx87/ld-st/CoRR+mmio,kamui,(P1:r0 == 1 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.0
 ptx/kamui/ptx87/ld-st/CoWR+discard,kamui,(P0:r0 == 7),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,30.7
 ptx/kamui/ptx87/ld-st/CoWR+ld.global.nc,kamui,(P0:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,27.8
+ptx/kamui/ptx87/ld-st/CoWR+local,kamui,(P0:r0 == 0),ptx-2019-alloy,ptx.als sha256:e11cd668dbe8,alloy,4.2 (artifact jar),-n 1 test,forbidden,0.4
 ptx/kamui/ptx87/ld-st/CoWR+local,kamui,(P0:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,31.9
+ptx/kamui/ptx87/ld-st/CoWR+local,kamui,(P0:r0 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.0
+ptx/kamui/ptx87/ld-st/MP+cache-operators,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-2019-alloy,ptx.als sha256:e11cd668dbe8,alloy,4.2 (artifact jar),-n 1 test,forbidden,0.3
 ptx/kamui/ptx87/ld-st/MP+cache-operators,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,32.6
+ptx/kamui/ptx87/ld-st/MP+cache-operators,kamui,(P1:r0 == 1 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.0
 ptx/kamui/ptx87/ld-st/MP+ld.global.nc,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,27.7
 ptx/kamui/ptx87/ld-st/MP+ldmatrix+bar.sync,kamui,(P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,19.6
 ptx/kamui/ptx87/ld-st/MP+ldu,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,29.6
+ptx/kamui/ptx87/ld-st/MP+mmio,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-2019-alloy,ptx.als sha256:e11cd668dbe8,alloy,4.2 (artifact jar),-n 1 test,allowed,0.4
 ptx/kamui/ptx87/ld-st/MP+mmio,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,30.6
+ptx/kamui/ptx87/ld-st/MP+mmio,kamui,(P1:r0 == 1 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,allowed,0.0
 ptx/kamui/ptx87/ld-st/ld.const+initial,kamui,(P0:r0 != 5),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,24.6
 ptx/kamui/ptx87/mbarrier-init/mbarrier-init+inval+use,kamui,(P0:r0 == 7),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,33.2
 ptx/kamui/ptx87/mbarrier-init/mbarrier-init+no-fence+cluster-barrier,kamui,(P1:r0 == 7),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,21.7
@@ -2473,20 +2480,37 @@ ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive,kamui,(P1:r0 == 1 
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,33.9
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,28.0
 ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,kamui,(P0:r0 == 0 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,25.2
+ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,kamui,(P0:r0 == 0 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.0
 ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster,kamui,(P0:r0 == 0 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,31.5
+ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster,kamui,(P0:r0 == 0 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.0
+ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,kamui,(P0:r0 == 0 /\ P1:r1 == 0),ptx-v6.0,ptx-v6.0.cat sha256:f5f425f2b9d6,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,1.6
+ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,kamui,(P0:r0 == 0 /\ P1:r1 == 0),ptx-v7.5,ptx-v7.5.cat sha256:a2d5f7d98e3f,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,1.4
 ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,kamui,(P0:r0 == 0 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,27.9
+ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,kamui,(P0:r0 == 0 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.0
+ptx/kamui/ptx87/rmw/2+add.gpu,kamui,(P0:r0 == 0 /\ P1:r1 == 0),ptx-v6.0,ptx-v6.0.cat sha256:f5f425f2b9d6,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.6
+ptx/kamui/ptx87/rmw/2+add.gpu,kamui,(P0:r0 == 0 /\ P1:r1 == 0),ptx-v7.5,ptx-v7.5.cat sha256:a2d5f7d98e3f,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.5
 ptx/kamui/ptx87/rmw/2+add.gpu,kamui,(P0:r0 == 0 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,26.6
+ptx/kamui/ptx87/rmw/2+add.gpu,kamui,(P0:r0 == 0 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.0
+ptx/kamui/ptx87/rmw/MP+cas-lock,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v6.0,ptx-v6.0.cat sha256:f5f425f2b9d6,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.4
+ptx/kamui/ptx87/rmw/MP+cas-lock,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v7.5,ptx-v7.5.cat sha256:a2d5f7d98e3f,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.6
 ptx/kamui/ptx87/rmw/MP+cas-lock,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,29.7
+ptx/kamui/ptx87/rmw/MP+red.release,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v6.0,ptx-v6.0.cat sha256:f5f425f2b9d6,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.6
+ptx/kamui/ptx87/rmw/MP+red.release,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v7.5,ptx-v7.5.cat sha256:a2d5f7d98e3f,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.5
 ptx/kamui/ptx87/rmw/MP+red.release,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,28.3
+ptx/kamui/ptx87/rmw/MP+red.release,kamui,(P1:r0 == 1 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.0
+ptx/kamui/ptx87/rmw/cas+fail,kamui,(x != 0),ptx-v6.0,ptx-v6.0.cat sha256:f5f425f2b9d6,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.6
+ptx/kamui/ptx87/rmw/cas+fail,kamui,(x != 0),ptx-v7.5,ptx-v7.5.cat sha256:a2d5f7d98e3f,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.6
 ptx/kamui/ptx87/rmw/cas+fail,kamui,(x != 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,19.4
 ptx/kamui/ptx87/rmw/cas.b128,kamui,(P0:r0 == 0 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,28.1
+ptx/kamui/ptx87/rmw/red+final,kamui,(x != 2),ptx-v6.0,ptx-v6.0.cat sha256:f5f425f2b9d6,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.5
+ptx/kamui/ptx87/rmw/red+final,kamui,(x != 2),ptx-v7.5,ptx-v7.5.cat sha256:a2d5f7d98e3f,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.5
 ptx/kamui/ptx87/rmw/red+final,kamui,(x != 2),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,28.4
+ptx/kamui/ptx87/rmw/red+final,kamui,(x != 2),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.0
 ptx/kamui/ptx87/rmw/rmw-ops+values,kamui,(P0:r0 != 7 \/ x != 7),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,47.1
 ptx/kamui/ptx87/sizes/MP+vector-release,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,27.3
 ptx/kamui/ptx87/sizes/MP+vector-release+data,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,25.3
 ptx/kamui/ptx87/sizes/mixed-size+bar.sync,kamui,(P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,26.9
 ptx/kamui/ptx87/sizes/mixed-size+flag,kamui,(P1:r1 == 1 /\ P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,25.8
-ptx/kamui/ptx87/sizes/mixed-size+ordered,kamui,(P1:r1 == 1 /\ P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose,allowed,15.5
 ptx/kamui/ptx87/sizes/mixed-size+race,kamui,(P1:r0 == 7),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,27.2
 ptx/kamui/ptx87/sizes/mixed-size+same-thread,kamui,(P0:r0 != 2),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,26.7
 ptx/kamui/ptx87/sizes/tearing+relaxed,kamui,(P1:r0[0] == 1 /\ P1:r0[1] == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,24.1
@@ -2497,7 +2521,9 @@ ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared,kamui,(P1:r0 == 1 /\ P1:r1 =
 ptx/kamui/ptx87/st-async/MP+red.async,kamui,(P1:r0 == 1 /\ P1:r1 != 3),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,29.2
 ptx/kamui/ptx87/st-async/MP+st.async,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,21.2
 ptx/kamui/ptx87/st-async/MP+st.async+not-transitive,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,25.5
+ptx/kamui/ptx87/st-async/MP+st.async.release,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-2019-alloy,ptx.als sha256:e11cd668dbe8,alloy,4.2 (artifact jar),-n 1 test,forbidden,0.4
 ptx/kamui/ptx87/st-async/MP+st.async.release,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,23.6
+ptx/kamui/ptx87/st-async/MP+st.async.release,kamui,(P1:r0 == 1 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.0
 ptx/kamui/ptx87/tensormap/MP+tensormap+no-acquire-proxy-fence,kamui,(P1:r0 == 1 /\ P1:r2 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,29.6
 ptx/kamui/ptx87/tensormap/MP+tensormap+no-release-proxy-fence,kamui,(P1:r0 == 1 /\ P1:r2 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,28.2
 ptx/kamui/ptx87/tensormap/MP+tensormap+proxy-fences,kamui,(P1:r0 == 1 /\ P1:r2 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:108bbdb338b3,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,26.9

@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_mbarrier_init_mbarrier_init_op_restrict_data
 open ptx87
 
 // PTX mbarrier-init+op-restrict+data
-// "fence.mbarrier_init orders only earlier mbarrier.init operations (22622): a global store before it is not ordered by the relaxed cluster barrier (D17). Expected: allowed."
+// "fence.mbarrier_init orders only earlier mbarrier.init operations (22622): a global store before it is not ordered by the relaxed cluster barrier (D18). Expected: allowed."
 // {
 // b=mbarrier() @cta 0;
 // d=0;

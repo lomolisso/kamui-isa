@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_spaces_MP_rel_acq_cluster_remote_shared
 open ptx87
 
 // PTX MP+rel-acq.cluster+remote-shared
-// "Message passing through distributed shared memory: P0 writes s in the shared memory of CTA 1 through the shared::cluster window, P1 (CTA 1) reads it through its shared::cta window after a cluster-scope release/acquire on a global flag. One location, two windows (D16). Expected: forbidden."
+// "Message passing through distributed shared memory: P0 writes s in the shared memory of CTA 1 through the shared::cluster window, P1 (CTA 1) reads it through its shared::cta window after a cluster-scope release/acquire on a global flag. One location, two windows (D17). Expected: forbidden."
 // {
 // s=0 @cta 1;
 // f=0;

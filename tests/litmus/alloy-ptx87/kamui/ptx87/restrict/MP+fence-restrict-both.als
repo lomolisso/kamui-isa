@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_restrict_MP_fence_restrict_both
 open ptx87
 
 // PTX MP+fence-restrict-both
-// "Both restricted fences, with the data in the consumer CTA's shared memory written by the producer through its own window: the producer's write is to CTA 1's memory, not its own, so the release side does not order it (D17). Expected: allowed."
+// "Both restricted fences, with the data in the consumer CTA's shared memory written by the producer through its own window: the producer's write is to CTA 1's memory, not its own, so the release side does not order it (D18). Expected: allowed."
 // {
 // s=0 @cta 1;
 // f=0;

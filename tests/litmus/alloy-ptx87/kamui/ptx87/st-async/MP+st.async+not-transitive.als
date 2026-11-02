@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_st_async_MP_st_async_not_transitive
 open ptx87
 
 // PTX MP+st.async+not-transitive
-// "As MP+st.async: P0's earlier global store is not ordered by the complete-tx (D18). Expected: allowed."
+// "As MP+st.async: P0's earlier global store is not ordered by the complete-tx (D19). Expected: allowed."
 // {
 // d=0 @cta 1;
 // h=0;

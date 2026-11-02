@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_bar_MP_bar_warp_sync
 open ptx87
 
 // PTX MP+bar.warp.sync
-// "bar.warp.sync between the two threads of its member mask (bit k is thread Pk in a litmus test, D24) orders memory (22448). Expected: forbidden."
+// "bar.warp.sync between the two threads of its member mask (bit k is thread Pk in a litmus test, D30) orders memory (22448). Expected: forbidden."
 // {
 // x=0;
 // P1:r0=0;

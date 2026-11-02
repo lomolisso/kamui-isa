@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_mbarrier_MP_mbarrier_remote_arrive_cta
 open ptx87
 
 // PTX MP+mbarrier-remote-arrive.cta
-// "As MP+mbarrier-remote-arrive.cluster with the remote arrive at .cta scope (D30). Expected: allowed."
+// "As MP+mbarrier-remote-arrive.cluster with the remote arrive at .cta scope (D16). Expected: allowed."
 // {
 // b=mbarrier(1) @cta 1;
 // x=0;

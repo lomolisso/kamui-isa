@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_restrict_MP_fence_restrict_both_producer_shared
 open ptx87
 
 // PTX MP+fence-restrict-both+producer-shared
-// "Both restricted fences: the producer writes its own CTA's shared memory, the consumer reads it through the shared::cluster window (D17). Expected: forbidden."
+// "Both restricted fences: the producer writes its own CTA's shared memory, the consumer reads it through the shared::cluster window (D18). Expected: forbidden."
 // {
 // s=0 @cta 0;
 // f=0;

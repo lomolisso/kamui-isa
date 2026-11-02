@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_mbarrier_MP_mbarrier_try_wait_relaxed_fence_restrict_glob
 open ptx87
 
 // PTX MP+mbarrier-try_wait-relaxed+fence-restrict+global
-// "As MP+mbarrier-try_wait-relaxed+fence-restrict with the data in global memory: the restricted acquire fence does not order it (D17). Expected: allowed."
+// "As MP+mbarrier-try_wait-relaxed+fence-restrict with the data in global memory: the restricted acquire fence does not order it (D18). Expected: allowed."
 // {
 // b=mbarrier(1) @cta 1;
 // d=0;

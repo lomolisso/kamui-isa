@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_multimem_multimem_st_free_order
 open ptx87
 
 // PTX multimem.st+free-order
-// "The per-location stores of one multimem.st.release are in no defined order (D26): y = 1 does not imply x = 1. Expected: allowed."
+// "The per-location stores of one multimem.st.release are in no defined order (D31): y = 1 does not imply x = 1. Expected: allowed."
 // {
 // x=0;
 // y=0;

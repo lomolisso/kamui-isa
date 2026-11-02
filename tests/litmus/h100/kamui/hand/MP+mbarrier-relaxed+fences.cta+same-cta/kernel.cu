@@ -3,7 +3,7 @@
 // "Relaxed mbarrier arrive and test, made synchronizing by a fence before the arrive and a fence after the test."
 // {
 // x=0;
-// b=0;
+// b=mbarrier(1);
 // P1:r0=0;
 // P1:r1=0;
 // }

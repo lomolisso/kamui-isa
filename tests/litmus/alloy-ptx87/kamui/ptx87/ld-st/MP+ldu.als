@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_ld_st_MP_ldu
 open ptx87
 
 // PTX MP+ldu
-// "ldu loads read-only data like ld.global.nc (9.7.9.10, D23). Expected: allowed."
+// "ldu loads read-only data like ld.global.nc (9.7.9.10, D29). Expected: allowed."
 // {
 // x=0;
 // f=0;

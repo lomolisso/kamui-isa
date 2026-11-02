@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_mbarrier_MP_mbarrier_remote_arrive_cluster
 open ptx87
 
 // PTX MP+mbarrier-remote-arrive.cluster
-// "P0 in CTA 0 arrives with release at cluster scope on an mbarrier of CTA 1 (shared::cluster); P1 in CTA 1 waits with acquire at cluster scope (D30). Expected: forbidden."
+// "P0 in CTA 0 arrives with release at cluster scope on an mbarrier of CTA 1 (shared::cluster); P1 in CTA 1 waits with acquire at cluster scope (D16). Expected: forbidden."
 // {
 // b=mbarrier(1) @cta 1;
 // x=0;

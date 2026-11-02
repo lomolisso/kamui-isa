@@ -63,7 +63,7 @@ PROXY_FENCE = {"texture": "Texture", "surface": "Surface", "constant": "Constant
 RMW_OPS = {"add", "sub", "exch", "cas", "inc", "dec", "min", "max", "and", "or", "xor"}
 SPACES = {"global": "Global", "shared": "Shared", "shared::cta": "Shared", "shared::cluster": "Shared",
           "local": "Local", "const": "Const", "param": "Param"}
-# qualifiers with no effect on the memory model: types, cache operators and hints (D21), alignment, ...
+# qualifiers with no effect on the memory model: types, cache operators and hints (D27), alignment, ...
 IGNORED = re.compile(r"^([busf](8|16|32|64|128)|f16x2|bf16|bf16x2|e4m3|e5m2|tf32|pred|ca|cg|cs|lu|cv|wb|wt|nc|"
                      r"L1::.*|L2::.*|level::.*|aligned|sync|noftz|ftz|rn|unified|b1024|"
                      r"m8n8|m16n8|x1|x2|x4|trans|ftz|relu)$")
@@ -148,7 +148,7 @@ class Query:
 
     def new_unit(self, th, cta: str | None = None) -> str:
         """An asynchronous unit in the issuing thread's CTA, or in the CTA whose shared memory the operations
-        write and whose mbarrier they signal (D20)."""
+        write and whose mbarrier they signal (D21)."""
         u = f"U{self.n_units}"
         self.n_units += 1
         self.add_node(u, "AsyncUnit", cta or self.cta_of[th.tid])
@@ -362,7 +362,7 @@ class Query:
         return self.scope_of[(th.tid, s)]
 
     def grid_deps(self):
-        """griddepcontrol.wait in a thread of grid N waits for the completion of every thread of grid N-1 (D27)."""
+        """griddepcontrol.wait in a thread of grid N waits for the completion of every thread of grid N-1 (D32)."""
         for e in [e for e in self.events if "gdwait" in e.subsets]:
             tid = int(e.node[1:])
             g = self.thread_grid[tid]
@@ -398,7 +398,7 @@ class Query:
         if op in ("prefetch", "prefetchu", "applypriority", "createpolicy") or \
                 (op == "cp" and q[:3] == ["async", "bulk", "prefetch"]) or \
                 (op == "griddepcontrol" and q == ["launch_dependents"]):
-            return  # no effect on the memory model (D21)
+            return  # no effect on the memory model (D27)
         if op == "discard":
             loc, idx = self.ref(ins.args[0])
             self.note_space(th, q, loc, "Global")
@@ -444,9 +444,9 @@ class Query:
         order = next((x for x in q if x in litmus.ORDERINGS), None) or "weak"
         if order not in allowed:
             raise Unsupported(f"instruction {ins.text!r}")
-        if order == "volatile":   # 8.4.2: relaxed at system scope (D7)
+        if order == "volatile":   # 8.4.2: relaxed at system scope (D28)
             return "relaxed", "Sys"
-        if "mmio" in q:           # mmio: a strong operation; only .relaxed.sys (9.7.9.8, D22)
+        if "mmio" in q:           # mmio: a strong operation; only .relaxed.sys (9.7.9.8, D28)
             if order != "relaxed" or ins.scope != "sys":
                 raise Unsupported(f"instruction {ins.text!r}")
         if order == "weak":
@@ -469,7 +469,7 @@ class Query:
         tid = th.tid
         order, sc = self.order_scope(th, ins, q, ("weak", "relaxed", "acquire", "volatile"))
         proxy = PROXY_OF_OP[ins.op]
-        if ins.op == "ld" and "nc" in ins.quals:  # ld.global.nc reads through the non-coherent path (D23)
+        if ins.op == "ld" and "nc" in ins.quals:  # ld.global.nc reads through the non-coherent path (D29)
             proxy = "Texture"
         if proxy != "Generic" and order != "weak":
             raise Unsupported(f"instruction {ins.text!r}")
@@ -617,7 +617,7 @@ class Query:
 
     def multimem(self, th, ins, q):
         """multimem.ld_reduce / st / red: one operation on each location of the multicast object, in a free
-        order (D26). Defaults: ld_reduce and st .weak, red .relaxed at .sys (17504)."""
+        order (D31). Defaults: ld_reduce and st .weak, red .relaxed at .sys (17504)."""
         tid = th.tid
         kind = q[0] if q else None
         if kind not in ("ld_reduce", "st", "red"):
@@ -756,7 +756,7 @@ class Query:
         """CTA barriers. `bar.cta.sync i[, a[, b]]` and `bar.cta.arrive ...` are Dat3M's form (instance i, barrier
         a, default i, thread count b); `bar.sync a[, b]`, `barrier.sync a[, b]`, `bar.arrive a, b`,
         `barrier.cta.*` are the PTX forms (barrier a, thread count b). `bar.warp.sync m`: bit k of m stands for
-        thread Pk (D24)."""
+        thread Pk (D30)."""
         q = list(ins.quals)
         tid = th.tid
         if q[:2] == ["warp", "sync"]:
@@ -967,7 +967,7 @@ class Query:
 
     def cp_async(self, th, ins, q):
         """cp.async (non-bulk): a weak read and a weak write in the generic proxy (18831), completed by
-        cp.async.wait_group / wait_all or cp.async.mbarrier.arrive (D25)."""
+        cp.async.wait_group / wait_all or cp.async.mbarrier.arrive (D22)."""
         tid = th.tid
         if len(ins.args) < 2:
             raise Unsupported(f"instruction {ins.text!r}")
@@ -1083,7 +1083,7 @@ class Query:
 
     def st_async(self, th, ins, q):
         """st.async: a weak store to shared::cluster memory with mbarrier complete-tx (release at cluster scope),
-        or .release: a strong release store to global memory (9.7.9.12). Generic proxy (D28)."""
+        or .release: a strong release store to global memory (9.7.9.12). Generic proxy (D23)."""
         tid = th.tid
         args = list(ins.args)
         rel = "release" in q
@@ -1107,7 +1107,7 @@ class Query:
 
     def red_async(self, th, ins, q):
         """red.async: a relaxed reduction at cluster scope on shared::cluster memory with complete-tx, or .release:
-        a strong release reduction on global memory (9.7.13.7). Generic proxy (D28)."""
+        a strong release reduction on global memory (9.7.13.7). Generic proxy (D23)."""
         tid = th.tid
         args = list(ins.args)
         rel = "release" in q
@@ -1131,7 +1131,7 @@ class Query:
 
     def wgmma(self, th, ins, q):
         """wgmma.mma_async reads its shared-memory operands in the async proxy; it is ordered after earlier
-        instructions only through wgmma.fence (6886, D29). The litmus form `wgmma.mma_async r, a, b` puts the
+        instructions only through wgmma.fence (6886, D24). The litmus form `wgmma.mma_async r, a, b` puts the
         value read from a into register r."""
         tid = th.tid
         if q[:1] == ["fence"]:

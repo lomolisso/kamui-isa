@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_mbarrier_MP_mbarrier_try_wait_relaxed_fence_restrict
 open ptx87
 
 // PTX MP+mbarrier-try_wait-relaxed+fence-restrict
-// "The manual's idiom (22749): a relaxed try_wait followed by fence.acquire.sync_restrict::shared::cluster orders the later shared-memory load (D17). Expected: forbidden."
+// "The manual's idiom (22749): a relaxed try_wait followed by fence.acquire.sync_restrict::shared::cluster orders the later shared-memory load (D18). Expected: forbidden."
 // {
 // b=mbarrier(1) @cta 1;
 // s=0 @cta 1;

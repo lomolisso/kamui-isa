@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_multimem_MP_multimem_st_release
 open ptx87
 
 // PTX MP+multimem.st.release
-// "multimem.st.release: each per-location store is a release store; a reader on GPU 1 that acquires its location sees the earlier data (D26). Expected: forbidden."
+// "multimem.st.release: each per-location store is a release store; a reader on GPU 1 that acquires its location sees the earlier data (D31). Expected: forbidden."
 // {
 // x=0;
 // y=0;

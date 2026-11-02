@@ -275,6 +275,263 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
 """
 
 
+
+# ----------------------------------------------------------------------------------------------- PTX 8.7 tests
+# The tests of tests/litmus/ptx/kamui/ptx87/ use their own kernel template (below), so that the kernels of the
+# older tests stay unchanged. It runs the tests that need no distributed shared memory: every shared location
+# and mbarrier belongs to the one CTA of a same-cta test; tests across CTAs use global memory only.
+
+TX_BYTES = 16  # one transaction unit of a litmus test (one copied location) = one 16-byte bulk copy
+SEM = ("weak", "relaxed", "acquire", "release", "acq_rel", "sc", "volatile")
+COPS = ("ca", "cg", "cs", "lu", "cv", "wb", "wt")
+
+
+def _sem87(i: litmus.Instr, default: str | None = None) -> str:
+    q = i.quals
+    if "mmio" in q:
+        return ".mmio.relaxed.sys"
+    o = next((x for x in q if x in SEM), default)
+    if o is None:
+        return ""
+    if o in ("weak", "volatile"):
+        return f".{o}"
+    scope = i.scope or ("gpu" if i.op in ("atom", "red") else None)
+    if scope is None:
+        raise Unsupported(f"no scope on {i.text!r}")
+    return f".{o}.{scope}"
+
+
+def _locs87(t: litmus.Litmus):
+    """name -> (kind, init): kind global, shared or mbar; init the initial value (mbar: the arrival count)."""
+    init, owner = {}, {}
+    for d in t.init:
+        lhs, rhs = (x.strip() for x in d.split("=", 1)) if "=" in d else (d, "")
+        if ":" in lhs:
+            continue
+        m = re.fullmatch(r"(.*?)\s*@\s*cta\s+(\d+)", rhs)
+        if m:
+            rhs, owner[lhs] = m.group(1).strip(), int(m.group(2))
+        m = re.fullmatch(r"mbarrier\((\d*)\)", rhs)
+        if m:
+            if not m.group(1):
+                raise Unsupported("an mbarrier initialized by the test itself")
+            init[lhs] = ("mbar", int(m.group(1)))
+        elif re.fullmatch(r"-?\d+", rhs) and re.fullmatch(r"\w+", lhs):
+            init[lhs] = (None, int(rhs))
+        else:
+            raise Unsupported(f"initial state {d!r}")
+    kinds = {}
+    for _, i in t.instrs():
+        q = i.quals
+        names = [a for a in i.args if re.fullmatch(r"[A-Za-z_]\w*", a) and not re.fullmatch(r"r\d+|_", a)]
+        for n in names:
+            if n not in init:
+                init[n] = (None, 0)
+            k = init[n][0]
+            if k == "mbar":
+                kinds[n] = "mbar"
+                continue
+            shared = "shared" in q or "shared::cta" in q
+            if i.op == "cp" and n == i.args[0] and ("shared" in q[1:3] or "shared::cluster" in q[2:3]):
+                shared = True
+            if i.op == "cp" and "bulk" in q and n == i.args[1] and q[2:4] == ["global", "shared::cta"]:
+                shared = True
+            if i.op == "cp" and "reduce" in q and n == i.args[1]:
+                shared = True
+            kinds[n] = "shared" if shared or kinds.get(n) == "shared" else kinds.get(n, "global")
+    return kinds, {n: v for n, (_, v) in init.items()}
+
+
+def _emit87(i: litmus.Instr, ops: dict[str, str], kinds) -> list[str]:
+    q, a = i.quals, i.args
+    sp = lambda n: "shared::cta" if kinds[n] == "shared" else "global"  # noqa: E731
+    cop = "".join(f".{x}" for x in q if x in COPS)
+    if i.op == "ld" and "nc" in q:
+        return [f"ld.global.nc.u32 {ops[a[0]]}, [{ops[a[1]]}];"]
+    if i.op == "ldu":
+        return [f"ldu.global.u32 {ops[a[0]]}, [{ops[a[1]]}];"]
+    if i.op == "ld" and len(a) == 2 and a[1] in ops and not any(re.fullmatch(r"v\d", x) for x in q):
+        return [f"ld{_sem87(i, 'weak')}.{sp(a[1])}{cop}.u32 {ops[a[0]]}, [{ops[a[1]]}];"]
+    if i.op == "st" and len(a) == 2 and "async" not in q and not any(re.fullmatch(r"v\d", x) for x in q):
+        if not re.fullmatch(r"-?\d+", a[1]):
+            raise Unsupported(f"store of a register {i.text!r}")
+        return [f"mov.u32 t, {a[1]};", f"st{_sem87(i, 'weak')}.{sp(a[0])}{cop}.u32 [{ops[a[0]]}], t;"]
+    if i.op in ("atom", "red") and "async" not in q and "b128" not in q and not any(re.fullmatch(r"v\d", x) for x in q):
+        op = next((x for x in q if x in ("add", "inc", "dec", "min", "max", "and", "or", "xor", "exch", "cas")), None)
+        if op is None:
+            raise Unsupported(f"{i.text!r}")
+        ty = "b32" if op in ("and", "or", "xor", "exch", "cas") else "u32"
+        args = list(a)
+        dst = None if i.op == "red" else ops[args.pop(0)]
+        loc = args.pop(0)
+        if not all(re.fullmatch(r"-?\d+", v) for v in args):
+            raise Unsupported(f"register operand {i.text!r}")
+        head = f"{i.op}{_sem87(i, 'relaxed')}.{sp(loc)}.{op}.{ty}"
+        return [f"{head} {dst + ', ' if dst else ''}[{ops[loc]}], {', '.join(args)};"]
+    if i.op == "fence" and not ({"tensormap::generic"} & set(q)):
+        if "proxy" in q and not any(x.startswith("async") for x in q):
+            raise Unsupported(f"{i.text!r}")
+        return [f"{i.text};"]
+    if i.op == "barrier" and q[:1] == ["cluster"]:
+        return [f"{i.text};"]
+    if i.op == "mbarrier":
+        kind = q[0]
+        sem = next((x for x in q if x in ("release", "relaxed", "acquire")), None)
+        scope = next((x for x in q if x in ("cta", "cluster")), "cta")
+        if "shared::cluster" in q or scope != "cta":
+            raise Unsupported(f"remote or cluster-scope mbarrier {i.text!r}")
+        if kind in ("arrive", "arrive_drop"):
+            if a[0] not in kinds:
+                raise Unsupported(f"arrive with a state register {i.text!r}")
+            sub = ".expect_tx" if q[1:2] == ["expect_tx"] else ""
+            extra = f", {int(a[1]) * TX_BYTES}" if sub else (f", {a[1]}" if len(a) > 1 else "")
+            return [f"mbarrier.{kind}{sub}.{sem or 'release'}.cta.shared::cta.b64 _, [{ops[a[0]]}]{extra};"]
+        if kind in ("expect_tx", "complete_tx"):
+            return [f"mbarrier.{kind}.relaxed.cta.shared::cta.b64 [{ops[a[0]]}], {int(a[1]) * TX_BYTES};"]
+        if kind in ("test_wait", "try_wait") and "parity" in q:
+            r, b, parity = a[:3]
+            return [f"mbarrier.{kind}.parity.{sem or 'acquire'}.cta.shared::cta.b64 p, [{ops[b]}], {parity};",
+                    f"selp.u32 {ops[r]}, 1, 0, p;"]
+        raise Unsupported(f"{i.text!r}")
+    if i.op == "cp":
+        rest = q[1:]
+        if q[0] == "async" and rest in (["commit_group"], ["wait_group"], ["wait_all"], ["bulk", "commit_group"],
+                                        ["bulk", "wait_group"], ["bulk", "wait_group", "read"]):
+            return [f"{i.text};"]
+        if q[0] == "async" and rest[:2] == ["mbarrier", "arrive"]:
+            return [f"cp.async.mbarrier.arrive{'.noinc' if 'noinc' in q else ''}.shared::cta.b64 [{ops[a[0]]}];"]
+        if q[0] == "async" and rest[:1] in (["ca"], ["cg"]):
+            return [f"cp.async.ca.shared.global [{ops[a[0]]}], [{ops[a[1]]}], 4;"]
+        if q[0] == "async" and rest == ["bulk", "global", "shared::cta", "bulk_group"]:
+            return [f"cp.async.bulk.global.shared::cta.bulk_group [{ops[a[0]]}], [{ops[a[1]]}], {TX_BYTES};"]
+        if q[0] == "async" and rest == ["bulk", "shared::cluster", "global", "mbarrier::complete_tx::bytes"]:
+            return [f"cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes [{ops[a[0]]}], [{ops[a[1]]}], "
+                    f"{TX_BYTES}, [{ops[a[2]]}];"]
+        if q[:2] == ["reduce", "async"] and q[2:] == ["bulk", "global", "shared::cta", "bulk_group", "add", "u32"]:
+            return [f"cp.reduce.async.bulk.global.shared::cta.bulk_group.add.u32 [{ops[a[0]]}], [{ops[a[1]]}], "
+                    f"{TX_BYTES};"]
+    raise Unsupported(f"instruction {i.text!r}")
+
+
+def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
+    if len(t.threads) > MAX_ROLES:
+        raise Unsupported("more than four threads")
+    if t.has_loops or any(th.grid is not None for th in t.threads):
+        raise Unsupported("loops or grids")
+    place = placement(t)
+    kinds, init = _locs87(t)
+    gl = [n for n in kinds if kinds[n] == "global"]
+    sh = [n for n in kinds if kinds[n] == "shared"]
+    mb = [n for n in kinds if kinds[n] == "mbar"]
+    if (sh or mb) and place != "same-cta":
+        raise Unsupported("shared memory across CTAs (no distributed shared memory in the harness)")
+    if len(sh) > 4 or len(mb) > 2:
+        raise Unsupported("too many shared locations")
+    if any(v != 0 for n, v in init.items() if n in gl) and place != "same-cta":
+        raise Unsupported("non-zero initial values across CTAs")
+    regs: list[tuple[int, str]] = []
+    for th in t.threads:
+        for i in th.instrs:
+            if i.is_empty:
+                continue
+            writes = i.op in ("ld", "ldu", "atom") or (i.op == "mbarrier" and i.quals[0] in ("test_wait", "try_wait"))
+            if writes and i.args and re.fullmatch(r"r\d+", i.args[0]):
+                if (th.tid, i.args[0]) in regs:
+                    raise Unsupported(f"register P{th.tid}:{i.args[0]} written twice")
+                regs.append((th.tid, i.args[0]))
+    for c in litmus.cond_atoms(t.condition):
+        for side in (c.lhs, c.rhs):
+            side = re.sub(r"^(\d+):", r"P\1:", side)
+            if re.fullmatch(r"-?\d+", side):
+                continue
+            if ":" in side:
+                k, r = side[1:].split(":")
+                if (int(k), r) not in regs:
+                    raise Unsupported(f"condition on {side}, which no load writes")
+            elif side not in gl:
+                raise Unsupported(f"condition on {side}")
+    cluster_bar = any(i.op == "barrier" for _, i in t.instrs())
+    bodies = []
+    for th in t.threads:
+        mine = [r for k, r in regs if k == th.tid]
+        used = [n for n in kinds if any(n in i.args for i in th.instrs)]
+        ops = {r: f"%{n}" for n, r in enumerate(mine)}
+        ops.update({n: f"%{len(mine) + k}" for k, n in enumerate(used)})
+        lines = [ln for i in th.instrs if not i.is_empty for ln in _emit87(i, ops, kinds)]
+        asm = "\n".join(f'        "{ln}\\n\\t"' for ln in [".reg .u32 t;", ".reg .pred p;"] + lines)
+        outs = ", ".join(f'"=r"(r_{r})' for r in mine)
+        ins = ", ".join(f'"{"l" if kinds[n] == "global" else "r"}"(a_{n})' for n in used)
+        bodies.append(
+            f"// P{th.tid}: {' ; '.join(i.text for i in th.instrs if not i.is_empty)}\n"
+            f"__device__ __forceinline__ void role{th.tid}(L &l, unsigned *out) {{\n"
+            + "".join(f"    {'unsigned long long' if kinds[n] == 'global' else 'unsigned'} a_{n} = l.{n};\n" for n in used)
+            + "".join(f"    unsigned r_{r} = 0;\n" for r in mine)
+            + f'    asm volatile("{{\\n\\t"\n{asm}\n        "}}"\n        : {outs}\n        : {ins}\n        : "memory");\n'
+            + "".join(f"    out[{regs.index((th.tid, r))}] = r_{r};\n" for r in mine) + "}\n")
+    fields = "".join(f"    {'unsigned long long' if kinds[n] == 'global' else 'unsigned'} {n};\n" for n in kinds)
+    loc_init = "".join(f"    l.{n} = to_global(mem + lo[{gl.index(n)}]);\n" for n in gl)
+    loc_init += "".join(f"    l.{n} = to_shared(&sbuf[({k} * 256 + lslot) * 4]);\n" for k, n in enumerate(sh))
+    loc_init += "".join(f"    l.{n} = to_shared(&mbar[{k} * 256 + lslot]);\n" for k, n in enumerate(mb))
+    setup = ""
+    if place == "same-cta":
+        setup = "    if (a != NONE && role == 0) {\n        const unsigned *lo = locoff + inst * NGLOC;\n"
+        setup += "".join(f"        mem[lo[{gl.index(n)}]] = {init[n]}u;\n" for n in gl if init[n])
+        setup += "".join(f"        sbuf[({k} * 256 + lslot) * 4] = {init[n]}u;\n" for k, n in enumerate(sh))
+        setup += "".join(f'        asm volatile("mbarrier.init.shared::cta.b64 [%0], {init[n]};" :: "r"(to_shared(&mbar[{k} * 256 + lslot])) : "memory");\n'
+                         for k, n in enumerate(mb))
+        setup += '        asm volatile("fence.proxy.async.shared::cta;" ::: "memory");\n    }\n    __syncthreads();\n'
+    src = (f"// Generated by tools/litmus/to_cuda.py from tests/litmus/{tid}.litmus. Do not edit.\n"
+           + "".join(f"// {ln}\n" for ln in t.format().splitlines()) + KERNEL_HEAD
+           + f"struct L {{\n{fields}}};\n\n" + "\n".join(bodies)
+           + KERNEL_MAIN87.format(ngloc=max(len(gl), 1), nregs=max(len(regs), 1), nroles=len(t.threads), setup=setup,
+                                  cluster_bar=('        asm volatile("barrier.cluster.arrive;\\n\\tbarrier.cluster.wait;" ::: "memory");\n'
+                                               if cluster_bar else ""),
+                                  loc_init=loc_init,
+                                  switch="".join(f"    case {k}: role{k}(l, out); break;\n" for k in range(len(t.threads)))))
+    spec = "\n".join([f"# Generated by tools/litmus/to_cuda.py from tests/litmus/{tid}.litmus", "kernel litmus",
+                      f"roles {len(t.threads)}", f"placement {place}", f"nregs {len(regs)}", f"ngloc {len(gl)}",
+                      f"cluster_barrier {int(cluster_bar)}",
+                      *[f"reg {n} P{k}:{r}" for n, (k, r) in enumerate(regs)],
+                      *[f"gloc {n} {loc}" for n, loc in enumerate(gl)]]) + "\n"
+    return src, spec
+
+
+KERNEL_MAIN87 = r"""
+#define NGLOC {ngloc}
+#define NREGS {nregs}
+#define NROLES {nroles}
+
+extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned *res, unsigned *place,
+                                                       const unsigned *assign, const unsigned *locoff,
+                                                       unsigned *scratch, unsigned scratch_mask,
+                                                       unsigned stress_iters, unsigned delay_mask) {{
+    __shared__ __align__(16) unsigned long long mbar[2 * 256];
+    __shared__ __align__(16) unsigned sbuf[4 * 256 * 4];
+    unsigned slot = blockIdx.x * blockDim.x + threadIdx.x;
+    unsigned a = assign[slot];
+    unsigned role = a & 7, lslot = (a >> 3) & 255, inst = a >> 11;
+{setup}    if (a == NONE) {{
+{cluster_bar}        unsigned h = slot * 2654435761u;
+        for (unsigned k = 0; k < stress_iters; k++) {{
+            h = h * 1664525u + 1013904223u;
+            volatile unsigned *p = scratch + ((h >> 8) & scratch_mask);
+            *p = *p + 1;
+        }}
+        return;
+    }}
+    unsigned d = (slot * 2246822519u >> 13) & delay_mask;
+    for (unsigned k = 0; k < d; k++)
+        asm volatile("" ::: "memory");
+    const unsigned *lo = locoff + inst * NGLOC;
+    unsigned *out = res + inst * NREGS;
+    L l;
+{loc_init}    switch (role) {{
+{switch}    }}
+    place[inst * NROLES + role] = (sreg_clusterid() << 8) | sreg_smid();
+}}
+"""
+
+
 def tests() -> list[Path]:
     return sorted((SUITE / "ptx" / "kamui").rglob("*.litmus"))
 
@@ -292,7 +549,8 @@ def generate_all() -> tuple[dict[Path, str], dict[str, str]]:
     for p in tests():
         tid = test_id(p)
         try:
-            src, spec = generate(litmus.load(p), tid)
+            gen = generate87 if tid.startswith("ptx/kamui/ptx87/") else generate
+            src, spec = gen(litmus.load(p), tid)
         except Unsupported as e:
             skipped[tid] = str(e)
             continue

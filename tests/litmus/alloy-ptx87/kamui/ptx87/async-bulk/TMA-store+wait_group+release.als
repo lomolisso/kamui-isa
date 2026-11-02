@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_async_bulk_TMA_store_wait_group_release
 open ptx87
 
 // PTX TMA-store+wait_group+release
-// "A bulk store from shared to global memory completed by the bulk async-group, then a release: the consumer that acquires the flag sees the copied value (completion is visible to the waiting thread and base causality is transitive, D19). Expected: forbidden."
+// "A bulk store from shared to global memory completed by the bulk async-group, then a release: the consumer that acquires the flag sees the copied value (completion is visible to the waiting thread and base causality is transitive, D20). Expected: forbidden."
 // {
 // s=0 @cta 0;
 // g=0;

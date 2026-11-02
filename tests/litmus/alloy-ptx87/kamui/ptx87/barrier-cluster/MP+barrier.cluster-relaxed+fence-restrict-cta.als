@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_barrier_cluster_MP_barrier_cluster_relaxed_fence_restrict
 open ptx87
 
 // PTX MP+barrier.cluster-relaxed+fence-restrict-cta
-// "A relaxed arrive after fence.release.sync_restrict::shared::cta: orders the CTA's own shared memory (D11, D17). Expected: forbidden."
+// "A relaxed arrive after fence.release.sync_restrict::shared::cta: orders the CTA's own shared memory (D11, D18). Expected: forbidden."
 // {
 // s=0 @cta 0;
 // P1:r0=0;

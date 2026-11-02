@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_ld_st_CoWR_ld_global_nc
 open ptx87
 
 // PTX CoWR+ld.global.nc
-// "A thread's own store is not guaranteed visible to its later ld.global.nc (D23). Expected: allowed."
+// "A thread's own store is not guaranteed visible to its later ld.global.nc (D29). Expected: allowed."
 // {
 // x=0;
 // P0:r0=0;

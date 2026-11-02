@@ -3,7 +3,7 @@
 // "As MP+mbarrier-rel-acq, with fence.acq_rel.cta after the test on the acquire side only."
 // {
 // x=0;
-// b=0;
+// b=mbarrier(1);
 // P1:r0=0;
 // P1:r1=0;
 // }

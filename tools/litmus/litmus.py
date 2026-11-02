@@ -280,17 +280,51 @@ class Litmus:
         return any(i.op == "fence" and i.order in ("acquire", "release") for _, i in self.instrs())
 
     @property
-    def dartagnan_ok(self) -> bool:
-        """Can Dartagnan's PTX models (v6.0, v7.5) answer this test? Not with `.cluster`, PTX 8.6 fences or
-        instructions its parser does not know. Cluster placement alone is fine: it is erased before the run."""
-        if self.uses_cluster_scope or self.uses_ptx86_fences:
-            return False
+    def uses_ptx87_syntax(self) -> bool:
+        """True if the test uses a litmus extension of the PTX 8.7 dialect (see tests/litmus/README.md): grid
+        placement, mbarrier or multimem declarations, shared locations with an owner CTA, granules (`x[0]`),
+        vector instructions, per-granule store values."""
         if any(t.grid is not None for t in self.threads):
-            return False
+            return True
         if any(re.search(r"mbarrier\(|multimem\(|\[\d+\]\s*=|@\s*cta\b", d) for d in self.init):
+            return True
+        for _, i in self.instrs():
+            if any(re.fullmatch(r"v\d", q) for q in i.quals):
+                return True
+            if any(re.search(r"\[\d+\]|:|\+", a) for a in i.args):
+                return True
+        return False
+
+    @property
+    def dartagnan_ok(self) -> bool:
+        """Can Dartagnan's PTX models (v6.0, v7.5) answer this test? Its parser (LitmusPTX.g4 in Dat3M 4.4.1) reads
+        only these forms: `ld|st.mo{.scope}`, `ld r, value`, `atom.mo.scope.op`, `red.mo.scope.op`,
+        `fence.mo.scope`, `fence.proxy.kind`, `bar.cta.sync|arrive ...`, register arithmetic, branches and labels,
+        with scopes cta, gpu, sys. Cluster placement alone is fine: it is erased before the run."""
+        if self.uses_cluster_scope or self.uses_ptx86_fences or self.uses_ptx87_syntax:
             return False
-        return all(i.op in DAT3M_OPS and i.order != "volatile" and not any("::" in q for q in i.quals)
-                   for _, i in self.instrs())
+        mos = {"weak", "relaxed", "acquire", "release", "acq_rel", "sc"}
+        scopes = {"cta", "gpu", "sys"}
+        for _, i in self.instrs():
+            q = i.quals
+            if i.op not in DAT3M_OPS:
+                return False
+            if i.op in ("ld", "tld", "suld", "cold"):
+                ok = (not q and i.op == "ld") or (q[:1] and q[0] in mos and len(q) <= 2 and set(q[1:]) <= scopes)
+            elif i.op in ("st", "sust"):
+                ok = bool(q) and q[0] in mos and len(q) <= 2 and set(q[1:]) <= scopes
+            elif i.op in ("atom", "red", "suatom", "sured"):
+                ok = len(q) == 3 and q[0] in mos and q[1] in scopes and \
+                    q[2] in {"add", "sub", "mul", "div", "and", "or", "xor"} | ({"cas", "exch"} if i.op == "atom" else set())
+            elif i.op == "fence":
+                ok = (len(q) == 2 and q[0] in mos and q[1] in scopes) or (len(q) == 2 and q[0] == "proxy")
+            elif i.op == "bar":
+                ok = q[:1] == ["cta"] and q[1:] in (["sync"], ["arrive"])
+            else:
+                ok = True
+            if not ok:
+                return False
+        return True
 
     def without_clusters(self) -> str:
         """The test text with cluster placement removed (for Dartagnan, which does not parse it)."""

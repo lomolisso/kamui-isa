@@ -20,7 +20,7 @@ open util
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 8.5 Scopes. The scope tree: the root is the system, threads are the leaves. The levels a test uses
 // (gpu, cluster, cta) are nodes of the tree; CtaScope and ClusterScope mark the nodes that some rules need.
-// An AsyncUnit is the thread-like node that performs the operations of one asynchronous instruction (D20).
+// An AsyncUnit is the thread-like node that performs the operations of one asynchronous instruction (D21).
 
 sig Scope { subscope: set Scope }
 sig CtaScope extends Scope {}
@@ -202,7 +202,7 @@ fun FalseWaits : Read { { r: MbarWait | not wait_true[r] } }
 
 // Undefined behaviour of mbarrier objects: an operation other than init on a location with no valid object
 // (9.7.13.15.10), more arrivals than pending (9.7.13.15.13), a wait for a phase that is neither the current
-// one nor the one just before (9.7.13.15.16, D14).
+// one nor the one just before (9.7.13.15.16); see D7 and D15.
 pred mb_undefined {
   (some r: Read & MbarEv | r.ph < 0)
   or (some w: (Write & MbarEv) - MbarInit | w.pend < 0)
@@ -352,7 +352,7 @@ fun sw : Event->Event {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Restricted release and acquire. Some release patterns order only some earlier operations, and some acquire
-// patterns only some later ones (D15 to D19):
+// patterns only some later ones (D18, D19):
 // - fence.release.sync_restrict::shared::cta: earlier operations on the executing CTA's shared memory;
 // - fence.mbarrier_init.release.cluster: earlier mbarrier.init operations of the same thread;
 // - the complete-tx of an asynchronous instruction (TxAnchor): only the memory operations of that instruction

@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_spaces_CoRR_relaxed_cluster_two_windows
 open ptx87
 
 // PTX CoRR+relaxed.cluster+two-windows
-// "Read-read coherence on one shared location read through the shared::cta window and then the shared::cluster window: the windows name the same location, so the second read cannot be older (D16). Expected: forbidden."
+// "Read-read coherence on one shared location read through the shared::cta window and then the shared::cluster window: the windows name the same location, so the second read cannot be older (D17). Expected: forbidden."
 // {
 // s=0 @cta 1;
 // P1:r0=0;

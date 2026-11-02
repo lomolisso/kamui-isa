@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_async_bulk_cp_reduce_async_bulk_generic_atomic
 open ptx87
 
 // PTX cp.reduce.async.bulk+generic-atomic
-// "The reduction of a bulk copy runs in the async proxy (18756); a concurrent atom.add runs in the generic proxy. Operations of different proxies are not morally strong (8.7), so atomicity is not guaranteed between them and an update may be lost (D32). Expected: allowed."
+// "The reduction of a bulk copy runs in the async proxy (18756); a concurrent atom.add runs in the generic proxy. Operations of different proxies are not morally strong (8.7), so atomicity is not guaranteed between them and an update may be lost (D25). Expected: allowed."
 // {
 // s=0 @cta 0;
 // g=0;

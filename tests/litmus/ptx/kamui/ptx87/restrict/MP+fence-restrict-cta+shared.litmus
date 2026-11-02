@@ -1,5 +1,5 @@
 PTX MP+fence-restrict-cta+shared
-"fence.release.sync_restrict::shared::cta orders P0's earlier store to its own CTA's shared memory before the flag (D17). Expected: forbidden."
+"fence.release.sync_restrict::shared::cta orders P0's earlier store to its own CTA's shared memory before the flag (D18). Expected: forbidden."
 {
 s=0 @cta 0;
 f=0;

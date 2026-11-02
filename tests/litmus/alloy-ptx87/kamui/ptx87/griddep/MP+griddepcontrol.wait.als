@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_griddep_MP_griddepcontrol_wait
 open ptx87
 
 // PTX MP+griddepcontrol.wait
-// "griddepcontrol.wait in the dependent grid waits for the prerequisite grid to complete with its memory operations performed and visible (23827, D27). Expected: forbidden."
+// "griddepcontrol.wait in the dependent grid waits for the prerequisite grid to complete with its memory operations performed and visible (23827, D32). Expected: forbidden."
 // {
 // x=0;
 // P1:r0=0;

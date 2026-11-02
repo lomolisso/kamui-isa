@@ -1,5 +1,5 @@
 PTX MP+barrier.cluster-relaxed+fence-restrict-cta
-"A relaxed arrive after fence.release.sync_restrict::shared::cta: orders the CTA's own shared memory (D11, D17). Expected: forbidden."
+"A relaxed arrive after fence.release.sync_restrict::shared::cta: orders the CTA's own shared memory (D11, D18). Expected: forbidden."
 {
 s=0 @cta 0;
 P1:r0=0;

@@ -83,3 +83,92 @@
   test: ptx/kamui/hand/MP+mbarrier-rel-acq-shared.cta+same-cta
   model: shuffle
   reason: *mbarrier_cta
+
+# ---- the PTX 8.7 Alloy model (models/ptx87): differences with Dartagnan, and programs with no execution
+
+- kind: models
+  test: ptx/imported/dat3m/Barrier/quorum1-pass
+  model: "*"
+  reason: &quorum >-
+    Three threads use a barrier with a thread count of 2, so one of them can never complete its barrier
+    (9.7.13.1: the barrier completes when 2 threads arrived and is reinitialized; the third waits for a partner
+    that never comes). The ptx-v8.7-alloy model counts only executions in which every thread finishes, so the
+    test has no outcome (decision D9 in models/ptx87/decisions.md). Dartagnan (ptx-v7.5, ptx-v6.0) also counts
+    executions in which a thread stays blocked, with the blocked thread's later loads keeping their initial
+    register values, which makes the condition reachable.
+
+- kind: models
+  test: ptx/imported/dat3m/Barrier/quorum2-pass
+  model: "*"
+  reason: *quorum
+
+- kind: models
+  test: ptx/imported/dat3m/Barrier/quorum3-pass
+  model: "*"
+  reason: *quorum
+
+- kind: models
+  test: ptx/imported/dat3m/Barrier/quorum4-pass
+  model: "*"
+  reason: *quorum
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum1-hang
+  model: ptx-v8.7-alloy
+  reason: &quorum_noexec >-
+    A barrier with a thread count that the test's threads cannot fill (or, for -hang, can never reach): some
+    thread waits forever, so the program has no execution that finishes and no outcome (D9).
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum2-hang
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum1-pass
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum2-pass
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum3-pass
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum4-pass
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum3-fail
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum4-fail
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Manual/PC-bar-sync-sync-3
+  model: ptx-v8.7-alloy
+  reason: &deadlock >-
+    The test's own comment says "Deadlock": the two threads wait at named barriers 0 and 1 in opposite orders, so
+    neither barrier completes and the program has no execution that finishes (D9). Dartagnan's verdict is
+    forbidden too.
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Manual/PC-bar-sync-sync-4
+  model: ptx-v8.7-alloy
+  reason: *deadlock
+
+- kind: no-execution
+  test: ptx/kamui/ptx87/bar/bar.sync-count+hang
+  model: ptx-v8.7-alloy
+  reason: >-
+    Written to have no execution: a barrier waits for 3 threads and only 2 arrive (D9).

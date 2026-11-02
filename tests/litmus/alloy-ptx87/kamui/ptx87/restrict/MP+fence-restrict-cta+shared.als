@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_restrict_MP_fence_restrict_cta_shared
 open ptx87
 
 // PTX MP+fence-restrict-cta+shared
-// "fence.release.sync_restrict::shared::cta orders P0's earlier store to its own CTA's shared memory before the flag (D17). Expected: forbidden."
+// "fence.release.sync_restrict::shared::cta orders P0's earlier store to its own CTA's shared memory before the flag (D18). Expected: forbidden."
 // {
 // s=0 @cta 0;
 // f=0;

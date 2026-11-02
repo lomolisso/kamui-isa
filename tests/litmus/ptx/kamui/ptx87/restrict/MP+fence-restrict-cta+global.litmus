@@ -1,5 +1,5 @@
 PTX MP+fence-restrict-cta+global
-"As MP+fence-restrict-cta+shared with the data in global memory: the restricted fence orders only operations on the CTA's shared memory (22626, D17). Expected: allowed."
+"As MP+fence-restrict-cta+shared with the data in global memory: the restricted fence orders only operations on the CTA's shared memory (22626, D18). Expected: allowed."
 {
 d=0;
 f=0;

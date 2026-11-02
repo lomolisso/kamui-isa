@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_restrict_MP_fence_restrict_cta_not_transitive
 open ptx87
 
 // PTX MP+fence-restrict-cta+not-transitive
-// "P0 writes global d, then shared s, then uses the restricted release fence. s is ordered; d is not, although d precedes s in program order: the restricted edges are not closed transitively (D18). Expected: allowed."
+// "P0 writes global d, then shared s, then uses the restricted release fence. s is ordered; d is not, although d precedes s in program order: the restricted edges are not closed transitively (D19). Expected: allowed."
 // {
 // s=0 @cta 0;
 // d=0;

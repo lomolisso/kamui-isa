@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_wgmma_wgmma_no_wgmma_fence
 open ptx87
 
 // PTX wgmma+no-wgmma.fence
-// "As wgmma+fence.proxy.async+wgmma.fence without wgmma.fence: wgmma.mma_async is not ordered after earlier instructions (6886), so only wgmma.fence orders it (D29). Expected: allowed."
+// "As wgmma+fence.proxy.async+wgmma.fence without wgmma.fence: wgmma.mma_async is not ordered after earlier instructions (6886), so only wgmma.fence orders it (D24). Expected: allowed."
 // {
 // a=0 @cta 0;
 // c=0 @cta 0;
