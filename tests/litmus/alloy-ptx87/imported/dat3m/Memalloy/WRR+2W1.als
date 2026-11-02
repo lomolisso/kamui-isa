@@ -24,7 +24,7 @@ open ptx87
 // (x == 2 /\ P1:r0 == 2 /\ P1:r2 == 0)
 
 one sig Sys, Gpu0 extends Scope {}
-one sig Cta0_0, Cta0_1 extends CtaScope {}
+one sig Cta0_0_0, Cta0_0_1 extends CtaScope {}
 one sig T0, T1, T2 extends Thread {}
 one sig L_x, L_y extends Address {}
 one sig E0, E4, E6 extends Write {}
@@ -33,26 +33,37 @@ one sig E2, E5 extends FenceSC {}
 
 fact shape {
   Event = E0 + E1 + E2 + E3 + E4 + E5 + E6
-  Scope = Sys + Gpu0 + Cta0_0 + Cta0_1 + T0 + T1 + T2
+  Scope = Sys + Gpu0 + Cta0_0_0 + Cta0_0_1 + T0 + T1 + T2
   Address = L_x + L_y
-  no Access
-  no acc
-  subscope = Sys->Gpu0 + Gpu0->Cta0_0 + Gpu0->Cta0_1 + Cta0_0->T0 + Cta0_1->T1 + Cta0_1->T2
+  Access = none
+  acc = none->none
+  subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Gpu0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1 + Cta0_0_1->T2
   start = T0->E0 + T1->E1 + T2->E4
   po = E1->E2 + E2->E3 + E4->E5 + E5->E6
   address = E0->L_x + E1->L_x + E3->L_y + E4->L_x + E6->L_y
   proxy = E0->Generic + E1->Generic + E3->Generic + E4->Generic + E6->Generic
-  scope = E0->T0 + E1->T1 + E2->Cta0_1 + E3->T1 + E4->T2 + E5->Gpu0 + E6->T2
+  scope = E0->T0 + E1->T1 + E2->Cta0_0_1 + E3->T1 + E4->T2 + E5->Gpu0 + E6->T2
   rmw = none->none
   dep = none->none
+  issue = none->none
+  done = none->none
+  gdep = none->none
   bwait = none->none
+  cwait = none->none
+  L_x.init = 0
+  L_y.init = 0
   alias = none->none
   space = L_x->Global + L_y->Global
   owner = none->none
-  L_x.init = 0
-  L_y.init = 0
+  Mbar = none
+  MbarInit = none
+  MbarWait = none
+  SyncRestrictCta = none
+  SyncRestrictCluster = none
+  OpRestrictInit = none
+  ClusterArriveRelaxed = none
+  TxAnchor = none
   ProxyFence = none
-  no dirs and no pspace and no paddr
   E0.val = 2
   E4.val = 1
   E6.val = 1
@@ -60,4 +71,4 @@ fact shape {
 
 pred outcome { (((some E0 and (E4) in ^co.E0 and E0.val = 2) or (some E4 and (E0) in ^co.E4 and E4.val = 2) or (no E0 + E4 and 0 = 2)) and (E1.val = 2) and (E3.val = 0)) }
 
-run test { ptx_mm and (outcome or undefined) } for 7 but 4 Int
+run test { ptx_mm and (outcome or undefined) } for 7 but 5 Int

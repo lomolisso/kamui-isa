@@ -129,7 +129,7 @@ def _paren(e, kind) -> str:
 
 
 _TOKEN = re.compile(
-    r"\s*(?:(?P<op>/\\|\\/|==|!=|<=|>=|=|<|>|~|\(|\))|(?P<val>-?0x[0-9a-fA-F]+|P?\d+\s*:\s*\w+|-?\d+|\w+(?:\[\d+\])?))"
+    r"\s*(?:(?P<op>/\\|\\/|==|!=|<=|>=|=|<|>|~|\(|\))|(?P<val>-?0x[0-9a-fA-F]+|P?\d+\s*:\s*\w+(?:\[\d+\])?|-?\d+|\w+(?:\[\d+\])?))"
 )
 
 
@@ -237,11 +237,13 @@ class Thread:
     gpu: int
     cluster: int | None = None
     instrs: list[Instr] = field(default_factory=list)
+    grid: int | None = None
 
     @property
     def placement(self) -> str:
         c = f",cluster {self.cluster}" if self.cluster is not None else ""
-        return f"P{self.tid}@cta {self.cta}{c},gpu {self.gpu}"
+        g = f",grid {self.grid}" if self.grid is not None else ""
+        return f"P{self.tid}@cta {self.cta}{c},gpu {self.gpu}{g}"
 
 
 @dataclass
@@ -282,6 +284,10 @@ class Litmus:
         """Can Dartagnan's PTX models (v6.0, v7.5) answer this test? Not with `.cluster`, PTX 8.6 fences or
         instructions its parser does not know. Cluster placement alone is fine: it is erased before the run."""
         if self.uses_cluster_scope or self.uses_ptx86_fences:
+            return False
+        if any(t.grid is not None for t in self.threads):
+            return False
+        if any(re.search(r"mbarrier\(|multimem\(|\[\d+\]\s*=|@\s*cta\b", d) for d in self.init):
             return False
         return all(i.op in DAT3M_OPS and i.order != "volatile" and not any("::" in q for q in i.quals)
                    for _, i in self.instrs())
@@ -334,7 +340,7 @@ class Litmus:
         return "\n".join(lines) + "\n"
 
 
-_PLACE = re.compile(r"P(\d+)\s*@\s*cta\s+(\d+)\s*,\s*(?:cluster\s+(\d+)\s*,\s*)?gpu\s+(\d+)")
+_PLACE = re.compile(r"P(\d+)\s*@\s*cta\s+(\d+)\s*,\s*(?:cluster\s+(\d+)\s*,\s*)?gpu\s+(\d+)(?:\s*,\s*grid\s+(\d+))?")
 
 
 def parse(text: str, path: str | Path | None = None) -> Litmus:
@@ -370,8 +376,9 @@ def _parse(text: str) -> Litmus:
         pm = _PLACE.fullmatch(cell.strip())
         if not pm:
             raise LitmusError(f"bad thread placement {cell!r}")
-        tid, cta, cl, gpu = pm.groups()
-        threads.append(Thread(int(tid), int(cta), int(gpu), int(cl) if cl is not None else None))
+        tid, cta, cl, gpu, grid = pm.groups()
+        threads.append(Thread(int(tid), int(cta), int(gpu), int(cl) if cl is not None else None,
+                              grid=int(grid) if grid is not None else None))
     for r in rows[1:]:
         cells = _cells(r)
         if len(cells) != len(threads):

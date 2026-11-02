@@ -6,21 +6,24 @@
     python tools/litmus/to_alloy87.py --why      # print every test it cannot express, with the reason
 
 A query declares the test's scope tree, locations and events as `one sig` atoms, pins every relation of the
-program in `fact shape` (program order, addresses, scopes, proxies, read-modify-write pairs, barrier
-generations, the values written), and asks Alloy for an execution that satisfies the model and the test's
-condition: `run test { ptx_mm and (outcome or undefined) }`. An instance means **allowed**, no instance means
-**forbidden** (the bound covers every atom of the test, so the answer is exact for the test).
+program in `fact shape` (program order, addresses, scopes, proxies, read-modify-write pairs, the asynchronous
+units and their issue and completion edges, the values written), and asks Alloy for an execution that
+satisfies the model and the test's condition: `run test { ptx_mm and (outcome or undefined) }`. An instance
+means **allowed**, no instance means **forbidden** (the bound covers every atom of the test, so the answer is
+exact for the test).
 
 Events carry integer values (`val`), so conditions are written on values: `P1:r0 == 1` becomes "the value of the
 read that wrote r0 is 1". A register holds an expression over the values of earlier reads; stores of registers
 and register arithmetic (`add`, `sub`, `mul`) add dependencies (`dep`).
 
-What it can express is listed in tests/litmus/README.md; `--why` gives the reason for every test it skips.
+The instructions and the litmus syntax it reads are listed in tests/litmus/README.md ("The PTX 8.7 dialect");
+`--why` gives the reason for every test it skips.
 """
 
 from __future__ import annotations
 
 import argparse
+import itertools
 import math
 import re
 import sys
@@ -42,7 +45,7 @@ class Unsupported(Exception):
     pass
 
 
-def _const(v: str) -> int | None:
+def _const(v) -> int | None:
     try:
         return int(v, 0)
     except (ValueError, TypeError):
@@ -50,24 +53,45 @@ def _const(v: str) -> int | None:
 
 
 PROXY_OF_OP = {"ld": "Generic", "st": "Generic", "atom": "Generic", "red": "Generic", "tld": "Texture",
-               "suld": "Surface", "sust": "Surface", "suatom": "Surface", "sured": "Surface", "cold": "Constant"}
-LOADS = {"ld", "tld", "suld", "cold"}
-STORES = {"st", "sust"}
+               "suld": "Surface", "sust": "Surface", "suatom": "Surface", "sured": "Surface", "cold": "Constant",
+               "ldu": "Texture", "ldmatrix": "Generic", "stmatrix": "Generic"}
+LOADS = {"ld", "tld", "suld", "cold", "ldu", "ldmatrix"}
+STORES = {"st", "sust", "stmatrix"}
 RMWS = {"atom", "red", "suatom", "sured"}
 FENCE_SIG = {"sc": "FenceSC", "acq_rel": "FenceAcqRel", "acquire": "FenceAcq", "release": "FenceRel"}
 PROXY_FENCE = {"texture": "Texture", "surface": "Surface", "constant": "Constant"}
-RMW_OPS = {"add", "sub", "exch", "cas", "inc", "dec", "min", "max"}
+RMW_OPS = {"add", "sub", "exch", "cas", "inc", "dec", "min", "max", "and", "or", "xor"}
+SPACES = {"global": "Global", "shared": "Shared", "shared::cta": "Shared", "shared::cluster": "Shared",
+          "local": "Local", "const": "Const", "param": "Param"}
+# qualifiers with no effect on the memory model: types, cache operators and hints (D21), alignment, ...
+IGNORED = re.compile(r"^([busf](8|16|32|64|128)|f16x2|bf16|bf16x2|e4m3|e5m2|tf32|pred|ca|cg|cs|lu|cv|wb|wt|nc|"
+                     r"L1::.*|L2::.*|level::.*|aligned|sync|noftz|ftz|rn|unified|b1024|"
+                     r"m8n8|m16n8|x1|x2|x4|trans|ftz|relu)$")
 
 
 @dataclass
 class Ev:
     atom: str
     sig: str
-    tid: int
+    node: str          # thread or asynchronous unit
     scope: str
-    loc: str | None = None
+    addr: str | None = None
     proxy: str | None = None
-    subsets: list[str] = field(default_factory=list)
+    subsets: set = field(default_factory=set)
+    lone: bool = False
+
+
+@dataclass
+class Loc:
+    name: str
+    granules: list[str]
+    init: list[int]
+    alias_of: str | None = None
+    space: str | None = None
+    owner: str | None = None
+    owner_cta: int | None = None   # declared owner CTA (`@cta N`)
+    mbar: tuple | None = None      # initial mbarrier state (phase, pending, expected, tx), or None
+    members: list[str] | None = None  # multimem object: the locations it maps to
 
 
 class Query:
@@ -76,54 +100,65 @@ class Query:
     def __init__(self, t: litmus.Litmus, name: str):
         self.t, self.name = t, name
         self.events: list[Ev] = []
-        self.po: list[tuple[str, str]] = []
-        self.start: dict[int, str] = {}
+        self.chains: dict[str, list[str]] = {}
+        self.node_parent: dict[str, str] = {}
+        self.node_sig: dict[str, str] = {}
+        self.node_order: list[str] = []
         self.rmw: list[tuple[str, str]] = []
         self.dep: list[tuple[str, str]] = []
-        self.sync: list[tuple[str, str]] = []
-        self.facts: list[str] = []
-        self.consts: list[int] = [0, 1]
-        self.arith = 0
-        self.locs: dict[str, dict] = {}  # name -> {space, owner, init, alias_of}
-        self.scope_nodes: list[tuple[str, str]] = []  # (atom, sig)
-        self.tree: list[tuple[str, str]] = []
-        self.node_of: dict[tuple[int, str], str] = {}
-        self.cta_of: dict[int, str] = {}
-        self.regs: dict[str, tuple[str, set[str]]] = {}  # "P1:r0" -> (Int expression, reads it depends on)
-        self.reads_of_reg: dict[str, str] = {}
-        self.writes: dict[str, list[str]] = {}  # physical location -> write atoms
+        self.issue: list[tuple[str, str]] = []
+        self.done: list[tuple[str, str]] = []
+        self.gdep: list[tuple[str, str]] = []
         self.bwait: list[tuple[str, str]] = []
-        self.views: dict[str, str] = {}  # name of a proxy reference -> the location it shows
+        self.cwait: list[tuple[str, str]] = []
+        self.facts: list[str] = []
+        self.consts: list[int] = [0, 1, 2]
+        self.arith = 0
+        self.locs: dict[str, Loc] = {}
+        self.views: dict[str, str] = {}
+        self.regs: dict[str, tuple[str, set[str]]] = {}
+        self.writes: dict[str, list[str]] = {}       # granule atom -> write atoms (incl. aliases' physical)
+        self.lone: dict[str, str] = {}              # lone write -> its read
+        self.perms: list[list[str]] = []            # groups of consecutive events in a free order
+        self.accesses: dict[str, str] = {}          # event -> access atom
+        self.n_access = 0
+        self.n_units = 0
+        self.scope_of: dict[tuple[int, str], str] = {}
+        self.cta_of: dict[int, str] = {}
+        self.cta_id: dict[str, tuple] = {}
+        self.thread_grid: dict[int, int] = {}
 
-    # ------------------------------------------------------------------------------------------- helpers
-
-    def new_event(self, sig: str, tid: int, scope: str, loc=None, proxy=None) -> Ev:
-        e = Ev(f"E{len(self.events)}", sig, tid, scope, loc, proxy)
-        self.events.append(e)
-        return e
+    # ------------------------------------------------------------------------------------------- atoms
 
     def add_node(self, atom: str, sig: str, parent: str | None):
-        if atom not in [a for a, _ in self.scope_nodes]:
-            self.scope_nodes.append((atom, sig))
-            if parent:
-                self.tree.append((parent, atom))
+        if atom in self.node_sig:
+            return
+        self.node_sig[atom] = sig
+        self.node_order.append(atom)
+        if parent:
+            self.node_parent[atom] = parent
 
-    def loc(self, name: str) -> str:
-        """The location (virtual address) a name in an instruction refers to."""
-        name = self.views.get(name, name)
-        if name not in self.locs:
-            if not re.fullmatch(r"[A-Za-z_]\w*", name):
-                raise Unsupported(f"location {name!r}")
-            # a location the initial state does not list starts at 0 (as in Dat3M)
-            self.locs[name] = {"alias_of": None, "space": None, "owner": None, "init": 0}
-        return name
+    def ev(self, sig: str, node: str, scope: str, addr=None, proxy=None, lone=False) -> Ev:
+        e = Ev(f"E{len(self.events)}", sig, node, scope, addr, proxy, lone=lone)
+        self.events.append(e)
+        self.chains.setdefault(node, []).append(e.atom)
+        if lone:
+            pass
+        return e
 
-    def physical(self, name: str) -> str:
-        d = self.locs[name]
-        while d.get("alias_of"):
-            name = d["alias_of"]
-            d = self.locs[name]
-        return name
+    def new_unit(self, th) -> str:
+        u = f"U{self.n_units}"
+        self.n_units += 1
+        self.add_node(u, "AsyncUnit", self.cta_of[th.tid])
+        return u
+
+    def marker(self, th) -> Ev:
+        return self.ev("Marker", f"T{th.tid}", f"T{th.tid}")
+
+    def fact(self, s: str):
+        self.facts.append(s)
+
+    # ------------------------------------------------------------------------------------------- values
 
     def value(self, tid: int, operand: str) -> tuple[str, set[str]]:
         v = _const(operand)
@@ -135,9 +170,144 @@ class Query:
             return self.regs[k]
         if operand in self.locs or operand in self.views:
             raise Unsupported(f"location {operand} used as a value")
-        return "0", set()  # a register never written holds its initial value (set below)
+        if not re.fullmatch(r"r\w*", operand):
+            raise Unsupported(f"operand {operand!r}")
+        return "0", set()
 
-    # ------------------------------------------------------------------------------------------- build
+    def setreg(self, tid: int, reg: str, expr: str, deps: set[str]):
+        self.regs[f"P{tid}:{reg}"] = (expr, deps)
+
+    # ------------------------------------------------------------------------------------------- locations
+
+    def parse_init(self):
+        for d in self.t.init:
+            d = d.strip()
+            m = re.fullmatch(r"(\w+)\s*@\s*(\w+)\s+aliases\s+(\w+)", d)
+            if m:
+                name, kind, target = m.groups()
+                target = self.views.get(target, target)
+                if target not in self.locs:
+                    raise Unsupported(f"alias of an undeclared location {d!r}")
+                if kind == "generic":
+                    # another virtual address of the same memory (a virtual alias, 8.2.2)
+                    base = self.locs[target]
+                    self.locs[name] = Loc(name, [self.atom_name(name, i, len(base.granules)) for i in
+                                                 range(len(base.granules))], list(base.init), alias_of=target)
+                else:
+                    # the same virtual address seen through another proxy (a texture or surface reference, D8)
+                    self.views[name] = target
+                continue
+            if "=" not in d:
+                raise Unsupported(f"initial state {d!r}")
+            lhs, rhs = (s.strip() for s in d.split("=", 1))
+            owner = None
+            m = re.fullmatch(r"(.*?)\s*@\s*cta\s+(\d+)", rhs)
+            if m:
+                rhs, owner = m.group(1).strip(), int(m.group(2))
+            if ":" in lhs:  # a register
+                v = _const(rhs)
+                if v is None:
+                    raise Unsupported(f"initial state {d!r}")
+                self.regs[lhs if lhs.startswith("P") else "P" + lhs] = (str(v), set())
+                self.consts.append(v)
+                continue
+            m = re.fullmatch(r"mbarrier\((\d*)\)", rhs)
+            if m and re.fullmatch(r"\w+", lhs):
+                n = m.group(1)
+                state = (0, int(n), int(n), 0) if n else (-1, 0, 0, 0)
+                self.consts.append(int(n or 0))
+                self.locs[lhs] = Loc(lhs, [f"L_{lhs}"], [0], mbar=state, owner_cta=owner, space="Shared")
+                continue
+            m = re.fullmatch(r"multimem\((\w+(?:\s*,\s*\w+)*)\)", rhs)
+            if m and re.fullmatch(r"\w+", lhs):
+                members = [x.strip() for x in m.group(1).split(",")]
+                for x in members:
+                    if x not in self.locs:
+                        raise Unsupported(f"multimem member {x} undeclared")
+                self.locs[lhs] = Loc(lhs, [], [], members=members)
+                continue
+            m = re.fullmatch(r"(\w+)\[(\d+)\]", lhs)
+            v = _const(rhs)
+            if v is None:
+                raise Unsupported(f"initial state {d!r}")
+            self.consts.append(v)
+            if m:  # one granule of a location of several granules (mixed-size tests)
+                name, k = m.group(1), int(m.group(2))
+                loc = self.locs.setdefault(name, Loc(name, [], [], owner_cta=owner))
+                if k != len(loc.granules):
+                    raise Unsupported(f"granules of {name} must be declared in order")
+                loc.granules.append(f"L_{name}_{k}")
+                loc.init.append(v)
+                continue
+            if not re.fullmatch(r"\w+", lhs):
+                raise Unsupported(f"initial state {d!r}")
+            self.locs[lhs] = Loc(lhs, [f"L_{lhs}"], [v], owner_cta=owner)
+
+    @staticmethod
+    def atom_name(name: str, i: int, n: int) -> str:
+        return f"L_{name}" if n == 1 else f"L_{name}_{i}"
+
+    def ref(self, operand: str) -> tuple[Loc, list[int]]:
+        """A location operand: `x` (every granule) or `x[k]` (granule k)."""
+        m = re.fullmatch(r"(\w+)(?:\[(\d+)\])?", operand)
+        if not m:
+            raise Unsupported(f"location operand {operand!r}")
+        name = self.views.get(m.group(1), m.group(1))
+        if name not in self.locs:
+            if not re.fullmatch(r"[A-Za-z_]\w*", name) or re.fullmatch(r"r\d+", name):
+                raise Unsupported(f"location {name!r}")
+            # a location the initial state does not list starts at 0 (as in Dat3M)
+            self.locs[name] = Loc(name, [f"L_{name}"], [0])
+        loc = self.locs[name]
+        if loc.members is not None:
+            raise Unsupported(f"multimem object {name} used by a plain instruction")
+        idx = list(range(len(loc.granules))) if m.group(2) is None else [int(m.group(2))]
+        if any(i >= len(loc.granules) for i in idx):
+            raise Unsupported(f"granule {operand}")
+        return loc, idx
+
+    def physical(self, loc: Loc) -> Loc:
+        while loc.alias_of:
+            loc = self.locs[loc.alias_of]
+        return loc
+
+    def note_space(self, th, quals, loc: Loc, default=None, which=None):
+        sp = None
+        qs = [q for q in quals if q in SPACES]
+        if which is not None:
+            qs = qs[which:which + 1]
+        for q in qs:
+            sp = SPACES[q]
+        sp = sp or default
+        ploc = self.physical(loc)
+        if sp is None:
+            return
+        if ploc.space not in (None, sp):
+            raise Unsupported(f"location {loc.name} used in two state spaces")
+        ploc.space = sp
+        if sp in ("Shared",) and ploc.owner is None:
+            if ploc.owner_cta is not None:
+                ploc.owner = self.cta_atom(th, ploc.owner_cta)
+            else:
+                ploc.owner = self.cta_of[th.tid]
+        if sp == "Local":
+            if ploc.owner not in (None, f"T{th.tid}"):
+                raise Unsupported(f"local location {loc.name} used by two threads")
+            ploc.owner = f"T{th.tid}"
+
+    def cta_atom(self, th, cta: int) -> str:
+        for (g, gr, c), atom in self.cta_id.items():
+            if g == th.gpu and c == cta:
+                return atom
+        raise Unsupported(f"CTA {cta} has no thread in the test")
+
+    def gaddr(self, loc: Loc, i: int) -> str:
+        return loc.granules[i]
+
+    def record_write(self, e: Ev):
+        self.writes.setdefault(e.addr, []).append(e.atom)
+
+    # ------------------------------------------------------------------------------------------- scopes
 
     def build(self):
         t = self.t
@@ -150,249 +320,436 @@ class Query:
         self.add_node("Sys", "Scope", None)
         cta_parent: dict[str, str] = {}
         for th in t.threads:
+            grid = getattr(th, "grid", None) or 0
+            self.thread_grid[th.tid] = grid
             g = f"Gpu{th.gpu}"
             self.add_node(g, "Scope", "Sys")
             parent = g
             if clusters:
-                c = f"Cl{th.gpu}_{th.cluster}"
+                c = f"Cl{th.gpu}_{grid}_{th.cluster}"
                 self.add_node(c, "ClusterScope", g)
                 parent = c
-                self.node_of[(th.tid, "cluster")] = c
-            cta = f"Cta{th.gpu}_{th.cta}"
+                self.scope_of[(th.tid, "cluster")] = c
+            cta = f"Cta{th.gpu}_{grid}_{th.cta}"
             if cta_parent.setdefault(cta, parent) != parent:
                 raise Unsupported(f"CTA {th.cta} placed in two clusters")
             self.add_node(cta, "CtaScope", parent)
+            self.cta_id[(th.gpu, grid, th.cta)] = cta
             self.cta_of[th.tid] = cta
-            self.node_of.update({(th.tid, "cta"): cta, (th.tid, "gpu"): g, (th.tid, "sys"): "Sys"})
+            self.scope_of.update({(th.tid, "cta"): cta, (th.tid, "gpu"): g, (th.tid, "sys"): "Sys"})
+        for th in t.threads:
+            self.add_node(f"T{th.tid}", "Thread", self.cta_of[th.tid])
+        self.groups = {th.tid: {"bulk": ([], []), "cp": ([], []), "wgmma": ([], [])} for th in t.threads}
+        self.cp_done: dict[int, list[str]] = {th.tid: [] for th in t.threads}  # completed cp.async ops
+        self.cp_ops: dict[int, list[str]] = {th.tid: [] for th in t.threads}
+        self.last_wgmma_fence: dict[int, str | None] = {th.tid: None for th in t.threads}
         for th in t.threads:
             self.thread(th)
+            if not self.chains.get(f"T{th.tid}"):
+                self.marker(th)
+        self.grid_deps()
 
-    def parse_init(self):
-        for d in self.t.init:
-            lhs, rhs = (s.strip() for s in d.split("=", 1)) if "=" in d else (d.strip(), "")
-            if ":" in lhs:  # register
-                v = _const(rhs)
-                if v is None:
-                    raise Unsupported(f"initial state {d!r}")
-                self.regs[lhs if lhs.startswith("P") else "P" + lhs] = (str(v), set())
-                self.consts.append(v)
-                continue
-            m = re.fullmatch(r"(\w+)\s*@\s*(\w+)\s+aliases\s+(\w+)", d.strip())
-            if m:
-                name, kind, target = m.groups()
-                if target not in self.locs and target not in self.views:
-                    raise Unsupported(f"alias of an undeclared location {d!r}")
-                target = self.views.get(target, target)
-                if kind == "generic":
-                    # another virtual address of the same memory (a virtual alias, 8.2.2)
-                    self.locs[name] = {"alias_of": target, "space": None, "owner": None, "init": None}
-                else:
-                    # the same virtual address seen through another proxy (a texture or surface reference)
-                    self.views[name] = target
-                continue
-            v = _const(rhs)
-            if not re.fullmatch(r"\w+", lhs) or v is None:
-                raise Unsupported(f"initial state {d!r}")
-            self.locs[lhs] = {"alias_of": None, "space": None, "owner": None, "init": v}
-            self.consts.append(v)
+    def scope_atom(self, th, s: str | None, default: str | None = None) -> str:
+        s = s or default
+        if s is None or (th.tid, s) not in self.scope_of:
+            raise Unsupported(f"scope .{s} in thread P{th.tid}")
+        return self.scope_of[(th.tid, s)]
 
-    def scope_atom(self, th, ins: litmus.Instr, default: str | None = None) -> str:
-        s = ins.scope or default
-        if s is None or (th.tid, s) not in self.node_of:
-            raise Unsupported(f"scope of {ins.text!r}")
-        return self.node_of[(th.tid, s)]
+    def grid_deps(self):
+        """griddepcontrol.wait in a thread of grid N waits for the completion of every thread of grid N-1 (D27)."""
+        for e in [e for e in self.events if "gdwait" in e.subsets]:
+            tid = int(e.node[1:])
+            g = self.thread_grid[tid]
+            pre = [th.tid for th in self.t.threads if self.thread_grid[th.tid] == g - 1]
+            if not pre:
+                raise Unsupported("griddepcontrol.wait with no prerequisite grid")
+            for p in pre:
+                last = self.chains[f"T{p}"][-1]
+                self.gdep.append((last, e.atom))
 
-    def note_space(self, th, ins: litmus.Instr, loc: str):
-        sp = None
-        for q in ins.quals:
-            if q in ("global",):
-                sp = "Global"
-            elif q in ("shared", "shared::cta", "shared::cluster"):
-                sp = "Shared"
-        d = self.locs[self.physical(loc)]
-        if sp is None:
-            return
-        if d["space"] not in (None, sp):
-            raise Unsupported(f"location {loc} used in two state spaces")
-        d["space"] = sp
-        if sp == "Shared" and d["owner"] is None:
-            if "shared::cluster" in ins.quals:
-                raise Unsupported(f"owner CTA of shared location {loc} (declare it)")
-            d["owner"] = self.cta_of[th.tid]
+    # ------------------------------------------------------------------------------------------- threads
 
     def thread(self, th):
-        tid = th.tid
-        prev: list[str | None] = [None]
-        tnode = f"T{tid}"
-
-        def chain(e: Ev):
-            if prev[0]:
-                self.po.append((prev[0], e.atom))
-            else:
-                self.start[tid] = e.atom
-            prev[0] = e.atom
-
         for ins in th.instrs:
             if ins.is_empty:
                 continue
-            op, q = ins.op, ins.quals
-            if op == "ld" and not q and len(ins.args) == 2 and _const(ins.args[1]) is not None:
-                self.regs[f"P{tid}:{ins.args[0]}"] = (ins.args[1], set())
-                self.consts.append(_const(ins.args[1]))
-                continue
-            if op in ("add", "sub", "mul") and not q and len(ins.args) == 3:
-                a, da = self.value(tid, ins.args[1])
-                b, db = self.value(tid, ins.args[2])
-                f = {"add": "plus", "sub": "minus", "mul": "mul"}[op]
-                self.regs[f"P{tid}:{ins.args[0]}"] = (f"{f}[{a}, {b}]", da | db)
-                self.arith += 1
-                continue
-            if op in LOADS:
-                self.load(th, ins, chain)
-            elif op in STORES:
-                self.store(th, ins, chain)
-            elif op in RMWS:
-                self.rmw_op(th, ins, chain)
-            elif op == "fence" or op == "membar":
-                self.fence(th, ins, chain)
-            elif op == "bar" or (op == "barrier" and ins.quals[:1] != ["cluster"]):
-                self.bar(th, ins, chain)
-            else:
-                raise Unsupported(f"instruction {ins.text!r}")
-        if prev[0] is None:
-            # a thread with no events: give it a marker so that `start` is defined
-            e = self.new_event("Marker", tid, tnode)
-            chain(e)
-        self.add_node(tnode, "Thread", self.cta_of[tid])
+            self.instr(th, ins)
 
-    def order_and_scope(self, th, ins: litmus.Instr, allowed: tuple[str, ...]) -> tuple[str, str]:
-        order = ins.order or "weak"
+    def instr(self, th, ins: litmus.Instr):
+        op, q = ins.op, [x for x in ins.quals if not IGNORED.match(x)]
+        tid = th.tid
+        if op == "ld" and not ins.quals and len(ins.args) == 2 and _const(ins.args[1]) is not None:
+            self.setreg(tid, ins.args[0], ins.args[1], set())
+            self.consts.append(_const(ins.args[1]))
+            return
+        if op in ("add", "sub", "mul") and len(ins.args) == 3 and not [x for x in q if x]:
+            a, da = self.value(tid, ins.args[1])
+            b, db = self.value(tid, ins.args[2])
+            f = {"add": "plus", "sub": "minus", "mul": "mul"}[op]
+            self.setreg(tid, ins.args[0], f"{f}[{a}, {b}]", da | db)
+            self.arith += 1
+            return
+        if op in ("prefetch", "prefetchu", "applypriority", "createpolicy") or \
+                (op == "cp" and q[:3] == ["async", "bulk", "prefetch"]) or \
+                (op == "griddepcontrol" and q == ["launch_dependents"]):
+            return  # no effect on the memory model (D21)
+        if op == "discard":
+            loc, idx = self.ref(ins.args[0])
+            self.note_space(th, q, loc, "Global")
+            for i in idx:
+                e = self.ev("Write", f"T{tid}", f"T{tid}", self.gaddr(loc, i), "Generic")
+                self.record_write(e)  # an indeterminate value: no fact on val (17690)
+            return
+        if op == "multimem":
+            return self.multimem(th, ins, q)
+        if op in LOADS:
+            return self.load(th, ins, q)
+        if op in STORES:
+            return self.store(th, ins, q)
+        if op in RMWS:
+            return self.rmw_op(th, ins, q)
+        if op in ("fence", "membar"):
+            return self.fence(th, ins, q)
+        if op == "bar" or (op == "barrier" and q[:1] != ["cluster"]):
+            return self.bar(th, ins)
+        if op == "barrier":
+            return self.cluster_bar(th, ins, q)
+        if op == "mbarrier":
+            return self.mbarrier(th, ins, q)
+        if op == "cp" and q[:1] == ["reduce"]:
+            return self.bulk_copy(th, ins, q)
+        if op == "cp":
+            return self.cp(th, ins, q)
+        if op == "st" or op == "red":
+            pass
+        if op == "wgmma":
+            return self.wgmma(th, ins, q)
+        if op == "tensormap":
+            return self.tensormap(th, ins, q)
+        if op == "griddepcontrol" and q == ["wait"]:
+            e = self.marker(th)
+            e.subsets.add("gdwait")
+            return
+        raise Unsupported(f"instruction {ins.text!r}")
+
+    # ------------------------------------------------------------------------------------------- loads, stores
+
+    def order_scope(self, th, ins, q, allowed, node=None) -> tuple[str, str]:
+        order = next((x for x in q if x in litmus.ORDERINGS), None) or "weak"
         if order not in allowed:
             raise Unsupported(f"instruction {ins.text!r}")
-        if order == "volatile":  # 8.4.2: relaxed at system scope (D7)
+        if order == "volatile":   # 8.4.2: relaxed at system scope (D7)
             return "relaxed", "Sys"
+        if "mmio" in q:           # mmio: a strong operation; only .relaxed.sys (9.7.9.8, D22)
+            if order != "relaxed" or ins.scope != "sys":
+                raise Unsupported(f"instruction {ins.text!r}")
         if order == "weak":
             if ins.scope:
                 raise Unsupported(f"weak access with a scope {ins.text!r}")
-            return "weak", f"T{th.tid}"
-        return order, self.scope_atom(th, ins)
+            return "weak", node or f"T{th.tid}"
+        return order, self.scope_atom(th, ins.scope)
 
-    def load(self, th, ins, chain):
-        order, sc = self.order_and_scope(th, ins, ("weak", "relaxed", "acquire", "volatile"))
-        if ins.op != "ld" and order != "weak":
-            raise Unsupported(f"instruction {ins.text!r}")
-        r, loc = ins.args
-        loc = self.loc(loc)
-        self.note_space(th, ins, loc)
-        e = self.new_event("Acquire" if order == "acquire" else "Read", th.tid, sc, loc, PROXY_OF_OP[ins.op])
-        chain(e)
-        self.regs[f"P{th.tid}:{r}"] = (f"{e.atom}.val", {e.atom})
+    def vec(self, q) -> int:
+        v = [x for x in q if re.fullmatch(r"v\d", x)]
+        return int(v[0][1:]) if v else 1
 
-    def store(self, th, ins, chain):
-        order, sc = self.order_and_scope(th, ins, ("weak", "relaxed", "release", "volatile"))
-        if ins.op != "st" and order != "weak":
-            raise Unsupported(f"instruction {ins.text!r}")
-        loc, v = ins.args
-        loc = self.loc(loc)
-        self.note_space(th, ins, loc)
-        val, deps = self.value(th.tid, v)
-        e = self.new_event("Release" if order == "release" else "Write", th.tid, sc, loc, PROXY_OF_OP[ins.op])
-        chain(e)
-        self.facts.append(f"{e.atom}.val = {val}")
-        self.dep += [(d, e.atom) for d in sorted(deps)]
-        self.writes.setdefault(self.physical(loc), []).append(e.atom)
-
-    def rmw_op(self, th, ins, chain):
-        q = [x for x in ins.quals if x not in litmus.SCOPES and x not in litmus.ORDERINGS
-             and x not in ("global", "shared", "shared::cta", "shared::cluster")]
-        ops = [x for x in q if x in RMW_OPS]
-        if len(ops) != 1:
-            raise Unsupported(f"instruction {ins.text!r}")
-        rop = ops[0]
-        order = ins.order or "relaxed"  # 9.7.13.5: .relaxed by default
-        if order not in ("relaxed", "acquire", "release", "acq_rel"):
-            raise Unsupported(f"instruction {ins.text!r}")
-        sc = self.scope_atom(th, ins, "gpu")  # .gpu by default
-        is_red = ins.op in ("red", "sured")
-        args = list(ins.args)
-        reg = None if is_red else args.pop(0)
-        loc = self.loc(args.pop(0))
-        self.note_space(th, ins, loc)
-        need = 2 if rop == "cas" else 1
-        if len(args) != need:
-            raise Unsupported(f"instruction {ins.text!r}")
-        vals = [self.value(th.tid, a) for a in args]
-        deps = set().union(*(d for _, d in vals))
+    def load(self, th, ins, q):
+        tid = th.tid
+        order, sc = self.order_scope(th, ins, q, ("weak", "relaxed", "acquire", "volatile"))
         proxy = PROXY_OF_OP[ins.op]
-        r = self.new_event("Acquire" if order in ("acquire", "acq_rel") else "Read", th.tid, sc, loc, proxy)
-        chain(r)
-        w = self.new_event("Release" if order in ("release", "acq_rel") else "Write", th.tid, sc, loc, proxy)
+        if ins.op == "ld" and "nc" in ins.quals:  # ld.global.nc reads through the non-coherent path (D23)
+            proxy = "Texture"
+        if proxy != "Generic" and order != "weak":
+            raise Unsupported(f"instruction {ins.text!r}")
+        n = self.vec(q)
+        if len(ins.args) != 2 * n:
+            raise Unsupported(f"instruction {ins.text!r}")
+        regs, ops = ins.args[:n], ins.args[n:]
+        elems = []
+        for r, operand in zip(regs, ops):
+            loc, idx = self.ref(operand)
+            default = "Global" if ins.op in ("ldu",) or "nc" in ins.quals else None
+            if ins.op == "ldmatrix":
+                default = "Shared"
+            self.note_space(th, q, loc, default)
+            acc = self.new_access() if len(idx) > 1 else None
+            evs = []
+            for i in idx:
+                e = self.ev("Acquire" if order == "acquire" else "Read", f"T{tid}", sc, self.gaddr(loc, i), proxy)
+                if acc:
+                    self.accesses[e.atom] = acc
+                evs.append(e)
+            elems += evs
+            if len(idx) == 1:
+                self.setreg(tid, r, f"{evs[0].atom}.val", {evs[0].atom})
+            else:
+                for k, e in zip(idx, evs):
+                    self.setreg(tid, f"{r}[{k}]", f"{e.atom}.val", {e.atom})
+        if n > 1:
+            self.perms.append([e.atom for e in elems])
+
+    def new_access(self) -> str:
+        a = f"A{self.n_access}"
+        self.n_access += 1
+        return a
+
+    def store(self, th, ins, q):
+        tid = th.tid
+        if "async" in q and ins.op == "st":
+            return self.st_async(th, ins, q)
+        order, sc = self.order_scope(th, ins, q, ("weak", "relaxed", "release", "volatile"))
+        proxy = PROXY_OF_OP[ins.op]
+        if proxy != "Generic" and order != "weak":
+            raise Unsupported(f"instruction {ins.text!r}")
+        n = self.vec(q)
+        if len(ins.args) != 2 * n:
+            raise Unsupported(f"instruction {ins.text!r}")
+        ops, vals = ins.args[:n], ins.args[n:]
+        elems = []
+        for operand, v in zip(ops, vals):
+            loc, idx = self.ref(operand)
+            if self.physical(loc).space in ("Const", "Param") or any(x in q for x in ("const", "param")):
+                raise Unsupported(f"store to a read-only state space {ins.text!r}")
+            self.note_space(th, q, loc, "Shared" if ins.op == "stmatrix" else None)
+            parts = v.split(":") if ":" in v else [v] * len(idx)
+            if len(parts) != len(idx):
+                raise Unsupported(f"store value {v!r}")
+            acc = self.new_access() if len(idx) > 1 else None
+            for i, part in zip(idx, parts):
+                val, deps = self.value(tid, part)
+                e = self.ev("Release" if order == "release" else "Write", f"T{tid}", sc, self.gaddr(loc, i), proxy)
+                if acc:
+                    self.accesses[e.atom] = acc
+                self.fact(f"{e.atom}.val = {val}")
+                self.dep += [(d, e.atom) for d in sorted(deps)]
+                self.record_write(e)
+                elems.append(e)
+        if n > 1:
+            self.perms.append([e.atom for e in elems])
+
+    # ------------------------------------------------------------------------------------------- RMWs
+
+    def rmw_expr(self, rop: str, old: str, v: str) -> str:
+        if rop in ("and", "or", "xor"):
+            return f"bit{rop}[{old}, {v}]"
+        return {"add": f"plus[{old}, {v}]", "sub": f"minus[{old}, {v}]", "exch": v,
+                "inc": f"({old} >= {v} => 0 else plus[{old}, 1])",
+                "dec": f"(({old} = 0 or {old} > {v}) => {v} else minus[{old}, 1])",
+                "min": f"({old} < {v} => {old} else {v})", "max": f"({old} > {v} => {old} else {v})"}[rop]
+
+    def rmw_pair(self, th, node, sc, addr, proxy, rsig, wsig, rop, vals, deps, cas=False) -> tuple[Ev, Ev]:
+        r = self.ev(rsig, node, sc, addr, proxy)
+        w = self.ev(wsig, node, sc, addr, proxy, lone=cas)
         self.rmw.append((r.atom, w.atom))
         self.dep.append((r.atom, w.atom))
         self.dep += [(d, w.atom) for d in sorted(deps)]
         old = f"{r.atom}.val"
-        if rop == "cas":
-            cmp, new = vals[0][0], vals[1][0]
-            w.subsets.append("lone")  # a failing CAS does not write
-            self.facts.append(f"some {w.atom} <=> {old} = {cmp}")
-            self.facts.append(f"all w: {w.atom} | w.val = {new}")
+        if cas:
+            self.lone[w.atom] = r.atom
+            self.fact(f"some {w.atom} <=> {old} = {vals[0]}")
+            self.fact(f"all w: {w.atom} | w.val = {vals[1]}")
         else:
-            v = vals[0][0]
-            expr = {"add": f"plus[{old}, {v}]", "sub": f"minus[{old}, {v}]", "exch": v,
-                    "inc": f"({old} >= {v} => 0 else plus[{old}, 1])",
-                    "dec": f"(({old} = 0 or {old} > {v}) => {v} else minus[{old}, 1])",
-                    "min": f"({old} < {v} => {old} else {v})", "max": f"({old} > {v} => {old} else {v})"}[rop]
-            self.facts.append(f"{w.atom}.val = {expr}")
+            self.fact(f"{w.atom}.val = {self.rmw_expr(rop, old, vals[0])}")
             if rop in ("add", "sub", "inc", "dec"):
                 self.arith += 1
-        self.po_append_rmw(r, w, chain)
-        if reg is not None:
-            self.regs[f"P{th.tid}:{reg}"] = (old, {r.atom})
-        self.writes.setdefault(self.physical(loc), []).append(w.atom)
+        self.record_write(w)
+        return r, w
 
-    def po_append_rmw(self, r: Ev, w: Ev, chain):
-        if "lone" in w.subsets:
-            # the write may be absent: program order skips it then (see shape)
-            self.lone_writes = getattr(self, "lone_writes", []) + [(r.atom, w.atom)]
-        chain(w)
+    def rmw_op(self, th, ins, q):
+        tid = th.tid
+        ops = [x for x in q if x in RMW_OPS]
+        if len(ops) != 1 or "async" in q:
+            if "async" in q and ins.op == "red":
+                return self.red_async(th, ins, q)
+            raise Unsupported(f"instruction {ins.text!r}")
+        rop = ops[0]
+        order = next((x for x in q if x in litmus.ORDERINGS), None) or "relaxed"  # 9.7.13.5: .relaxed by default
+        if order not in ("relaxed", "acquire", "release", "acq_rel"):
+            raise Unsupported(f"instruction {ins.text!r}")
+        sc = self.scope_atom(th, ins.scope, "gpu")  # .gpu by default
+        is_red = ins.op in ("red", "sured")
+        n = self.vec(q)
+        args = list(ins.args)
+        regs = [] if is_red else [args.pop(0) for _ in range(n)]
+        locs = [args.pop(0) for _ in range(n)]
+        need = 2 if rop == "cas" else 1
+        if len(args) != need * (n if rop != "cas" else 1) and len(args) != need:
+            raise Unsupported(f"instruction {ins.text!r}")
+        proxy = PROXY_OF_OP[ins.op]
+        rsig = "Acquire" if order in ("acquire", "acq_rel") else "Read"
+        wsig = "Release" if order in ("release", "acq_rel") else "Write"
+        elems = []
+        for k, operand in enumerate(locs):
+            loc, idx = self.ref(operand)
+            if len(idx) != 1:
+                raise Unsupported(f"read-modify-write over several granules {ins.text!r}")
+            self.note_space(th, q, loc)
+            ops_k = args if len(args) == need else args[k * need:(k + 1) * need]
+            vals = [self.value(tid, a) for a in ops_k]
+            deps = set().union(*(d for _, d in vals))
+            r, w = self.rmw_pair(th, f"T{tid}", sc, self.gaddr(loc, idx[0]), proxy, rsig, wsig, rop,
+                                 [v for v, _ in vals], deps, cas=(rop == "cas"))
+            elems += [r, w]
+            if regs:
+                self.setreg(tid, regs[k], f"{r.atom}.val", {r.atom})
+        if n > 1:
+            self.perms.append([e.atom for e in elems])
 
-    def fence(self, th, ins, chain):
-        q = ins.quals
+    # ------------------------------------------------------------------------------------------- multimem
+
+    def multimem(self, th, ins, q):
+        """multimem.ld_reduce / st / red: one operation on each location of the multicast object, in a free
+        order (D26). Defaults: ld_reduce and st .weak, red .relaxed at .sys (17504)."""
+        tid = th.tid
+        kind = q[0] if q else None
+        if kind not in ("ld_reduce", "st", "red"):
+            raise Unsupported(f"instruction {ins.text!r}")
+        order = next((x for x in q if x in litmus.ORDERINGS), None) or ("relaxed" if kind == "red" else "weak")
+        sc = f"T{tid}" if order == "weak" else self.scope_atom(th, ins.scope, "sys" if kind == "red" else None)
+        args = list(ins.args)
+        reg = args.pop(0) if kind == "ld_reduce" else None
+        name = args.pop(0)
+        if name not in self.locs or self.locs[name].members is None:
+            raise Unsupported(f"multimem operand {name} is not a multimem object")
+        members = [self.locs[m] for m in self.locs[name].members]
+        evs = []
+        if kind == "ld_reduce":
+            rop = next((x for x in q if x in ("add", "min", "max")), None)
+            if rop is None or order not in ("weak", "relaxed", "acquire"):
+                raise Unsupported(f"instruction {ins.text!r}")
+            for loc in members:
+                self.note_space(th, ["global"], loc)
+                evs.append(self.ev("Acquire" if order == "acquire" else "Read", f"T{tid}", sc, loc.granules[0],
+                                   "Generic"))
+            expr = f"{evs[0].atom}.val"
+            for e in evs[1:]:
+                expr = {"add": f"plus[{expr}, {e.atom}.val]", "min": f"({expr} < {e.atom}.val => {expr} else {e.atom}.val)",
+                        "max": f"({expr} > {e.atom}.val => {expr} else {e.atom}.val)"}[rop]
+            self.setreg(tid, reg, expr, {e.atom for e in evs})
+        elif kind == "st":
+            if order not in ("weak", "relaxed", "release"):
+                raise Unsupported(f"instruction {ins.text!r}")
+            val, deps = self.value(tid, args[0])
+            for loc in members:
+                self.note_space(th, ["global"], loc)
+                e = self.ev("Release" if order == "release" else "Write", f"T{tid}", sc, loc.granules[0], "Generic")
+                self.fact(f"{e.atom}.val = {val}")
+                self.dep += [(d, e.atom) for d in sorted(deps)]
+                self.record_write(e)
+                evs.append(e)
+        else:
+            rop = next((x for x in q if x in RMW_OPS), None)
+            if rop is None:
+                raise Unsupported(f"instruction {ins.text!r}")
+            val, deps = self.value(tid, args[0])
+            for loc in members:
+                self.note_space(th, ["global"], loc)
+                r, w = self.rmw_pair(th, f"T{tid}", sc, loc.granules[0], "Generic", "Read",
+                                     "Release" if order == "release" else "Write", rop, [val], deps)
+                evs += [r, w]
+        if len(evs) > 1:
+            self.perms.append([e.atom for e in evs])
+
+    # ------------------------------------------------------------------------------------------- fences
+
+    def fence(self, th, ins, q):
+        tid = th.tid
         if ins.op == "membar":  # 9.7.13.4: membar is a synonym for fence.sc
+            if q == ["proxy", "alias"]:
+                self.ev("AliasFence", f"T{tid}", f"T{tid}")
+                return
             if len(q) != 1 or q[0] not in ("cta", "gl", "sys", "gpu"):
                 raise Unsupported(f"instruction {ins.text!r}")
             s = {"gl": "gpu"}.get(q[0], q[0])
-            e = self.new_event("FenceSC", th.tid, self.node_of[(th.tid, s)])
-            chain(e)
+            self.ev("FenceSC", f"T{tid}", self.scope_atom(th, s))
             return
         if q and q[0] == "proxy":
             kind = q[1:]
             if kind == ["alias"]:
-                e = self.new_event("AliasFence", th.tid, f"T{th.tid}")
-            elif len(kind) == 1 and kind[0] in PROXY_FENCE:
+                self.ev("AliasFence", f"T{tid}", f"T{tid}")
+                return
+            if len(kind) == 1 and kind[0] in PROXY_FENCE:
                 p = PROXY_FENCE[kind[0]]
-                e = self.new_event("PlainProxyFence", th.tid, f"T{th.tid}")
-                e.subsets.append("ProxyFence")
-                self.facts.append(f"{e.atom}.dirs = {p}->Generic + Generic->{p}")
-                self.facts.append(f"no {e.atom}.pspace and no {e.atom}.paddr")
-            else:
+                return self.proxy_fence(th, "PlainProxyFence", f"T{tid}", f"{p}->Generic + Generic->{p}")
+            if kind[:1] == ["async"] and len(kind) <= 2:
+                # fence.proxy.async{.global,.shared::cta,.shared::cluster}: bi-directional generic <-> async
+                space = None if len(kind) == 1 else SPACES.get(kind[1])
+                if len(kind) == 2 and space is None:
+                    raise Unsupported(f"instruction {ins.text!r}")
+                return self.proxy_fence(th, "PlainProxyFence", f"T{tid}", "Async->Generic + Generic->Async",
+                                        space=space)
+            if kind[:1] in (["tensormap::generic"], ["async::generic"]):
+                to = "TensorMap" if kind[0] == "tensormap::generic" else "Async"
+                sem = kind[1] if len(kind) > 1 else None
+                rest = kind[2:]
+                restrict = [x for x in rest if x.startswith("sync_restrict")]
+                scope = next((x for x in rest if x in litmus.SCOPES), None)
+                if sem not in ("release", "acquire") or scope is None:
+                    raise Unsupported(f"instruction {ins.text!r}")
+                sig = "FenceRel" if sem == "release" else "FenceAcq"
+                e = self.proxy_fence(th, sig, self.scope_atom(th, scope), f"Generic->{to}")
+                if restrict:
+                    self.restrict(e, restrict[0], sem, scope, ins)
+                if to == "TensorMap" and sem == "acquire":
+                    if len(ins.args) < 1:
+                        raise Unsupported(f"instruction {ins.text!r}")
+                    loc, idx = self.ref(ins.args[0])
+                    self.paddr[e.atom] = [self.gaddr(loc, i) for i in idx]
+                return
+            raise Unsupported(f"instruction {ins.text!r}")
+        if "mbarrier_init" in q:  # fence.mbarrier_init.release.cluster (.op_restrict)
+            if [x for x in q if x not in ("mbarrier_init", "release", "cluster")] or "cluster" not in q:
                 raise Unsupported(f"instruction {ins.text!r}")
-            chain(e)
+            e = self.ev("FenceRel", f"T{tid}", self.scope_atom(th, "cluster"))
+            e.subsets.add("OpRestrictInit")
             return
-        if any("::" in x or x in ("op_restrict", "mbarrier_init") for x in q):
+        restrict = [x for x in q if x.startswith("sync_restrict")]
+        order = next((x for x in q if x in FENCE_SIG), None) or "acq_rel"  # .acq_rel by default
+        extra = [x for x in q if x not in (order, ins.scope) and not x.startswith("sync_restrict")]
+        if extra or ins.scope is None:
             raise Unsupported(f"instruction {ins.text!r}")
-        order = ins.order or "acq_rel"  # 9.7.13.4: .acq_rel by default
-        if order not in FENCE_SIG or [x for x in q if x not in (order, ins.scope)]:
-            raise Unsupported(f"instruction {ins.text!r}")
-        e = self.new_event(FENCE_SIG[order], th.tid, self.scope_atom(th, ins))
-        chain(e)
+        e = self.ev(FENCE_SIG[order], f"T{tid}", self.scope_atom(th, ins.scope))
+        if restrict:
+            self.restrict(e, restrict[0], order, ins.scope, ins)
 
-    def bar(self, th, ins, chain):
+    def restrict(self, e: Ev, r: str, sem: str, scope: str, ins):
+        """.sync_restrict::shared::cta needs .release, ::shared::cluster needs .acquire, both .cluster (22626)."""
+        if scope != "cluster":
+            raise Unsupported(f"instruction {ins.text!r}")
+        if r == "sync_restrict::shared::cta" and sem == "release":
+            e.subsets.add("SyncRestrictCta")
+        elif r == "sync_restrict::shared::cluster" and sem == "acquire":
+            e.subsets.add("SyncRestrictCluster")
+        else:
+            raise Unsupported(f"instruction {ins.text!r}")
+
+    def proxy_fence(self, th, sig, scope, dirs, space=None, node=None) -> Ev:
+        e = self.ev(sig, node or f"T{th.tid}", scope)
+        e.subsets.add("ProxyFence")
+        self.pdirs[e.atom] = dirs
+        self.pspace[e.atom] = space
+        return e
+
+    # ------------------------------------------------------------------------------------------- CTA barriers
+
+    def bar(self, th, ins):
         """CTA barriers. `bar.cta.sync i[, a[, b]]` and `bar.cta.arrive ...` are Dat3M's form (instance i, barrier
-        a, default i, thread count b); `bar.sync a[, b]`, `barrier.sync a[, b]`, `bar.arrive a, b`, `bar.red ...`
-        and `barrier.cta.*` are the PTX forms (barrier a, thread count b)."""
+        a, default i, thread count b); `bar.sync a[, b]`, `barrier.sync a[, b]`, `bar.arrive a, b`,
+        `barrier.cta.*` are the PTX forms (barrier a, thread count b). `bar.warp.sync m`: bit k of m stands for
+        thread Pk (D24)."""
         q = list(ins.quals)
-        if ins.op == "bar" and q[:1] == ["cta"]:
+        tid = th.tid
+        if q[:2] == ["warp", "sync"]:
+            if len(ins.args) != 1 or _const(ins.args[0]) is None:
+                raise Unsupported(f"barrier {ins.text!r}")
+            mask = _const(ins.args[0])
+            members = [t for t in self.t.threads if mask & (1 << t.tid)] if mask != -1 else list(self.t.threads)
+            if th not in members or len({self.cta_of[t.tid] for t in members}) != 1:
+                raise Unsupported(f"bar.warp.sync mask {ins.args[0]}")
+            res, count = str(-1 - (mask & 0x7 if mask != -1 else 0x7)), str(len(members))
+            self.consts.append(-8)
+            mode = ["sync"]
+        elif ins.op == "bar" and q[:1] == ["cta"]:
             mode = q[1:]
             args = list(ins.args)
             if not args or len(args) > 3:
@@ -402,8 +759,6 @@ class Query:
         else:
             q = [x for x in q if x not in ("cta", "aligned")]
             mode = q[:1]
-            if ins.op == "barrier" and mode not in (["sync"], ["arrive"]):
-                raise Unsupported(f"barrier {ins.text!r}")
             if mode == ["red"]:
                 raise Unsupported(f"barrier {ins.text!r} (bar.red results are not modelled)")
             args = list(ins.args)
@@ -414,22 +769,419 @@ class Query:
                 raise Unsupported(f"barrier {ins.text!r} (bar.arrive needs a thread count)")
         if mode not in (["sync"], ["arrive"]):
             raise Unsupported(f"barrier {ins.text!r}")
-        cta = self.cta_of[th.tid]
-        a = self.new_event("BarrierArrive", th.tid, cta)
-        chain(a)
-        rv, rd = self.value(th.tid, res)
-        self.facts.append(f"{a.atom}.bid = {rv}")
+        cta = self.cta_of[tid]
+        a = self.ev("BarrierArrive", f"T{tid}", cta)
+        rv, rd = self.value(tid, res)
+        self.fact(f"{a.atom}.bid = {rv}")
         self.dep += [(d, a.atom) for d in sorted(rd)]
         if count is None:
-            self.facts.append(f"no {a.atom}.bcount")
+            self.fact(f"no {a.atom}.bcount")
         else:
-            cv, cd = self.value(th.tid, count)
-            self.facts.append(f"{a.atom}.bcount = {cv}")
+            cv, cd = self.value(tid, count)
+            self.fact(f"{a.atom}.bcount = {cv}")
             self.dep += [(d, a.atom) for d in sorted(cd)]
         if mode == ["sync"]:
-            w = self.new_event("BarrierWait", th.tid, cta)
-            chain(w)
+            w = self.ev("BarrierWait", f"T{tid}", cta)
             self.bwait.append((a.atom, w.atom))
+
+    def cluster_bar(self, th, ins, q):
+        """barrier.cluster.arrive{.release,.relaxed}, barrier.cluster.wait{.acquire} (9.7.13.3)."""
+        tid = th.tid
+        sc = self.scope_atom(th, "cluster")
+        q = [x for x in q if x != "aligned"]
+        if q in (["cluster", "arrive"], ["cluster", "arrive", "release"], ["cluster", "arrive", "relaxed"]):
+            e = self.ev("ClusterArrive", f"T{tid}", sc)
+            if "relaxed" in q:
+                e.subsets.add("ClusterArriveRelaxed")
+            self.open_arrive[tid] = e.atom
+        elif q in (["cluster", "wait"], ["cluster", "wait", "acquire"]):
+            a = self.open_arrive.get(tid)
+            if a is None:
+                raise Unsupported("barrier.cluster.wait without an arrive")
+            e = self.ev("ClusterWait", f"T{tid}", sc)
+            self.cwait.append((a, e.atom))
+            self.open_arrive[tid] = None
+        else:
+            raise Unsupported(f"instruction {ins.text!r}")
+
+    # ------------------------------------------------------------------------------------------- mbarrier
+
+    def mbar_loc(self, th, operand, q, ins) -> Loc:
+        loc, idx = self.ref(operand)
+        if loc.mbar is None:
+            raise Unsupported(f"{operand} is not declared as an mbarrier (b = mbarrier(n))")
+        if loc.owner is None:
+            loc.owner = self.cta_atom(th, loc.owner_cta) if loc.owner_cta is not None else self.cta_of[th.tid]
+        if "shared::cluster" not in q and loc.owner != self.cta_of[th.tid]:
+            raise Unsupported(f"remote mbarrier {operand} needs .shared::cluster: {ins.text!r}")
+        return loc
+
+    def mbarrier(self, th, ins, q):
+        tid = th.tid
+        node = f"T{tid}"
+        kind = q[0] if q else None
+        args = list(ins.args)
+        scope = next((x for x in q if x in ("cta", "cluster")), "cta")  # .cta by default (9.7.13.15.13)
+        if kind in ("init", "inval"):
+            loc = self.mbar_loc(th, args[0], q, ins)
+            w = self.ev("Write", node, node, loc.granules[0], "Generic")
+            self.record_write(w)
+            if kind == "init":
+                n, _ = self.value(tid, args[1])
+                w.subsets.add("MbarInit")
+                self.fact(f"mb_init[{w.atom}, {n}]")
+            else:
+                self.fact(f"mb_inval[{w.atom}]")
+            self.fact(f"{w.atom}.val = 0")
+            return
+        if kind in ("arrive", "arrive_drop", "expect_tx", "complete_tx"):
+            sub = q[1] if len(q) > 1 and q[1] == "expect_tx" else None
+            sem = next((x for x in q if x in ("release", "relaxed")), "release" if kind.startswith("arrive") else "relaxed")
+            reg = None
+            if args and args[0] not in self.locs and args[0] not in self.views and args[0] != "_":
+                if not re.fullmatch(r"r\w*", args[0]):
+                    raise Unsupported(f"instruction {ins.text!r}")
+                reg = args.pop(0)
+            elif args and args[0] == "_":
+                args.pop(0)
+            loc = self.mbar_loc(th, args.pop(0), q, ins)
+            sc = self.scope_atom(th, scope)
+            cnt = args.pop(0) if args else "1"
+            c, deps = self.value(tid, cnt)
+            if kind == "arrive":
+                darr, dexp, dtx = (c, "0", "0") if sub is None else ("1", "0", c)
+            elif kind == "arrive_drop":
+                darr, dexp, dtx = c, c, "0"
+            elif kind == "expect_tx":
+                darr, dexp, dtx = "0", "0", c
+            else:
+                darr, dexp, dtx = "0", "0", f"minus[0, {c}]"
+            r, w = self.mb_rmw(node, sc, loc, "Release" if sem == "release" else "Write", darr, dexp, dtx, deps)
+            if reg:
+                self.setreg(tid, reg, f"{r.atom}.ph", {r.atom})
+            return
+        if kind in ("test_wait", "try_wait"):
+            sem = next((x for x in q if x in ("acquire", "relaxed")), "acquire")
+            parity = "parity" in q
+            if len(args) < 3:
+                raise Unsupported(f"instruction {ins.text!r}")
+            reg, b, p = args[0], args[1], args[2]
+            loc = self.mbar_loc(th, b, q, ins)
+            sc = self.scope_atom(th, scope)
+            r = self.ev("Acquire" if sem == "acquire" else "Read", node, sc, loc.granules[0], "Generic")
+            r.subsets.add("MbarWait")
+            pv, pd = self.value(tid, p)
+            self.dep += [(d, r.atom) for d in sorted(pd)]
+            if parity:
+                self.fact(f"{r.atom}.wpar = {pv} and no {r.atom}.wtok")
+            else:
+                self.fact(f"{r.atom}.wtok = {pv} and no {r.atom}.wpar")
+            self.setreg(tid, reg, f"(wait_true[{r.atom}] => 1 else 0)", {r.atom})
+            return
+        raise Unsupported(f"instruction {ins.text!r}")
+
+    def mb_rmw(self, node, sc, loc, wsig, darr, dexp, dtx, deps=()) -> tuple[Ev, Ev]:
+        r = self.ev("Read", node, sc, loc.granules[0], "Generic")
+        w = self.ev(wsig, node, sc, loc.granules[0], "Generic")
+        self.rmw.append((r.atom, w.atom))
+        self.dep.append((r.atom, w.atom))
+        self.dep += [(d, w.atom) for d in sorted(deps)]
+        self.fact(f"mb_next[{r.atom}, {w.atom}, {darr}, {dexp}, {dtx}]")
+        self.fact(f"{w.atom}.val = 0")
+        self.record_write(w)
+        return r, w
+
+    # ------------------------------------------------------------------------------------------- async
+
+    def complete_tx(self, th, unit, mbar_operand, ops: list[Ev], q, ins, units=1):
+        """The implicit complete-tx of an asynchronous instruction: an mbarrier update with release semantics at
+        cluster scope that orders only that instruction's operations (19150, 6897)."""
+        loc = self.mbar_loc(th, mbar_operand, ["shared::cluster"], ins)
+        sc = self.scope_atom(th, "cluster") if (th.tid, "cluster") in self.scope_of else self.cta_of[th.tid]
+        r, w = self.mb_rmw(unit, sc, loc, "Release", "0", "0", f"minus[0, {units}]")
+        w.subsets.add("TxAnchor")
+        self.txops[w.atom] = [e.atom for e in ops]
+        return w
+
+    def issue_unit(self, th, unit):
+        m = self.marker(th)
+        self.issue.append((m.atom, self.chains[unit][0]))
+        return m
+
+    def cp(self, th, ins, q):
+        tid = th.tid
+        if q[:1] != ["async"]:
+            raise Unsupported(f"instruction {ins.text!r}")
+        rest = q[1:]
+        if rest in (["commit_group"], ["bulk", "commit_group"]):
+            kind = "bulk" if rest[0] == "bulk" else "cp"
+            pend, groups = self.groups[tid][kind]
+            groups.append(list(pend))
+            pend.clear()
+            return
+        if rest in (["wait_group"], ["wait_all"], ["bulk", "wait_group"], ["bulk", "wait_group", "read"]):
+            kind = "bulk" if rest[0] == "bulk" else "cp"
+            pend, groups = self.groups[tid][kind]
+            if rest == ["wait_all"]:
+                groups.append(list(pend))
+                pend.clear()
+                n = 0
+            else:
+                n = _const(ins.args[0])
+                if n is None:
+                    raise Unsupported(f"instruction {ins.text!r}")
+            m = self.marker(th)
+            k = max(0, len(groups) - n)
+            for g in groups[:k]:
+                for unit_done, unit_read_done in g:
+                    self.done.append(((unit_read_done if "read" in rest else unit_done), m.atom))
+            del groups[:k]
+            return
+        if rest[:2] == ["mbarrier", "arrive"]:
+            return self.cp_mbarrier_arrive(th, ins, q)
+        if rest[:1] == ["bulk"] or rest[:1] == ["reduce"]:
+            return self.bulk_copy(th, ins, q)
+        if rest[:1] in (["ca"], ["cg"], []) or (rest and rest[0] in ("shared", "shared::cta")):
+            return self.cp_async(th, ins, q)
+        raise Unsupported(f"instruction {ins.text!r}")
+
+    def cp_async(self, th, ins, q):
+        """cp.async (non-bulk): a weak read and a weak write in the generic proxy (18831), completed by
+        cp.async.wait_group / wait_all or cp.async.mbarrier.arrive (D25)."""
+        tid = th.tid
+        if len(ins.args) < 2:
+            raise Unsupported(f"instruction {ins.text!r}")
+        dloc, didx = self.ref(ins.args[0])
+        sloc, sidx = self.ref(ins.args[1])
+        if len(didx) != len(sidx):
+            raise Unsupported(f"instruction {ins.text!r}")
+        self.note_space(th, ["shared"], dloc)
+        self.note_space(th, ["global"], sloc)
+        u = self.new_unit(th)
+        ops = []
+        for di, si in zip(didx, sidx):
+            r = self.ev("Read", u, u, self.gaddr(sloc, si), "Generic")
+            w = self.ev("Write", u, u, self.gaddr(dloc, di), "Generic")
+            self.fact(f"{w.atom}.val = {r.atom}.val")
+            self.dep.append((r.atom, w.atom))
+            self.record_write(w)
+            ops += [r, w]
+        self.issue_unit(th, u)
+        last = self.chains[u][-1]
+        self.groups[tid]["cp"][0].append((last, last))
+        self.cp_ops[tid].append((u, [e.atom for e in ops], last))
+
+    def cp_mbarrier_arrive(self, th, ins, q):
+        """cp.async.mbarrier.arrive{.noinc}: an arrive-on triggered when all prior cp.async operations of the
+        thread complete; without .noinc the pending count is first incremented (9.7.13.15.15)."""
+        tid = th.tid
+        loc = self.mbar_loc(th, ins.args[0], q, ins)
+        sc = self.cta_of[tid]
+        if "noinc" not in q:
+            self.mb_rmw(f"T{tid}", sc, loc, "Write", "-1", "0", "0")
+        u = self.new_unit(th)
+        r, w = self.mb_rmw(u, sc, loc, "Release", "1", "0", "0")
+        w.subsets.add("TxAnchor")
+        self.txops[w.atom] = [a for _, ops, _ in self.cp_ops[tid] for a in ops]
+        self.issue_unit(th, u)
+        for _, _, last in self.cp_ops[tid]:
+            self.done.append((last, r.atom))
+
+    def bulk_copy(self, th, ins, q):
+        """cp.async.bulk{.tensor} and cp.reduce.async.bulk{.tensor}: operations of the async proxy, outside program
+        order, completed by a bulk async-group or by mbarrier complete-tx (9.7.9.25)."""
+        tid = th.tid
+        reduce = q[0] == "reduce"
+        rest = q[3:] if reduce else q[2:]
+        tensor = bool(rest) and rest[0] == "tensor"
+        if tensor:
+            rest = [x for x in rest[1:] if not re.fullmatch(r"\dd|tile|im2col|im2col_no_offs|gather4|scatter4", x)]
+        spaces = [x for x in rest if x in SPACES]
+        if len(spaces) != 2:
+            raise Unsupported(f"instruction {ins.text!r}")
+        dsp, ssp = spaces
+        mcast = "multicast::cluster" in rest
+        mbar = "mbarrier::complete_tx::bytes" in rest
+        group = "bulk_group" in rest or not mbar
+        rop = next((x for x in rest if x in RMW_OPS), None) if reduce else None
+        if reduce and rop is None:
+            raise Unsupported(f"instruction {ins.text!r}")
+        args = list(ins.args)
+        dst = args.pop(0).split("+")
+        src = args.pop(0)
+        bars = args.pop(0).split("+") if mbar else []
+        if mcast:
+            args = args[1:] if args and _const(args[0]) is not None else args  # the CTA mask is implied by dst
+        tmap = treg = None
+        if tensor:
+            if len(args) < 2:
+                raise Unsupported(f"tensor copy needs a tensor map and a register: {ins.text!r}")
+            tmap, treg = args.pop(0), args.pop(0)
+        if args or (mbar and len(bars) != len(dst)) or (not mcast and len(dst) != 1):
+            raise Unsupported(f"instruction {ins.text!r}")
+        sloc, sidx = self.ref(src)
+        self.note_space(th, [ssp], sloc)
+        u = self.new_unit(th)
+        ops = []
+        if tensor:
+            tl, ti = self.ref(tmap)
+            self.note_space(th, [], tl, "Global")
+            tm = self.ev("Read", u, u, self.gaddr(tl, ti[0]), "TensorMap")
+            self.setreg(tid, treg, f"{tm.atom}.val", {tm.atom})
+            ops.append(tm)
+        reads = []
+        for si in sidx:
+            reads.append(self.ev("Read", u, u, self.gaddr(sloc, si), "Async"))
+        ops += reads
+        pfr = self.proxy_fence(th, "PlainProxyFence", u, "Async->Generic + Generic->Async", node=u)
+        writes_per_dst = []
+        for d in dst:
+            dloc, didx = self.ref(d)
+            if len(didx) != len(sidx):
+                raise Unsupported(f"instruction {ins.text!r}")
+            self.note_space(th, [dsp], dloc)
+            ws = []
+            for r, di in zip(reads, didx):
+                if reduce:
+                    gscope = self.scope_atom(th, "gpu")
+                    rr, ww = self.rmw_pair(th, u, gscope, self.gaddr(dloc, di), "Async", "Read", "Write", rop,
+                                           [f"{r.atom}.val"], {r.atom})
+                    ws += [rr, ww]
+                else:
+                    w = self.ev("Write", u, u, self.gaddr(dloc, di), "Async")
+                    self.fact(f"{w.atom}.val = {r.atom}.val")
+                    self.dep.append((r.atom, w.atom))
+                    self.record_write(w)
+                    ws.append(w)
+            writes_per_dst.append(ws)
+        pf = self.proxy_fence(th, "PlainProxyFence", u, "Async->Generic + Generic->Async", node=u)
+        if mbar:
+            for b, ws in zip(bars, writes_per_dst):
+                self.complete_tx(th, u, b, ops + [pfr] + ws + [pf], [], ins, units=len(sidx))
+        self.issue_unit(th, u)
+        if group:
+            self.groups[tid]["bulk"][0].append((pf.atom, pfr.atom))
+
+    def st_async(self, th, ins, q):
+        """st.async: a weak store to shared::cluster memory with mbarrier complete-tx (release at cluster scope),
+        or .release: a strong release store to global memory (9.7.9.12). Generic proxy (D28)."""
+        tid = th.tid
+        args = list(ins.args)
+        rel = "release" in q
+        u = self.new_unit(th)
+        loc, idx = self.ref(args[0])
+        val, deps = self.value(tid, args[1])
+        if rel:
+            sc = self.scope_atom(th, ins.scope, "sys")
+            self.note_space(th, [], loc, "Global")
+            w = self.ev("Release", u, sc, self.gaddr(loc, idx[0]), "Generic")
+        else:
+            self.note_space(th, [], loc, "Shared")
+            w = self.ev("Write", u, u, self.gaddr(loc, idx[0]), "Generic")
+        self.fact(f"{w.atom}.val = {val}")
+        self.dep += [(d, w.atom) for d in sorted(deps)]
+        self.record_write(w)
+        if not rel:
+            if len(args) != 3:
+                raise Unsupported(f"instruction {ins.text!r}")
+            self.complete_tx(th, u, args[2], [w], q, ins)
+        self.issue_unit(th, u)
+
+    def red_async(self, th, ins, q):
+        """red.async: a relaxed reduction at cluster scope on shared::cluster memory with complete-tx, or .release:
+        a strong release reduction on global memory (9.7.13.7). Generic proxy (D28)."""
+        tid = th.tid
+        args = list(ins.args)
+        rel = "release" in q
+        rop = next((x for x in q if x in RMW_OPS), None)
+        if rop is None:
+            raise Unsupported(f"instruction {ins.text!r}")
+        u = self.new_unit(th)
+        loc, idx = self.ref(args[0])
+        val, deps = self.value(tid, args[1])
+        if rel:
+            sc = self.scope_atom(th, ins.scope, "sys")
+            self.note_space(th, [], loc, "Global")
+            r, w = self.rmw_pair(th, u, sc, self.gaddr(loc, idx[0]), "Generic", "Read", "Release", rop, [val], deps)
+        else:
+            sc = self.scope_atom(th, "cluster")
+            self.note_space(th, [], loc, "Shared")
+            r, w = self.rmw_pair(th, u, sc, self.gaddr(loc, idx[0]), "Generic", "Read", "Write", rop, [val], deps)
+            if len(args) != 3:
+                raise Unsupported(f"instruction {ins.text!r}")
+            self.complete_tx(th, u, args[2], [r, w], q, ins)
+        self.issue_unit(th, u)
+
+    def wgmma(self, th, ins, q):
+        """wgmma.mma_async reads its shared-memory operands in the async proxy; it is ordered after earlier
+        instructions only through wgmma.fence (6886, D29). The litmus form `wgmma.mma_async r, a, b` puts the
+        value read from a into register r."""
+        tid = th.tid
+        if q[:1] == ["fence"]:
+            m = self.marker(th)
+            self.last_wgmma_fence[tid] = m.atom
+            return
+        if q[:1] == ["commit_group"]:
+            pend, groups = self.groups[tid]["wgmma"]
+            groups.append(list(pend))
+            pend.clear()
+            return
+        if q[:1] == ["wait_group"]:
+            pend, groups = self.groups[tid]["wgmma"]
+            n = _const(ins.args[0])
+            m = self.marker(th)
+            k = max(0, len(groups) - n)
+            for g in groups[:k]:
+                for d, _ in g:
+                    self.done.append((d, m.atom))
+            del groups[:k]
+            return
+        if q[:1] != ["mma_async"] or len(ins.args) != 3:
+            raise Unsupported(f"instruction {ins.text!r}")
+        reg, a, b = ins.args
+        u = self.new_unit(th)
+        reads = []
+        for operand in (a, b):
+            loc, idx = self.ref(operand)
+            self.note_space(th, [], loc, "Shared")
+            reads.append(self.ev("Read", u, u, self.gaddr(loc, idx[0]), "Async"))
+        pf = self.proxy_fence(th, "PlainProxyFence", u, "Async->Generic + Generic->Async", node=u)
+        self.setreg(tid, reg, f"{reads[0].atom}.val", {reads[0].atom})
+        f = self.last_wgmma_fence[tid]
+        if f:
+            self.issue.append((f, self.chains[u][0]))
+        self.groups[tid]["wgmma"][0].append((pf.atom, pf.atom))
+
+    def tensormap(self, th, ins, q):
+        """tensormap.replace: a generic write to the tensor map; tensormap.cp_fenceproxy: a generic copy followed by
+        fence.proxy.tensormap::generic.release (9.7.9.26, 9.7.13.16)."""
+        tid = th.tid
+        node = f"T{tid}"
+        if q[:1] == ["replace"]:
+            loc, idx = self.ref(ins.args[0])
+            self.note_space(th, q, loc, "Global")
+            val, deps = self.value(tid, ins.args[1])
+            w = self.ev("Write", node, node, self.gaddr(loc, idx[0]), "Generic")
+            self.fact(f"{w.atom}.val = {val}")
+            self.dep += [(d, w.atom) for d in sorted(deps)]
+            self.record_write(w)
+            return
+        if q[:1] == ["cp_fenceproxy"]:
+            scope = next((x for x in q if x in litmus.SCOPES), None)
+            if scope is None:
+                raise Unsupported(f"instruction {ins.text!r}")
+            dloc, didx = self.ref(ins.args[0])
+            sloc, sidx = self.ref(ins.args[1])
+            self.note_space(th, [], dloc, "Global")
+            self.note_space(th, [], sloc, "Shared")
+            r = self.ev("Read", node, node, self.gaddr(sloc, sidx[0]), "Generic")
+            w = self.ev("Write", node, node, self.gaddr(dloc, didx[0]), "Generic")
+            self.fact(f"{w.atom}.val = {r.atom}.val")
+            self.dep.append((r.atom, w.atom))
+            self.record_write(w)
+            self.proxy_fence(th, "FenceRel", self.scope_atom(th, scope), "Generic->TensorMap")
+            return
+        raise Unsupported(f"instruction {ins.text!r}")
 
     # ------------------------------------------------------------------------------------------- condition
 
@@ -447,29 +1199,36 @@ class Query:
             self.consts.append(v)
             return str(v)
         s = re.sub(r"^(\d+):", r"P\1:", s)
-        if re.fullmatch(r"P\d+:\w+", s):
+        if re.fullmatch(r"P\d+:\w+(\[\d+\])?", s):
             if s in self.regs:
                 return self.regs[s][0]
+            if f"{s}[0]" in self.regs:
+                raise Unsupported(f"condition on {s}: name a part, {s}[k]")
             return "0"
         raise Unsupported(f"condition term {s!r}")
 
     def cmp(self, c: litmus.Cmp) -> str:
         op = {"==": "=", "!=": "!=", "<": "<", ">": ">", "<=": "<=", ">=": ">="}[c.op]
         lhs, rhs = c.lhs, c.rhs
-        lhs, rhs = self.views.get(lhs, lhs), self.views.get(rhs, rhs)
-        if rhs in self.locs and lhs not in self.locs:
+        is_loc = lambda x: re.fullmatch(r"(\w+)(\[\d+\])?", x) and self.views.get(re.match(r"\w+", x).group(0),  # noqa: E731
+                                                                                  re.match(r"\w+", x).group(0)) in self.locs
+        if is_loc(rhs) and not is_loc(lhs):
             lhs, rhs = rhs, lhs
             op = {"<": ">", ">": "<", "<=": ">=", ">=": "<="}.get(op, op)
-        if lhs in self.locs:
-            return self.final_cmp(lhs, op, self.term(rhs))
+        if is_loc(lhs):
+            loc, idx = self.ref(lhs)
+            if len(idx) != 1:
+                raise Unsupported(f"condition on {lhs}: name a granule")
+            return self.final_cmp(loc, idx[0], op, self.term(rhs))
         return f"({self.term(lhs)} {op} {self.term(rhs)})"
 
-    def final_cmp(self, loc: str, op: str, other: str) -> str:
+    def final_cmp(self, loc: Loc, i: int, op: str, other: str) -> str:
         """A condition on the final value of a location: the value of the write that every other write to the
-        location precedes in coherence order, or the initial value if there is no write."""
-        phys = self.physical(loc)
-        ws = self.writes.get(phys, [])
-        init = self.locs[phys]["init"]
+        same memory precedes in coherence order, or the initial value if there is no write."""
+        ploc = self.physical(loc)
+        names = [l for l in self.locs.values() if l.granules and self.physical(l) is ploc]
+        ws = [w for l in names for w in self.writes.get(l.granules[i], [])]
+        init = ploc.init[i]
         alts = []
         for w in ws:
             others = [o for o in ws if o != w]
@@ -482,96 +1241,171 @@ class Query:
 
     def bitwidth(self) -> int:
         m = max(abs(v) for v in self.consts)
-        bound = m * (self.arith + 1) + self.arith  # the largest value arithmetic can reach
+        bound = m * (self.arith + 1) + self.arith + len(self.events)
         return max(4, math.ceil(math.log2(bound + 1)) + 1)
 
-    def emit(self) -> str:
-        t = self.t
-        cond = self.cond(t.condition)
-        for loc, d in self.locs.items():
-            if d["alias_of"]:
-                d["space"] = d["space"] or self.locs[self.physical(loc)]["space"]
-        lines = [f"module {re.sub(r'[^A-Za-z0-9_]', '_', self.name)}", "open ptx87", ""]
-        lines += [f"// {line}" for line in t.format().splitlines()]
-        lines.append("")
-        by_sig: dict[str, list[str]] = {}
-        for a, s in self.scope_nodes:
-            by_sig.setdefault(s, []).append(a)
-        for s in ("Scope", "ClusterScope", "CtaScope", "Thread"):
-            if by_sig.get(s):
-                lines.append(f"one sig {', '.join(by_sig[s])} extends {s} {{}}")
-        locs = list(self.locs)
-        lines.append(f"one sig {', '.join('L_' + x for x in locs)} extends Address {{}}")
-        ev_sig: dict[tuple[str, str], list[str]] = {}
-        for e in self.events:
-            mult = "lone" if "lone" in e.subsets else "one"
-            ev_sig.setdefault((mult, e.sig), []).append(e.atom)
-        for (mult, s), atoms in sorted(ev_sig.items(), key=lambda kv: kv[1][0]):
-            lines.append(f"{mult} sig {', '.join(atoms)} extends {s} {{}}")
-        mem = [e for e in self.events if e.loc is not None]
-        lone = dict(getattr(self, "lone_writes", []))
-        po = self.po_expr(lone)
-        shape = [
-            f"Event = {' + '.join(e.atom for e in self.events)}",
-            f"Scope = {' + '.join(a for a, _ in self.scope_nodes)}",
-            f"Address = {' + '.join('L_' + x for x in locs)}",
-            "no Access",
-            "no acc",
-            f"subscope = {' + '.join(f'{p}->{c}' for p, c in self.tree)}",
-            f"start = {' + '.join(f'T{tid}->{a}' for tid, a in sorted(self.start.items()))}",
-            f"po = {po}",
-            f"address = {self.rel([(e.atom, 'L_' + e.loc) for e in mem])}",
-            f"proxy = {self.rel([(e.atom, e.proxy) for e in mem])}",
-            f"scope = {self.rel([(e.atom, e.scope) for e in self.events])}",
-            f"rmw = {self.rel(self.rmw)}",
-            f"dep = {self.rel(self.dep)}",
-            f"bwait = {self.rel(self.bwait)}",
-            f"alias = {self.rel([('L_' + n, 'L_' + d['alias_of']) for n, d in self.locs.items() if d['alias_of']])}",
-            f"space = {self.rel([('L_' + n, d['space'] or 'Global') for n, d in self.locs.items()])}",
-            f"owner = {self.rel([('L_' + n, d['owner']) for n, d in self.locs.items() if d['owner']])}",
-        ]
-        for n, d in self.locs.items():
-            if not d["alias_of"]:
-                shape.append(f"L_{n}.init = {d['init']}")
-        pfs = [e.atom for e in self.events if "ProxyFence" in e.subsets]
-        shape.append(f"ProxyFence = {' + '.join(pfs) if pfs else 'none'}")
-        if not pfs:
-            shape.append("no dirs and no pspace and no paddr")
-        shape += self.facts
-        lines += ["", "fact shape {"] + [f"  {s}" for s in shape] + ["}", ""]
-        lines.append(f"pred outcome {{ {cond} }}")
-        lines.append("")
-        n = max(len(self.events), len(self.scope_nodes), len(locs), 6)
-        lines.append(f"run test {{ ptx_mm and (outcome or undefined) }} for {n} but {self.bitwidth()} Int")
-        lines.append("")
-        return HEADER.format(test=self.name) + "\n".join(lines)
-
-    def po_expr(self, lone: dict[str, str]) -> str:
-        if not self.po:
-            return "none->none"
-        lone_w = set(lone.values())
-        fixed, cond = [], []
-        for a, b in self.po:
-            if b in lone_w:
-                continue  # r -> w handled with the write's successor
-            if a in lone_w:
-                r = next(k for k, v in lone.items() if v == a)
-                cond.append(f"(some {a} => {r}->{a} + {a}->{b} else {r}->{b})")
-            else:
-                fixed.append(f"{a}->{b}")
-        for r, w in lone.items():
-            if not any(a == w for a, _ in self.po):  # the write is the last event of its thread
-                cond.append(f"{r}->{w}")
-        return " + ".join(fixed + cond) if fixed or cond else "none->none"
+    def po_alternatives(self) -> list[str]:
+        """Program order: each thread's chain of events; a failing CAS's write may be absent; the elements of a
+        vector or multimem instruction are in a free order (6569)."""
+        base, cond = [], []
+        perm_of = {}
+        for g in self.perms:
+            for a in g:
+                perm_of[a] = tuple(g)
+        groups_done = set()
+        variants = [[]]  # list of lists of edges from the permuted groups
+        for node, chain in self.chains.items():
+            items = []
+            for a in chain:
+                if a in perm_of:
+                    g = perm_of[a]
+                    if g not in groups_done:
+                        groups_done.add(g)
+                        items.append(g)
+                else:
+                    items.append(a)
+            for x, y in zip(items, items[1:]):
+                if isinstance(x, tuple) or isinstance(y, tuple):
+                    continue
+                if y in self.lone:
+                    continue
+                if x in self.lone:
+                    r = self.lone[x]
+                    cond.append(f"(some {x} => {r}->{x} + {x}->{y} else {r}->{y})")
+                else:
+                    base.append(f"{x}->{y}")
+            for w, r in self.lone.items():
+                if w in chain and chain[-1] == w:
+                    cond.append(f"{r}->{w}")
+            for k, item in enumerate(items):
+                if not isinstance(item, tuple):
+                    continue
+                prev = items[k - 1] if k > 0 else None
+                nxt = items[k + 1] if k + 1 < len(items) else None
+                if isinstance(prev, tuple) or isinstance(nxt, tuple):
+                    raise Unsupported("two vector instructions in a row")
+                orders = list(itertools.permutations(item))
+                new = []
+                for v in variants:
+                    for o in orders:
+                        edges = ([f"{prev}->{o[0]}"] if prev else []) + [f"{a}->{b}" for a, b in zip(o, o[1:])] + \
+                                ([f"{o[-1]}->{nxt}"] if nxt else [])
+                        new.append(v + edges)
+                variants = new
+                if len(variants) > 64:
+                    raise Unsupported("too many orders of vector elements")
+        fixed = " + ".join(base + cond) if base or cond else "none->none"
+        if len(variants) == 1 and not variants[0]:
+            return [f"po = {fixed}"]
+        alts = [f"po = {fixed} + {' + '.join(v)}" if v else f"po = {fixed}" for v in variants]
+        return ["(" + " or ".join(f"({a})" for a in alts) + ")"]
 
     @staticmethod
     def rel(pairs) -> str:
         pairs = list(pairs)
         return " + ".join(f"{a}->{b}" for a, b in pairs) if pairs else "none->none"
 
+    @staticmethod
+    def setx(atoms) -> str:
+        atoms = list(atoms)
+        return " + ".join(atoms) if atoms else "none"
+
+    def emit(self) -> str:
+        t = self.t
+        cond = self.cond(t.condition)
+        lines = [f"module {re.sub(r'[^A-Za-z0-9_]', '_', self.name)}", "open ptx87", ""]
+        lines += [f"// {line}" for line in t.format().splitlines()]
+        lines.append("")
+        by_sig: dict[str, list[str]] = {}
+        for a in self.node_order:
+            by_sig.setdefault(self.node_sig[a], []).append(a)
+        for s in ("Scope", "ClusterScope", "CtaScope", "Thread", "AsyncUnit"):
+            if by_sig.get(s):
+                lines.append(f"one sig {', '.join(by_sig[s])} extends {s} {{}}")
+        addrs = []
+        for loc in self.locs.values():
+            addrs += loc.granules
+        if not addrs:
+            raise Unsupported("no memory location")
+        lines.append(f"one sig {', '.join(addrs)} extends Address {{}}")
+        if self.n_access:
+            lines.append(f"one sig {', '.join(f'A{k}' for k in range(self.n_access))} extends Access {{}}")
+        ev_sig: dict[tuple[str, str], list[str]] = {}
+        for e in self.events:
+            ev_sig.setdefault(("lone" if e.lone else "one", e.sig), []).append(e.atom)
+        for (mult, s), atoms in sorted(ev_sig.items(), key=lambda kv: int(kv[1][0][1:])):
+            lines.append(f"{mult} sig {', '.join(atoms)} extends {s} {{}}")
+        mem = [e for e in self.events if e.addr is not None]
+        sub = lambda name: self.setx(e.atom for e in self.events if name in e.subsets)  # noqa: E731
+        starts = [(n, c[0]) for n, c in self.chains.items()]
+        shape = [
+            f"Event = {self.setx(e.atom for e in self.events)}",
+            f"Scope = {self.setx(self.node_order)}",
+            f"Address = {self.setx(addrs)}",
+            f"Access = {self.setx(f'A{k}' for k in range(self.n_access))}",
+            f"acc = {self.rel(self.accesses.items())}",
+            f"subscope = {self.rel((p, c) for c, p in self.node_parent.items())}",
+            f"start = {self.rel(starts)}",
+            *self.po_alternatives(),
+            f"address = {self.rel((e.atom, e.addr) for e in mem)}",
+            f"proxy = {self.rel((e.atom, e.proxy) for e in mem)}",
+            f"scope = {self.rel((e.atom, e.scope) for e in self.events)}",
+            f"rmw = {self.rel(self.rmw)}",
+            f"dep = {self.rel(self.dep)}",
+            f"issue = {self.rel(self.issue)}",
+            f"done = {self.rel(self.done)}",
+            f"gdep = {self.rel(self.gdep)}",
+            f"bwait = {self.rel(self.bwait)}",
+            f"cwait = {self.rel(self.cwait)}",
+        ]
+        alias, space, owner = [], [], []
+        mbars = []
+        for loc in self.locs.values():
+            ploc = self.physical(loc)
+            for i, g in enumerate(loc.granules):
+                if loc.alias_of:
+                    alias.append((g, self.locs[loc.alias_of].granules[i]))
+                space.append((g, ploc.space or "Global"))
+                if ploc.space in ("Shared", "Local"):
+                    o = ploc.owner
+                    if o is None:
+                        o = self.cta_atom(self.t.threads[0], ploc.owner_cta) if ploc.owner_cta is not None else \
+                            self.cta_of[self.t.threads[0].tid]
+                    owner.append((g, o))
+                if not loc.alias_of:
+                    shape.append(f"{g}.init = {loc.init[i]}")
+            if loc.mbar is not None:
+                mbars.append((loc.granules[0], loc.mbar))
+        shape += [f"alias = {self.rel(alias)}", f"space = {self.rel(space)}", f"owner = {self.rel(owner)}"]
+        shape.append(f"Mbar = {self.setx(a for a, _ in mbars)}")
+        for a, (p, n, e, x) in mbars:
+            shape.append(f"{a}.iph = {p} and {a}.ipend = {n} and {a}.iexp = {e} and {a}.itx = {x}")
+        for s in ("MbarInit", "MbarWait", "SyncRestrictCta", "SyncRestrictCluster", "OpRestrictInit",
+                  "ClusterArriveRelaxed", "TxAnchor", "ProxyFence"):
+            shape.append(f"{s} = {sub(s)}")
+        for e in self.events:
+            if "ProxyFence" in e.subsets:
+                sp = self.pspace.get(e.atom)
+                pa = self.paddr.get(e.atom)
+                shape.append(f"{e.atom}.dirs = {self.pdirs[e.atom]}")
+                shape.append(f"{e.atom}.pspace = {sp or 'none'}")
+                shape.append(f"{e.atom}.paddr = {self.setx(pa or [])}")
+        for a, ops in self.txops.items():
+            shape.append(f"{a}.txops = {self.setx(ops)}")
+        shape += self.facts
+        lines += ["", "fact shape {"] + [f"  {s}" for s in shape] + ["}", ""]
+        lines.append(f"pred outcome {{ {cond} }}")
+        lines.append("")
+        n = max(len(self.events), len(self.node_order), len(addrs), self.n_access, 6)
+        lines.append(f"run test {{ ptx_mm and (outcome or undefined) }} for {n} but {self.bitwidth()} Int")
+        lines.append("")
+        return HEADER.format(test=self.name) + "\n".join(lines)
+
 
 def translate(t: litmus.Litmus, name: str) -> str:
     q = Query(t, name)
+    q.pdirs, q.pspace, q.paddr, q.txops = {}, {}, {}, {}
+    q.open_arrive = {}
     q.build()
     return q.emit()
 

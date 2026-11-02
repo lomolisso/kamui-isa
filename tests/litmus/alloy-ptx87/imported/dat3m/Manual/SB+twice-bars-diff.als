@@ -20,7 +20,7 @@ open ptx87
 // (~((P0:r0 == 1 /\ P1:r0 == 1 /\ P0:r1 == 1 /\ P1:r1 == 1)))
 
 one sig Sys, Gpu0 extends Scope {}
-one sig Cta0_0 extends CtaScope {}
+one sig Cta0_0_0 extends CtaScope {}
 one sig T0, T1 extends Thread {}
 one sig L_x0, L_x1, L_y0, L_y1 extends Address {}
 one sig E0, E4, E8, E12 extends Write {}
@@ -30,28 +30,39 @@ one sig E3, E7, E11, E15 extends Read {}
 
 fact shape {
   Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8 + E9 + E10 + E11 + E12 + E13 + E14 + E15
-  Scope = Sys + Gpu0 + Cta0_0 + T0 + T1
+  Scope = Sys + Gpu0 + Cta0_0_0 + T0 + T1
   Address = L_x0 + L_x1 + L_y0 + L_y1
-  no Access
-  no acc
-  subscope = Sys->Gpu0 + Gpu0->Cta0_0 + Cta0_0->T0 + Cta0_0->T1
+  Access = none
+  acc = none->none
+  subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->T1
   start = T0->E0 + T1->E8
   po = E0->E1 + E1->E2 + E2->E3 + E3->E4 + E4->E5 + E5->E6 + E6->E7 + E8->E9 + E9->E10 + E10->E11 + E11->E12 + E12->E13 + E13->E14 + E14->E15
   address = E0->L_x0 + E3->L_y0 + E4->L_x1 + E7->L_y1 + E8->L_y0 + E11->L_x0 + E12->L_y1 + E15->L_x1
   proxy = E0->Generic + E3->Generic + E4->Generic + E7->Generic + E8->Generic + E11->Generic + E12->Generic + E15->Generic
-  scope = E0->T0 + E1->Cta0_0 + E2->Cta0_0 + E3->T0 + E4->T0 + E5->Cta0_0 + E6->Cta0_0 + E7->T0 + E8->T1 + E9->Cta0_0 + E10->Cta0_0 + E11->T1 + E12->T1 + E13->Cta0_0 + E14->Cta0_0 + E15->T1
+  scope = E0->T0 + E1->Cta0_0_0 + E2->Cta0_0_0 + E3->T0 + E4->T0 + E5->Cta0_0_0 + E6->Cta0_0_0 + E7->T0 + E8->T1 + E9->Cta0_0_0 + E10->Cta0_0_0 + E11->T1 + E12->T1 + E13->Cta0_0_0 + E14->Cta0_0_0 + E15->T1
   rmw = none->none
   dep = none->none
+  issue = none->none
+  done = none->none
+  gdep = none->none
   bwait = E1->E2 + E5->E6 + E9->E10 + E13->E14
-  alias = none->none
-  space = L_x0->Global + L_x1->Global + L_y0->Global + L_y1->Global
-  owner = none->none
+  cwait = none->none
   L_x0.init = 0
   L_x1.init = 0
   L_y0.init = 0
   L_y1.init = 0
+  alias = none->none
+  space = L_x0->Global + L_x1->Global + L_y0->Global + L_y1->Global
+  owner = none->none
+  Mbar = none
+  MbarInit = none
+  MbarWait = none
+  SyncRestrictCta = none
+  SyncRestrictCluster = none
+  OpRestrictInit = none
+  ClusterArriveRelaxed = none
+  TxAnchor = none
   ProxyFence = none
-  no dirs and no pspace and no paddr
   E0.val = 1
   E1.bid = 1
   no E1.bcount
@@ -68,4 +79,4 @@ fact shape {
 
 pred outcome { (not ((E3.val = 1) and (E11.val = 1) and (E7.val = 1) and (E15.val = 1))) }
 
-run test { ptx_mm and (outcome or undefined) } for 16 but 4 Int
+run test { ptx_mm and (outcome or undefined) } for 16 but 6 Int

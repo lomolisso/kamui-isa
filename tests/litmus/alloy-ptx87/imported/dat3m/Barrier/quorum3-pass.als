@@ -15,7 +15,7 @@ open ptx87
 // (P0:r0 == 0 /\ P2:r0 == 0)
 
 one sig Sys, Gpu0 extends Scope {}
-one sig Cta0_0 extends CtaScope {}
+one sig Cta0_0_0 extends CtaScope {}
 one sig T0, T1, T2 extends Thread {}
 one sig L_x, L_y extends Address {}
 one sig E0, E5, E7 extends BarrierArrive {}
@@ -25,26 +25,37 @@ one sig E3, E4 extends Write {}
 
 fact shape {
   Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8 + E9
-  Scope = Sys + Gpu0 + Cta0_0 + T0 + T1 + T2
+  Scope = Sys + Gpu0 + Cta0_0_0 + T0 + T1 + T2
   Address = L_x + L_y
-  no Access
-  no acc
-  subscope = Sys->Gpu0 + Gpu0->Cta0_0 + Cta0_0->T0 + Cta0_0->T1 + Cta0_0->T2
+  Access = none
+  acc = none->none
+  subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->T1 + Cta0_0_0->T2
   start = T0->E0 + T1->E3 + T2->E7
   po = E0->E1 + E1->E2 + E3->E4 + E4->E5 + E5->E6 + E7->E8 + E8->E9
   address = E2->L_x + E3->L_x + E4->L_y + E9->L_y
   proxy = E2->Generic + E3->Generic + E4->Generic + E9->Generic
-  scope = E0->Cta0_0 + E1->Cta0_0 + E2->T0 + E3->T1 + E4->T1 + E5->Cta0_0 + E6->Cta0_0 + E7->Cta0_0 + E8->Cta0_0 + E9->T2
+  scope = E0->Cta0_0_0 + E1->Cta0_0_0 + E2->T0 + E3->T1 + E4->T1 + E5->Cta0_0_0 + E6->Cta0_0_0 + E7->Cta0_0_0 + E8->Cta0_0_0 + E9->T2
   rmw = none->none
   dep = none->none
+  issue = none->none
+  done = none->none
+  gdep = none->none
   bwait = E0->E1 + E5->E6 + E7->E8
+  cwait = none->none
+  L_x.init = 0
+  L_y.init = 0
   alias = none->none
   space = L_x->Global + L_y->Global
   owner = none->none
-  L_x.init = 0
-  L_y.init = 0
+  Mbar = none
+  MbarInit = none
+  MbarWait = none
+  SyncRestrictCta = none
+  SyncRestrictCluster = none
+  OpRestrictInit = none
+  ClusterArriveRelaxed = none
+  TxAnchor = none
   ProxyFence = none
-  no dirs and no pspace and no paddr
   E0.bid = 1
   E0.bcount = 2
   E3.val = 1
@@ -57,4 +68,4 @@ fact shape {
 
 pred outcome { ((E2.val = 0) and (E9.val = 0)) }
 
-run test { ptx_mm and (outcome or undefined) } for 10 but 4 Int
+run test { ptx_mm and (outcome or undefined) } for 10 but 5 Int

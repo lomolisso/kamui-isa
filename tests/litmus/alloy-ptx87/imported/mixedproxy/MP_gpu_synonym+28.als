@@ -23,7 +23,7 @@ open ptx87
 // (P1:r0 == 1 /\ ~(P1:r1 == 2))
 
 one sig Sys, Gpu0 extends Scope {}
-one sig Cta0_0, Cta0_1 extends CtaScope {}
+one sig Cta0_0_0, Cta0_0_1 extends CtaScope {}
 one sig T0, T1 extends Thread {}
 one sig L_x, L_y, L_flag extends Address {}
 one sig E0 extends Write {}
@@ -35,11 +35,11 @@ one sig E5 extends Read {}
 
 fact shape {
   Event = E0 + E1 + E2 + E3 + E4 + E5
-  Scope = Sys + Gpu0 + Cta0_0 + Cta0_1 + T0 + T1
+  Scope = Sys + Gpu0 + Cta0_0_0 + Cta0_0_1 + T0 + T1
   Address = L_x + L_y + L_flag
-  no Access
-  no acc
-  subscope = Sys->Gpu0 + Gpu0->Cta0_0 + Gpu0->Cta0_1 + Cta0_0->T0 + Cta0_1->T1
+  Access = none
+  acc = none->none
+  subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Gpu0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1
   start = T0->E0 + T1->E2
   po = E0->E1 + E2->E3 + E3->E4 + E4->E5
   address = E0->L_x + E1->L_flag + E2->L_flag + E5->L_y
@@ -47,19 +47,32 @@ fact shape {
   scope = E0->T0 + E1->Gpu0 + E2->Gpu0 + E3->T1 + E4->T1 + E5->T1
   rmw = none->none
   dep = none->none
+  issue = none->none
+  done = none->none
+  gdep = none->none
   bwait = none->none
+  cwait = none->none
+  L_x.init = 0
+  L_flag.init = 0
   alias = L_y->L_x
   space = L_x->Global + L_y->Global + L_flag->Global
   owner = none->none
-  L_x.init = 0
-  L_flag.init = 0
+  Mbar = none
+  MbarInit = none
+  MbarWait = none
+  SyncRestrictCta = none
+  SyncRestrictCluster = none
+  OpRestrictInit = none
+  ClusterArriveRelaxed = none
+  TxAnchor = none
   ProxyFence = E4
+  E4.dirs = Surface->Generic + Generic->Surface
+  E4.pspace = none
+  E4.paddr = none
   E0.val = 2
   E1.val = 1
-  E4.dirs = Surface->Generic + Generic->Surface
-  no E4.pspace and no E4.paddr
 }
 
 pred outcome { ((E2.val = 1) and (not (E5.val = 2))) }
 
-run test { ptx_mm and (outcome or undefined) } for 6 but 4 Int
+run test { ptx_mm and (outcome or undefined) } for 6 but 5 Int

@@ -19,7 +19,7 @@ open ptx87
 // (~((P0:r0 == 1)))
 
 one sig Sys, Gpu0 extends Scope {}
-one sig Cta0_0 extends CtaScope {}
+one sig Cta0_0_0 extends CtaScope {}
 one sig T0 extends Thread {}
 one sig L_x extends Address {}
 one sig E0 extends Write {}
@@ -28,11 +28,11 @@ one sig E2 extends Read {}
 
 fact shape {
   Event = E0 + E1 + E2
-  Scope = Sys + Gpu0 + Cta0_0 + T0
+  Scope = Sys + Gpu0 + Cta0_0_0 + T0
   Address = L_x
-  no Access
-  no acc
-  subscope = Sys->Gpu0 + Gpu0->Cta0_0 + Cta0_0->T0
+  Access = none
+  acc = none->none
+  subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Cta0_0_0->T0
   start = T0->E0
   po = E0->E1 + E1->E2
   address = E0->L_x + E2->L_x
@@ -40,15 +40,28 @@ fact shape {
   scope = E0->T0 + E1->T0 + E2->T0
   rmw = none->none
   dep = none->none
+  issue = none->none
+  done = none->none
+  gdep = none->none
   bwait = none->none
+  cwait = none->none
+  L_x.init = 0
   alias = none->none
   space = L_x->Global
   owner = none->none
-  L_x.init = 0
+  Mbar = none
+  MbarInit = none
+  MbarWait = none
+  SyncRestrictCta = none
+  SyncRestrictCluster = none
+  OpRestrictInit = none
+  ClusterArriveRelaxed = none
+  TxAnchor = none
   ProxyFence = E1
-  E0.val = 1
   E1.dirs = Surface->Generic + Generic->Surface
-  no E1.pspace and no E1.paddr
+  E1.pspace = none
+  E1.paddr = none
+  E0.val = 1
 }
 
 pred outcome { (not (E2.val = 1)) }

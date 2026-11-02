@@ -20,7 +20,7 @@ open ptx87
 // (P1:r5 == 1 /\ P1:r3 != 42)
 
 one sig Sys, Gpu0 extends Scope {}
-one sig Cta0_0 extends CtaScope {}
+one sig Cta0_0_0 extends CtaScope {}
 one sig T0, T1 extends Thread {}
 one sig L_rd1, L_rd4 extends Address {}
 one sig E0 extends Write {}
@@ -31,28 +31,41 @@ one sig E4 extends Read {}
 
 fact shape {
   Event = E0 + E1 + E2 + E3 + E4
-  Scope = Sys + Gpu0 + Cta0_0 + T0 + T1
+  Scope = Sys + Gpu0 + Cta0_0_0 + T0 + T1
   Address = L_rd1 + L_rd4
-  no Access
-  no acc
-  subscope = Sys->Gpu0 + Gpu0->Cta0_0 + Cta0_0->T0 + Cta0_0->T1
+  Access = none
+  acc = none->none
+  subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->T1
   start = T0->E0 + T1->E3
   po = E0->E1 + E1->E2 + E3->E4
   address = E0->L_rd1 + E2->L_rd4 + E3->L_rd4 + E4->L_rd1
   proxy = E0->Generic + E2->Generic + E3->Generic + E4->Constant
-  scope = E0->T0 + E1->T0 + E2->Cta0_0 + E3->Cta0_0 + E4->T1
+  scope = E0->T0 + E1->T0 + E2->Cta0_0_0 + E3->Cta0_0_0 + E4->T1
   rmw = none->none
   dep = none->none
+  issue = none->none
+  done = none->none
+  gdep = none->none
   bwait = none->none
+  cwait = none->none
+  L_rd1.init = 0
+  L_rd4.init = 0
   alias = none->none
   space = L_rd1->Global + L_rd4->Global
   owner = none->none
-  L_rd1.init = 0
-  L_rd4.init = 0
+  Mbar = none
+  MbarInit = none
+  MbarWait = none
+  SyncRestrictCta = none
+  SyncRestrictCluster = none
+  OpRestrictInit = none
+  ClusterArriveRelaxed = none
+  TxAnchor = none
   ProxyFence = E1
-  E0.val = 42
   E1.dirs = Constant->Generic + Generic->Constant
-  no E1.pspace and no E1.paddr
+  E1.pspace = none
+  E1.paddr = none
+  E0.val = 42
   E2.val = 1
 }
 
