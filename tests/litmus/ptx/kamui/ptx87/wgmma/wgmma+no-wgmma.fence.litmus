@@ -1,0 +1,15 @@
+PTX wgmma+no-wgmma.fence
+"As wgmma+fence.proxy.async+wgmma.fence without wgmma.fence: wgmma.mma_async is not ordered after earlier instructions (6886), so only wgmma.fence orders it (D29). Expected: allowed."
+{
+a=0 @cta 0;
+c=0 @cta 0;
+P0:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0              ;
+ st.weak.shared::cta a, 1              ;
+ fence.proxy.async.shared::cta         ;
+ wgmma.mma_async.sync.aligned r0, a, c ;
+ wgmma.commit_group.sync.aligned       ;
+ wgmma.wait_group.sync.aligned 0       ;
+exists
+(P0:r0 == 0)

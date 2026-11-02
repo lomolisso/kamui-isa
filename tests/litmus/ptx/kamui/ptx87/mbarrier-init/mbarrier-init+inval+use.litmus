@@ -1,0 +1,11 @@
+PTX mbarrier-init+inval+use
+"An mbarrier operation after mbarrier.inval is undefined behaviour (9.7.13.15.10): any outcome. Expected: allowed."
+{
+b=mbarrier(1) @cta 0;
+P0:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0          ;
+ mbarrier.inval.shared::cta b      ;
+ mbarrier.arrive.release.cta r0, b ;
+exists
+(P0:r0 == 7)

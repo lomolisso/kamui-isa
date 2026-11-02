@@ -1,0 +1,10 @@
+PTX ld.const+initial
+"The constant state space is read-only: a load returns the initial value. Expected: forbidden."
+{
+c=5;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0 ;
+ ld.const r0, c ;
+exists
+(P0:r0 != 5)

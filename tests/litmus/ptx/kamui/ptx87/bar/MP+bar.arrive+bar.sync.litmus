@@ -1,0 +1,11 @@
+PTX MP+bar.arrive+bar.sync
+"Producer-consumer with a named barrier in the PTX form: P0 bar.arrive 1, 2; P1 bar.sync 1, 2 (9.7.13.1). Expected: forbidden."
+{
+x=0;
+P1:r0=0;
+}
+ P0@cta 0,gpu 0  | P1@cta 0,gpu 0 ;
+ st.weak x, 1    | bar.sync 1, 2  ;
+ bar.arrive 1, 2 | ld.weak r0, x  ;
+exists
+(P1:r0 == 0)

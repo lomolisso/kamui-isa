@@ -1,0 +1,11 @@
+PTX MP+bar.warp.sync
+"bar.warp.sync between the two threads of its member mask (bit k is thread Pk in a litmus test, D24) orders memory (22448). Expected: forbidden."
+{
+x=0;
+P1:r0=0;
+}
+ P0@cta 0,gpu 0  | P1@cta 0,gpu 0  ;
+ st.weak x, 1    | bar.warp.sync 3 ;
+ bar.warp.sync 3 | ld.weak r0, x   ;
+exists
+(P1:r0 == 0)

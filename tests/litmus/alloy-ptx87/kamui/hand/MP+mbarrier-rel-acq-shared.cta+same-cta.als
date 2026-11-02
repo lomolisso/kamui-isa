@@ -69,3 +69,4 @@ fact shape {
 pred outcome { (((wait_true[E3] => 1 else 0) = 1) and (E4.val = 0)) }
 
 run test { ptx_mm and (outcome or undefined) } for 6 but 4 Int
+run consistent { ptx_mm } for 6 but 4 Int  // the program has an execution: the test is not vacuous

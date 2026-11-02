@@ -69,3 +69,4 @@ fact shape {
 pred outcome { ((E4.val = 2) or (E9.val = 2)) }
 
 run test { ptx_mm and (outcome or undefined) } for 10 but 5 Int
+run consistent { ptx_mm } for 10 but 5 Int  // the program has an execution: the test is not vacuous

@@ -203,7 +203,7 @@ class Alloy6:
     home = Path(os.environ.get("ALLOY6_HOME", "/opt/alloy/alloy-6.2.0"))
     jar = home / "lib" / "app" / "org.alloytools.alloy.dist.jar"
     native = home / "lib" / "runtime" / "lib"  # libglucose.so, libminisat.so
-    flags = "exec -n -s glucose"
+    flags = "exec -n -s glucose -c *"
     files = ("ptx87.als", "util.als")
     _version = None
 
@@ -237,10 +237,16 @@ class Alloy6:
                                 "-o", str(Path(w) / "out"), "q.als"], cwd=w, capture_output=True, text=True,
                                timeout=3600)
             dt = time.monotonic() - t0
-        m = re.search(r"\d+\.\s+run\s+test\b[^\n]*?\b(UNSAT|SAT)\b", p.stdout + p.stderr)
-        if not m:
+        out = p.stdout + p.stderr
+        m = re.search(r"\d+\.\s+run\s+test\b[^\n]*?\b(UNSAT|SAT)\b", out)
+        c = re.search(r"\d+\.\s+run\s+consistent\b[^\n]*?\b(UNSAT|SAT)\b", out)
+        if not m or not c:
             sys.stderr.write(f"{tid} ({self.model}): {p.stdout[-600:]}{p.stderr[-600:]}\n")
             return "error", dt, self.flags
+        if c.group(1) == "UNSAT":
+            # The program has no execution at all, so every condition is forbidden: a barrier that can never
+            # complete, or a bug in the query. check_suite.py requires each such test to be explained.
+            return "forbidden", dt, self.flags + " (no execution)"
         return ("allowed" if m.group(1) == "SAT" else "forbidden"), dt, self.flags
 
 

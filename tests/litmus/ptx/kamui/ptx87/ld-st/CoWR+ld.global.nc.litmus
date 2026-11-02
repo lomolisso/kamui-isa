@@ -1,0 +1,11 @@
+PTX CoWR+ld.global.nc
+"A thread's own store is not guaranteed visible to its later ld.global.nc (D23). Expected: allowed."
+{
+x=0;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0      ;
+ st.weak.global x, 1 ;
+ ld.global.nc r0, x  ;
+exists
+(P0:r0 == 0)

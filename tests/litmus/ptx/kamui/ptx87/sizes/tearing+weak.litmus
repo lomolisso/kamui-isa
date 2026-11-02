@@ -1,0 +1,12 @@
+PTX tearing+weak
+"As tearing+relaxed with weak accesses: a data race of same-size accesses, no single-copy atomicity. Expected: allowed."
+{
+x[0]=0;
+x[1]=0;
+P1:r0[0]=0;
+P1:r0[1]=0;
+}
+ P0@cta 0,gpu 0   | P1@cta 1,gpu 0    ;
+ st.weak.b32 x, 1 | ld.weak.b32 r0, x ;
+exists
+(P1:r0[0] == 1 /\ P1:r0[1] == 0)

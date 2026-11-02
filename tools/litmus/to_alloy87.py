@@ -146,11 +146,17 @@ class Query:
             pass
         return e
 
-    def new_unit(self, th) -> str:
+    def new_unit(self, th, cta: str | None = None) -> str:
+        """An asynchronous unit in the issuing thread's CTA, or in the CTA whose shared memory the operations
+        write and whose mbarrier they signal (D20)."""
         u = f"U{self.n_units}"
         self.n_units += 1
-        self.add_node(u, "AsyncUnit", self.cta_of[th.tid])
+        self.add_node(u, "AsyncUnit", cta or self.cta_of[th.tid])
         return u
+
+    def dest_cta(self, th, loc: Loc) -> str:
+        p = self.physical(loc)
+        return p.owner if p.space == "Shared" and p.owner else self.cta_of[th.tid]
 
     def marker(self, th) -> Ev:
         return self.ev("Marker", f"T{th.tid}", f"T{th.tid}")
@@ -449,6 +455,12 @@ class Query:
             return "weak", node or f"T{th.tid}"
         return order, self.scope_atom(th, ins.scope)
 
+    def head(self, th):
+        """A thread whose first instruction has elements in a free order starts with a marker, so that its
+        first event is fixed."""
+        if not self.chains.get(f"T{th.tid}"):
+            self.marker(th)
+
     def vec(self, q) -> int:
         v = [x for x in q if re.fullmatch(r"v\d", x)]
         return int(v[0][1:]) if v else 1
@@ -465,6 +477,8 @@ class Query:
         if len(ins.args) != 2 * n:
             raise Unsupported(f"instruction {ins.text!r}")
         regs, ops = ins.args[:n], ins.args[n:]
+        if n > 1:
+            self.head(th)
         elems = []
         for r, operand in zip(regs, ops):
             loc, idx = self.ref(operand)
@@ -486,7 +500,7 @@ class Query:
                 for k, e in zip(idx, evs):
                     self.setreg(tid, f"{r}[{k}]", f"{e.atom}.val", {e.atom})
         if n > 1:
-            self.perms.append([e.atom for e in elems])
+            self.perms.append([[e.atom] for e in elems])
 
     def new_access(self) -> str:
         a = f"A{self.n_access}"
@@ -505,6 +519,8 @@ class Query:
         if len(ins.args) != 2 * n:
             raise Unsupported(f"instruction {ins.text!r}")
         ops, vals = ins.args[:n], ins.args[n:]
+        if n > 1:
+            self.head(th)
         elems = []
         for operand, v in zip(ops, vals):
             loc, idx = self.ref(operand)
@@ -525,7 +541,7 @@ class Query:
                 self.record_write(e)
                 elems.append(e)
         if n > 1:
-            self.perms.append([e.atom for e in elems])
+            self.perms.append([[e.atom] for e in elems])
 
     # ------------------------------------------------------------------------------------------- RMWs
 
@@ -578,6 +594,8 @@ class Query:
         proxy = PROXY_OF_OP[ins.op]
         rsig = "Acquire" if order in ("acquire", "acq_rel") else "Read"
         wsig = "Release" if order in ("release", "acq_rel") else "Write"
+        if n > 1:
+            self.head(th)
         elems = []
         for k, operand in enumerate(locs):
             loc, idx = self.ref(operand)
@@ -589,11 +607,11 @@ class Query:
             deps = set().union(*(d for _, d in vals))
             r, w = self.rmw_pair(th, f"T{tid}", sc, self.gaddr(loc, idx[0]), proxy, rsig, wsig, rop,
                                  [v for v, _ in vals], deps, cas=(rop == "cas"))
-            elems += [r, w]
+            elems.append([r.atom, w.atom])
             if regs:
                 self.setreg(tid, regs[k], f"{r.atom}.val", {r.atom})
         if n > 1:
-            self.perms.append([e.atom for e in elems])
+            self.perms.append(elems)
 
     # ------------------------------------------------------------------------------------------- multimem
 
@@ -612,6 +630,8 @@ class Query:
         if name not in self.locs or self.locs[name].members is None:
             raise Unsupported(f"multimem operand {name} is not a multimem object")
         members = [self.locs[m] for m in self.locs[name].members]
+        if len(members) > 1:
+            self.head(th)
         evs = []
         if kind == "ld_reduce":
             rop = next((x for x in q if x in ("add", "min", "max")), None)
@@ -646,9 +666,9 @@ class Query:
                 self.note_space(th, ["global"], loc)
                 r, w = self.rmw_pair(th, f"T{tid}", sc, loc.granules[0], "Generic", "Read",
                                      "Release" if order == "release" else "Write", rop, [val], deps)
-                evs += [r, w]
+                evs.append([r, w])
         if len(evs) > 1:
-            self.perms.append([e.atom for e in evs])
+            self.perms.append([[e.atom for e in x] if isinstance(x, list) else [x.atom] for x in evs])
 
     # ------------------------------------------------------------------------------------------- fences
 
@@ -1021,7 +1041,7 @@ class Query:
             raise Unsupported(f"instruction {ins.text!r}")
         sloc, sidx = self.ref(src)
         self.note_space(th, [ssp], sloc)
-        u = self.new_unit(th)
+        u = self.new_unit(th)  # the reads, in the issuing CTA
         ops = []
         if tensor:
             tl, ti = self.ref(tmap)
@@ -1034,33 +1054,32 @@ class Query:
             reads.append(self.ev("Read", u, u, self.gaddr(sloc, si), "Async"))
         ops += reads
         pfr = self.proxy_fence(th, "PlainProxyFence", u, "Async->Generic + Generic->Async", node=u)
-        writes_per_dst = []
-        for d in dst:
+        self.issue_unit(th, u)
+        for k, d in enumerate(dst):
             dloc, didx = self.ref(d)
             if len(didx) != len(sidx):
                 raise Unsupported(f"instruction {ins.text!r}")
             self.note_space(th, [dsp], dloc)
+            ud = self.new_unit(th, self.dest_cta(th, dloc))  # the writes and the completion, per destination
             ws = []
             for r, di in zip(reads, didx):
+                # the value flows from the read in the issuing CTA's unit; dependencies stay within a thread
                 if reduce:
                     gscope = self.scope_atom(th, "gpu")
-                    rr, ww = self.rmw_pair(th, u, gscope, self.gaddr(dloc, di), "Async", "Read", "Write", rop,
-                                           [f"{r.atom}.val"], {r.atom})
+                    rr, ww = self.rmw_pair(th, ud, gscope, self.gaddr(dloc, di), "Async", "Read", "Write", rop,
+                                           [f"{r.atom}.val"], set())
                     ws += [rr, ww]
                 else:
-                    w = self.ev("Write", u, u, self.gaddr(dloc, di), "Async")
+                    w = self.ev("Write", ud, ud, self.gaddr(dloc, di), "Async")
                     self.fact(f"{w.atom}.val = {r.atom}.val")
-                    self.dep.append((r.atom, w.atom))
                     self.record_write(w)
                     ws.append(w)
-            writes_per_dst.append(ws)
-        pf = self.proxy_fence(th, "PlainProxyFence", u, "Async->Generic + Generic->Async", node=u)
-        if mbar:
-            for b, ws in zip(bars, writes_per_dst):
-                self.complete_tx(th, u, b, ops + [pfr] + ws + [pf], [], ins, units=len(sidx))
-        self.issue_unit(th, u)
-        if group:
-            self.groups[tid]["bulk"][0].append((pf.atom, pfr.atom))
+            self.done.append((pfr.atom, self.chains[ud][0]))
+            pf = self.proxy_fence(th, "PlainProxyFence", ud, "Async->Generic + Generic->Async", node=ud)
+            if mbar:
+                self.complete_tx(th, ud, bars[k], ops + [pfr] + ws + [pf], [], ins, units=len(sidx))
+            if group:
+                self.groups[tid]["bulk"][0].append((pf.atom, pfr.atom))
 
     def st_async(self, th, ins, q):
         """st.async: a weak store to shared::cluster memory with mbarrier complete-tx (release at cluster scope),
@@ -1068,15 +1087,14 @@ class Query:
         tid = th.tid
         args = list(ins.args)
         rel = "release" in q
-        u = self.new_unit(th)
         loc, idx = self.ref(args[0])
+        self.note_space(th, [], loc, "Global" if rel else "Shared")
+        u = self.new_unit(th, None if rel else self.dest_cta(th, loc))
         val, deps = self.value(tid, args[1])
         if rel:
             sc = self.scope_atom(th, ins.scope, "sys")
-            self.note_space(th, [], loc, "Global")
             w = self.ev("Release", u, sc, self.gaddr(loc, idx[0]), "Generic")
         else:
-            self.note_space(th, [], loc, "Shared")
             w = self.ev("Write", u, u, self.gaddr(loc, idx[0]), "Generic")
         self.fact(f"{w.atom}.val = {val}")
         self.dep += [(d, w.atom) for d in sorted(deps)]
@@ -1096,16 +1114,15 @@ class Query:
         rop = next((x for x in q if x in RMW_OPS), None)
         if rop is None:
             raise Unsupported(f"instruction {ins.text!r}")
-        u = self.new_unit(th)
         loc, idx = self.ref(args[0])
+        self.note_space(th, [], loc, "Global" if rel else "Shared")
+        u = self.new_unit(th, None if rel else self.dest_cta(th, loc))
         val, deps = self.value(tid, args[1])
         if rel:
             sc = self.scope_atom(th, ins.scope, "sys")
-            self.note_space(th, [], loc, "Global")
             r, w = self.rmw_pair(th, u, sc, self.gaddr(loc, idx[0]), "Generic", "Read", "Release", rop, [val], deps)
         else:
             sc = self.scope_atom(th, "cluster")
-            self.note_space(th, [], loc, "Shared")
             r, w = self.rmw_pair(th, u, sc, self.gaddr(loc, idx[0]), "Generic", "Read", "Write", rop, [val], deps)
             if len(args) != 3:
                 raise Unsupported(f"instruction {ins.text!r}")
@@ -1250,8 +1267,10 @@ class Query:
         base, cond = [], []
         perm_of = {}
         for g in self.perms:
-            for a in g:
-                perm_of[a] = tuple(g)
+            key = tuple(tuple(sub) for sub in g)
+            for sub in g:
+                for a in sub:
+                    perm_of[a] = key
         groups_done = set()
         variants = [[]]  # list of lists of edges from the permuted groups
         for node, chain in self.chains.items():
@@ -1284,7 +1303,7 @@ class Query:
                 nxt = items[k + 1] if k + 1 < len(items) else None
                 if isinstance(prev, tuple) or isinstance(nxt, tuple):
                     raise Unsupported("two vector instructions in a row")
-                orders = list(itertools.permutations(item))
+                orders = [[a for sub in o for a in sub] for o in itertools.permutations(item)]
                 new = []
                 for v in variants:
                     for o in orders:
@@ -1397,7 +1416,9 @@ class Query:
         lines.append(f"pred outcome {{ {cond} }}")
         lines.append("")
         n = max(len(self.events), len(self.node_order), len(addrs), self.n_access, 6)
-        lines.append(f"run test {{ ptx_mm and (outcome or undefined) }} for {n} but {self.bitwidth()} Int")
+        bound = f"for {n} but {self.bitwidth()} Int"
+        lines.append(f"run test {{ ptx_mm and (outcome or undefined) }} {bound}")
+        lines.append(f"run consistent {{ ptx_mm }} {bound}  // the program has an execution: the test is not vacuous")
         lines.append("")
         return HEADER.format(test=self.name) + "\n".join(lines)
 

@@ -1,0 +1,14 @@
+PTX MP+fence-restrict-cta+remote-shared
+"As MP+fence-restrict-cta+shared with the data in the shared memory of the other CTA: not the executing CTA's shared::cta space, so not ordered (D17). Expected: allowed."
+{
+s=0 @cta 1;
+f=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0                         | P1@cta 1,cluster 0,gpu 0  ;
+ st.weak.shared::cluster s, 1                     | ld.relaxed.cluster r0, f  ;
+ fence.release.sync_restrict::shared::cta.cluster | fence.acq_rel.cluster     ;
+ st.relaxed.cluster f, 1                          | ld.weak.shared::cta r1, s ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

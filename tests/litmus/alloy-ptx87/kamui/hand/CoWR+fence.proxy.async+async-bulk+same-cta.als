@@ -23,29 +23,29 @@ one sig Sys, Gpu0 extends Scope {}
 one sig Cl0_0_0 extends ClusterScope {}
 one sig Cta0_0_0 extends CtaScope {}
 one sig T0 extends Thread {}
-one sig U0 extends AsyncUnit {}
+one sig U0, U1 extends AsyncUnit {}
 one sig L_s, L_g extends Address {}
-one sig E0, E4 extends Write {}
-one sig E1, E3, E5 extends PlainProxyFence {}
+one sig E0, E5 extends Write {}
+one sig E1, E3, E6 extends PlainProxyFence {}
 one sig E2, E8 extends Read {}
-one sig E6, E7 extends Marker {}
+one sig E4, E7 extends Marker {}
 
 fact shape {
   Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8
-  Scope = Sys + Gpu0 + Cl0_0_0 + Cta0_0_0 + T0 + U0
+  Scope = Sys + Gpu0 + Cl0_0_0 + Cta0_0_0 + T0 + U0 + U1
   Address = L_s + L_g
   Access = none
   acc = none->none
-  subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->U0
-  start = T0->E0 + U0->E2
-  po = E0->E1 + E1->E6 + E6->E7 + E7->E8 + E2->E3 + E3->E4 + E4->E5
-  address = E0->L_s + E2->L_s + E4->L_g + E8->L_g
-  proxy = E0->Generic + E2->Async + E4->Async + E8->Generic
-  scope = E0->T0 + E1->T0 + E2->U0 + E3->U0 + E4->U0 + E5->U0 + E6->T0 + E7->T0 + E8->T0
+  subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->U0 + Cta0_0_0->U1
+  start = T0->E0 + U0->E2 + U1->E5
+  po = E0->E1 + E1->E4 + E4->E7 + E7->E8 + E2->E3 + E5->E6
+  address = E0->L_s + E2->L_s + E5->L_g + E8->L_g
+  proxy = E0->Generic + E2->Async + E5->Async + E8->Generic
+  scope = E0->T0 + E1->T0 + E2->U0 + E3->U0 + E4->T0 + E5->U1 + E6->U1 + E7->T0 + E8->T0
   rmw = none->none
-  dep = E2->E4
-  issue = E6->E2
-  done = E5->E7
+  dep = none->none
+  issue = E4->E2
+  done = E3->E5 + E6->E7
   gdep = none->none
   bwait = none->none
   cwait = none->none
@@ -62,20 +62,21 @@ fact shape {
   OpRestrictInit = none
   ClusterArriveRelaxed = none
   TxAnchor = none
-  ProxyFence = E1 + E3 + E5
+  ProxyFence = E1 + E3 + E6
   E1.dirs = Async->Generic + Generic->Async
   E1.pspace = Shared
   E1.paddr = none
   E3.dirs = Async->Generic + Generic->Async
   E3.pspace = none
   E3.paddr = none
-  E5.dirs = Async->Generic + Generic->Async
-  E5.pspace = none
-  E5.paddr = none
+  E6.dirs = Async->Generic + Generic->Async
+  E6.pspace = none
+  E6.paddr = none
   E0.val = 1
-  E4.val = E2.val
+  E5.val = E2.val
 }
 
 pred outcome { (E8.val = 0) }
 
 run test { ptx_mm and (outcome or undefined) } for 9 but 5 Int
+run consistent { ptx_mm } for 9 but 5 Int  // the program has an execution: the test is not vacuous
