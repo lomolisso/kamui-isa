@@ -1,0 +1,11 @@
+PTX LU+add.gpu+dsmem-remote-reader
+"Two relaxed .gpu atom.add on one location in the writer's shared memory, read from another CTA of the cluster"
+{
+x=0 @cta 0;
+P0:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0                  | P1@cta 1,cluster 0,gpu 0                      ;
+ atom.relaxed.gpu.shared::cta.add r0, x, 1 | atom.relaxed.gpu.shared::cluster.add r1, x, 1 ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

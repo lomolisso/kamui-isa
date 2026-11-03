@@ -1,0 +1,12 @@
+PTX CoRR+mmio+global+same-cta
+"Two .mmio reads of one location in global memory, both threads in one CTA"
+{
+x=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0        | P1@cta 0,cluster 0,gpu 0         ;
+ st.mmio.relaxed.sys.global x, 1 | ld.mmio.relaxed.sys.global r0, x ;
+                                 | ld.mmio.relaxed.sys.global r1, x ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)
