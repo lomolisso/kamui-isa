@@ -2,7 +2,7 @@
 # Run the scoped C++ to PTX 8.7 mapping check (compile_src11_ptx87.als) with Alloy 6.2.0, one Alloy process per
 # command, in parallel, in the build area. Run in the dev container:
 #
-#   tools/dev.sh 'models/ptx87/check_mapping.sh'                      # every check and sanity run
+#   tools/dev.sh 'models/ptx87/check_mapping.sh'                      # the quick checks and the sanity runs
 #   tools/dev.sh 'models/ptx87/check_mapping.sh src11_ptx87_legal_sc' # some of them
 #
 # ALLOY6_SOLVER picks the SAT solver (default glucose; lingeling.parallel is plingeling, multi-threaded), CPUS a
@@ -20,9 +20,10 @@ pin=()
 [ -n "${CPUS:-}" ] && pin=(taskset -c "$CPUS")
 cmds=("$@")
 if [ ${#cmds[@]} -eq 0 ]; then
-  cmds=(src11_ptx87_legal_coherence src11_ptx87_legal_atomicity src11_ptx87_legal_sc src11_ptx87_legal_no_thin_air
-        coherence_4 coherence_5 atomicity_4 atomicity_5 sc_4 sc_5 coherence_5e7s atomicity_5e7s sc_5e7s
-        sanity MP MP_cluster)
+  # the quick set; the longer checks (coherence_5, sc_5, *_5e7s, the bound 6 checks) run only when named, see
+  # README.md for their times
+  cmds=(coherence_4 atomicity_4 sc_4 atomicity_5 atomicity_5e7s src11_ptx87_legal_atomicity
+        src11_ptx87_legal_no_thin_air sanity MP MP_cluster)
 fi
 base="$root/build/ptx87-mapping"
 mkdir -p "$base"

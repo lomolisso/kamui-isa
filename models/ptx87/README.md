@@ -77,8 +77,27 @@ atomicity, SC or no-thin-air. The sanity runs `sanity`, `MP` and `MP_cluster` mu
 is not vacuous); the four checks must find none.
 
 ```bash
-tools/dev.sh 'models/ptx87/check_mapping.sh'
+tools/dev.sh 'models/ptx87/check_mapping.sh'                 # the quick checks (bound 4) and the sanity runs, under 2 minutes
+tools/dev.sh 'models/ptx87/check_mapping.sh coherence_5'     # a longer one, by name
 ```
+
+Results (UNSAT means no counterexample exists within the bound; "5e7s" is 5 C++ events with 7 scope-tree nodes,
+enough for two threads in different CTAs of one cluster, which `for 5` cannot hold):
+
+| check | bound | result | time |
+|---|---|---|---|
+| `sanity`, `MP`, `MP_cluster` (must find an instance) | 4, 4, 6 | SAT | 2 to 4 s |
+| atomicity | 4 / 5 / 6 / 5e7s | UNSAT | 2 / 3 / 5 / 3 s |
+| SC | 4 / 5 / 5e7s | UNSAT | 9 s / 2781 s / 23905 s |
+| coherence | 4 / 5 | UNSAT | 73 s / 32511 s |
+| coherence | 5e7s | no result, stopped after 21 h | |
+| coherence, SC | 6 | no result, stopped after 3 h 45 min | |
+| no thin air | 6 | SAT (expected) | 28 s |
+
+The 5e7s runs used plingeling (`ALLOY6_SOLVER=lingeling.parallel`, `CPUS` set to 32 cores each). The no-thin-air
+counterexample is expected: the scoped C++ model of the 2019 paper drops RC11's no-thin-air axiom because PTX
+allows load buffering. Bound 6 is expensive for these models in general: the 2019 artifact's own coherence check
+at bound 6 had not finished after 3 h 45 min on the same machine and solver.
 
 ## How it is checked
 
