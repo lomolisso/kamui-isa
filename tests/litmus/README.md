@@ -190,11 +190,11 @@ rewrites the jar it is started from (seen again here: the copy's checksum change
 `rvwmo` is a baseline, not a PTX verdict: it answers the question for a different program, the test lowered to
 plain RISC-V with C++-style fences (the mapping table is in `tools/litmus/to_riscv.py`).
 
-Today: 828 tests, 2552 rows. The PTX 8.7 model (`ptx-v8.7-alloy`) decides 809 tests (every test without a
+Today: 828 tests, 2562 rows. The PTX 8.7 model (`ptx-v8.7-alloy`) decides 809 tests (every test without a
 loop). Wherever two PTX models decide the same test they agree, with four exceptions: Dat3M barrier tests in
 which a thread can never complete its barrier, which Dartagnan counts and the PTX 8.7 model does not (decision D9
 of `models/ptx87/decisions.md`, explained in `allowlist.yaml`). Dartagnan v7.5 decides 612 tests, the 2019 Alloy
-model 372. On the 383 lowered tests, RVWMO forbids every outcome that PTX forbids, so the naive lowering is sound;
+model 377. On the 388 lowered tests, RVWMO forbids every outcome that PTX forbids, so the naive lowering is sound;
 it also forbids outcomes that PTX allows, from two sources: scopes (for example `.cta` synchronization between
 different CTAs, which PTX does not order and RVWMO, having no scopes, does) and multi-copy atomicity (IRIW with
 release/acquire, allowed in PTX, forbidden in RVWMO).
