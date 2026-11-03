@@ -1261,7 +1261,9 @@ class Query:
     def bitwidth(self) -> int:
         m = max(abs(v) for v in self.consts)
         bound = m * (self.arith + 1) + self.arith + len(self.events)
-        return max(4, math.ceil(math.log2(bound + 1)) + 1)
+        # bitand/bitor/bitxor (ptx87.als) work on 4-bit values with products up to 8 and sums up to 15: 5 bits
+        low = 5 if any(re.search(r"\bbit(and|or|xor)\[", f) for f in self.facts) else 4
+        return max(low, math.ceil(math.log2(bound + 1)) + 1)
 
     def po_alternatives(self) -> list[str]:
         """Program order: each thread's chain of events; a failing CAS's write may be absent; the elements of a
