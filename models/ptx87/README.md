@@ -39,15 +39,20 @@ module (`tests/litmus/alloy-ptx87/`) that opens `ptx87`, declares the test's thr
 atoms, fixes the program (program order, addresses, scopes, values written, ...) and asks two questions:
 
 ```
-run test       { ptx_mm and (outcome or undefined) } for 12 but 5 Int
-run consistent { ptx_mm }                            for 12 but 5 Int
+run test          { ptx_mm and (outcome or undefined) } for 12 but 5 Int
+run consistent    { ptx_mm }                            for 12 but 5 Int
+run racy          { ptx_mm and mixed_size_race }        for 12 but 5 Int
+run unconstrained { outcome }                           for 12 but 5 Int
 ```
 
 `test` is SAT if some execution satisfies the axioms (`ptx_mm`) and the test's condition: the outcome is
 **allowed**; UNSAT means **forbidden**. `undefined` makes every outcome allowed when the program has undefined
-behaviour (a mixed-size data race, an mbarrier used before its initialization, ...; decision D7). `consistent`
+behaviour (an mbarrier used before its initialization or after its invalidation, ...; decision D7). `consistent`
 checks that the program has any execution at all, so that a forbidden verdict is not an accident of the
 translation; a program with no execution (for example a barrier that can never complete) is reported as such.
+`racy` and `unconstrained` handle mixed-size data races (D38): when an execution that satisfies the axioms has
+one, the axioms do not apply to the program, but its reads still return written values, so the outcome is
+allowed exactly when `unconstrained` (the condition, with only the well-formedness facts) is SAT.
 
 Values are integers, so a condition such as `P1:r0 == 1 /\ P1:r1 == 0` is a condition on the values the loads
 read. The bound covers every atom of the test, so the answer is exact for the test (not only up to a bound).

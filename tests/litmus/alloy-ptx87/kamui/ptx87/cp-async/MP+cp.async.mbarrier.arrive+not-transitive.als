@@ -79,3 +79,5 @@ pred outcome { (((wait_true[E7] => 1 else 0) = 1) and (E8.val = 0)) }
 
 run test { ptx_mm and (outcome or undefined) } for 9 but 5 Int
 run consistent { ptx_mm } for 9 but 5 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 9 but 5 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 9 but 5 Int  // the outcome without the axioms (D38)

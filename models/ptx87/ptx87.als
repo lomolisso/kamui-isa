@@ -407,19 +407,29 @@ fun pf_dst : ProxyFence->MemoryEvent {
   { f: ProxyFence, m: MemoryEvent | Generic -> m.proxy in f.dirs } & same_cta_r & pf_space_ok
 }
 
+// The tensormap proxy fences order generic -> tensormap only as a pair: a .release fence after the generic
+// operation and a .acquire fence before the tensormap operation, related by base causality (9.7.13.4: "A
+// .release proxy fence can form a release sequence that synchronizes with an acquire sequence that contains a
+// .acquire proxy fence"; D37). Every other proxy fence acts alone (D2).
+fun TmFence : ProxyFence { { f: ProxyFence | Generic -> TensorMap in f.dirs } }
+fun pf_dst_with[cb: Event->Event] : Event->MemoryEvent {
+  (cb & (pf_dst - (TmFence <: pf_dst)))
+  + ((TmFence & FenceRel) <: (cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))
+}
+
 fun ppbco_with[cb: Event->Event] : MemoryEvent->MemoryEvent {
   // no proxy fence or alias fence
   same_alias[GenericM <: cb :> GenericM]
   + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]
   // proxy fence for the source, for the destination, for both
   + same_alias[(cb & pf_src).cb :> GenericM]
-  + same_alias[GenericM <: cb.(cb & pf_dst)]
-  + same_alias[(cb & pf_src).cb.(cb & pf_dst)]
+  + same_alias[GenericM <: cb.(pf_dst_with[cb])]
+  + same_alias[(cb & pf_src).cb.(pf_dst_with[cb])]
   // alias fence, alone or with proxy fences
   + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]
   + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]
-  + same_location[GenericM <: cb.(AliasFence <: cb).(cb & pf_dst)]
-  + same_location[(cb & pf_src).(cb :> AliasFence).cb.(cb & pf_dst)]
+  + same_location[GenericM <: cb.(AliasFence <: cb).(pf_dst_with[cb])]
+  + same_location[(cb & pf_src).(cb :> AliasFence).cb.(pf_dst_with[cb])]
 }
 
 fun ppbco : MemoryEvent->MemoryEvent { ppbco_with[cause_base] }
@@ -473,8 +483,11 @@ pred mixed_size_race {
     and e1->e2 not in ms_r + cause + ~cause
 }
 
-// Programs whose behaviour the manual leaves undefined: any outcome is allowed (D7).
-pred undefined { mixed_size_race or mb_undefined }
+// Undefined behaviour: any outcome is allowed (D7). A mixed-size data race is handled by the query instead
+// (D38): it switches the axioms off for the whole program, but reads still return written values (8, "In the
+// absence of any constraint, each read operation returns the value committed by some write operation"), so a
+// racy program allows exactly the outcomes of its executions that satisfy only the facts.
+pred undefined { mb_undefined }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CTA barriers. A barrier completes when its thread count has arrived (9.7.13.1); the arrivals of one completion

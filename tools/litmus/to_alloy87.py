@@ -10,7 +10,9 @@ program in `fact shape` (program order, addresses, scopes, proxies, read-modify-
 units and their issue and completion edges, the values written), and asks Alloy for an execution that
 satisfies the model and the test's condition: `run test { ptx_mm and (outcome or undefined) }`. An instance
 means **allowed**, no instance means **forbidden** (the bound covers every atom of the test, so the answer is
-exact for the test).
+exact for the test). Two more runs handle mixed-size data races: `racy` (an execution that satisfies the model
+has one) and `unconstrained` (the condition holds in an execution that satisfies only the facts); a racy
+program allows the outcome when `unconstrained` is SAT (decision D38).
 
 Events carry integer values (`val`), so conditions are written on values: `P1:r0 == 1` becomes "the value of the
 read that wrote r0 is 1". A register holds an expression over the values of earlier reads; stores of registers
@@ -1419,6 +1421,8 @@ class Query:
         bound = f"for {n} but {self.bitwidth()} Int"
         lines.append(f"run test {{ ptx_mm and (outcome or undefined) }} {bound}")
         lines.append(f"run consistent {{ ptx_mm }} {bound}  // the program has an execution: the test is not vacuous")
+        lines.append(f"run racy {{ ptx_mm and mixed_size_race }} {bound}  // a mixed-size data race (D38)")
+        lines.append(f"run unconstrained {{ outcome }} {bound}  // the outcome without the axioms (D38)")
         lines.append("")
         return HEADER.format(test=self.name) + "\n".join(lines)
 

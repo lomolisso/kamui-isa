@@ -2,12 +2,15 @@
 
 The PTX ISA 8.7 manual defines the memory model in English (chapter 8) and adds ordering rules in the
 instruction descriptions (chapter 9). Where the text leaves room, the model in `ptx87.als` makes a choice. This
-file lists every such choice, numbered `D1` to `D36`: the text it interprets (section and line of the plain-text
+file lists every such choice, numbered `D1` to `D38`: the text it interprets (section and line of the plain-text
 manual, PTX ISA 8.7, February 2025), the alternatives, the choice, and the litmus tests whose verdict depends on
 it (under `tests/litmus/ptx/`; most are in `kamui/ptx87/`).
 
 The list is written so that the model can be implemented again from it, without reading `ptx87.als`: a second
-implementation that makes the same choices must give the same verdicts. Terms: *po* program order, *rf*
+implementation that makes the same choices must give the same verdicts. A second model was written independently
+from the manual in Dartagnan (`deps/dat3m`, `cat/ptx-v8.7.cat`, with its own interpretation log `cat/ptx-v8.7.md`,
+entries `M1` to `M51`); the two disagreed on ten tests, and the readings settled then are D37 and D38 and the
+notes "Cross-check" below. Terms: *po* program order, *rf*
 reads-from, *co* coherence order, *fr* from-reads, *bco* base causality order, *ms* morally strong.
 
 ## Base relations and axioms
@@ -53,6 +56,8 @@ generic <-> async; `fence.proxy.{texture,surface,constant}` (PTX 7.5 tests) gene
 proxy only. Tests: `kamui/hand/CoWR+fence.proxy.async+async-bulk+same-cta`,
 `kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.*`, `kamui/ptx87/tensormap/*`, the mixed-proxy and Dat3M
 proxy tests.
+
+The tensormap proxy fences are the exception: they act only as a release/acquire pair (D37).
 
 ### D3. The Fence-SC axiom uses base causality order
 
@@ -119,10 +124,14 @@ Tests: `kamui/ptx87/sizes/*`, `kamui/ptx87/rmw/cas.b128`.
 > does not contain a valid mbarrier object, results in undefined behaviour." (9.7.13.15.10)
 
 Choice: if any execution of the program that satisfies the axioms has undefined behaviour, every outcome of the
-test is allowed. Undefined behaviour in the model: a mixed-size data race (two operations on the same memory
-that overlap only partially, at least one a write, neither morally strong nor ordered by causality order, 6803);
-an mbarrier operation other than `init` that reads a location without a valid object (before `init` or after
-`inval`); more arrivals than pending; a wait whose state token is older than the previous phase (D15). The
+test is allowed. Undefined behaviour in the model: an mbarrier operation other than `init` that reads a location
+without a valid object (before `init` or after `inval`); more arrivals than pending; a wait whose state token is
+older than the previous phase (D15). A mixed-size data race is not undefined behaviour in this sense: see D38.
+
+Cross-check: the Dartagnan model only flagged mbarrier misuse and kept the axioms (M35), which forbade
+`mbarrier-init+inval+use` and `mbarrier-init+no-fence+cluster-barrier`. Decided for this reading: the manual says
+"results in undefined behavior" with no limit on the result, and looking for misuse only in executions that
+satisfy the axioms avoids a stale read justifying itself (the concern of M35). The
 exception of 6817 (overlapping atomic operations whose scopes include each other stay atomic) is in the
 atomicity axiom. Tests: `kamui/ptx87/sizes/mixed-size+race`, `mixed-size+flag`,
 `kamui/ptx87/mbarrier-init/*`.
@@ -404,6 +413,10 @@ proxy fence for it, so such a read is never guaranteed to see data written durin
 return the initial value. `ldu` (read-only data, 9.7.9.10) is treated the same way. Tests:
 `kamui/ptx87/ld-st/MP+ld.global.nc`, `CoWR+ld.global.nc`, `MP+ldu`.
 
+Cross-check: the Dartagnan model read `ldu` as an ordinary weak load (M11: 6521 does not name it), which forbade
+`MP+ldu`. Decided for this reading: the manual says only "Load read-only data" (16927), nothing promises that
+`ldu` sees data written during the kernel, and the weaker reading promises nothing the text does not.
+
 ### D30. bar.warp.sync in litmus tests
 
 > "bar.warp.sync also guarantee memory ordering among threads participating in barrier." (22448)
@@ -462,3 +475,44 @@ work on values below 16.
 - Read-modify-writes that cover several granules, so the partial-overlap exception of 6817 is in the axiom but no
   litmus test can express it.
 - Programs with loops: the model is exact for straight-line tests; loops need unrolling, which Dartagnan does.
+
+## Decisions from the cross-check with the Dartagnan model
+
+### D37. The tensormap proxy fences act as a pair
+
+> "A .release proxy fence can form a release sequence that synchronizes with an acquire sequence that contains a
+> .acquire proxy fence." (9.7.13.4, 22662-22664)
+
+Both examples of the manual (22733-22737, 25045-25050) use `fence.proxy.tensormap::generic.release` (or
+`tensormap.cp_fenceproxy`, which ends with it) and `fence.proxy.tensormap::generic.acquire` together.
+
+- A: as every other proxy fence under D2, either fence alone orders generic -> tensormap when the tensormap
+  operation is in its thread block (an acquire proxy fence in the reader's CTA after an ordinary release was
+  enough).
+- B: generic -> tensormap only through the pair: a generic operation X, base causality to a release tensormap
+  proxy fence, base causality to an acquire tensormap proxy fence in the thread block of the tensormap operation
+  Y (and naming Y's address), base causality to Y.
+
+Choice: **B** (the Dartagnan model's reading, M26; the first model used A). Tests:
+`kamui/ptx87/tensormap/MP+tensormap+no-release-proxy-fence` (allowed),
+`MP+tensormap+no-acquire-proxy-fence` (allowed), `MP+tensormap+proxy-fences` and
+`MP+tensormap.cp_fenceproxy` (forbidden).
+
+### D38. Mixed-size data races: per program, values from writes
+
+> "The axioms in the memory consistency model do not apply if a PTX program contains one or more mixed-size
+> data-races." (8.7.2, 6811) "In the absence of any constraint, each read operation returns the value committed
+> by some write operation to the same memory location, including the initial write to that memory location."
+> (8, 6511-6512)
+
+- Per program or per execution: the first sentence speaks of the program, so one execution that satisfies the
+  axioms and has a mixed-size data race (as in D7) frees every execution of the program.
+- What a read returns: 6511 is not one of the axioms of 8.10, so it still holds: a read returns a value some
+  write (or the initial state) committed; no other value appears.
+
+Choice: a program with a mixed-size data race allows exactly the outcomes of its executions that satisfy only
+the well-formedness facts (values from writes, program order, the instructions' own semantics), with none of the
+axioms. (The first model allowed every outcome, the Dartagnan model judged each execution on its own, M16; this
+merges the per-program part of the first with the values part of the second.) Tests:
+`kamui/ptx87/sizes/mixed-size+race` (forbidden: no write produces 7), `mixed-size+flag` (allowed: the race is in
+the execution that reads the flag as 0).
