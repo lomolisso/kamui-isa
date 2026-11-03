@@ -121,7 +121,7 @@ Persistent means "kept because rebuilding is slow", never "cannot be rebuilt". E
 |---|---|---|---|---|
 | `kamui-isa-dev:0.3` (only the current tag) | Docker on iacoma231 (`/srv/docker`) | 16 GB | about 35 min | `docker build` on 231, see `tools/devcontainer.md` |
 
-| `keep/m2` | build area of the build host that builds the Dartagnan fork | about 300 MB | about 5 min | `tools/dat3m/build.sh` (Maven downloads it again) |
+| `keep/m2` | build area of the build host that builds the Dartagnan fork | about 200 MB | about 3 min | `tools/dat3m/build.sh` (Maven downloads it again) |
 
 The Sail model build of `main` (about 12 minutes to rebuild) is expected to be the next entry once the Kamui Sail
 model exists.

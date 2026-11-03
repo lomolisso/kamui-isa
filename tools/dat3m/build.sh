@@ -14,8 +14,11 @@ src="$root/deps/dat3m"
 out="$root/build/dat3m"
 m2="${KAMUI_BUILD_AREA:?run through tools/dev.sh}/keep/m2"
 [ -f "$src/pom.xml" ] || { echo "deps/dat3m is missing: git submodule update --init deps/dat3m" >&2; exit 1; }
-mkdir -p "$out" "$m2"
-mvn=(mvn -q -B -Dmaven.repo.local="$m2" -f "$src/pom.xml")
+mkdir -p "$out" "$m2" "$out/output"
+# the fork's tests and runs read their configuration and cat files from DAT3M_HOME, which in the image points to the
+# upstream release in /opt/dat3m
+export DAT3M_HOME="$src" DAT3M_OUTPUT="$out/output"
+mvn=(mvn -q -B -Dmaven.repo.local="$m2" -Djacoco.skip=true -f "$src/pom.xml")
 if [ "${1:-}" = test ]; then
   "${mvn[@]}" install -DskipTests
   "${mvn[@]}" -pl dartagnan test -Dtest='LitmusPTX*' -Dsurefire.failIfNoSpecifiedTests=false
