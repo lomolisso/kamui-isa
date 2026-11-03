@@ -1,0 +1,794 @@
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126
+  driver: 580.126.20
+instances: 1000000
+configs:
+- plain
+- stress
+- shuffle
+tests: ptx/kamui/ptx87/*
+shard: 0/1
+seconds: 118.9
+failed: 0
+runs:
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive
+  config: plain
+  exit: 0
+  seconds: 0.84
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive
+  config: shuffle
+  exit: 0
+  seconds: 0.92
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source
+  config: plain
+  exit: 0
+  seconds: 0.57
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source
+  config: shuffle
+  exit: 0
+  seconds: 0.89
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source
+  config: plain
+  exit: 0
+  seconds: 0.58
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source
+  config: shuffle
+  exit: 0
+  seconds: 0.86
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread
+  config: plain
+  exit: 0
+  seconds: 0.57
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread
+  config: stress
+  exit: 0
+  seconds: 0.79
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread
+  config: shuffle
+  exit: 0
+  seconds: 0.79
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq
+  config: plain
+  exit: 0
+  seconds: 0.57
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq
+  config: stress
+  exit: 0
+  seconds: 0.85
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq
+  config: shuffle
+  exit: 0
+  seconds: 0.63
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread
+  config: plain
+  exit: 0
+  seconds: 0.76
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread
+  config: stress
+  exit: 0
+  seconds: 0.85
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread
+  config: shuffle
+  exit: 0
+  seconds: 0.62
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq
+  config: plain
+  exit: 0
+  seconds: 0.83
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq
+  config: stress
+  exit: 0
+  seconds: 0.89
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq
+  config: shuffle
+  exit: 0
+  seconds: 0.6
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior
+  config: plain
+  exit: 0
+  seconds: 0.81
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior
+  config: shuffle
+  exit: 0
+  seconds: 0.66
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+stale-source
+  config: plain
+  exit: 0
+  seconds: 0.82
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+stale-source
+  config: stress
+  exit: 0
+  seconds: 0.68
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-load+stale-source
+  config: shuffle
+  exit: 0
+  seconds: 0.6
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1
+  config: plain
+  exit: 0
+  seconds: 0.87
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1
+  config: stress
+  exit: 0
+  seconds: 0.69
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1
+  config: shuffle
+  exit: 0
+  seconds: 0.75
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1+older
+  config: plain
+  exit: 0
+  seconds: 0.7
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1+older
+  config: stress
+  exit: 0
+  seconds: 0.61
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1+older
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+source-reuse
+  config: plain
+  exit: 0
+  seconds: 0.68
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+source-reuse
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+source-reuse
+  config: shuffle
+  exit: 0
+  seconds: 0.87
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+wait_group
+  config: plain
+  exit: 0
+  seconds: 0.69
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+wait_group
+  config: stress
+  exit: 0
+  seconds: 0.57
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+wait_group
+  config: shuffle
+  exit: 0
+  seconds: 0.76
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait
+  config: plain
+  exit: 0
+  seconds: 0.56
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait
+  config: stress
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait
+  config: shuffle
+  exit: 0
+  seconds: 0.93
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global
+  config: plain
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global
+  config: stress
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global
+  config: shuffle
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence.cta
+  config: plain
+  exit: 0
+  seconds: 0.57
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence.cta
+  config: stress
+  exit: 0
+  seconds: 0.93
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence.cta
+  config: shuffle
+  exit: 0
+  seconds: 0.84
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/SB+barrier.cluster
+  config: plain
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/SB+barrier.cluster
+  config: stress
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/SB+barrier.cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive
+  config: plain
+  exit: 0
+  seconds: 0.56
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive
+  config: stress
+  exit: 0
+  seconds: 0.76
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive
+  config: shuffle
+  exit: 0
+  seconds: 0.91
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq
+  config: plain
+  exit: 0
+  seconds: 0.56
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq
+  config: stress
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq
+  config: shuffle
+  exit: 0
+  seconds: 1.04
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive
+  config: plain
+  exit: 0
+  seconds: 0.6
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive
+  config: stress
+  exit: 0
+  seconds: 0.84
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive
+  config: shuffle
+  exit: 0
+  seconds: 0.83
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+no-wait
+  config: plain
+  exit: 0
+  seconds: 0.58
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+no-wait
+  config: stress
+  exit: 0
+  seconds: 0.85
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+no-wait
+  config: shuffle
+  exit: 0
+  seconds: 0.74
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+wait_all
+  config: plain
+  exit: 0
+  seconds: 0.65
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+wait_all
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+wait_all
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+wait_group-1
+  config: plain
+  exit: 0
+  seconds: 0.59
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+wait_group-1
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+wait_group-1
+  config: shuffle
+  exit: 0
+  seconds: 0.7
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older
+  config: plain
+  exit: 0
+  seconds: 0.69
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older
+  config: stress
+  exit: 0
+  seconds: 0.6
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older
+  config: shuffle
+  exit: 0
+  seconds: 0.97
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc
+  config: plain
+  exit: 0
+  seconds: 0.69
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc
+  config: stress
+  exit: 0
+  seconds: 0.59
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc
+  config: shuffle
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/ld-st/CoRR+mmio
+  config: plain
+  exit: 0
+  seconds: 0.79
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/CoRR+mmio
+  config: stress
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/CoRR+mmio
+  config: shuffle
+  exit: 0
+  seconds: 0.94
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/CoWR+ld.global.nc
+  config: plain
+  exit: 0
+  seconds: 0.86
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/CoWR+ld.global.nc
+  config: stress
+  exit: 0
+  seconds: 0.57
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/CoWR+ld.global.nc
+  config: shuffle
+  exit: 0
+  seconds: 0.9
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/CoWR+local
+  config: plain
+  exit: 0
+  seconds: 0.75
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/CoWR+local
+  config: stress
+  exit: 0
+  seconds: 0.58
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/CoWR+local
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/MP+cache-operators
+  config: plain
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+cache-operators
+  config: stress
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+cache-operators
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+ld.global.nc
+  config: plain
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+ld.global.nc
+  config: stress
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+ld.global.nc
+  config: shuffle
+  exit: 0
+  seconds: 0.85
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+ldu
+  config: plain
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+ldu
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+ldu
+  config: shuffle
+  exit: 0
+  seconds: 1.07
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+mmio
+  config: plain
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+mmio
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/MP+mmio
+  config: shuffle
+  exit: 0
+  seconds: 1.0
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/ld-st/ld.const+initial
+  config: plain
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/ld.const+initial
+  config: stress
+  exit: 0
+  seconds: 0.58
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/ld.const+initial
+  config: shuffle
+  exit: 0
+  seconds: 0.87
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx
+  config: plain
+  exit: 0
+  seconds: 0.85
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx
+  config: shuffle
+  exit: 0
+  seconds: 0.8
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta
+  config: plain
+  exit: 0
+  seconds: 0.75
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta
+  config: stress
+  exit: 0
+  seconds: 0.75
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta
+  config: shuffle
+  exit: 0
+  seconds: 0.85
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq
+  config: plain
+  exit: 0
+  seconds: 0.85
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq
+  config: stress
+  exit: 0
+  seconds: 0.73
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq
+  config: shuffle
+  exit: 0
+  seconds: 0.8
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta
+  config: plain
+  exit: 0
+  seconds: 0.86
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta
+  config: stress
+  exit: 0
+  seconds: 0.62
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta
+  config: shuffle
+  exit: 0
+  seconds: 0.83
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side
+  config: plain
+  exit: 0
+  seconds: 0.72
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side
+  config: stress
+  exit: 0
+  seconds: 0.62
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side
+  config: shuffle
+  exit: 0
+  seconds: 0.98
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop
+  config: plain
+  exit: 0
+  seconds: 0.65
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop
+  config: stress
+  exit: 0
+  seconds: 0.54
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop
+  config: shuffle
+  exit: 0
+  seconds: 0.81
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-expect-tx-blocks
+  config: plain
+  exit: 0
+  seconds: 0.66
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-expect-tx-blocks
+  config: stress
+  exit: 0
+  seconds: 0.59
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-expect-tx-blocks
+  config: shuffle
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-parity-1
+  config: plain
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-parity-1
+  config: stress
+  exit: 0
+  seconds: 0.95
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-parity-1
+  config: shuffle
+  exit: 0
+  seconds: 0.58
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-phase-incomplete
+  config: plain
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-phase-incomplete
+  config: stress
+  exit: 0
+  seconds: 0.79
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-phase-incomplete
+  config: shuffle
+  exit: 0
+  seconds: 0.62
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync
+  config: plain
+  exit: 0
+  seconds: 0.7
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync
+  config: stress
+  exit: 0
+  seconds: 0.65
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync
+  config: shuffle
+  exit: 0
+  seconds: 0.78
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global
+  config: plain
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global
+  config: shuffle
+  exit: 0
+  seconds: 0.87
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global
+  config: plain
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global
+  config: shuffle
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster
+  config: plain
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster
+  config: plain
+  exit: 0
+  seconds: 0.57
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster
+  config: stress
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster
+  config: shuffle
+  exit: 0
+  seconds: 1.04
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.cta+diff-cta
+  config: plain
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.cta+diff-cta
+  config: stress
+  exit: 0
+  seconds: 1.05
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.cta+diff-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/MP+cas-lock
+  config: plain
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/MP+cas-lock
+  config: stress
+  exit: 0
+  seconds: 0.92
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/MP+cas-lock
+  config: shuffle
+  exit: 0
+  seconds: 0.85
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/MP+red.release
+  config: plain
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/MP+red.release
+  config: stress
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/MP+red.release
+  config: shuffle
+  exit: 0
+  seconds: 0.98
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/cas+fail
+  config: plain
+  exit: 0
+  seconds: 0.55
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/rmw/cas+fail
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/rmw/cas+fail
+  config: shuffle
+  exit: 0
+  seconds: 0.87
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/rmw/red+final
+  config: plain
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/red+final
+  config: stress
+  exit: 0
+  seconds: 0.79
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/red+final
+  config: shuffle
+  exit: 0
+  seconds: 0.95
+  message: ok 1001088 instances in 79 launches

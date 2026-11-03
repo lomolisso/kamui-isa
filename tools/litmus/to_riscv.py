@@ -133,6 +133,8 @@ def cond_text(e) -> str:
 
 
 def translate(t: litmus.Litmus) -> str:
+    if t.uses_ptx87_syntax:
+        raise Unsupported("PTX 8.7 litmus syntax")
     if t.uses_proxy:
         raise Unsupported("proxies")
     if t.has_loops:

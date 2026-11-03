@@ -3,7 +3,7 @@
 // "As MP+mbarrier-rel-acq, but the arrive and the test are relaxed: the mbarrier no longer orders the data."
 // {
 // x=0;
-// b=0;
+// b=mbarrier(1);
 // P1:r0=0;
 // P1:r1=0;
 // }

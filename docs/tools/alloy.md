@@ -79,7 +79,16 @@ java -cp build/alloy/a42:build/alloy/a42/alloy4.2.jar RunAlloy -f <file.als> [-b
 
 # mixedproxy litmus front end (Alloy 5.1.0 jar in its alloy/ directory, lark-parser on PYTHONPATH)
 python3 src/test_to_alloy.py tests/SB_cta.test
+
+# the PTX 8.7 model (models/ptx87): the CLI started with java, the native SAT solver glucose (-s glucose; with
+# java -jar, Alloy finds the native solvers only through -Djava.library.path), every command (-c '*'), no
+# arithmetic overflow (-n), and a private temporary directory per parallel run
+java -Djava.io.tmpdir=$PWD/tmp -Djava.library.path=/opt/alloy/alloy-6.2.0/lib/runtime/lib \
+     -jar /opt/alloy/alloy-6.2.0/lib/app/org.alloytools.alloy.dist.jar exec -n -s glucose -c '*' -f -o out q.als
 ```
+
+The CLI prints the command lines (`00. run test 0 1/1 SAT`) on standard error and the native solver's progress
+(`c ...` lines) on standard output.
 
 Run all of these inside the dev container (`tools/dev.sh`) and write outputs under
 `build/`. `deps/` is read-only reference material. On the machine where you edit,
@@ -309,6 +318,11 @@ check_r1: SAT, outcome permitted
 
 ## How kamui-isa uses it
 
+- **The PTX 8.7 model** ([models/ptx87](../../models/ptx87/README.md)): Kamui's memory contract in Alloy, with
+  its interpretation decisions. `tools/litmus/to_alloy87.py` writes one query per litmus test
+  (`tests/litmus/alloy-ptx87/`), `tools/litmus/run_formal.py` runs them (model `ptx-v8.7-alloy`, about 0.5 to
+  100 s each), and `models/ptx87/check_mapping.sh` runs the scoped C++ to PTX 8.7 mapping check.
+
 - **Litmus suite**: (a) second opinion on PTX verdicts: `tools/litmus/to_alloy.py` writes a 2019-model query
   for every test it can express (`tests/litmus/alloy/`) and `tools/litmus/run_formal.py` runs them, about
   0.5 s each (see [tests/litmus/README.md](../../tests/litmus/README.md)); (b) the **cluster scope**, added as a
@@ -333,7 +347,8 @@ check_r1: SAT, outcome permitted
 - Expensive with scopes: the bound you can afford is small (4 to 6 events).
 - No litmus front end for the 2019 model; you write each test as an Alloy module (a
   generator from the Dat3M dialect would be a small script).
-- Neither model covers `.cluster`, the async proxy, `mbarrier`, or `fence.acquire`/`.release`.
+- Neither published model covers `.cluster`, the async proxy, `mbarrier`, or `fence.acquire`/`.release`; the
+  PTX 8.7 model in `models/ptx87` does.
 - Version friction: 2019 model needs the `e'` fix for Alloy 6; old Java wrappers need the
   Alloy version they were written for.
 

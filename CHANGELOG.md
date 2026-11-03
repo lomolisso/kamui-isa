@@ -18,6 +18,8 @@ All notable changes to this project are listed here. The format follows
 - NVBit instruction histograms of CUTLASS, FlashInfer, flash-attn 2 and Triton workloads on the H100.
 - `tools/evidence/report_tables.py`, which prints the summary tables of the H100 evidence.
 - PTX memory-model litmus suite (Dat3M and mixedproxy tests) with Dartagnan verdicts and consistency checks.
+- PTX ISA 8.7 memory model in Alloy (`models/ptx87`) with its interpretation decisions, PTX 8.7 litmus tests and
+  verdicts, the scoped C++ mapping check, and H100 runs of the new tests.
 - Litmus test families over scopes and placements, hand-reasoned tests for sm_90 features, 2019 Alloy model and
   RVWMO baseline verdicts.
 - H100 litmus harness (inline-PTX kernels, runner with stress and placement control, job) and its results.

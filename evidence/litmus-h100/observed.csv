@@ -3938,3 +3938,512 @@ ptx/kamui/hand/MP+volatile+diff-cluster,shuffle,diff-cluster,P1:r0=1 P1:r1=1 x=1
 ptx/kamui/hand/MP+volatile+diff-cluster,stress,diff-cluster,P1:r0=0 P1:r1=0 x=1 y=1,777344,1001088,no,allowed
 ptx/kamui/hand/MP+volatile+diff-cluster,stress,diff-cluster,P1:r0=0 P1:r1=1 x=1 y=1,105657,1001088,no,allowed
 ptx/kamui/hand/MP+volatile+diff-cluster,stress,diff-cluster,P1:r0=1 P1:r1=1 x=1 y=1,118087,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,plain,same-sm,P1:r0=0 P1:r1=0 h=1 g=5,362981,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,plain,same-sm,P1:r0=0 P1:r1=1 h=1 g=5,619243,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,plain,same-sm,P1:r0=1 P1:r1=0 h=1 g=5,1307,1013760,yes,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,plain,same-sm,P1:r0=1 P1:r1=1 h=1 g=5,30229,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,shuffle,same-sm,P1:r0=0 P1:r1=0 h=1 g=5,319551,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,shuffle,same-sm,P1:r0=0 P1:r1=1 h=1 g=5,669116,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,shuffle,same-sm,P1:r0=1 P1:r1=0 h=1 g=5,1889,1013760,yes,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,shuffle,same-sm,P1:r0=1 P1:r1=1 h=1 g=5,23204,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,stress,same-sm,P1:r0=0 P1:r1=0 h=1 g=5,242722,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,stress,same-sm,P1:r0=0 P1:r1=1 h=1 g=5,743057,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,stress,same-sm,P1:r0=1 P1:r1=0 h=1 g=5,542,1013760,yes,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,stress,same-sm,P1:r0=1 P1:r1=1 h=1 g=5,27439,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,plain,same-sm,P0:r0=0 P0:r1=0 g=6,289,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,plain,same-sm,P0:r0=1 P0:r1=0 g=6,121300,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,plain,same-sm,P0:r0=1 P0:r1=6 g=6,892171,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,shuffle,same-sm,P0:r0=0 P0:r1=0 g=6,9697,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,shuffle,same-sm,P0:r0=0 P0:r1=6 g=6,4,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,shuffle,same-sm,P0:r0=1 P0:r1=0 g=6,145467,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,shuffle,same-sm,P0:r0=1 P0:r1=6 g=6,858592,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,stress,same-sm,P0:r0=0 P0:r1=0 g=6,5120,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,stress,same-sm,P0:r0=0 P0:r1=6 g=6,1,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,stress,same-sm,P0:r0=1 P0:r1=0 g=6,138985,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.global+source,stress,same-sm,P0:r0=1 P0:r1=6 g=6,869654,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,plain,same-sm,P0:r0=0 P0:r1=0 g=6,437,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,plain,same-sm,P0:r0=1 P0:r1=0 g=6,120102,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,plain,same-sm,P0:r0=1 P0:r1=5 g=6,5950,1013760,yes,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,plain,same-sm,P0:r0=1 P0:r1=6 g=6,887271,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,shuffle,same-sm,P0:r0=0 P0:r1=0 g=6,11588,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,shuffle,same-sm,P0:r0=1 P0:r1=0 g=6,148969,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,shuffle,same-sm,P0:r0=1 P0:r1=5 g=6,16608,1013760,yes,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,shuffle,same-sm,P0:r0=1 P0:r1=6 g=6,836595,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,stress,same-sm,P0:r0=0 P0:r1=0 g=6,8973,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,stress,same-sm,P0:r0=1 P0:r1=0 g=6,148062,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,stress,same-sm,P0:r0=1 P0:r1=5 g=6,18810,1013760,yes,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+fence.proxy.async.shared+source,stress,same-sm,P0:r0=1 P0:r1=6 g=6,837915,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread,plain,same-sm,P1:r0=0 P1:r1=0 g=5,986143,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread,plain,same-sm,P1:r0=1 P1:r1=0 g=5,27613,1013760,yes,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread,plain,same-sm,P1:r0=1 P1:r1=5 g=5,4,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread,shuffle,same-sm,P1:r0=0 P1:r1=0 g=5,975661,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread,shuffle,same-sm,P1:r0=1 P1:r1=0 g=5,38054,1013760,yes,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread,shuffle,same-sm,P1:r0=1 P1:r1=5 g=5,45,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread,stress,same-sm,P1:r0=0 P1:r1=0 g=5,989744,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread,stress,same-sm,P1:r0=1 P1:r1=0 g=5,23976,1013760,yes,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread,stress,same-sm,P1:r0=1 P1:r1=5 g=5,40,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq,plain,same-sm,P1:r0=0 P1:r1=0 g=5,959791,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq,plain,same-sm,P1:r0=0 P1:r1=5 g=5,24582,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq,plain,same-sm,P1:r0=1 P1:r1=5 g=5,29387,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq,shuffle,same-sm,P1:r0=0 P1:r1=0 g=5,955303,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq,shuffle,same-sm,P1:r0=0 P1:r1=5 g=5,21606,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq,shuffle,same-sm,P1:r0=1 P1:r1=5 g=5,36851,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq,stress,same-sm,P1:r0=0 P1:r1=0 g=5,948606,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq,stress,same-sm,P1:r0=0 P1:r1=5 g=5,31376,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread+fence-acq,stress,same-sm,P1:r0=1 P1:r1=5 g=5,33778,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread,plain,same-sm,P0:r0=0 P0:r1=0 g=5,93,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread,plain,same-sm,P0:r0=1 P0:r1=0 g=5,97620,1013760,yes,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread,plain,same-sm,P0:r0=1 P0:r1=5 g=5,916047,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread,shuffle,same-sm,P0:r0=0 P0:r1=0 g=5,5265,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread,shuffle,same-sm,P0:r0=1 P0:r1=0 g=5,105644,1013760,yes,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread,shuffle,same-sm,P0:r0=1 P0:r1=5 g=5,902851,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread,stress,same-sm,P0:r0=0 P0:r1=0 g=5,3137,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread,stress,same-sm,P0:r0=1 P0:r1=0 g=5,103791,1013760,yes,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread,stress,same-sm,P0:r0=1 P0:r1=5 g=5,906832,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq,plain,same-sm,P0:r0=0 P0:r1=0 g=5,3,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq,plain,same-sm,P0:r0=0 P0:r1=5 g=5,397,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq,plain,same-sm,P0:r0=1 P0:r1=5 g=5,1013360,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq,shuffle,same-sm,P0:r0=0 P0:r1=0 g=5,4669,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq,shuffle,same-sm,P0:r0=0 P0:r1=5 g=5,2640,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq,shuffle,same-sm,P0:r0=1 P0:r1=5 g=5,1006451,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq,stress,same-sm,P0:r0=0 P0:r1=0 g=5,2691,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq,stress,same-sm,P0:r0=0 P0:r1=5 g=5,1504,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread+fence-acq,stress,same-sm,P0:r0=1 P0:r1=5 g=5,1009565,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,plain,same-sm,P1:r0=0 P1:r1=0 h=1 g=5,354018,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,plain,same-sm,P1:r0=0 P1:r1=1 h=1 g=5,631053,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,plain,same-sm,P1:r0=1 P1:r1=0 h=1 g=5,414,1013760,yes,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,plain,same-sm,P1:r0=1 P1:r1=1 h=1 g=5,28275,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,shuffle,same-sm,P1:r0=0 P1:r1=0 h=1 g=5,282417,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,shuffle,same-sm,P1:r0=0 P1:r1=1 h=1 g=5,703274,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,shuffle,same-sm,P1:r0=1 P1:r1=0 h=1 g=5,1263,1013760,yes,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,shuffle,same-sm,P1:r0=1 P1:r1=1 h=1 g=5,26806,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,stress,same-sm,P1:r0=0 P1:r1=0 h=1 g=5,217746,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,stress,same-sm,P1:r0=0 P1:r1=1 h=1 g=5,767321,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,stress,same-sm,P1:r0=1 P1:r1=0 h=1 g=5,206,1013760,yes,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior,stress,same-sm,P1:r0=1 P1:r1=1 h=1 g=5,28487,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,plain,same-sm,P0:r0=0 P0:r1=0 g=6,170,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,plain,same-sm,P0:r0=1 P0:r1=0 g=6,97608,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,plain,same-sm,P0:r0=1 P0:r1=5 g=6,4844,1013760,yes,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,plain,same-sm,P0:r0=1 P0:r1=6 g=6,911138,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,shuffle,same-sm,P0:r0=0 P0:r1=0 g=6,11545,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,shuffle,same-sm,P0:r0=1 P0:r1=0 g=6,127891,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,shuffle,same-sm,P0:r0=1 P0:r1=5 g=6,23054,1013760,yes,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,shuffle,same-sm,P0:r0=1 P0:r1=6 g=6,851270,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,stress,same-sm,P0:r0=0 P0:r1=0 g=6,8467,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,stress,same-sm,P0:r0=1 P0:r1=0 g=6,121944,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,stress,same-sm,P0:r0=1 P0:r1=5 g=6,22969,1013760,yes,allowed
+ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,stress,same-sm,P0:r0=1 P0:r1=6 g=6,860380,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1,plain,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1,shuffle,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1,stress,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1+older,plain,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1+older,shuffle,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1+older,stress,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+source-reuse,plain,same-sm,g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+source-reuse,shuffle,same-sm,g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+source-reuse,stress,same-sm,g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+wait_group,plain,same-sm,P0:r0=3 g=3,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+wait_group,shuffle,same-sm,P0:r0=3 g=3,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+wait_group,stress,same-sm,P0:r0=3 g=3,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,plain,same-cluster,P1:r0=0 x=1,779842,1001088,yes,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,plain,same-cluster,P1:r0=1 x=1,221246,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,shuffle,same-cluster,P1:r0=0 x=1,480170,1001088,yes,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,shuffle,same-cluster,P1:r0=1 x=1,520918,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,stress,same-cluster,P1:r0=0 x=1,449728,1001088,yes,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,stress,same-cluster,P1:r0=1 x=1,551360,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global,plain,same-cluster,P1:r0=0 d=1,30504,1001088,yes,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global,plain,same-cluster,P1:r0=1 d=1,970584,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global,shuffle,same-cluster,P1:r0=0 d=1,10226,1001088,yes,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global,shuffle,same-cluster,P1:r0=1 d=1,990862,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global,stress,same-cluster,P1:r0=0 d=1,38575,1001088,yes,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global,stress,same-cluster,P1:r0=1 d=1,962513,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence.cta,plain,same-cluster,P1:r0=0 x=1,166812,1001088,yes,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence.cta,plain,same-cluster,P1:r0=1 x=1,834276,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence.cta,shuffle,same-cluster,P1:r0=0 x=1,37134,1001088,yes,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence.cta,shuffle,same-cluster,P1:r0=1 x=1,963954,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence.cta,stress,same-cluster,P1:r0=0 x=1,109011,1001088,yes,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence.cta,stress,same-cluster,P1:r0=1 x=1,892077,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/SB+barrier.cluster,plain,same-cluster,P0:r0=1 P1:r1=1 x=1 y=1,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/barrier-cluster/SB+barrier.cluster,shuffle,same-cluster,P0:r0=1 P1:r1=1 x=1 y=1,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/barrier-cluster/SB+barrier.cluster,stress,same-cluster,P0:r0=1 P1:r1=1 x=1 y=1,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,plain,same-sm,P1:r0=0 P1:r1=0 g=1,319915,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,plain,same-sm,P1:r0=0 P1:r1=1 g=1,464236,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,plain,same-sm,P1:r0=1 P1:r1=0 g=1,77187,1013760,yes,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,plain,same-sm,P1:r0=1 P1:r1=1 g=1,152422,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,shuffle,same-sm,P1:r0=0 P1:r1=0 g=1,586717,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,shuffle,same-sm,P1:r0=0 P1:r1=1 g=1,192489,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,shuffle,same-sm,P1:r0=1 P1:r1=0 g=1,129545,1013760,yes,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,shuffle,same-sm,P1:r0=1 P1:r1=1 g=1,105009,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,stress,same-sm,P1:r0=0 P1:r1=0 g=1,476962,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,stress,same-sm,P1:r0=0 P1:r1=1 g=1,366072,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,stress,same-sm,P1:r0=1 P1:r1=0 g=1,67978,1013760,yes,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive,stress,same-sm,P1:r0=1 P1:r1=1 g=1,102748,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq,plain,same-sm,P1:r0=0 P1:r1=1 g=1,469043,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq,plain,same-sm,P1:r0=1 P1:r1=1 g=1,544717,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq,shuffle,same-sm,P1:r0=0 P1:r1=0 g=1,8186,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq,shuffle,same-sm,P1:r0=0 P1:r1=1 g=1,631739,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq,shuffle,same-sm,P1:r0=1 P1:r1=1 g=1,373835,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq,stress,same-sm,P1:r0=0 P1:r1=0 g=1,5176,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq,stress,same-sm,P1:r0=0 P1:r1=1 g=1,571550,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+fence-acq,stress,same-sm,P1:r0=1 P1:r1=1 g=1,437034,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,plain,same-sm,P1:r0=0 P1:r1=0 h=1 g=1,369332,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,plain,same-sm,P1:r0=0 P1:r1=1 h=1 g=1,641306,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,plain,same-sm,P1:r0=1 P1:r1=0 h=1 g=1,44,1013760,yes,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,plain,same-sm,P1:r0=1 P1:r1=1 h=1 g=1,3078,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,shuffle,same-sm,P1:r0=0 P1:r1=0 h=1 g=1,360478,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,shuffle,same-sm,P1:r0=0 P1:r1=1 h=1 g=1,643857,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,shuffle,same-sm,P1:r0=1 P1:r1=0 h=1 g=1,386,1013760,yes,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,shuffle,same-sm,P1:r0=1 P1:r1=1 h=1 g=1,9039,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,stress,same-sm,P1:r0=0 P1:r1=0 h=1 g=1,271946,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,stress,same-sm,P1:r0=0 P1:r1=1 h=1 g=1,734275,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,stress,same-sm,P1:r0=1 P1:r1=0 h=1 g=1,182,1013760,yes,allowed
+ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive+not-transitive,stress,same-sm,P1:r0=1 P1:r1=1 h=1 g=1,7357,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/cp.async+no-wait,plain,same-sm,P0:r0=0 g=1,995912,1013760,yes,allowed
+ptx/kamui/ptx87/cp-async/cp.async+no-wait,plain,same-sm,P0:r0=1 g=1,17848,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/cp.async+no-wait,shuffle,same-sm,P0:r0=0 g=1,1010067,1013760,yes,allowed
+ptx/kamui/ptx87/cp-async/cp.async+no-wait,shuffle,same-sm,P0:r0=1 g=1,3693,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/cp.async+no-wait,stress,same-sm,P0:r0=0 g=1,1010651,1013760,yes,allowed
+ptx/kamui/ptx87/cp-async/cp.async+no-wait,stress,same-sm,P0:r0=1 g=1,3109,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/cp.async+wait_all,plain,same-sm,P0:r0=1 g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async+wait_all,shuffle,same-sm,P0:r0=1 g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async+wait_all,stress,same-sm,P0:r0=1 g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1,plain,same-sm,P0:r0=1 P0:r1=0 g=1 h=1,196796,1013760,yes,allowed
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1,plain,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,816964,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1,shuffle,same-sm,P0:r0=1 P0:r1=0 g=1 h=1,277631,1013760,yes,allowed
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1,shuffle,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,736129,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1,stress,same-sm,P0:r0=1 P0:r1=0 g=1 h=1,283524,1013760,yes,allowed
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1,stress,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,730236,1013760,no,allowed
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older,plain,same-sm,P0:r0=1 P0:r1=0 g=1 h=1,198297,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older,plain,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,815463,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older,shuffle,same-sm,P0:r0=1 P0:r1=0 g=1 h=1,274910,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older,shuffle,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,738850,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older,stress,same-sm,P0:r0=1 P0:r1=0 g=1 h=1,275556,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older,stress,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,738204,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc,plain,same-sm,P1:r0=0 g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc,shuffle,same-sm,P1:r0=0 g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc,stress,same-sm,P1:r0=0 g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,801040,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,200048,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,500889,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9333,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,490866,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,955664,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,45424,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,2975,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,998071,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,42,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,489565,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18716,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,492807,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,197,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000891,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,439658,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,561430,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,488161,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18283,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,494644,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,988247,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,stress,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,12841,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,801869,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,199219,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,500089,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9354,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,491645,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,957365,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,43697,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,stress,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,26,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,803356,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,197732,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,499297,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9754,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,492037,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,956919,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,44137,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,stress,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,32,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,806016,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,195072,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,501629,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,shuffle,same-cluster,P1:r2=0 P1:r0=1 P1:r1=0 x=1 f=1,1,1001088,yes,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9598,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,489860,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,956615,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,44441,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,stress,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,32,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,803562,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,197526,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,500780,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9415,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,490893,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,953791,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,47297,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,2313,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,805912,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,192863,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,489449,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,9736,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9264,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,492639,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,1246,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,951823,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,48019,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,2116,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,800038,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,198934,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,487804,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,10141,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9764,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,493379,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,1515,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,953393,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,46180,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,3088,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,997996,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,4,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,488530,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18113,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,494445,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,266,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000822,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,2999,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,998079,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,10,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,489417,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18453,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,493218,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,204,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000884,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,3225,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,997857,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,6,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,489171,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18470,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,493447,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,679,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000409,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,2996,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,998073,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,19,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,489267,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18771,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,493050,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,147,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000941,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,800328,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,200760,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,500959,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9112,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,491017,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,955252,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,45832,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,stress,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,4,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,803384,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,197704,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,499007,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,shuffle,same-cluster,P1:r2=0 P1:r0=1 P1:r1=0 x=1 f=1,1,1001088,yes,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9379,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,492701,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,955647,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,45441,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,809365,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,191723,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,499788,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9284,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,492016,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,954384,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,46704,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/CoRR+mmio,plain,same-cluster,P1:r0=0 P1:r1=0 x=1,664028,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/CoRR+mmio,plain,same-cluster,P1:r0=0 P1:r1=1 x=1,90461,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/CoRR+mmio,plain,same-cluster,P1:r0=1 P1:r1=1 x=1,246599,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/CoRR+mmio,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1,501140,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/CoRR+mmio,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1,182,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/CoRR+mmio,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1,499766,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/CoRR+mmio,stress,same-cluster,P1:r0=0 P1:r1=0 x=1,791532,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/CoRR+mmio,stress,same-cluster,P1:r0=0 P1:r1=1 x=1,111387,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/CoRR+mmio,stress,same-cluster,P1:r0=1 P1:r1=1 x=1,98169,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/CoWR+ld.global.nc,plain,same-sm,P0:r0=0 x=1,1013760,1013760,yes,allowed
+ptx/kamui/ptx87/ld-st/CoWR+ld.global.nc,shuffle,same-sm,P0:r0=0 x=1,1013760,1013760,yes,allowed
+ptx/kamui/ptx87/ld-st/CoWR+ld.global.nc,stress,same-sm,P0:r0=0 x=1,1013760,1013760,yes,allowed
+ptx/kamui/ptx87/ld-st/CoWR+local,plain,same-sm,P0:r0=1 l=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/ld-st/CoWR+local,shuffle,same-sm,P0:r0=1 l=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/ld-st/CoWR+local,stress,same-sm,P0:r0=1 l=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/ld-st/MP+cache-operators,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,93327,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/MP+cache-operators,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,907761,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/MP+cache-operators,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,490277,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/MP+cache-operators,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18720,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/MP+cache-operators,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,492091,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/MP+cache-operators,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,694,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/MP+cache-operators,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000394,1001088,no,forbidden
+ptx/kamui/ptx87/ld-st/MP+ld.global.nc,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,93438,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ld.global.nc,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,907650,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ld.global.nc,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,490390,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ld.global.nc,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,19165,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ld.global.nc,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,491533,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ld.global.nc,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,507,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ld.global.nc,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000581,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ldu,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,100056,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ldu,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,901032,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ldu,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,489530,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ldu,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18695,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ldu,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,492863,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ldu,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,477,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+ldu,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000611,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+mmio,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,826998,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+mmio,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,57721,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+mmio,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,116369,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+mmio,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,500035,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+mmio,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,462,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+mmio,shuffle,same-cluster,P1:r0=1 P1:r1=0 x=1 f=1,103,1001088,yes,allowed
+ptx/kamui/ptx87/ld-st/MP+mmio,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,500488,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+mmio,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,969556,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+mmio,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,13586,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/MP+mmio,stress,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,17946,1001088,no,allowed
+ptx/kamui/ptx87/ld-st/ld.const+initial,plain,same-sm,P0:r0=5 c=5,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/ld-st/ld.const+initial,shuffle,same-sm,P0:r0=5 c=5,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/ld-st/ld.const+initial,stress,same-sm,P0:r0=5 c=5,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,plain,same-sm,P2:r0=0 P2:r1=1 x=1,590144,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,plain,same-sm,P2:r0=1 P2:r1=1 x=1,423616,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,shuffle,same-sm,P2:r0=0 P2:r1=1 x=1,497888,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,shuffle,same-sm,P2:r0=1 P2:r1=1 x=1,515872,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,stress,same-sm,P2:r0=0 P2:r1=1 x=1,469280,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,stress,same-sm,P2:r0=1 P2:r1=1 x=1,544480,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,plain,same-sm,P2:r0=0 P2:r1=0 P2:r2=0 x=1 y=1,96,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,plain,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,567936,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,plain,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,38240,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,plain,same-sm,P2:r0=1 P2:r1=1 P2:r2=0 x=1 y=1,37216,1013760,yes,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,plain,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,370272,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,shuffle,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 x=1 y=1,32,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,344922,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,189852,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,shuffle,same-sm,P2:r0=1 P2:r1=1 P2:r2=0 x=1 y=1,143814,1013760,yes,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,shuffle,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,335140,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,stress,same-sm,P2:r0=0 P2:r1=0 P2:r2=0 x=1 y=1,32,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,488224,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,28768,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,stress,same-sm,P2:r0=1 P2:r1=1 P2:r2=0 x=1 y=1,31872,1013760,yes,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,stress,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,464864,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq,plain,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,2464,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq,plain,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,630496,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq,plain,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,380800,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,2560,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,683163,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq,shuffle,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,328037,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,2976,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,668768,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta+fence-acq,stress,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,342016,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,plain,same-sm,P2:r0=0 P2:r1=0 P2:r2=0 x=1 y=1,128,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,plain,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,522688,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,plain,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,31904,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,plain,same-sm,P2:r0=1 P2:r1=1 P2:r2=0 x=1 y=1,79168,1013760,yes,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,plain,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,379872,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,shuffle,same-sm,P2:r0=0 P2:r1=0 P2:r2=0 x=1 y=1,32,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,306592,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,162562,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,shuffle,same-sm,P2:r0=1 P2:r1=1 P2:r2=0 x=1 y=1,183200,1013760,yes,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,shuffle,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,361374,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,stress,same-sm,P2:r0=0 P2:r1=0 P2:r2=0 x=1 y=1,32,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,278592,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,18496,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,stress,same-sm,P2:r0=1 P2:r1=1 P2:r2=0 x=1 y=1,244224,1013760,yes,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta,stress,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,472416,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,plain,same-sm,P2:r0=0 P2:r1=0 P2:r2=0 x=1 y=1,64,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,plain,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,514944,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,plain,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,32768,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,plain,same-sm,P2:r0=1 P2:r1=1 P2:r2=0 x=1 y=1,78400,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,plain,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,387584,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,shuffle,same-sm,P2:r0=0 P2:r1=0 P2:r2=0 x=1 y=1,96,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,shuffle,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 x=1 y=1,21,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,304507,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,162728,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,shuffle,same-sm,P2:r0=1 P2:r1=0 P2:r2=1 x=1 y=1,11,1013760,yes,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,shuffle,same-sm,P2:r0=1 P2:r1=1 P2:r2=0 x=1 y=1,181253,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,shuffle,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,365144,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,stress,same-sm,P2:r0=0 P2:r1=0 P2:r2=0 x=1 y=1,32,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,stress,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 x=1 y=1,32,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,272672,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,19136,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,stress,same-sm,P2:r0=1 P2:r1=1 P2:r2=0 x=1 y=1,247616,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side,stress,same-sm,P2:r0=1 P2:r1=1 P2:r2=1 x=1 y=1,474272,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop,plain,same-sm,P1:r0=0 P1:r1=0,111840,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop,plain,same-sm,P1:r0=0 P1:r1=1,23936,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop,plain,same-sm,P1:r0=1 P1:r1=1,877984,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop,shuffle,same-sm,P1:r0=0 P1:r1=0,37190,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop,shuffle,same-sm,P1:r0=0 P1:r1=1,29380,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop,shuffle,same-sm,P1:r0=1 P1:r1=1,947190,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop,stress,same-sm,P1:r0=0 P1:r1=0,64928,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop,stress,same-sm,P1:r0=0 P1:r1=1,30624,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop,stress,same-sm,P1:r0=1 P1:r1=1,918208,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-expect-tx-blocks,plain,same-sm,P1:r0=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-expect-tx-blocks,shuffle,same-sm,P1:r0=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-expect-tx-blocks,stress,same-sm,P1:r0=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-parity-1,plain,same-sm,P0:r0=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-parity-1,shuffle,same-sm,P0:r0=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-parity-1,stress,same-sm,P0:r0=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-phase-incomplete,plain,same-sm,P1:r0=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-phase-incomplete,shuffle,same-sm,P1:r0=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-phase-incomplete,stress,same-sm,P1:r0=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,plain,same-sm,P1:r0=0 P1:r1=0 x=1,4832,1013760,yes,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,plain,same-sm,P1:r0=0 P1:r1=1 x=1,18592,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,plain,same-sm,P1:r0=1 P1:r1=0 x=1,2816,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,plain,same-sm,P1:r0=1 P1:r1=1 x=1,987520,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,shuffle,same-sm,P1:r0=0 P1:r1=0 x=1,47647,1013760,yes,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,shuffle,same-sm,P1:r0=0 P1:r1=1 x=1,207788,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,shuffle,same-sm,P1:r0=1 P1:r1=0 x=1,5473,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,shuffle,same-sm,P1:r0=1 P1:r1=1 x=1,752852,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,stress,same-sm,P1:r0=0 P1:r1=0 x=1,38112,1013760,yes,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,stress,same-sm,P1:r0=0 P1:r1=1 x=1,33504,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,stress,same-sm,P1:r0=1 P1:r1=0 x=1,9984,1013760,no,allowed
+ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,stress,same-sm,P1:r0=1 P1:r1=1 x=1,932160,1013760,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,plain,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,91431,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,plain,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,909657,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,shuffle,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,494010,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,shuffle,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,18353,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,shuffle,same-cluster,P1:r0=1 P1:r1=1 d=1 f=1,488725,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,stress,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,709,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,stress,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,1000379,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,plain,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,3250,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,plain,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,981565,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,plain,same-cluster,P1:r0=1 P1:r1=1 d=1 f=1,16273,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,shuffle,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,487505,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,shuffle,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,10870,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,shuffle,same-cluster,P1:r0=1 P1:r1=1 d=1 f=1,502713,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,stress,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,226,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,stress,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,986843,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,stress,same-cluster,P1:r0=1 P1:r1=1 d=1 f=1,14019,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,plain,diff-cluster,P0:r0=0 P1:r1=1 x=2,587758,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,plain,diff-cluster,P0:r0=1 P1:r1=0 x=2,413330,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,shuffle,diff-cluster,P0:r0=0 P1:r1=1 x=2,501024,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,shuffle,diff-cluster,P0:r0=1 P1:r1=0 x=2,500064,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,stress,diff-cluster,P0:r0=0 P1:r1=1 x=2,532625,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,stress,diff-cluster,P0:r0=1 P1:r1=0 x=2,468463,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster,plain,same-cluster,P0:r0=0 P1:r1=1 x=2,518392,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster,plain,same-cluster,P0:r0=1 P1:r1=0 x=2,482696,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster,shuffle,same-cluster,P0:r0=0 P1:r1=1 x=2,500320,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster,shuffle,same-cluster,P0:r0=1 P1:r1=0 x=2,500768,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster,stress,same-cluster,P0:r0=0 P1:r1=1 x=2,810429,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster,stress,same-cluster,P0:r0=1 P1:r1=0 x=2,190659,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,plain,same-cluster,P0:r0=0 P1:r1=1 x=2,522908,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,plain,same-cluster,P0:r0=1 P1:r1=0 x=2,478180,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,shuffle,same-cluster,P0:r0=0 P1:r1=1 x=2,500469,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,shuffle,same-cluster,P0:r0=1 P1:r1=0 x=2,500619,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,stress,same-cluster,P0:r0=0 P1:r1=1 x=2,814566,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,stress,same-cluster,P0:r0=1 P1:r1=0 x=2,186522,1001088,no,allowed
+ptx/kamui/ptx87/rmw/MP+cas-lock,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 l=1,1169,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+cas-lock,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 l=1,999919,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+cas-lock,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 l=1,490549,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+cas-lock,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 l=1,19065,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+cas-lock,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 l=2,491474,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+cas-lock,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 l=1,79,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+cas-lock,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 l=1,1001009,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+red.release,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,91953,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+red.release,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,909135,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+red.release,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,490406,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+red.release,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18349,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+red.release,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,492333,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+red.release,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,407,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/MP+red.release,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000681,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/cas+fail,plain,same-sm,P0:r0=0 x=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/rmw/cas+fail,shuffle,same-sm,P0:r0=0 x=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/rmw/cas+fail,stress,same-sm,P0:r0=0 x=0,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/rmw/red+final,plain,same-cluster,x=2,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/red+final,shuffle,same-cluster,x=2,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/red+final,stress,same-cluster,x=2,1001088,1001088,no,forbidden

@@ -83,3 +83,196 @@
   test: ptx/kamui/hand/MP+mbarrier-rel-acq-shared.cta+same-cta
   model: shuffle
   reason: *mbarrier_cta
+
+# ---- the PTX 8.7 Alloy model (models/ptx87): differences with Dartagnan, and programs with no execution
+
+- kind: models
+  test: ptx/imported/dat3m/Barrier/quorum1-pass
+  model: "*"
+  reason: &quorum >-
+    Three threads use a barrier with a thread count of 2, so one of them can never complete its barrier
+    (9.7.13.1: the barrier completes when 2 threads arrived and is reinitialized; the third waits for a partner
+    that never comes). The ptx-v8.7-alloy model counts only executions in which every thread finishes, so the
+    test has no outcome (decision D9 in models/ptx87/decisions.md). Dartagnan (ptx-v7.5, ptx-v6.0) also counts
+    executions in which a thread stays blocked, with the blocked thread's later loads keeping their initial
+    register values, which makes the condition reachable.
+
+- kind: models
+  test: ptx/imported/dat3m/Barrier/quorum2-pass
+  model: "*"
+  reason: *quorum
+
+- kind: models
+  test: ptx/imported/dat3m/Barrier/quorum3-pass
+  model: "*"
+  reason: *quorum
+
+- kind: models
+  test: ptx/imported/dat3m/Barrier/quorum4-pass
+  model: "*"
+  reason: *quorum
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum1-hang
+  model: ptx-v8.7-alloy
+  reason: &quorum_noexec >-
+    A barrier with a thread count that the test's threads cannot fill (or, for -hang, can never reach): some
+    thread waits forever, so the program has no execution that finishes and no outcome (D9).
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum2-hang
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum1-pass
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum2-pass
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum3-pass
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum4-pass
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum3-fail
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Barrier/quorum4-fail
+  model: ptx-v8.7-alloy
+  reason: *quorum_noexec
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Manual/PC-bar-sync-sync-3
+  model: ptx-v8.7-alloy
+  reason: &deadlock >-
+    The test's own comment says "Deadlock": the two threads wait at named barriers 0 and 1 in opposite orders, so
+    neither barrier completes and the program has no execution that finishes (D9). Dartagnan's verdict is
+    forbidden too.
+
+- kind: no-execution
+  test: ptx/imported/dat3m/Manual/PC-bar-sync-sync-4
+  model: ptx-v8.7-alloy
+  reason: *deadlock
+
+- kind: no-execution
+  test: ptx/kamui/ptx87/bar/bar.sync-count+hang
+  model: ptx-v8.7-alloy
+  reason: >-
+    Written to have no execution: a barrier waits for 3 threads and only 2 arrive (D9).
+
+# ---- H100: the mbarrier wait gap in the PTX 8.7 tests (job 20261102T022710Z-q000042)
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread
+  model: plain
+  reason: &mbarrier_gap_ptx87 >-
+    The same H100 behaviour as MP+mbarrier-rel-acq.cta+same-cta above: an acquire mbarrier.test_wait at .cta scope
+    that returns True does not order the thread's later loads, here after the complete-tx of a bulk copy
+    (TMA-load+*), the asynchronous arrive of cp.async.mbarrier.arrive, or several arrivals (MP2+*). The variant of
+    each test with one fence.acq_rel.cta after the wait (+fence-acq) shows the outcome in 0 of about 3 million
+    instances, and the copy sources are fenced to the async proxy before the test starts, so the harness is not
+    the cause. PTX ISA 8.7 section 9.7.13.15.16 forbids the outcome; the model follows the manual.
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread
+  model: stress
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread
+  model: plain
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread
+  model: stress
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior
+  model: plain
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior
+  model: stress
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive
+  model: plain
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive
+  model: stress
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta
+  model: plain
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta
+  model: stress
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate
+  model: shuffle
+  reason: &ptxas_load_merge >-
+    A compiler effect, not a hardware one. The reader loads x, then the flag with ld.acquire.gpu, then x again with
+    the same instruction; ptxas (CUDA 12.8, and the JIT of driver 580) keeps only the first load of x, before the
+    acquire, and reuses its value (every observed outcome has r1 == r2). When both stores of the writer fall between
+    the first load and the flag read, the result is the forbidden outcome. The .cv and .lu variants, whose second
+    load differs and is kept, show the allowed outcome in that window and never the forbidden one. PTX ISA 8.7
+    does not make the race on x undefined, so the model keeps the verdict. Details in evidence/litmus-h100/README.md.
+
+- kind: h100
+  test: ptx/kamui/ptx87/hints/MP+st.wb
+  model: shuffle
+  reason: *ptxas_load_merge

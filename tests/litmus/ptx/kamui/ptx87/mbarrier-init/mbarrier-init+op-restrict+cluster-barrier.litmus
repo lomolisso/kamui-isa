@@ -1,0 +1,13 @@
+PTX mbarrier-init+op-restrict+cluster-barrier
+"The cluster-wide initialization idiom: P0 initializes b, then fence.mbarrier_init.release.cluster and a relaxed cluster barrier; P1 (another CTA) arrives on b remotely after the barrier. Its arrive reads the initialized object, so it sees phase 0 (r0 is the phase it read). Expected: forbidden."
+{
+b=mbarrier() @cta 0;
+P1:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0            | P1@cta 1,cluster 0,gpu 0                              ;
+ mbarrier.init.shared::cta b, 2      | barrier.cluster.arrive.relaxed                        ;
+ fence.mbarrier_init.release.cluster | barrier.cluster.wait                                  ;
+ barrier.cluster.arrive.relaxed      | mbarrier.arrive.release.cluster.shared::cluster r0, b ;
+ barrier.cluster.wait                |                                                       ;
+exists
+(P1:r0 != 0)

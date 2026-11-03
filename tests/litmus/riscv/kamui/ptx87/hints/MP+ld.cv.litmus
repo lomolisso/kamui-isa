@@ -1,0 +1,12 @@
+RISCV MP+ld.cv
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/ptx87/hints/MP+ld.cv.litmus"
+{
+0:x5=x; 0:x6=f; 1:x5=x; 1:x6=f;
+}
+ P0          | P1           ;
+ ori x7,x0,1 | lw x12,0(x5) ;
+ sw x7,0(x5) | lw x10,0(x6) ;
+ fence rw,w  | fence r,rw   ;
+ ori x7,x0,1 | lw x11,0(x5) ;
+ sw x7,0(x6) |              ;
+exists (1:x10=1 /\ 1:x11=0)

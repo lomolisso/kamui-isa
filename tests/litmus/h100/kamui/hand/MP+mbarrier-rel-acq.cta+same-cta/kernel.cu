@@ -3,7 +3,7 @@
 // "Message passing through an mbarrier in shared memory, initialized with an arrival count of 1 before the threads start. P0 arrives with release semantics; P1 tests phase 0 with acquire semantics."
 // {
 // x=0;
-// b=0;
+// b=mbarrier(1);
 // P1:r0=0;
 // P1:r1=0;
 // }

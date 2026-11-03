@@ -1,0 +1,14 @@
+PTX MP+mbarrier-try_wait-relaxed+fence-restrict
+"The manual's idiom (22749): a relaxed try_wait followed by fence.acquire.sync_restrict::shared::cluster orders the later shared-memory load (D18). Expected: forbidden."
+{
+b=mbarrier(1) @cta 1;
+s=0 @cta 1;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0                          | P1@cta 1,cluster 0,gpu 0                             ;
+ st.weak.shared::cluster s, 1                      | mbarrier.try_wait.parity.relaxed.cluster r0, b, 0    ;
+ mbarrier.arrive.release.cluster.shared::cluster b | fence.acquire.sync_restrict::shared::cluster.cluster ;
+                                                   | ld.weak.shared::cta r1, s                            ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

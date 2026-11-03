@@ -1,0 +1,15 @@
+PTX MP+mbarrier-token
+"test_wait with the state token returned by the thread's own arrive (instead of a parity): with count 2 the phase completes after P1's arrive. Expected: forbidden."
+{
+b=mbarrier(2) @cta 0;
+x=0;
+P0:r0=0;
+P0:r1=0;
+P0:r2=0;
+}
+ P0@cta 0,cluster 0,gpu 0                 | P1@cta 0,cluster 0,gpu 0      ;
+ mbarrier.arrive.release.cta r0, b        | st.weak x, 1                  ;
+ mbarrier.test_wait.acquire.cta r1, b, r0 | mbarrier.arrive.release.cta b ;
+ ld.weak r2, x                            |                               ;
+exists
+(P0:r1 == 1 /\ P0:r2 == 0)

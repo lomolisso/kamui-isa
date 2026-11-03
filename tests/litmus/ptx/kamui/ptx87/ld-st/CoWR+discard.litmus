@@ -1,0 +1,12 @@
+PTX CoWR+discard
+"discard.global.L2 leaves the line with an undetermined value (17690): a later load may return any value. Expected: allowed."
+{
+x=0;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0           ;
+ st.weak.global x, 1      ;
+ discard.global.L2 x, 128 ;
+ ld.weak.global r0, x     ;
+exists
+(P0:r0 == 7)

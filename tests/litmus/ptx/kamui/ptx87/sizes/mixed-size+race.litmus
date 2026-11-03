@@ -1,0 +1,11 @@
+PTX mixed-size+race
+"A 32-bit store racing with a 16-bit load of half of it: a mixed-size data race, for which the axioms do not apply (6811): every outcome is allowed, even this impossible one (D7). Expected: allowed."
+{
+x[0]=0;
+x[1]=0;
+P1:r0=0;
+}
+ P0@cta 0,gpu 0          | P1@cta 1,gpu 0              ;
+ st.relaxed.gpu.b32 x, 1 | ld.relaxed.gpu.b16 r0, x[0] ;
+exists
+(P1:r0 == 7)

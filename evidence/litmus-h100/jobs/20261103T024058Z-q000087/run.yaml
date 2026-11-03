@@ -1,0 +1,254 @@
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-428e544c-5649-1dde-a6bf-95de7485dd6a
+  driver: 580.126.20
+instances: 1000000
+configs:
+- plain
+- stress
+- shuffle
+tests: ptx/kamui/ptx87/hints/*
+shard: 0/1
+seconds: 23.2
+failed: 0
+runs:
+- test: ptx/kamui/ptx87/hints/MP+L2-cache_hint
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+L2-cache_hint
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+L2-cache_hint
+  config: shuffle
+  exit: 0
+  seconds: 0.5
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+applypriority
+  config: plain
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+applypriority
+  config: stress
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+applypriority
+  config: shuffle
+  exit: 0
+  seconds: 0.57
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+bulk-prefetch
+  config: plain
+  exit: 0
+  seconds: 0.4
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+bulk-prefetch
+  config: stress
+  exit: 0
+  seconds: 0.51
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+bulk-prefetch
+  config: shuffle
+  exit: 0
+  seconds: 0.48
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-evict_first
+  config: plain
+  exit: 0
+  seconds: 0.33
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-evict_first
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-evict_first
+  config: shuffle
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-evict_last
+  config: plain
+  exit: 0
+  seconds: 0.36
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-evict_last
+  config: stress
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-evict_last
+  config: shuffle
+  exit: 0
+  seconds: 0.48
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate
+  config: stress
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate
+  config: shuffle
+  exit: 0
+  seconds: 0.47
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.ca
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.ca
+  config: stress
+  exit: 0
+  seconds: 0.52
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.ca
+  config: shuffle
+  exit: 0
+  seconds: 0.64
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.cv
+  config: plain
+  exit: 0
+  seconds: 0.4
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.cv
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.cv
+  config: shuffle
+  exit: 0
+  seconds: 0.47
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.lu
+  config: plain
+  exit: 0
+  seconds: 0.4
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.lu
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.lu
+  config: shuffle
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L1
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L1
+  config: stress
+  exit: 0
+  seconds: 0.45
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L1
+  config: shuffle
+  exit: 0
+  seconds: 0.47
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L2
+  config: plain
+  exit: 0
+  seconds: 0.42
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L2
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L2
+  config: shuffle
+  exit: 0
+  seconds: 0.48
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last
+  config: stress
+  exit: 0
+  seconds: 0.42
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last
+  config: shuffle
+  exit: 0
+  seconds: 0.47
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetchu
+  config: plain
+  exit: 0
+  seconds: 0.56
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetchu
+  config: stress
+  exit: 0
+  seconds: 0.53
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetchu
+  config: shuffle
+  exit: 0
+  seconds: 0.47
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+st.L1-no_allocate
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+st.L1-no_allocate
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+st.L1-no_allocate
+  config: shuffle
+  exit: 0
+  seconds: 0.92
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+st.wb
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+st.wb
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+st.wb
+  config: shuffle
+  exit: 0
+  seconds: 0.48
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+st.wt
+  config: plain
+  exit: 0
+  seconds: 0.54
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+st.wt
+  config: stress
+  exit: 0
+  seconds: 0.56
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/hints/MP+st.wt
+  config: shuffle
+  exit: 0
+  seconds: 0.48
+  message: ok 1001088 instances in 79 launches

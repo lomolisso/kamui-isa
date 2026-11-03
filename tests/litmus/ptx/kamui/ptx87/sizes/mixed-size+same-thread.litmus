@@ -1,0 +1,12 @@
+PTX mixed-size+same-thread
+"A full-word store then a half-word load in one thread: program order, no race. Expected: forbidden."
+{
+x[0]=0;
+x[1]=0;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0       ;
+ st.weak.b32 x, 1:2   ;
+ ld.weak.b16 r0, x[1] ;
+exists
+(P0:r0 != 2)

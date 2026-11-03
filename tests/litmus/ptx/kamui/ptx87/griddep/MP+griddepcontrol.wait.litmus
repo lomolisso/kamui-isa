@@ -1,0 +1,11 @@
+PTX MP+griddepcontrol.wait
+"griddepcontrol.wait in the dependent grid waits for the prerequisite grid to complete with its memory operations performed and visible (23827, D32). Expected: forbidden."
+{
+x=0;
+P1:r0=0;
+}
+ P0@cta 0,gpu 0,grid 0            | P1@cta 0,gpu 0,grid 1 ;
+ st.weak.global x, 1              | griddepcontrol.wait   ;
+ griddepcontrol.launch_dependents | ld.weak.global r0, x  ;
+exists
+(P1:r0 == 0)

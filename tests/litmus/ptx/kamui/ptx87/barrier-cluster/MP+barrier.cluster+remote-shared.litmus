@@ -1,0 +1,12 @@
+PTX MP+barrier.cluster+remote-shared
+"A cluster barrier orders P0's store to CTA 1's shared memory before P1's load (9.7.13.3). Expected: forbidden."
+{
+s=0 @cta 1;
+P1:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0     | P1@cta 1,cluster 0,gpu 0  ;
+ st.weak.shared::cluster s, 1 | barrier.cluster.arrive    ;
+ barrier.cluster.arrive       | barrier.cluster.wait      ;
+ barrier.cluster.wait         | ld.weak.shared::cta r0, s ;
+exists
+(P1:r0 == 0)

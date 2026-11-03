@@ -7,8 +7,10 @@ Tables (all by default): `suite` (tests per source and group), `verdicts` (resul
 (pairs of PTX models: tests both decide, and how many agree), `rvwmo` (the RISC-V baseline against the PTX
 verdict, per shape), `families` (the verdict of every family test by scope and placement), `h100` (observed
 weak outcomes per configuration against the verdict), `h100-families` (the H100 weak-outcome rate of the family
-tests by scope and placement). Reads only committed files: tests/litmus/expected.csv and
-evidence/litmus-h100/{summary,observed}.csv.
+tests by scope and placement), `ptx87` (the PTX 8.7 feature tests per folder: verdicts of the PTX 8.7 model,
+agreement with the verdict each test states in its comment, H100 runs), `decisions` (how many tests cite each
+interpretation decision of models/ptx87/decisions.md). Reads only committed files: tests/litmus/expected.csv,
+the tests, models/ptx87/decisions.md and evidence/litmus-h100/{summary,observed}.csv.
 """
 
 from __future__ import annotations
@@ -22,7 +24,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 EXPECTED = ROOT / "tests" / "litmus" / "expected.csv"
 EVID = ROOT / "evidence" / "litmus-h100"
-PTX_MODELS = ["ptx-v7.5", "ptx-v6.0", "ptx-2019-alloy", "ptx-2019-alloy+ext", "manual-reasoning"]
+PTX_MODELS = ["ptx-v8.7-alloy", "ptx-v7.5", "ptx-v6.0", "ptx-2019-alloy", "ptx-2019-alloy+ext", "manual-reasoning"]
+SUITE = ROOT / "tests" / "litmus"
 SCOPES = ["cta", "cluster", "gpu", "sys"]
 PLACES = ["same-cta", "same-cluster", "diff-cluster"]
 
@@ -156,7 +159,57 @@ def t_h100_families() -> str:
             "\n\n" + grid(cell))
 
 
-TABLES = {"suite": t_suite, "verdicts": t_verdicts, "agreement": t_agreement, "rvwmo": t_rvwmo,
+def t_ptx87() -> str:
+    import re
+    d = by_test()
+    summ = defaultdict(list)
+    for r in rows(EVID / "summary.csv"):
+        summ[r["test"]].append(r["status"])
+    c = defaultdict(Counter)
+    for p in sorted((SUITE / "ptx" / "kamui" / "ptx87").rglob("*.litmus")):
+        tid = p.relative_to(SUITE).with_suffix("").as_posix()
+        g = tid.split("/")[3]
+        res = d.get(tid, {}).get("ptx-v8.7-alloy", "none")
+        m = re.search(r"Expected: (allowed|forbidden)", p.read_text())
+        c[g]["tests"] += 1
+        c[g][res] += 1
+        c[g]["as stated"] += bool(m and m.group(1) == res)
+        if summ.get(tid):
+            c[g]["on H100"] += 1
+            c[g]["forbidden but seen"] += "forbidden-observed" in summ[tid]
+    cols = ["tests", "allowed", "forbidden", "as stated", "on H100", "forbidden but seen"]
+    body = [[g] + [c[g][k] for k in cols] for g in sorted(c)]
+    tot = [sum(r[i + 1] for r in body) for i in range(len(cols))]
+    return md(["folder"] + cols, body + [["total", *tot]])
+
+
+def t_decisions() -> str:
+    """For each decision: the litmus tests its `Tests:` line names (paths or patterns under tests/litmus/ptx/)."""
+    import fnmatch
+    import re
+    text = (ROOT / "models" / "ptx87" / "decisions.md").read_text()
+    ids = sorted(p.relative_to(SUITE / "ptx").with_suffix("").as_posix() for p in (SUITE / "ptx").rglob("*.litmus"))
+    body = []
+    for m in re.finditer(r"^### (D\d+)\. (.+?)$(.*?)(?=^### |\Z)", text, re.M | re.S):
+        dn, title, sec = m.groups()
+        t = re.search(r"Tests?:(.*?)(?:\n\n|\Z)", sec, re.S)
+        toks = re.findall(r"`([^`]+)`", t.group(1)) if t else []
+        hit, folder = set(), None
+        for pat in toks:
+            pat = pat.removeprefix("tests/litmus/ptx/")
+            if "/" in pat:
+                folder = pat.rsplit("/", 1)[0]
+            elif folder:  # a bare name: in the folder of the path before it
+                pat = f"{folder}/{pat}"
+            else:
+                continue
+            hit |= {i for i in ids if fnmatch.fnmatch(i, pat) or fnmatch.fnmatch(i, pat + "*")}
+        body.append([dn, title, len(hit)])
+    body.sort(key=lambda r: int(r[0][1:]))
+    return md(["decision", "title", "tests named"], body)
+
+
+TABLES = {"suite": t_suite, "verdicts": t_verdicts, "agreement": t_agreement, "rvwmo": t_rvwmo, "ptx87": t_ptx87, "decisions": t_decisions,
           "families": t_families, "h100": t_h100, "h100-families": t_h100_families}
 
 

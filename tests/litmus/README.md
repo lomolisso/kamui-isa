@@ -22,8 +22,10 @@ checked against.
 | `ptx/imported/mixedproxy/` | the 11 NVlabs/mixedproxy tests, expanded to 128 tests and translated to the Dat3M dialect; `src/` holds the originals |
 | `ptx/imported/origin.csv` | where every imported test comes from, its licence, its original quantifier and the upstream verdicts |
 | `ptx/kamui/families/` | 288 generated tests: 8 classic shapes x orderings x the 4 scopes x 3 thread placements (`tools/litmus/gen_families.py`) |
-| `ptx/kamui/hand/` | 10 hand-written tests for features no formal model covers: `mbarrier`, `barrier.cluster`, the async proxy, `.volatile` |
+| `ptx/kamui/hand/` | 14 hand-written tests of `mbarrier`, `barrier.cluster`, the async proxy and `.volatile`, with verdicts argued in `manual-reasoning.yaml` |
+| `ptx/kamui/ptx87/` | 113 tests of the PTX 8.7 features, one or more per feature and per interpretation decision of the PTX 8.7 model (`models/ptx87/decisions.md`); each says which verdict it expects and why |
 | `alloy/` | the Alloy queries for the 2019 PTX model, generated from the tests (`tools/litmus/to_alloy.py`) |
+| `alloy-ptx87/` | the Alloy queries for the PTX 8.7 model (`models/ptx87`), generated from the tests (`tools/litmus/to_alloy87.py`) |
 | `riscv/` | the naive RISC-V lowering of each test, for herd7 and RVWMO (`tools/litmus/to_riscv.py`) |
 | `h100/` | one CUDA kernel per runnable test (`kernel.cu`, the compiled `kernel.ptx`, `spec.txt`), for the H100 runs (`tools/litmus/to_cuda.py`) |
 | `expected.csv` | one verdict per (test, model, tool) |
@@ -62,9 +64,61 @@ exists
 Our own tests also write `P0@cta 0,cluster 0,gpu 0` (thread 0 in CTA 0 of cluster 0) and may use the `.cluster`
 scope, which Dartagnan does not parse. Cluster placement alone is erased before a test goes to Dartagnan (it
 changes nothing when no instruction uses `.cluster`); tests with the `.cluster` scope get verdicts from the
-other models only. The hand-written tests use real PTX mnemonics (`mbarrier.arrive.release.cta b`,
-`barrier.cluster.wait`, `cp.async.bulk.global.shared::cta g, s`); no tool reads them, and their verdicts are
-argued in `manual-reasoning.yaml`.
+other models only. The tests of PTX 8.x features use the extensions below, which only the PTX 8.7 model reads.
+
+## The PTX 8.7 dialect
+
+`tools/litmus/to_alloy87.py` reads Dartagnan's dialect plus these extensions. Instructions keep their PTX
+mnemonics and qualifiers; operands are location names and registers (no brackets); type qualifiers (`.u32`,
+`.b64`, ...), cache operators and hints are accepted and ignored.
+
+**Initial state.**
+
+| Declaration | Meaning |
+|---|---|
+| `s=0 @cta 1` | `s` is in the shared memory of CTA 1 (default: the CTA of the first thread that accesses it with a `.shared` qualifier) |
+| `b=mbarrier(2)` | `b` is an mbarrier, initialized before the threads start with an arrival count of 2 (phase 0) |
+| `b=mbarrier()` | `b` is a location for an mbarrier that a thread initializes with `mbarrier.init` |
+| `x[0]=0; x[1]=0` | `x` has two granules (a mixed-size test); `x` names both, `x[1]` one |
+| `m=multimem(x, y)` | `m` is a multimem object over the locations `x` and `y` |
+| `y @ generic aliases x` | `y` is another virtual address of the memory of `x` |
+| `s @ surface aliases x` | `s` is `x` accessed through the surface proxy (also `texture`, `constant`) |
+
+**Placement.** `P1@cta 0,cluster 0,gpu 0,grid 1`: the optional `grid N` puts the thread in grid `N`; grid `N`
+depends on grid `N-1` (for `griddepcontrol.wait`).
+
+**Instructions** (beyond Dartagnan's):
+
+| Form | Notes |
+|---|---|
+| `ld.relaxed.cluster.shared::cluster r0, s`, `st.weak.shared::cta s, 1` | state spaces: `.global`, `.shared{::cta,::cluster}`, `.local`, `.const`, `.param` |
+| `ld.volatile r0, x`, `ld.mmio.relaxed.sys.global r0, x`, `ld.global.nc r0, x`, `ldu.global r0, x` | |
+| `st.release.gpu.v2 x, y, 1, 1`, `ld.weak.v2 r0, r1, x, y` | vectors: registers or locations, then values |
+| `st.relaxed.gpu.b32 x, 1:2`, `ld.relaxed.gpu.b32 r0, x` | a wide access to every granule of `x`; `1:2` gives one value per granule, `r0[0]`, `r0[1]` are the parts of the register |
+| `atom.relaxed.gpu.add r0, x, 1`, `atom.acquire.gpu.cas r0, l, 1, 2`, `red.release.gpu.add x, 1` | ops `add sub exch cas inc dec min max and or xor`; `.relaxed`, `.gpu` by default |
+| `multimem.st.release.sys.global.u32 m, 1`, `multimem.ld_reduce.relaxed.sys.global.add.u32 r0, m`, `multimem.red.global.add.u32 m, 1` | |
+| `discard.global.L2 x, 128` | |
+| `fence.acquire.sync_restrict::shared::cluster.cluster`, `fence.release.sync_restrict::shared::cta.cluster`, `fence.mbarrier_init.release.cluster` | restricted fences |
+| `fence.proxy.async{.global,.shared::cta,.shared::cluster}`, `fence.proxy.async::generic.release.sync_restrict::shared::cta.cluster`, `fence.proxy.tensormap::generic.release.gpu`, `fence.proxy.tensormap::generic.acquire.gpu tm, 128` | proxy fences |
+| `bar.sync 1, 2`, `bar.arrive 1, 2`, `barrier.sync 0`, `bar.warp.sync 3` | PTX barrier forms (`bar.cta.sync i, a, b` is Dartagnan's); in `bar.warp.sync`, bit `k` of the mask is thread `Pk` |
+| `barrier.cluster.arrive{.release,.relaxed}`, `barrier.cluster.wait` | |
+| `mbarrier.init b, 2`, `mbarrier.inval b` | |
+| `mbarrier.arrive{.release,.relaxed}{.cta,.cluster}{.shared::cluster} [r0,] b[, count]`, `mbarrier.arrive_drop ...` | `r0`: the state token (the phase the arrive read) |
+| `mbarrier.arrive.expect_tx.release.cta b, 1`, `mbarrier.expect_tx.relaxed.cta b, 1`, `mbarrier.complete_tx.relaxed.cta b, 1` | transaction counts in units of one copied location |
+| `mbarrier.test_wait.parity.acquire.cta r0, b, 0`, `mbarrier.try_wait.relaxed.cluster r0, b, r1` | `r0 = 1` when the wait returns True; the last operand is a parity (`.parity`) or a state token |
+| `cp.async.ca.shared.global d, g`, `cp.async.commit_group`, `cp.async.wait_group 1`, `cp.async.wait_all`, `cp.async.mbarrier.arrive{.noinc}.shared b` | |
+| `cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes d, g, b` | `.multicast::cluster` takes `d0+d1` and `b0+b1`, one per destination CTA |
+| `cp.async.bulk.global.shared::cta.bulk_group g, s`, `cp.async.bulk.commit_group`, `cp.async.bulk.wait_group{.read} 0` | |
+| `cp.reduce.async.bulk.global.shared::cta.bulk_group.add.u32 g, s` | |
+| `cp.async.bulk.tensor.1d.shared::cluster.global.tile.mbarrier::complete_tx::bytes d, g, b, tm, r2` | after the copy's operands: the tensor map `tm` and a register that gets the value the copy read from it |
+| `tensormap.replace.tile.global_address.global.b1024.b64 tm, 1`, `tensormap.cp_fenceproxy.global.shared::cta.tensormap::generic.release.gpu.sync.aligned tm, s, 128` | |
+| `st.async.shared::cluster.mbarrier::complete_tx::bytes.b32 d, 1, b`, `st.async.release.gpu.global.b32 f, 1`, `red.async.relaxed.cluster.shared::cluster.mbarrier::complete_tx::bytes.add.u32 d, 1, b` | |
+| `wgmma.fence`, `wgmma.mma_async r0, a, c`, `wgmma.commit_group`, `wgmma.wait_group 0` | `r0`: the value read from the shared-memory operand `a` |
+| `stmatrix.sync.aligned.m8n8.x1.shared.b16 s, 1`, `ldmatrix.sync.aligned.m8n8.x1.shared.b16 r0, s` | one location per thread |
+| `griddepcontrol.wait`, `griddepcontrol.launch_dependents` | |
+| `prefetch`, `applypriority`, `createpolicy`, `cp.async.bulk.prefetch...` | accepted, no effect |
+
+Conditions may name register parts (`P1:r0[1]`) and the granules of a location (`x[1]`).
 
 ## Our test families
 
@@ -101,7 +155,8 @@ and the vendored mixedproxy files; `--check` verifies the committed files.
 
 ## expected.csv
 
-`python tools/litmus/run_formal.py` (dev container, about 35 s on 32 cores) runs every test through every model
+`python tools/litmus/run_formal.py` (dev container, about 10 minutes on 56 cores, most of it for the PTX 8.7
+model) runs every test through every model
 that applies and writes this file; `--check` re-runs everything and fails if a row would change (ignoring
 `runtime_s`).
 
@@ -125,6 +180,7 @@ that applies and writes this file; `--check` re-runs everything and fails if a r
 | `ptx-2019-alloy` | the 2019 Alloy model (`deps/ptx-memory-model/ptx.als`, PTX ISA 6.0) with its own driver and Alloy 4.2 jar | tests `to_alloy.py` can express: loads, stores, fences, simple barriers, no proxies or read-modify-writes |
 | `ptx-2019-alloy+ext` | the same model with our extensions: a cluster level in the scope tree, and `fence.acquire`/`fence.release` as the model's FenceAcq/FenceRel | tests with the `.cluster` scope or a PTX 8.6 fence |
 | `rvwmo` | herd7 7.58 with RISC-V's `riscv.cat`, on the naive RISC-V lowering in `riscv/` (scopes erased) | tests `to_riscv.py` can lower |
+| `ptx-v8.7-alloy` | the PTX ISA 8.7 model (`models/ptx87/ptx87.als`) on Alloy 6.2.0, on the queries in `alloy-ptx87/` | tests `to_alloy87.py` can express: every test without loops |
 | `manual-reasoning` | an argument from the PTX ISA 8.7 manual, in `manual-reasoning.yaml` | tests no tool decides |
 
 Dartagnan runs with `--method=eager --bound=1 --solver=z3`, as in Dat3M's own tests. Alloy answers within a bound
@@ -134,11 +190,14 @@ rewrites the jar it is started from (seen again here: the copy's checksum change
 `rvwmo` is a baseline, not a PTX verdict: it answers the question for a different program, the test lowered to
 plain RISC-V with C++-style fences (the mapping table is in `tools/litmus/to_riscv.py`).
 
-Today: 691 tests, 1711 rows. The four PTX models agree on every test that more than one of them decides (the
-2019 Alloy model on 367 tests, Dartagnan v7.5 on 606). On the 372 lowered tests, RVWMO forbids every outcome
-that PTX forbids, so the naive lowering is sound; it also forbids 86 outcomes that PTX allows, from two sources:
-scopes (for example `.cta` synchronization between different CTAs, which PTX does not order and RVWMO, having no
-scopes, does) and multi-copy atomicity (IRIW with release/acquire, allowed in PTX, forbidden in RVWMO).
+Today: 828 tests, 2562 rows. The PTX 8.7 model (`ptx-v8.7-alloy`) decides 809 tests (every test without a
+loop). Wherever two PTX models decide the same test they agree, with four exceptions: Dat3M barrier tests in
+which a thread can never complete its barrier, which Dartagnan counts and the PTX 8.7 model does not (decision D9
+of `models/ptx87/decisions.md`, explained in `allowlist.yaml`). Dartagnan v7.5 decides 612 tests, the 2019 Alloy
+model 377. On the 388 lowered tests, RVWMO forbids every outcome that PTX forbids, so the naive lowering is sound;
+it also forbids outcomes that PTX allows, from two sources: scopes (for example `.cta` synchronization between
+different CTAs, which PTX does not order and RVWMO, having no scopes, does) and multi-copy atomicity (IRIW with
+release/acquire, allowed in PTX, forbidden in RVWMO).
 
 ## Checks
 
