@@ -2430,6 +2430,22 @@ ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older,kamui,(P0:r0 == 0),ptx-v8.7
 ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc,kamui,(P1:r0 == 1),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,20.8
 ptx/kamui/ptx87/griddep/MP+griddepcontrol+no-wait,kamui,(P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,12.9
 ptx/kamui/ptx87/griddep/MP+griddepcontrol.wait,kamui,(P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,18.3
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.1
+ptx/kamui/ptx87/hints/MP+applypriority,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.6
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.6
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.5
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,6.7
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.2
+ptx/kamui/ptx87/hints/MP+ld.ca,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.1
+ptx/kamui/ptx87/hints/MP+ld.cv,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,6.6
+ptx/kamui/ptx87/hints/MP+ld.lu,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.6
+ptx/kamui/ptx87/hints/MP+prefetch.L1,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.4
+ptx/kamui/ptx87/hints/MP+prefetch.L2,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.1
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.5
+ptx/kamui/ptx87/hints/MP+prefetchu,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,6.3
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,6.6
+ptx/kamui/ptx87/hints/MP+st.wb,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.6
+ptx/kamui/ptx87/hints/MP+st.wt,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.6
 ptx/kamui/ptx87/ld-st/CoRR+mmio,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-2019-alloy,ptx.als sha256:e11cd668dbe8,alloy,4.2 (artifact jar),-n 1 test,forbidden,2.1
 ptx/kamui/ptx87/ld-st/CoRR+mmio,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:3c96180d44fb,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,18.7
 ptx/kamui/ptx87/ld-st/CoRR+mmio,kamui,(P1:r0 == 1 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,forbidden,0.1

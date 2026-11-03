@@ -346,16 +346,33 @@ def _emit87(i: litmus.Instr, ops: dict[str, str], kinds) -> list[str]:
     q, a = i.quals, i.args
     sp = lambda n: "shared::cta" if kinds[n] == "shared" else "global"  # noqa: E731
     cop = "".join(f".{x}" for x in q if x in COPS)
+    # eviction priorities and the L2 cache policy are hints (D27); a policy operand comes from createpolicy
+    cop += "".join(f".{x}" for x in q if x.startswith("L1::") or x in ("L2::64B", "L2::128B", "L2::256B"))
+    pol = "L2::cache_hint" in q
+    if pol:
+        cop += ".L2::cache_hint"
+    wrap = (lambda ls: ["{", ".reg .b64 pol;", "createpolicy.fractional.L2::evict_last.b64 pol, 1.0;", *ls, "}"]) \
+        if pol else (lambda ls: ls)  # noqa: E731
+    tail = ", pol" if pol else ""
+    if i.op in ("prefetch", "prefetchu") and len(a) == 1 and kinds.get(a[0]) == "global":
+        return [f"{i.op}{''.join('.' + x for x in q)} [{ops[a[0]]}];"]
+    if i.op == "applypriority" and len(a) == 1 and kinds.get(a[0]) == "global":
+        # the operand must be a 128-byte aligned line: the line holding the location
+        return ["{", ".reg .b64 al;", f"and.b64 al, {ops[a[0]]}, -128;",
+                f"applypriority{''.join('.' + x for x in q)} [al], 128;", "}"]
+    if i.op == "cp" and q[:3] == ["async", "bulk", "prefetch"] and len(a) == 1 and kinds.get(a[0]) == "global":
+        return ["{", ".reg .b64 al;", f"and.b64 al, {ops[a[0]]}, -16;",
+                f"cp.async.bulk.prefetch{''.join('.' + x for x in q[3:])} [al], 16;", "}"]
     if i.op == "ld" and "nc" in q:
         return [f"ld.global.nc.u32 {ops[a[0]]}, [{ops[a[1]]}];"]
     if i.op == "ldu":
         return [f"ldu.global.u32 {ops[a[0]]}, [{ops[a[1]]}];"]
     if i.op == "ld" and len(a) == 2 and a[1] in ops and not any(re.fullmatch(r"v\d", x) for x in q):
-        return [f"ld{_sem87(i, 'weak')}.{sp(a[1])}{cop}.u32 {ops[a[0]]}, [{ops[a[1]]}];"]
+        return wrap([f"ld{_sem87(i, 'weak')}.{sp(a[1])}{cop}.u32 {ops[a[0]]}, [{ops[a[1]]}]{tail};"])
     if i.op == "st" and len(a) == 2 and "async" not in q and not any(re.fullmatch(r"v\d", x) for x in q):
         if not re.fullmatch(r"-?\d+", a[1]):
             raise Unsupported(f"store of a register {i.text!r}")
-        return [f"mov.u32 t, {a[1]};", f"st{_sem87(i, 'weak')}.{sp(a[0])}{cop}.u32 [{ops[a[0]]}], t;"]
+        return wrap([f"mov.u32 t, {a[1]};", f"st{_sem87(i, 'weak')}.{sp(a[0])}{cop}.u32 [{ops[a[0]]}], t{tail};"])
     if i.op in ("atom", "red") and "async" not in q and "b128" not in q and not any(re.fullmatch(r"v\d", x) for x in q):
         op = next((x for x in q if x in ("add", "inc", "dec", "min", "max", "and", "or", "xor", "exch", "cas")), None)
         if op is None:
