@@ -107,7 +107,7 @@ at bound 6 had not finished after 3 h 45 min on the same machine and solver.
 ## How it is checked
 
 - Against the other formal models (`tools/litmus/check_suite.py`, in CI): on every test that Dartagnan's
-  PTX 7.5 model, its PTX 6.0 model or the 2019 Alloy model can answer, the verdicts agree, except four barrier
+  PTX 8.7, PTX 7.5 or PTX 6.0 model or the 2019 Alloy model can answer, the verdicts agree, except four barrier
   tests where the models count blocked executions differently (decision D9, explained in
   `tests/litmus/allowlist.yaml`).
 - Against the hand-reasoned verdicts of `tests/litmus/manual-reasoning.yaml`.
@@ -115,5 +115,12 @@ at bound 6 had not finished after 3 h 45 min on the same machine and solver.
   known mbarrier case where the H100 is weaker than the manual (the allow-list explains it; the model follows the
   manual).
 
+- Against a second model written independently from the manual in our Dartagnan fork (`deps/dat3m`,
+  `cat/ptx-v8.7.cat`, model `ptx-v8.7` in `expected.csv`; see `docs/tools/dartagnan.md`). On the 809 tests both
+  decide, they first agreed on 799. The other ten came from four readings of the manual, each settled from its
+  text and recorded here: D37 (tensormap proxy fences act as a pair; this model changed), D38 (mixed-size data
+  races; both changed), and the cross-check notes of D7 (mbarrier misuse) and D29 (`ldu`), where the Dartagnan
+  model changed. Now they agree on every test, apart from the four barrier tests above.
+
 The model is our reading of the manual, not NVIDIA's. Where the manual is ambiguous, `decisions.md` says so and
-states the choice; a second implementation of the same decisions (in Dartagnan) is the planned cross-check.
+states the choice.

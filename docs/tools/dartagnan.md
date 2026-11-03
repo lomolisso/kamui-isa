@@ -242,6 +242,39 @@ with one verdict (allowed or forbidden) per test and model. `tools/litmus/run_fo
 as Dat3M's unit tests do (`--method=eager --bound=1 --solver=z3`), about 35 s for the whole suite on 32 cores
 of the build host. The README explains the layout, the columns and every known disagreement.
 
+### The PTX 8.7 model (our fork)
+
+Upstream Dat3M stops at PTX 7.5. Our fork [lomolisso/Dat3M](https://github.com/lomolisso/Dat3M), branch
+`ptx-v8.7`, is the submodule `deps/dat3m`. It adds the sm_90 features (cluster placement and the `.cluster`
+scope, state spaces and the async and tensormap proxies, CTA and cluster barriers, mbarrier, restricted fences,
+asynchronous copies and their completion, wgmma, multimem, griddepcontrol) to the PTX litmus parser and events,
+and a model written from the PTX ISA 8.7 manual without looking at the Alloy model in `models/ptx87`:
+
+| File in `deps/dat3m` | Content |
+|---|---|
+| `cat/ptx-v8.7.cat` | the model; it includes `cat/ptx-v8.7-common.cat` |
+| `cat/ptx-v8.7-noaxioms.cat` | the same executions with no axioms, for programs with a mixed-size data race |
+| `cat/ptx-v8.7.md` | the interpretation log, entries `M1` to `M51`, each with the manual's words and line numbers |
+| `litmus/PTX/Kamui/` | our litmus tests without their comment lines (written by `tools/dat3m/strip_tests.py`) |
+| `dartagnan/src/test/.../LitmusPTXv8_7*Test.java` | the fork's unit tests: Dat3M's PTX tests (same verdicts as PTX 7.5) and our tests |
+
+Build it (Maven, in the build area; the jar lands in `build/dat3m/`) and run it:
+
+```bash
+tools/dev.sh 'tools/dat3m/build.sh'          # tools/dat3m/build.sh test also runs the fork's PTX unit tests
+tools/dev.sh 'python tools/litmus/run_formal.py --models ptx-v8.7'
+```
+
+`run_formal.py` takes two Dartagnan runs per test for this model. The first, with `--property=cat_spec`, reports
+the model's flags. A flag `undefined-behaviour` (an mbarrier used before `init` or after `inval`, a missing
+`wgmma.fence`) makes every outcome allowed (decision D7 of `models/ptx87/decisions.md`); a flag
+`mixed-size-data-race` sends the condition to `ptx-v8.7-noaxioms.cat` (D38); otherwise the second run checks the
+condition with `ptx-v8.7.cat`. The whole suite takes about 4 minutes on 32 cores.
+
+The two models were compared test by test: they agree on every test both decide, apart from the four barrier
+tests where the tools count blocked threads differently (`tests/litmus/allowlist.yaml`). The ten tests where
+they first disagreed were settled from the manual (decisions D37, D38 and the cross-check notes of D7 and D29).
+
 ### Full `Xkmscope` (tier 2)
 
 If the Kamui memory model is written as a `.cat` file over RISC-V events with scope tags,
@@ -252,9 +285,9 @@ Adding a scope tag for cluster requires changing the Java parser in a fork
 
 ## Limitations
 
-- **No sm_90 features**: no `.cluster`, no async proxy, no `mbarrier`, no `fence.acquire`/
-  `.release`, no `.volatile`, no `.mmio`. The newest formal PTX model available is
-  PTX 7.5.
+- **No sm_90 features upstream**: Dat3M 4.4.1 has no `.cluster`, no async proxy, no `mbarrier`, no
+  `fence.acquire`/`.release`, no `.volatile`, no `.mmio`; its newest PTX model is PTX 7.5. Our fork adds them
+  (see "The PTX 8.7 model (our fork)").
 - **Bounded**: loops are unrolled to `--bound`; results with loops can be `UNKNOWN`.
 - **Lazy method is unreliable for PTX v7.5** (#1039); use `--method=eager`.
 - **PASS/FAIL depend on the quantifier**; always convert to allowed/forbidden.

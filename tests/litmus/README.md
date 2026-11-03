@@ -181,6 +181,7 @@ that applies and writes this file; `--check` re-runs everything and fails if a r
 | `ptx-2019-alloy+ext` | the same model with our extensions: a cluster level in the scope tree, and `fence.acquire`/`fence.release` as the model's FenceAcq/FenceRel | tests with the `.cluster` scope or a PTX 8.6 fence |
 | `rvwmo` | herd7 7.58 with RISC-V's `riscv.cat`, on the naive RISC-V lowering in `riscv/` (scopes erased) | tests `to_riscv.py` can lower |
 | `ptx-v8.7-alloy` | the PTX ISA 8.7 model (`models/ptx87/ptx87.als`) on Alloy 6.2.0, on the queries in `alloy-ptx87/` | tests `to_alloy87.py` can express: every test without loops |
+| `ptx-v8.7` | Dartagnan with our fork's PTX ISA 8.7 model (`deps/dat3m/cat/ptx-v8.7.cat`, written independently of `ptx-v8.7-alloy`; see `docs/tools/dartagnan.md`) | every test |
 | `manual-reasoning` | an argument from the PTX ISA 8.7 manual, in `manual-reasoning.yaml` | tests no tool decides |
 
 Dartagnan runs with `--method=eager --bound=1 --solver=z3`, as in Dat3M's own tests. Alloy answers within a bound
@@ -190,8 +191,9 @@ rewrites the jar it is started from (seen again here: the copy's checksum change
 `rvwmo` is a baseline, not a PTX verdict: it answers the question for a different program, the test lowered to
 plain RISC-V with C++-style fences (the mapping table is in `tools/litmus/to_riscv.py`).
 
-Today: 828 tests, 2562 rows. The PTX 8.7 model (`ptx-v8.7-alloy`) decides 809 tests (every test without a
-loop). Wherever two PTX models decide the same test they agree, with four exceptions: Dat3M barrier tests in
+Today: 828 tests, 3390 rows. The PTX 8.7 Alloy model (`ptx-v8.7-alloy`) decides 809 tests (every test without a
+loop); the PTX 8.7 Dartagnan model (`ptx-v8.7`) decides 827 (one spin loop stays unknown, as with v7.5).
+Wherever two PTX models decide the same test they agree, with four exceptions: Dat3M barrier tests in
 which a thread can never complete its barrier, which Dartagnan counts and the PTX 8.7 model does not (decision D9
 of `models/ptx87/decisions.md`, explained in `allowlist.yaml`). Dartagnan v7.5 decides 612 tests, the 2019 Alloy
 model 377. On the 388 lowered tests, RVWMO forbids every outcome that PTX forbids, so the naive lowering is sound;
