@@ -1,0 +1,315 @@
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-428e544c-5649-1dde-a6bf-95de7485dd6a
+  driver: 580.126.20
+instances: 1000000
+configs:
+- plain
+- stress
+- shuffle
+- spread
+tests: ptx/kamui/ptx87/ld-st/CoWR+discard,ptx/kamui/ptx87/mbarrier-init/mbarrier-init+inval+use,ptx/kamui/ptx87/mbarrier-init/mbarrier-init+op-restrict+data,ptx/kamui/ptx87/mbarrier-init/mbarrier-init+same-thread,ptx/kamui/ptx87/mbarrier/MP+mbarrier-token,ptx/kamui/ptx87/rmw/cas.b128,ptx/kamui/ptx87/rmw/rmw-ops+values,ptx/kamui/ptx87/sizes/MP+vector-release+data,ptx/kamui/ptx87/sizes/MP+vector-release,ptx/kamui/ptx87/sizes/mixed-size+bar.sync,ptx/kamui/ptx87/sizes/mixed-size+flag,ptx/kamui/ptx87/sizes/mixed-size+race,ptx/kamui/ptx87/sizes/mixed-size+same-thread,ptx/kamui/ptx87/sizes/tearing+relaxed,ptx/kamui/ptx87/sizes/tearing+weak
+shard: 0/1
+seconds: 29.8
+failed: 0
+runs:
+- test: ptx/kamui/ptx87/ld-st/CoWR+discard
+  config: plain
+  exit: 0
+  seconds: 0.36
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/CoWR+discard
+  config: stress
+  exit: 0
+  seconds: 0.32
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/CoWR+discard
+  config: shuffle
+  exit: 0
+  seconds: 0.46
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/ld-st/CoWR+discard
+  config: spread
+  exit: 0
+  seconds: 0.34
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-token
+  config: plain
+  exit: 0
+  seconds: 0.33
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-token
+  config: stress
+  exit: 0
+  seconds: 0.57
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-token
+  config: shuffle
+  exit: 0
+  seconds: 0.46
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-token
+  config: spread
+  exit: 0
+  seconds: 0.5
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+inval+use
+  config: plain
+  exit: 0
+  seconds: 0.89
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+inval+use
+  config: stress
+  exit: 0
+  seconds: 0.81
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+inval+use
+  config: shuffle
+  exit: 0
+  seconds: 0.86
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+inval+use
+  config: spread
+  exit: 0
+  seconds: 0.77
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+op-restrict+data
+  config: plain
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+op-restrict+data
+  config: stress
+  exit: 0
+  seconds: 0.52
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+op-restrict+data
+  config: shuffle
+  exit: 0
+  seconds: 0.45
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+op-restrict+data
+  config: spread
+  exit: 0
+  seconds: 0.45
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+same-thread
+  config: plain
+  exit: 0
+  seconds: 0.56
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+same-thread
+  config: stress
+  exit: 0
+  seconds: 0.56
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+same-thread
+  config: shuffle
+  exit: 0
+  seconds: 0.39
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/mbarrier-init/mbarrier-init+same-thread
+  config: spread
+  exit: 0
+  seconds: 0.32
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/rmw/cas.b128
+  config: plain
+  exit: 0
+  seconds: 0.32
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/cas.b128
+  config: stress
+  exit: 0
+  seconds: 0.53
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/cas.b128
+  config: shuffle
+  exit: 0
+  seconds: 0.45
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/cas.b128
+  config: spread
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/rmw-ops+values
+  config: plain
+  exit: 0
+  seconds: 0.33
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/rmw/rmw-ops+values
+  config: stress
+  exit: 0
+  seconds: 0.45
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/rmw/rmw-ops+values
+  config: shuffle
+  exit: 0
+  seconds: 0.35
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/rmw/rmw-ops+values
+  config: spread
+  exit: 0
+  seconds: 0.36
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/sizes/MP+vector-release
+  config: plain
+  exit: 0
+  seconds: 0.64
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/MP+vector-release
+  config: stress
+  exit: 0
+  seconds: 0.65
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/MP+vector-release
+  config: shuffle
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/MP+vector-release
+  config: spread
+  exit: 0
+  seconds: 0.45
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/MP+vector-release+data
+  config: plain
+  exit: 0
+  seconds: 0.33
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/MP+vector-release+data
+  config: stress
+  exit: 0
+  seconds: 0.48
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/MP+vector-release+data
+  config: shuffle
+  exit: 0
+  seconds: 0.81
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/MP+vector-release+data
+  config: spread
+  exit: 0
+  seconds: 0.47
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+bar.sync
+  config: plain
+  exit: 0
+  seconds: 0.31
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+bar.sync
+  config: stress
+  exit: 0
+  seconds: 0.4
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+bar.sync
+  config: shuffle
+  exit: 0
+  seconds: 0.38
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+bar.sync
+  config: spread
+  exit: 0
+  seconds: 0.71
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+flag
+  config: plain
+  exit: 0
+  seconds: 0.33
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+flag
+  config: stress
+  exit: 0
+  seconds: 0.57
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+flag
+  config: shuffle
+  exit: 0
+  seconds: 0.48
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+flag
+  config: spread
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+race
+  config: plain
+  exit: 0
+  seconds: 0.39
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+race
+  config: stress
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+race
+  config: shuffle
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+race
+  config: spread
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+same-thread
+  config: plain
+  exit: 0
+  seconds: 0.3
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+same-thread
+  config: stress
+  exit: 0
+  seconds: 0.55
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+same-thread
+  config: shuffle
+  exit: 0
+  seconds: 0.53
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/sizes/mixed-size+same-thread
+  config: spread
+  exit: 0
+  seconds: 0.48
+  message: ok 1013760 instances in 20 launches
+- test: ptx/kamui/ptx87/sizes/tearing+relaxed
+  config: plain
+  exit: 0
+  seconds: 0.32
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/tearing+relaxed
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/tearing+relaxed
+  config: shuffle
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/tearing+relaxed
+  config: spread
+  exit: 0
+  seconds: 0.53
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/tearing+weak
+  config: plain
+  exit: 0
+  seconds: 0.31
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/tearing+weak
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/tearing+weak
+  config: shuffle
+  exit: 0
+  seconds: 0.5
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/sizes/tearing+weak
+  config: spread
+  exit: 0
+  seconds: 0.68
+  message: ok 1001088 instances in 79 launches

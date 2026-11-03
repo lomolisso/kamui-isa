@@ -1,16 +1,15 @@
-{"instances": 1001088, "launches": 158, "config": "spread", "seed": 2212357831, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 6336}, "seconds": 0.305, "histogram": [
-  {"values": [1, 2, 1, 2, 1, 1], "class": "same-cluster", "count": 37},
-  {"values": [1, 0, 1, 2, 2, 2], "class": "same-cluster", "count": 2},
-  {"values": [1, 2, 2, 2, 2, 1], "class": "same-cluster", "count": 1308},
-  {"values": [1, 2, 2, 2, 2, 2], "class": "same-cluster", "count": 245140},
-  {"values": [1, 0, 0, 2, 1, 1], "class": "same-cluster", "count": 50825},
-  {"values": [1, 2, 2, 2, 1, 1], "class": "same-cluster", "count": 206380},
-  {"values": [1, 1, 1, 2, 1, 1], "class": "same-cluster", "count": 31},
-  {"values": [1, 1, 1, 2, 2, 2], "class": "same-cluster", "count": 68872},
-  {"values": [1, 0, 2, 2, 1, 1], "class": "same-cluster", "count": 142469},
-  {"values": [1, 0, 2, 2, 2, 2], "class": "same-cluster", "count": 42438},
-  {"values": [1, 0, 2, 2, 2, 1], "class": "same-cluster", "count": 789},
-  {"values": [1, 0, 0, 2, 2, 1], "class": "same-cluster", "count": 42},
-  {"values": [1, 0, 0, 2, 2, 2], "class": "same-cluster", "count": 44931},
-  {"values": [1, 1, 2, 2, 2, 2], "class": "same-cluster", "count": 197824}
+{"instances": 1001088, "launches": 158, "config": "spread", "seed": 2212357831, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 6336}, "seconds": 0.303, "histogram": [
+  {"values": [1, 2, 1, 2, 1, 1], "class": "same-cluster", "count": 23},
+  {"values": [1, 2, 2, 2, 2, 1], "class": "same-cluster", "count": 3880},
+  {"values": [1, 2, 2, 2, 2, 2], "class": "same-cluster", "count": 354294},
+  {"values": [1, 0, 0, 2, 1, 1], "class": "same-cluster", "count": 50767},
+  {"values": [1, 2, 2, 2, 1, 1], "class": "same-cluster", "count": 448898},
+  {"values": [1, 1, 1, 2, 1, 1], "class": "same-cluster", "count": 465},
+  {"values": [1, 1, 1, 2, 2, 2], "class": "same-cluster", "count": 60921},
+  {"values": [1, 0, 2, 2, 1, 1], "class": "same-cluster", "count": 7959},
+  {"values": [1, 0, 2, 2, 2, 2], "class": "same-cluster", "count": 1661},
+  {"values": [1, 0, 2, 2, 2, 1], "class": "same-cluster", "count": 18},
+  {"values": [1, 0, 0, 2, 2, 1], "class": "same-cluster", "count": 220},
+  {"values": [1, 0, 0, 2, 2, 2], "class": "same-cluster", "count": 65360},
+  {"values": [1, 1, 2, 2, 2, 2], "class": "same-cluster", "count": 6622}
 ]}

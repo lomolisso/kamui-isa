@@ -23,6 +23,8 @@ All notable changes to this project are listed here. The format follows
 - Litmus test families over scopes and placements, hand-reasoned tests for sm_90 features, 2019 Alloy model and
   RVWMO baseline verdicts.
 - H100 litmus harness (inline-PTX kernels, runner with stress and placement control, job) and its results.
+- H100 litmus runs of the imported tests, CTA barriers, shared memory across CTAs, mixed sizes and mbarrier
+  initialization, and a `spread` configuration; start delays now use `nanosleep`.
 
 ## [0.1.0] - 2026-10-31
 

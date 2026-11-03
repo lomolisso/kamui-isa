@@ -124,7 +124,7 @@ def test_granules_vectors_and_wide_cas():
     src, _ = to_cuda.generate87(litmus.load(P87 / "sizes" / "mixed-size+flag.litmus"), "m")
     assert "ld.weak.global.u16 %1, [%2+2];" in src
     src, spec = to_cuda.generate87(litmus.load(P87 / "sizes" / "MP+vector-release.litmus"), "v")
-    assert "l.y = l.x + 4;" in src and "gloc 0 x" in spec and "gloc 1" not in spec and ".v2.u32" in src
+    assert "l.y = l.x + 4;" in src and "gloc 0 x" in spec and "\ngloc 1 " not in spec and ".v2.u32" in src
     src, _ = to_cuda.generate87(litmus.load(P87 / "rmw" / "cas.b128.litmus"), "c")
     assert "atom.relaxed.gpu.global.cas.b128 qd," in src
 

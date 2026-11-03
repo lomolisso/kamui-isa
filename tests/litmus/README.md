@@ -222,12 +222,14 @@ reason. Today all 264 Dat3M verdicts and 127 of the 128 mixedproxy annotations m
 ## Running the tests on the H100
 
 The formal verdicts are the reference; running a test on a GPU only shows which outcomes that GPU produces. We run
-every test the harness can run (509 of 828: the families, the hand-written tests, the PTX 8.7 tests and the
-imported tests) on the H100 to see which of the outcomes PTX allows the hardware really shows, and to catch
-anything it shows that PTX forbids. `python tools/litmus/to_cuda.py --why` lists the other 319 with the reason:
-accesses through texture, surface or constant proxy aliases (245, almost all of `Nvidia/proxy` and
-`mixedproxy`), loops, more than one GPU, barriers that cannot complete (Dat3M's `*-hang` and deadlock tests),
-tensor maps and multicast copies, and a few PTX 8.7 forms the kernel template does not cover. Results and
+every test the harness can run (524 of 828: the 302 families and hand-written tests, 111 of the 133 PTX 8.7
+tests and 111 of the 393 imported tests) on the H100 to see which of the outcomes PTX allows the hardware really
+shows, and to catch anything it shows that PTX forbids. `python tools/litmus/to_cuda.py --why` lists the other
+304 with the reason: accesses through texture, surface or constant proxy aliases (245, almost all of
+`Nvidia/proxy` and `mixedproxy`), loops (21), barriers that cannot complete (11, Dat3M's `*-hang` and deadlock
+tests), more than one GPU (8), tensor maps and multicast copies (5), and a few forms the GPU cannot express
+(`red` with an acquire order, the state of a remote `mbarrier.arrive`, `bar.warp.sync` between warps, matrix
+instructions). Results and
 findings: [evidence/litmus-h100/](../../evidence/litmus-h100/README.md).
 
 - `tools/litmus/to_cuda.py` writes one kernel per test. Each litmus thread is one `asm volatile` block holding the

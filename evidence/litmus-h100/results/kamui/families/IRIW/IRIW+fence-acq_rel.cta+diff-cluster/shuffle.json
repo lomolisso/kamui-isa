@@ -1,17 +1,17 @@
-{"instances": 1001088, "launches": 79, "config": "shuffle", "seed": 4287189617, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 12672}, "seconds": 0.219, "histogram": [
-  {"values": [0, 1, 0, 0, 1, 1], "class": "diff-cluster", "count": 43947},
-  {"values": [1, 1, 0, 1, 1, 1], "class": "diff-cluster", "count": 44209},
-  {"values": [0, 1, 0, 1, 1, 1], "class": "diff-cluster", "count": 1},
-  {"values": [1, 1, 0, 0, 1, 1], "class": "diff-cluster", "count": 83508},
-  {"values": [1, 1, 1, 0, 1, 1], "class": "diff-cluster", "count": 39133},
-  {"values": [1, 0, 1, 1, 1, 1], "class": "diff-cluster", "count": 39647},
-  {"values": [0, 0, 0, 1, 1, 1], "class": "diff-cluster", "count": 43307},
-  {"values": [1, 1, 1, 1, 1, 1], "class": "diff-cluster", "count": 171988},
-  {"values": [1, 0, 0, 0, 1, 1], "class": "diff-cluster", "count": 39029},
-  {"values": [0, 0, 0, 0, 1, 1], "class": "diff-cluster", "count": 163586},
-  {"values": [0, 0, 1, 0, 1, 1], "class": "diff-cluster", "count": 38488},
-  {"values": [0, 1, 1, 1, 1, 1], "class": "diff-cluster", "count": 44827},
-  {"values": [1, 0, 0, 1, 1, 1], "class": "diff-cluster", "count": 82498},
-  {"values": [0, 0, 1, 1, 1, 1], "class": "diff-cluster", "count": 83349},
-  {"values": [0, 1, 1, 0, 1, 1], "class": "diff-cluster", "count": 83571}
+{"instances": 1001088, "launches": 79, "config": "shuffle", "seed": 4287189617, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 12672}, "seconds": 0.174, "histogram": [
+  {"values": [0, 1, 0, 0, 1, 1], "class": "diff-cluster", "count": 44070},
+  {"values": [1, 1, 0, 1, 1, 1], "class": "diff-cluster", "count": 43630},
+  {"values": [0, 1, 0, 1, 1, 1], "class": "diff-cluster", "count": 3},
+  {"values": [1, 1, 0, 0, 1, 1], "class": "diff-cluster", "count": 83705},
+  {"values": [1, 1, 1, 0, 1, 1], "class": "diff-cluster", "count": 39893},
+  {"values": [1, 0, 1, 1, 1, 1], "class": "diff-cluster", "count": 40550},
+  {"values": [0, 0, 0, 1, 1, 1], "class": "diff-cluster", "count": 43376},
+  {"values": [1, 1, 1, 1, 1, 1], "class": "diff-cluster", "count": 171517},
+  {"values": [1, 0, 0, 0, 1, 1], "class": "diff-cluster", "count": 38853},
+  {"values": [0, 0, 0, 0, 1, 1], "class": "diff-cluster", "count": 164080},
+  {"values": [0, 0, 1, 0, 1, 1], "class": "diff-cluster", "count": 38302},
+  {"values": [0, 1, 1, 1, 1, 1], "class": "diff-cluster", "count": 44380},
+  {"values": [1, 0, 0, 1, 1, 1], "class": "diff-cluster", "count": 82345},
+  {"values": [0, 0, 1, 1, 1, 1], "class": "diff-cluster", "count": 83001},
+  {"values": [0, 1, 1, 0, 1, 1], "class": "diff-cluster", "count": 83383}
 ]}

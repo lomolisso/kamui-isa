@@ -16,6 +16,10 @@ outcome the formal model forbids but the H100 showed is a finding to investigate
 | PTX 8.7 tests | job `20261102T022710Z-q000042` (commit `3efb161`): the 52 runnable tests of `tests/litmus/ptx/kamui/ptx87/`, 156 runs, about 3 minutes; command `h100 submit --gpu 3 -- env TESTS='ptx/kamui/ptx87/*' bash jobs/litmus-h100.sh`. Two earlier runs of the same tests were replaced: one stopped by the queue's watchdog, one with a kernel bug in the copy tests (fixed in `tools/litmus/to_cuda.py`) |
 | Cache hints | job `20261103T024058Z-q000087` (commit `60a260c`): the 16 tests of `tests/litmus/ptx/kamui/ptx87/hints/`, 48 runs; command `h100 submit --gpu 2 -- env TESTS='ptx/kamui/ptx87/hints/*' bash jobs/litmus-h100.sh`. Job `20261103T024305Z-q000088` reran them in the shuffle configuration with 1e7 instances each (`CONFIGS=shuffle INSTANCES=10000000`); its counts are in `jobs/20261103T024305Z-q000088/hints-shuffle.csv` |
 | `2+add.gpu` | job `20261103T041314Z-q000089` (commit `f2ece0b`): `tests/litmus/ptx/kamui/ptx87/rmw/2+add.gpu`, 3 runs; command `h100 submit --gpu 2 -- env TESTS='ptx/kamui/ptx87/rmw/2+add.gpu' bash jobs/litmus-h100.sh`. Its kernel folder was hidden by the `*.gpu` rule of `.gitignore` until then |
+| Imported tests | job `20261103T042800Z-q000090` (commit `cbde6eb`), stopped by us at a Dat3M test that deadlocks by design (`PC-bar-sync-sync-3`, now skipped), and resumed into the same folder by job `q000091` (commit `ab5f07a`): the 111 runnable tests of `tests/litmus/ptx/imported/`, 333 runs, about 2 minutes; command `h100 submit --gpu 2 -- env TESTS='ptx/imported/*' bash jobs/litmus-h100.sh`, then the same with `RESUME=1 OUT=<the folder>` |
+| Shared memory across CTAs | job `20261103T045153Z-q000092` (commit `29b3ef5`): the 25 PTX 8.7 tests that use the shared memory of another CTA of the cluster, and 2 `bar` tests, 81 runs; `TESTS` lists them, comma-separated |
+| Start delays | job `20261103T045407Z-q000093` (commit `ce19777`) ran the new `spread` configuration and showed no change at all: ptxas had removed the empty loop that was meant to delay each thread's start, so no `shuffle` run before it had a start delay. Job `20261103T050216Z-q000094` (commit `49ee74a`, the delay now a `nanosleep`) reran `shuffle` and `spread` on all 509 runnable tests, 1018 runs, 9 minutes; its results replace the earlier `shuffle` results and those of job q000093 |
+| Remaining PTX 8.7 forms | job `20261103T053509Z-q000095` (commit `95d8aeb`): 15 tests with mixed sizes and tearing, vector stores, `atom.cas.b128`, several atomic operations on one register, `discard`, mbarrier `init`/`inval` and the state token, in all four configurations, 60 runs |
 
 ## Files
 
@@ -44,7 +48,8 @@ observed), `ok` (forbidden, never observed) or `forbidden-observed`.
 
 Tables: `python tools/litmus/report_tables.py --table h100` and `--table h100-families`.
 
-- **Threads of one CTA never showed a weak outcome**, in any test or configuration: they share one SM and its L1.
+- **Threads of one CTA never showed a weak outcome in the classic shapes** (`kamui/families/`), in any
+  configuration, also with real start delays: they share one SM and its L1.
 - **Across CTAs, the H100 shows the weak outcomes PTX allows**: store buffering (SB) up to 3e-3 of the instances,
   message passing (MP), load buffering (LB) and 2+2W around 1e-4 to 5e-4, ISA2 with weak accesses up to 4e-3;
   more often between clusters than inside one. LB is a hardware effect: ptxas keeps the load before the store
@@ -74,6 +79,24 @@ Tables: `python tools/litmus/report_tables.py --table h100` and `--table h100-fa
   race on `x` undefined, so the model keeps the verdict forbidden; these eight hints are not measured on the H100
   (the manual's statement that they do not change memory behaviour, 15572, 15696, 16674, is the basis). No other
   test of the suite has two weak loads of one address around an acquire or a fence in one thread.
+- **Coverage**: 524 of the 828 tests run (`python tools/litmus/to_cuda.py --why` lists the rest with the reason):
+  all families and hand-written tests, 111 of the 393 imported tests (the others access memory through texture,
+  surface or constant proxy aliases, loop, use two GPUs, use `red` with an acquire order, which is not PTX, or
+  wait at barriers that never complete) and 111 of the 133 PTX 8.7 tests (the others need two GPUs or multimem,
+  tensor maps, a multicast copy, matrix instructions, `griddepcontrol` across kernels, `bar.warp.sync` within one
+  warp, the state returned by a remote arrive, which the GPU does not return, or never finish by design).
+- **Imported tests**: no outcome the formal models forbid; 65 of 444 runs show an allowed weak outcome.
+- **Shared memory of another CTA** (`st.weak.shared::cluster`, remote `mbarrier.arrive`, `st.async`,
+  `red.async`, bulk copies into another CTA, restricted fences): no forbidden outcome. In several of these tests
+  the reader almost never sees the writer's flag (the writer's remote store and release take longer than the
+  reader's whole program), so they show little; the `TMA-store+*` tests never reached that state in 4e6
+  instances.
+- **Mixed sizes**: no torn value in `tearing+weak` or `tearing+relaxed` (4e6 instances each), although PTX
+  allows one for weak accesses; `atom.cas.b128` behaves as one atomic operation; `discard.global.L2` drops the
+  preceding store in 99.8% of the instances, which the manual allows (the line's data becomes undefined).
+- **Real start delays** (`shuffle`, `spread`) make the mbarrier gap below show in two more tests,
+  `MP+mbarrier-expect-complete-tx` (about 9%) and `MP+mbarrier-token` (0.2% to 0.3%), and in more runs of the
+  tests that already showed it.
 - **One forbidden outcome observed, in three tests: `MP+mbarrier-rel-acq`** (and its `try_wait` and shared-memory
   variants), 0.13% to 1.1% of the instances. A thread whose `mbarrier.test_wait.acquire` (or `try_wait`) returns
   True can still read data older than what the arriving thread wrote before its `mbarrier.arrive.release`; PTX

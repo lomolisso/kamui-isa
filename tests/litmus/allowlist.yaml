@@ -181,7 +181,9 @@
   reason: &mbarrier_gap_ptx87 >-
     The same H100 behaviour as MP+mbarrier-rel-acq.cta+same-cta above: an acquire mbarrier.test_wait at .cta scope
     that returns True does not order the thread's later loads, here after the complete-tx of a bulk copy
-    (TMA-load+*), the asynchronous arrive of cp.async.mbarrier.arrive, or several arrivals (MP2+*). The variant of
+    (TMA-load+*), the asynchronous arrive of cp.async.mbarrier.arrive, several arrivals (MP2+*), a complete-tx by
+    another thread (MP+mbarrier-expect-complete-tx) or a wait on the state token of an arrive (MP+mbarrier-token);
+    some appear only with the random start delays of the shuffle and spread configurations. The variant of
     each test with one fence.acq_rel.cta after the wait (+fence-acq) shows the outcome in 0 of about 3 million
     instances, and the copy sources are fenced to the async proxy before the test starts, so the harness is not
     the cause. PTX ISA 8.7 section 9.7.13.15.16 forbids the outcome; the model follows the manual.
@@ -262,8 +264,8 @@
   reason: *mbarrier_gap_ptx87
 
 - kind: h100
-  test: ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate
-  model: shuffle
+  test: ptx/kamui/ptx87/hints/MP+ld.L1-evict_first
+  model: spread
   reason: &ptxas_load_merge >-
     A compiler effect, not a hardware one. The reader loads x, then the flag with ld.acquire.gpu, then x again with
     the same instruction; ptxas (CUDA 12.8, and the JIT of driver 580) keeps only the first load of x, before the
@@ -273,6 +275,71 @@
     does not make the race on x undefined, so the model keeps the verdict. Details in evidence/litmus-h100/README.md.
 
 - kind: h100
-  test: ptx/kamui/ptx87/hints/MP+st.wb
-  model: shuffle
+  test: ptx/kamui/ptx87/hints/MP+st.wt
+  model: spread
   reason: *ptxas_load_merge
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq-shared.cta+same-cta
+  model: spread
+  reason: *mbarrier_cta
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq-try_wait.cta+same-cta
+  model: spread
+  reason: *mbarrier_cta
+
+- kind: h100
+  test: ptx/kamui/hand/MP+mbarrier-rel-acq.cta+same-cta
+  model: spread
+  reason: *mbarrier_cta
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+other-thread
+  model: spread
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread
+  model: spread
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior
+  model: spread
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/cp-async/MP+cp.async.mbarrier.arrive
+  model: spread
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx
+  model: spread
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-token
+  model: shuffle
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-token
+  model: spread
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta
+  model: spread
+  reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side
+  model: spread
+  reason: *mbarrier_gap_ptx87

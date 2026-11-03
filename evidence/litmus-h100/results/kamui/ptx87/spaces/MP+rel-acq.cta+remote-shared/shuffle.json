@@ -1,5 +1,5 @@
-{"instances": 1001088, "launches": 79, "config": "shuffle", "seed": 1507920301, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 12672}, "seconds": 0.167, "histogram": [
-  {"values": [0, 1, 1], "class": "same-cluster", "count": 989225},
-  {"values": [0, 0, 1], "class": "same-cluster", "count": 10855},
-  {"values": [1, 1, 1], "class": "same-cluster", "count": 1008}
+{"instances": 1001088, "launches": 79, "config": "shuffle", "seed": 1507920301, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 12672}, "seconds": 0.168, "histogram": [
+  {"values": [0, 1, 1], "class": "same-cluster", "count": 815023},
+  {"values": [0, 0, 1], "class": "same-cluster", "count": 79458},
+  {"values": [1, 1, 1], "class": "same-cluster", "count": 106607}
 ]}

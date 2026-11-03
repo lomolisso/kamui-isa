@@ -1,11 +1,17 @@
-{"instances": 1005312, "launches": 119, "config": "shuffle", "seed": 2170603124, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 8448}, "seconds": 0.248, "histogram": [
-  {"values": [1, 1, 1, 1, 1, 1], "class": "same-sm", "count": 55296},
-  {"values": [0, 1, 1, 1, 1, 1], "class": "same-sm", "count": 152768},
-  {"values": [1, 0, 0, 1, 1, 1], "class": "same-sm", "count": 896},
-  {"values": [0, 1, 1, 0, 1, 1], "class": "same-sm", "count": 544},
-  {"values": [0, 1, 0, 0, 1, 1], "class": "same-sm", "count": 32},
-  {"values": [1, 1, 0, 1, 1, 1], "class": "same-sm", "count": 212096},
-  {"values": [0, 1, 0, 1, 1, 1], "class": "same-sm", "count": 583616},
-  {"values": [1, 1, 1, 0, 1, 1], "class": "same-sm", "count": 32},
-  {"values": [1, 0, 1, 1, 1, 1], "class": "same-sm", "count": 32}
+{"instances": 1005312, "launches": 119, "config": "shuffle", "seed": 2170603124, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 8448}, "seconds": 0.230, "histogram": [
+  {"values": [1, 1, 1, 1, 1, 1], "class": "same-sm", "count": 68095},
+  {"values": [1, 0, 0, 0, 1, 1], "class": "same-sm", "count": 1},
+  {"values": [0, 0, 0, 0, 1, 1], "class": "same-sm", "count": 1},
+  {"values": [0, 0, 1, 0, 1, 1], "class": "same-sm", "count": 1},
+  {"values": [0, 1, 1, 1, 1, 1], "class": "same-sm", "count": 163018},
+  {"values": [1, 0, 0, 1, 1, 1], "class": "same-sm", "count": 6824},
+  {"values": [0, 0, 1, 1, 1, 1], "class": "same-sm", "count": 51},
+  {"values": [0, 1, 1, 0, 1, 1], "class": "same-sm", "count": 4584},
+  {"values": [0, 1, 0, 0, 1, 1], "class": "same-sm", "count": 121},
+  {"values": [1, 1, 0, 1, 1, 1], "class": "same-sm", "count": 213685},
+  {"values": [0, 1, 0, 1, 1, 1], "class": "same-sm", "count": 544271},
+  {"values": [1, 1, 0, 0, 1, 1], "class": "same-sm", "count": 61},
+  {"values": [1, 1, 1, 0, 1, 1], "class": "same-sm", "count": 2206},
+  {"values": [1, 0, 1, 1, 1, 1], "class": "same-sm", "count": 2258},
+  {"values": [0, 0, 0, 1, 1, 1], "class": "same-sm", "count": 135}
 ]}
