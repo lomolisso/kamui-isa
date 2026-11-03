@@ -1,4 +1,1325 @@
 test,config,class,outcome,count,total,observed_weak,model_verdict
+ptx/imported/dat3m/Barrier/barrier-inscope,plain,same-sm,P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Barrier/barrier-inscope,shuffle,same-sm,P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Barrier/barrier-inscope,stress,same-sm,P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Barrier/barrier-not-inscope,plain,same-cluster,P1:r0=0 x=1,850534,1001088,yes,allowed
+ptx/imported/dat3m/Barrier/barrier-not-inscope,plain,same-cluster,P1:r0=1 x=1,150554,1001088,no,allowed
+ptx/imported/dat3m/Barrier/barrier-not-inscope,shuffle,same-cluster,P1:r0=0 x=1,747286,1001088,yes,allowed
+ptx/imported/dat3m/Barrier/barrier-not-inscope,shuffle,same-cluster,P1:r0=1 x=1,253802,1001088,no,allowed
+ptx/imported/dat3m/Barrier/barrier-not-inscope,stress,same-cluster,P1:r0=0 x=1,977774,1001088,yes,allowed
+ptx/imported/dat3m/Barrier/barrier-not-inscope,stress,same-cluster,P1:r0=1 x=1,23314,1001088,no,allowed
+ptx/imported/dat3m/Barrier/quorum1-fail,plain,same-sm,P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Barrier/quorum1-fail,shuffle,same-sm,P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Barrier/quorum1-fail,stress,same-sm,P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Barrier/quorum2-fail,plain,same-sm,P0:r0=0 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Barrier/quorum2-fail,shuffle,same-sm,P0:r0=0 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Barrier/quorum2-fail,stress,same-sm,P0:r0=0 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/Atom-minus-location_,plain,same-cluster,P0:r0=1 P1:r0=2 x=0,305177,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-minus-location_,plain,same-cluster,P0:r0=2 P1:r0=1 x=0,695911,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-minus-location_,shuffle,same-cluster,P0:r0=1 P1:r0=2 x=0,499729,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-minus-location_,shuffle,same-cluster,P0:r0=2 P1:r0=1 x=0,501359,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-minus-location_,stress,same-cluster,P0:r0=1 P1:r0=2 x=0,408798,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-minus-location_,stress,same-cluster,P0:r0=2 P1:r0=1 x=0,592290,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-plus-location-weak_,plain,same-cluster,P0:r0=0 P1:r0=1 x=2,510580,1001088,no,allowed
+ptx/imported/dat3m/Manual/Atom-plus-location-weak_,plain,same-cluster,P0:r0=1 P1:r0=0 x=2,490508,1001088,no,allowed
+ptx/imported/dat3m/Manual/Atom-plus-location-weak_,shuffle,same-cluster,P0:r0=0 P1:r0=1 x=2,500448,1001088,no,allowed
+ptx/imported/dat3m/Manual/Atom-plus-location-weak_,shuffle,same-cluster,P0:r0=1 P1:r0=0 x=2,500640,1001088,no,allowed
+ptx/imported/dat3m/Manual/Atom-plus-location-weak_,stress,same-cluster,P0:r0=0 P1:r0=1 x=2,784680,1001088,no,allowed
+ptx/imported/dat3m/Manual/Atom-plus-location-weak_,stress,same-cluster,P0:r0=1 P1:r0=0 x=2,216408,1001088,no,allowed
+ptx/imported/dat3m/Manual/Atom-plus-location_,plain,same-cluster,P0:r0=0 P1:r0=1 x=2,700608,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-plus-location_,plain,same-cluster,P0:r0=1 P1:r0=0 x=2,300480,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-plus-location_,shuffle,same-cluster,P0:r0=0 P1:r0=1 x=2,500021,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-plus-location_,shuffle,same-cluster,P0:r0=1 P1:r0=0 x=2,501067,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-plus-location_,stress,same-cluster,P0:r0=0 P1:r0=1 x=2,610445,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Atom-plus-location_,stress,same-cluster,P0:r0=1 P1:r0=0 x=2,390643,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,plain,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=0 x=1 f1=1 f2=1,23137,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,plain,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=0 x=2 f1=1 f2=1,47160,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,plain,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=1 x=1 f1=1 f2=1,253918,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,plain,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=1 x=2 f1=1 f2=1,182177,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,plain,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=2 x=1 f1=1 f2=1,97146,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,plain,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=2 x=2 f1=1 f2=1,397550,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=0 x=1 f1=1 f2=1,163614,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=0 x=2 f1=1 f2=1,4567,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=1 x=1 f1=1 f2=1,163,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=1 x=2 f1=1 f2=1,35,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=2 x=1 f1=1 f2=1,8419,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=2 x=2 f1=1 f2=1,194,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=0 P2:r2=1 P2:r3=1 x=1 f1=1 f2=1,252,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=0 P2:r2=1 P2:r3=2 x=1 f1=1 f2=1,4211,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=0 P2:r2=1 P2:r3=2 x=2 f1=1 f2=1,99,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=1 P2:r2=1 P2:r3=1 x=1 f1=1 f2=1,174741,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=1 P2:r2=1 P2:r3=2 x=1 f1=1 f2=1,150961,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=0 P2:r1=1 P2:r2=1 P2:r3=2 x=2 f1=1 f2=1,4432,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=1 P2:r1=0 P2:r2=0 P2:r3=0 x=2 f1=1 f2=1,158797,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=1 P2:r1=0 P2:r2=0 P2:r3=1 x=2 f1=1 f2=1,161325,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=1 P2:r1=0 P2:r2=0 P2:r3=2 x=2 f1=1 f2=1,8829,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=1 P2:r1=0 P2:r2=1 P2:r3=2 x=2 f1=1 f2=1,4384,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,shuffle,same-cluster,P1:r1=1 P2:r1=1 P2:r2=1 P2:r3=2 x=2 f1=1 f2=1,156065,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,stress,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=0 x=1 f1=1 f2=1,20815,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,stress,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=0 x=2 f1=1 f2=1,3137,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,stress,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=1 x=1 f1=1 f2=1,340267,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,stress,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=1 x=2 f1=1 f2=1,13422,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,stress,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=2 x=1 f1=1 f2=1,449203,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,stress,same-cluster,P1:r1=0 P2:r1=0 P2:r2=0 P2:r3=2 x=2 f1=1 f2=1,174206,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,stress,same-cluster,P1:r1=0 P2:r1=0 P2:r2=1 P2:r3=1 x=1 f1=1 f2=1,2,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,stress,same-cluster,P1:r1=1 P2:r1=0 P2:r2=0 P2:r3=1 x=2 f1=1 f2=1,33,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-strong,stress,same-cluster,P1:r1=1 P2:r1=0 P2:r2=0 P2:r3=2 x=2 f1=1 f2=1,3,1001088,no,forbidden
+ptx/imported/dat3m/Manual/Cause-base-weak,plain,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=0 x=1 f1=1 f2=1,14,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,plain,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=0 x=2 f1=1 f2=1,2105,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,plain,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=1 x=1 f1=1 f2=1,15584,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,plain,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=1 x=2 f1=1 f2=1,227840,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,plain,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=2 x=1 f1=1 f2=1,371,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,plain,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=2 x=2 f1=1 f2=1,755174,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=0 x=1 f1=1 f2=1,160107,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=0 x=2 f1=1 f2=1,161284,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=1 x=1 f1=1 f2=1,296,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=1 x=2 f1=1 f2=1,14655,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=2 x=1 f1=1 f2=1,10436,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=2 x=2 f1=1 f2=1,508,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=0 P2:r3=1 P2:r4=1 x=1 f1=1 f2=1,15143,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=0 P2:r3=1 P2:r4=2 x=1 f1=1 f2=1,152956,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=0 P2:r3=1 P2:r4=2 x=2 f1=1 f2=1,55,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=1 P2:r3=0 P2:r4=1 x=2 f1=1 f2=1,158892,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=1 P2:r3=0 P2:r4=2 x=2 f1=1 f2=1,11175,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=1 P2:r3=1 P2:r4=1 x=1 f1=1 f2=1,153247,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,shuffle,same-cluster,P1:r1=2 P2:r2=1 P2:r3=1 P2:r4=2 x=2 f1=1 f2=1,162334,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,stress,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=0 x=2 f1=1 f2=1,36,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,stress,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=1 x=1 f1=1 f2=1,20,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,stress,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=1 x=2 f1=1 f2=1,488472,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,stress,same-cluster,P1:r1=2 P2:r2=0 P2:r3=0 P2:r4=2 x=2 f1=1 f2=1,512557,1001088,no,allowed
+ptx/imported/dat3m/Manual/Cause-base-weak,stress,same-cluster,P1:r1=2 P2:r2=0 P2:r3=1 P2:r4=2 x=2 f1=1 f2=1,3,1001088,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-3-threads-scope-same,plain,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 P2:r3=1 x=1 f1=1 f2=1,32,1013760,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-3-threads-scope-same,plain,same-sm,P2:r0=0 P2:r1=0 P2:r2=2 P2:r3=2 x=2 f1=1 f2=1,1013728,1013760,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-3-threads-scope-same,shuffle,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 P2:r3=1 x=1 f1=1 f2=1,736,1013760,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-3-threads-scope-same,shuffle,same-sm,P2:r0=0 P2:r1=0 P2:r2=2 P2:r3=2 x=2 f1=1 f2=1,1013024,1013760,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-3-threads-scope-same,stress,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 P2:r3=1 x=1 f1=1 f2=1,544,1013760,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-3-threads-scope-same,stress,same-sm,P2:r0=0 P2:r1=0 P2:r2=2 P2:r3=2 x=2 f1=1 f2=1,1013216,1013760,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,plain,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 P3:r3=0 P3:r4=0 P3:r5=1 x=1 f1=1 f2=1,424960,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,plain,same-sm,P2:r0=0 P2:r1=0 P2:r2=2 P3:r3=0 P3:r4=0 P3:r5=2 x=2 f1=1 f2=1,580352,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,shuffle,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 P3:r3=0 P3:r4=0 P3:r5=1 x=1 f1=1 f2=1,568895,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,shuffle,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 P3:r3=0 P3:r4=1 P3:r5=1 x=1 f1=1 f2=1,320,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,shuffle,same-sm,P2:r0=0 P2:r1=0 P2:r2=2 P3:r3=0 P3:r4=0 P3:r5=2 x=2 f1=1 f2=1,435233,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,shuffle,same-sm,P2:r0=0 P2:r1=0 P2:r2=2 P3:r3=0 P3:r4=1 P3:r5=2 x=2 f1=1 f2=1,64,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 P3:r3=0 P3:r4=0 P3:r5=1 x=1 f1=1 f2=1,512,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 P3:r3=0 P3:r4=1 P3:r5=1 x=1 f1=1 f2=1,128,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=2 P3:r3=0 P3:r4=0 P3:r5=2 x=2 f1=1 f2=1,128,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,shuffle,same-sm,P2:r0=0 P2:r1=1 P2:r2=2 P3:r3=0 P3:r4=1 P3:r5=2 x=2 f1=1 f2=1,32,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,stress,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 P3:r3=0 P3:r4=0 P3:r5=1 x=1 f1=1 f2=1,401312,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,stress,same-sm,P2:r0=0 P2:r1=0 P2:r2=1 P3:r3=0 P3:r4=1 P3:r5=1 x=1 f1=1 f2=1,64,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,stress,same-sm,P2:r0=0 P2:r1=0 P2:r2=2 P3:r3=0 P3:r4=0 P3:r5=2 x=2 f1=1 f2=1,603296,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,stress,same-sm,P2:r0=0 P2:r1=0 P2:r2=2 P3:r3=0 P3:r4=1 P3:r5=2 x=2 f1=1 f2=1,224,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 P3:r3=0 P3:r4=0 P3:r5=1 x=1 f1=1 f2=1,128,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 P3:r3=0 P3:r4=1 P3:r5=1 x=1 f1=1 f2=1,160,1005312,no,allowed
+ptx/imported/dat3m/Manual/Co-Total-4-threads,stress,same-sm,P2:r0=0 P2:r1=1 P2:r2=2 P3:r3=0 P3:r4=1 P3:r5=2 x=2 f1=1 f2=1,128,1005312,no,allowed
+ptx/imported/dat3m/Manual/CoRR-acquire-weak,plain,same-cluster,P1:r1=0 P1:r2=0 x=1,710806,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRR-acquire-weak,plain,same-cluster,P1:r1=0 P1:r2=1 x=1,290204,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRR-acquire-weak,plain,same-cluster,P1:r1=1 P1:r2=1 x=1,78,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRR-acquire-weak,shuffle,same-cluster,P1:r1=0 P1:r2=0 x=1,500914,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRR-acquire-weak,shuffle,same-cluster,P1:r1=0 P1:r2=1 x=1,8958,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRR-acquire-weak,shuffle,same-cluster,P1:r1=1 P1:r2=1 x=1,491216,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRR-acquire-weak,stress,same-cluster,P1:r1=0 P1:r2=0 x=1,978593,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRR-acquire-weak,stress,same-cluster,P1:r1=0 P1:r2=1 x=1,22495,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRR-weak-acquire,plain,same-cluster,P1:r1=0 P1:r2=0 x=1,972735,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRR-weak-acquire,plain,same-cluster,P1:r1=0 P1:r2=1 x=1,12192,1001088,yes,allowed
+ptx/imported/dat3m/Manual/CoRR-weak-acquire,plain,same-cluster,P1:r1=1 P1:r2=1 x=1,16161,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRR-weak-acquire,shuffle,same-cluster,P1:r1=0 P1:r2=0 x=1,509083,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRR-weak-acquire,shuffle,same-cluster,P1:r1=0 P1:r2=1 x=1,99,1001088,yes,allowed
+ptx/imported/dat3m/Manual/CoRR-weak-acquire,shuffle,same-cluster,P1:r1=1 P1:r2=1 x=1,491906,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRR-weak-acquire,stress,same-cluster,P1:r1=0 P1:r2=0 x=1,1001024,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRR-weak-acquire,stress,same-cluster,P1:r1=1 P1:r2=1 x=1,64,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRW-R,plain,same-cluster,P1:r1=0 P1:r2=2 x=1,999818,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW-R,plain,same-cluster,P1:r1=0 P1:r2=2 x=2,1270,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW-R,shuffle,same-cluster,P1:r1=0 P1:r2=2 x=1,501711,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW-R,shuffle,same-cluster,P1:r1=0 P1:r2=2 x=2,8607,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW-R,shuffle,same-cluster,P1:r1=1 P1:r2=2 x=2,490770,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW-R,stress,same-cluster,P1:r1=0 P1:r2=2 x=1,999156,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW-R,stress,same-cluster,P1:r1=0 P1:r2=2 x=2,1932,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW-WW,plain,same-cluster,P0:r1=0 x=5 y=3,844993,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRW-WW,plain,same-cluster,P0:r1=0 x=5 y=4,156095,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRW-WW,shuffle,same-cluster,P0:r1=0 x=5 y=3,20102,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRW-WW,shuffle,same-cluster,P0:r1=0 x=5 y=4,489108,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRW-WW,shuffle,same-cluster,P0:r1=5 x=5 y=3,491878,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRW-WW,stress,same-cluster,P0:r1=0 x=5 y=3,908428,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRW-WW,stress,same-cluster,P0:r1=0 x=5 y=4,92660,1001088,no,allowed
+ptx/imported/dat3m/Manual/CoRW_,plain,same-cluster,P1:r1=0 x=1,336024,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW_,plain,same-cluster,P1:r1=0 x=2,665064,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW_,shuffle,same-cluster,P1:r1=0 x=1,500624,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW_,shuffle,same-cluster,P1:r1=0 x=2,9089,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW_,shuffle,same-cluster,P1:r1=1 x=2,491375,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW_,stress,same-cluster,P1:r1=0 x=1,921780,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW_,stress,same-cluster,P1:r1=0 x=2,79244,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoRW_,stress,same-cluster,P1:r1=1 x=2,64,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoWR_,plain,same-cluster,P1:r1=2 x=1,329229,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoWR_,plain,same-cluster,P1:r1=2 x=2,671859,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoWR_,shuffle,same-cluster,P1:r1=2 x=1,500150,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoWR_,shuffle,same-cluster,P1:r1=2 x=2,500938,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoWR_,stress,same-cluster,P1:r1=1 x=1,2,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoWR_,stress,same-cluster,P1:r1=2 x=1,425416,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoWR_,stress,same-cluster,P1:r1=2 x=2,575670,1001088,no,forbidden
+ptx/imported/dat3m/Manual/CoWW-R,plain,same-sm,P0:r1=2 x=2,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/CoWW-R,shuffle,same-sm,P0:r1=2 x=2,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/CoWW-R,stress,same-sm,P0:r1=2 x=2,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/CoWW-RR,plain,same-sm,P1:r0=0 P1:r1=0 x=2,60640,1013760,no,allowed
+ptx/imported/dat3m/Manual/CoWW-RR,plain,same-sm,P1:r0=2 P1:r1=2 x=2,953120,1013760,no,allowed
+ptx/imported/dat3m/Manual/CoWW-RR,shuffle,same-sm,P1:r0=0 P1:r1=0 x=2,113536,1013760,no,allowed
+ptx/imported/dat3m/Manual/CoWW-RR,shuffle,same-sm,P1:r0=2 P1:r1=2 x=2,900224,1013760,no,allowed
+ptx/imported/dat3m/Manual/CoWW-RR,stress,same-sm,P1:r0=0 P1:r1=0 x=2,88832,1013760,no,allowed
+ptx/imported/dat3m/Manual/CoWW-RR,stress,same-sm,P1:r0=2 P1:r1=2 x=2,924928,1013760,no,allowed
+ptx/imported/dat3m/Manual/CoWW_,plain,same-sm,x=2,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/CoWW_,shuffle,same-sm,x=2,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/CoWW_,stress,same-sm,x=2,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=0 P2:r1=1 P3:r2=0 P3:r3=1 x=1,178144,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=0 P2:r1=1 P3:r2=1 P3:r3=1 x=1,13056,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=0 P2:r1=1 P3:r2=2 P3:r3=1 x=1,57856,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=0 P2:r1=2 P3:r2=0 P3:r3=2 x=2,407104,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=0 P2:r1=2 P3:r2=1 P3:r3=2 x=2,94528,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=0 P2:r1=2 P3:r2=2 P3:r3=2 x=2,29568,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=1 P2:r1=1 P3:r2=0 P3:r3=1 x=1,4064,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=1 P2:r1=1 P3:r2=1 P3:r3=1 x=1,1792,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=1 P2:r1=1 P3:r2=2 P3:r3=1 x=1,512,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=1 P2:r1=2 P3:r2=0 P3:r3=2 x=2,96576,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=1 P2:r1=2 P3:r2=1 P3:r3=2 x=2,25728,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=1 P2:r1=2 P3:r2=2 P3:r3=2 x=2,9888,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=2 P2:r1=1 P3:r2=0 P3:r3=1 x=1,20320,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=2 P2:r1=1 P3:r2=1 P3:r3=1 x=1,2304,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=2 P2:r1=1 P3:r2=2 P3:r3=1 x=1,19392,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=2 P2:r1=2 P3:r2=0 P3:r3=2 x=2,32480,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=2 P2:r1=2 P3:r2=1 P3:r3=2 x=2,1984,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,plain,same-sm,P2:r0=2 P2:r1=2 P3:r2=2 P3:r3=2 x=2,10016,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=0 P2:r1=1 P3:r2=0 P3:r3=1 x=1,254154,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=0 P2:r1=1 P3:r2=1 P3:r3=1 x=1,42797,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=0 P2:r1=1 P3:r2=2 P3:r3=1 x=1,56960,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=0 P2:r1=2 P3:r2=0 P3:r3=2 x=2,237750,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=0 P2:r1=2 P3:r2=1 P3:r3=2 x=2,86432,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=0 P2:r1=2 P3:r2=2 P3:r3=2 x=2,26835,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=1 P2:r1=1 P3:r2=0 P3:r3=1 x=1,44636,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=1 P2:r1=1 P3:r2=1 P3:r3=1 x=1,11037,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=1 P2:r1=1 P3:r2=2 P3:r3=1 x=1,6336,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=1 P2:r1=2 P3:r2=0 P3:r3=2 x=2,85792,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=1 P2:r1=2 P3:r2=1 P3:r3=2 x=2,24704,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=1 P2:r1=2 P3:r2=2 P3:r3=2 x=2,13120,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=2 P2:r1=1 P3:r2=0 P3:r3=1 x=1,54048,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=2 P2:r1=1 P3:r2=1 P3:r3=1 x=1,6688,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=2 P2:r1=1 P3:r2=2 P3:r3=1 x=1,11072,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=2 P2:r1=2 P3:r2=0 P3:r3=2 x=2,25156,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=2 P2:r1=2 P3:r2=1 P3:r3=2 x=2,12544,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,shuffle,same-sm,P2:r0=2 P2:r1=2 P3:r2=2 P3:r3=2 x=2,5251,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=0 P2:r1=1 P3:r2=0 P3:r3=1 x=1,222816,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=0 P2:r1=1 P3:r2=1 P3:r3=1 x=1,11232,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=0 P2:r1=1 P3:r2=2 P3:r3=1 x=1,67424,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=0 P2:r1=2 P3:r2=0 P3:r3=2 x=2,368128,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=0 P2:r1=2 P3:r2=1 P3:r3=2 x=2,134080,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=0 P2:r1=2 P3:r2=2 P3:r3=2 x=2,18016,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=1 P2:r1=1 P3:r2=0 P3:r3=1 x=1,4800,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=1 P2:r1=1 P3:r2=1 P3:r3=1 x=1,2560,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=1 P2:r1=1 P3:r2=2 P3:r3=1 x=1,1632,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=1 P2:r1=2 P3:r2=0 P3:r3=2 x=2,82080,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=1 P2:r1=2 P3:r2=1 P3:r3=2 x=2,22272,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=1 P2:r1=2 P3:r2=2 P3:r3=2 x=2,16384,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=2 P2:r1=1 P3:r2=0 P3:r3=1 x=1,14560,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=2 P2:r1=1 P3:r2=1 P3:r3=1 x=1,4640,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=2 P2:r1=1 P3:r2=2 P3:r3=1 x=1,6112,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=2 P2:r1=2 P3:r2=0 P3:r3=2 x=2,19232,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=2 P2:r1=2 P3:r2=1 P3:r3=2 x=2,3904,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence,stress,same-sm,P2:r0=2 P2:r1=2 P3:r2=2 P3:r3=2 x=2,5440,1005312,no,forbidden
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=0 P2:r1=1 P3:r2=0 P3:r3=1 x=1,184224,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=0 P2:r1=1 P3:r2=1 P3:r3=1 x=1,12544,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=0 P2:r1=1 P3:r2=2 P3:r3=1 x=1,60160,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=0 P2:r1=2 P3:r2=0 P3:r3=2 x=2,399168,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=0 P2:r1=2 P3:r2=1 P3:r3=2 x=2,89664,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=0 P2:r1=2 P3:r2=2 P3:r3=2 x=2,31328,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=1 P2:r1=1 P3:r2=0 P3:r3=1 x=1,4000,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=1 P2:r1=1 P3:r2=1 P3:r3=1 x=1,2016,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=1 P2:r1=1 P3:r2=2 P3:r3=1 x=1,640,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=1 P2:r1=2 P3:r2=0 P3:r3=2 x=2,94848,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=1 P2:r1=2 P3:r2=1 P3:r3=2 x=2,24288,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=1 P2:r1=2 P3:r2=2 P3:r3=2 x=2,12736,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=2 P2:r1=1 P3:r2=0 P3:r3=1 x=1,21536,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=2 P2:r1=1 P3:r2=1 P3:r3=1 x=1,1696,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=2 P2:r1=1 P3:r2=2 P3:r3=1 x=1,21600,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=2 P2:r1=2 P3:r2=0 P3:r3=2 x=2,31712,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=2 P2:r1=2 P3:r2=1 P3:r3=2 x=2,2880,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,plain,same-sm,P2:r0=2 P2:r1=2 P3:r2=2 P3:r3=2 x=2,10272,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=0 P2:r1=1 P3:r2=0 P3:r3=1 x=1,256245,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=0 P2:r1=1 P3:r2=1 P3:r3=1 x=1,40713,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=0 P2:r1=1 P3:r2=2 P3:r3=1 x=1,54144,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=0 P2:r1=2 P3:r2=0 P3:r3=2 x=2,243819,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=0 P2:r1=2 P3:r2=1 P3:r3=2 x=2,82080,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=0 P2:r1=2 P3:r2=2 P3:r3=2 x=2,25303,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=1 P2:r1=1 P3:r2=0 P3:r3=1 x=1,45341,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=1 P2:r1=1 P3:r2=1 P3:r3=1 x=1,10204,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=1 P2:r1=1 P3:r2=2 P3:r3=1 x=1,7616,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=1 P2:r1=2 P3:r2=0 P3:r3=2 x=2,82816,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=1 P2:r1=2 P3:r2=1 P3:r3=2 x=2,24192,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=1 P2:r1=2 P3:r2=2 P3:r3=2 x=2,12608,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=2 P2:r1=1 P3:r2=0 P3:r3=1 x=1,56768,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=2 P2:r1=1 P3:r2=1 P3:r3=1 x=1,7680,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=2 P2:r1=1 P3:r2=2 P3:r3=1 x=1,11328,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=2 P2:r1=2 P3:r2=0 P3:r3=2 x=2,26627,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=2 P2:r1=2 P3:r2=1 P3:r3=2 x=2,13024,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,shuffle,same-sm,P2:r0=2 P2:r1=2 P3:r2=2 P3:r3=2 x=2,4804,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=0 P2:r1=1 P3:r2=0 P3:r3=1 x=1,221152,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=0 P2:r1=1 P3:r2=1 P3:r3=1 x=1,11424,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=0 P2:r1=1 P3:r2=2 P3:r3=1 x=1,64992,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=0 P2:r1=2 P3:r2=0 P3:r3=2 x=2,379040,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=0 P2:r1=2 P3:r2=1 P3:r3=2 x=2,127808,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=0 P2:r1=2 P3:r2=2 P3:r3=2 x=2,18688,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=1 P2:r1=1 P3:r2=0 P3:r3=1 x=1,6016,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=1 P2:r1=1 P3:r2=1 P3:r3=1 x=1,2464,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=1 P2:r1=1 P3:r2=2 P3:r3=1 x=1,2144,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=1 P2:r1=2 P3:r2=0 P3:r3=2 x=2,82656,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=1 P2:r1=2 P3:r2=1 P3:r3=2 x=2,21408,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=1 P2:r1=2 P3:r2=2 P3:r3=2 x=2,14752,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=2 P2:r1=1 P3:r2=0 P3:r3=1 x=1,15648,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=2 P2:r1=1 P3:r2=1 P3:r3=1 x=1,3136,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=2 P2:r1=1 P3:r2=2 P3:r3=1 x=1,6496,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=2 P2:r1=2 P3:r2=0 P3:r3=2 x=2,18400,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=2 P2:r1=2 P3:r2=1 P3:r3=2 x=2,3904,1005312,no,allowed
+ptx/imported/dat3m/Manual/Coherence-weak,stress,same-sm,P2:r0=2 P2:r1=2 P3:r2=2 P3:r3=2 x=2,5184,1005312,no,allowed
+ptx/imported/dat3m/Manual/LB+NoThinAir-location_,plain,same-cluster,P0:r0=0 P1:r1=0 x=0 y=0,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB+NoThinAir-location_,shuffle,same-cluster,P0:r0=0 P1:r1=0 x=0 y=0,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB+NoThinAir-location_,stress,same-cluster,P0:r0=0 P1:r1=0 x=0 y=0,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB+NoThinAir-register,plain,same-cluster,P0:r1=0 P1:r2=0 y=0 x=0,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB+NoThinAir-register,shuffle,same-cluster,P0:r1=0 P1:r2=0 y=0 x=0,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB+NoThinAir-register,stress,same-cluster,P0:r1=0 P1:r2=0 y=0 x=0,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB+RMW-a,plain,same-sm,P0:r0=0 P1:r1=0 P2:r2=0 y=1 x=1,840224,1013760,no,allowed
+ptx/imported/dat3m/Manual/LB+RMW-a,plain,same-sm,P0:r0=0 P1:r1=0 P2:r2=1 y=1 x=1,173536,1013760,no,allowed
+ptx/imported/dat3m/Manual/LB+RMW-a,shuffle,same-sm,P0:r0=0 P1:r1=0 P2:r2=0 y=1 x=1,879072,1013760,no,allowed
+ptx/imported/dat3m/Manual/LB+RMW-a,shuffle,same-sm,P0:r0=0 P1:r1=0 P2:r2=1 y=1 x=1,134688,1013760,no,allowed
+ptx/imported/dat3m/Manual/LB+RMW-a,stress,same-sm,P0:r0=0 P1:r1=0 P2:r2=0 y=1 x=1,900096,1013760,no,allowed
+ptx/imported/dat3m/Manual/LB+RMW-a,stress,same-sm,P0:r0=0 P1:r1=0 P2:r2=1 y=1 x=1,113664,1013760,no,allowed
+ptx/imported/dat3m/Manual/LB+RMW-b,plain,same-sm,P0:r0=0 P2:r2=0 y=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/LB+RMW-b,shuffle,same-sm,P0:r0=0 P2:r2=0 y=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/LB+RMW-b,stress,same-sm,P0:r0=0 P2:r2=0 y=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/LB+RMW-c,plain,same-sm,P0:r0=0 P1:r1=0 P2:r2=0 y=1 x=1,842720,1013760,no,forbidden
+ptx/imported/dat3m/Manual/LB+RMW-c,plain,same-sm,P0:r0=0 P1:r1=0 P2:r2=1 y=1 x=1,171040,1013760,no,forbidden
+ptx/imported/dat3m/Manual/LB+RMW-c,shuffle,same-sm,P0:r0=0 P1:r1=0 P2:r2=0 y=1 x=1,878304,1013760,no,forbidden
+ptx/imported/dat3m/Manual/LB+RMW-c,shuffle,same-sm,P0:r0=0 P1:r1=0 P2:r2=1 y=1 x=1,135456,1013760,no,forbidden
+ptx/imported/dat3m/Manual/LB+RMW-c,stress,same-sm,P0:r0=0 P1:r1=0 P2:r2=0 y=1 x=1,897952,1013760,no,forbidden
+ptx/imported/dat3m/Manual/LB+RMW-c,stress,same-sm,P0:r0=0 P1:r1=0 P2:r2=1 y=1 x=1,115808,1013760,no,forbidden
+ptx/imported/dat3m/Manual/LB-dlb,plain,same-cluster,P0:r0=0 P1:r1=0 P1:r3=1 h=1 t=1,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB-dlb,shuffle,same-cluster,P0:r0=0 P1:r1=0 P1:r3=1 h=1 t=1,20401,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB-dlb,shuffle,same-cluster,P0:r0=0 P1:r1=1 P1:r3=1 h=1 t=1,491800,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB-dlb,shuffle,same-cluster,P0:r0=1 P1:r1=0 P1:r3=0 h=1 t=1,488887,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB-dlb,stress,same-cluster,P0:r0=0 P1:r1=0 P1:r3=1 h=1 t=1,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-1,plain,same-cluster,P0:r0=0 P1:r1=0 P1:r3=1 h=1 t=1,875554,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-1,plain,same-cluster,P0:r0=0 P1:r1=1 P1:r3=1 h=1 t=1,122953,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-1,plain,same-cluster,P0:r0=1 P1:r1=0 P1:r3=0 h=1 t=1,2581,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-1,shuffle,same-cluster,P0:r0=0 P1:r1=0 P1:r3=1 h=1 t=1,11004,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-1,shuffle,same-cluster,P0:r0=0 P1:r1=1 P1:r3=1 h=1 t=1,502162,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-1,shuffle,same-cluster,P0:r0=1 P1:r1=0 P1:r3=0 h=1 t=1,487922,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-1,stress,same-cluster,P0:r0=0 P1:r1=0 P1:r3=1 h=1 t=1,960639,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-1,stress,same-cluster,P0:r0=0 P1:r1=1 P1:r3=1 h=1 t=1,40429,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-1,stress,same-cluster,P0:r0=1 P1:r1=0 P1:r3=0 h=1 t=1,20,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-2,plain,same-cluster,P0:r0=0 P1:r1=0 P1:r3=1 h=1 t=1,718538,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-2,plain,same-cluster,P0:r0=0 P1:r1=1 P1:r3=1 h=1 t=1,32,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-2,plain,same-cluster,P0:r0=1 P1:r1=0 P1:r3=0 h=1 t=1,282518,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-2,shuffle,same-cluster,P0:r0=0 P1:r1=0 P1:r3=1 h=1 t=1,10216,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-2,shuffle,same-cluster,P0:r0=0 P1:r1=1 P1:r3=1 h=1 t=1,489291,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-2,shuffle,same-cluster,P0:r0=1 P1:r1=0 P1:r3=0 h=1 t=1,501581,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-2,stress,same-cluster,P0:r0=0 P1:r1=0 P1:r3=1 h=1 t=1,809981,1001088,no,allowed
+ptx/imported/dat3m/Manual/LB-dlb-no-fence-2,stress,same-cluster,P0:r0=1 P1:r1=0 P1:r3=0 h=1 t=1,191107,1001088,no,allowed
+ptx/imported/dat3m/Manual/MP+RMW,plain,same-sm,P1:r0=0 P2:r1=0 P2:r2=1 x=1 y=1,404032,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP+RMW,plain,same-sm,P1:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,609728,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP+RMW,shuffle,same-sm,P1:r0=0 P2:r1=0 P2:r2=1 x=1 y=1,173952,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP+RMW,shuffle,same-sm,P1:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,839808,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP+RMW,stress,same-sm,P1:r0=0 P2:r1=0 P2:r2=1 x=1 y=1,253920,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP+RMW,stress,same-sm,P1:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,759840,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,plain,same-cluster,P1:r0=0 P2:r1=0 P2:r2=0 x=1 y=1 z=1,69373,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,plain,same-cluster,P1:r0=0 P2:r1=0 P2:r2=1 x=1 y=1 z=1,34979,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,plain,same-cluster,P1:r0=1 P2:r1=0 P2:r2=0 x=1 y=1 z=1,88033,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,plain,same-cluster,P1:r0=1 P2:r1=0 P2:r2=1 x=1 y=1 z=1,808703,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,shuffle,same-cluster,P1:r0=0 P2:r1=0 P2:r2=0 x=1 y=1 z=1,2369,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,shuffle,same-cluster,P1:r0=0 P2:r1=0 P2:r2=1 x=1 y=1 z=1,125951,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,shuffle,same-cluster,P1:r0=1 P2:r1=0 P2:r2=0 x=1 y=1 z=1,10354,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,shuffle,same-cluster,P1:r0=1 P2:r1=0 P2:r2=1 x=1 y=1 z=1,862412,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,shuffle,same-cluster,P1:r0=1 P2:r1=1 P2:r2=1 x=1 y=1 z=1,2,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,stress,same-cluster,P1:r0=0 P2:r1=0 P2:r2=0 x=1 y=1 z=1,480,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,stress,same-cluster,P1:r0=0 P2:r1=0 P2:r2=1 x=1 y=1 z=1,113632,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,stress,same-cluster,P1:r0=1 P2:r1=0 P2:r2=0 x=1 y=1 z=1,219,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-3-transitive,stress,same-cluster,P1:r0=1 P2:r1=0 P2:r2=1 x=1 y=1 z=1,886757,1001088,no,forbidden
+ptx/imported/dat3m/Manual/MP-cta,plain,same-cluster,P1:r1=0 P1:r2=0 x=1 y=1,355258,1001088,no,allowed
+ptx/imported/dat3m/Manual/MP-cta,plain,same-cluster,P1:r1=0 P1:r2=1 x=1 y=1,612546,1001088,no,allowed
+ptx/imported/dat3m/Manual/MP-cta,plain,same-cluster,P1:r1=1 P1:r2=1 x=1 y=1,33284,1001088,no,allowed
+ptx/imported/dat3m/Manual/MP-cta,shuffle,same-cluster,P1:r1=0 P1:r2=0 x=1 y=1,494029,1001088,no,allowed
+ptx/imported/dat3m/Manual/MP-cta,shuffle,same-cluster,P1:r1=0 P1:r2=1 x=1 y=1,9595,1001088,no,allowed
+ptx/imported/dat3m/Manual/MP-cta,shuffle,same-cluster,P1:r1=1 P1:r2=1 x=1 y=1,497464,1001088,no,allowed
+ptx/imported/dat3m/Manual/MP-cta,stress,same-cluster,P1:r1=0 P1:r2=0 x=1 y=1,41283,1001088,no,allowed
+ptx/imported/dat3m/Manual/MP-cta,stress,same-cluster,P1:r1=0 P1:r2=1 x=1 y=1,950704,1001088,no,allowed
+ptx/imported/dat3m/Manual/MP-cta,stress,same-cluster,P1:r1=1 P1:r2=1 x=1 y=1,9101,1001088,no,allowed
+ptx/imported/dat3m/Manual/MP-cta-gpu,plain,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,935744,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-cta-gpu,plain,same-sm,P1:r1=1 P1:r2=1 x=1 y=1,78016,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-cta-gpu,shuffle,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,922208,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-cta-gpu,shuffle,same-sm,P1:r1=1 P1:r2=1 x=1 y=1,91552,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-cta-gpu,stress,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,896832,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-cta-gpu,stress,same-sm,P1:r1=1 P1:r2=1 x=1 y=1,116928,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-gpu,plain,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-gpu,shuffle,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-gpu,stress,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-relaxed,plain,same-sm,P1:r1=0 P1:r2=0 x=1 y=1,1013760,1013760,no,allowed
+ptx/imported/dat3m/Manual/MP-relaxed,shuffle,same-sm,P1:r1=0 P1:r2=0 x=1 y=1,1013760,1013760,no,allowed
+ptx/imported/dat3m/Manual/MP-relaxed,stress,same-sm,P1:r1=0 P1:r2=0 x=1 y=1,1013760,1013760,no,allowed
+ptx/imported/dat3m/Manual/MP-sys,plain,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-sys,shuffle,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-sys,stress,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-sys-fence,plain,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-sys-fence,shuffle,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/MP-sys-fence,stress,same-sm,P1:r1=0 P1:r2=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/PC-bar-sync-arrive,plain,same-sm,P0:r0=0 x=1,1009632,1013760,no,allowed
+ptx/imported/dat3m/Manual/PC-bar-sync-arrive,plain,same-sm,P0:r0=1 x=1,4128,1013760,yes,allowed
+ptx/imported/dat3m/Manual/PC-bar-sync-arrive,shuffle,same-sm,P0:r0=0 x=1,989568,1013760,no,allowed
+ptx/imported/dat3m/Manual/PC-bar-sync-arrive,shuffle,same-sm,P0:r0=1 x=1,24192,1013760,yes,allowed
+ptx/imported/dat3m/Manual/PC-bar-sync-arrive,stress,same-sm,P0:r0=0 x=1,962016,1013760,no,allowed
+ptx/imported/dat3m/Manual/PC-bar-sync-arrive,stress,same-sm,P0:r0=1 x=1,51744,1013760,yes,allowed
+ptx/imported/dat3m/Manual/PC-bar-sync-sync-1,plain,same-sm,P0:r0=0 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/PC-bar-sync-sync-1,shuffle,same-sm,P0:r0=0 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/PC-bar-sync-sync-1,stress,same-sm,P0:r0=0 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/PC-bar-sync-sync-2,plain,same-sm,P0:r0=0 x=1,1013760,1013760,yes,allowed
+ptx/imported/dat3m/Manual/PC-bar-sync-sync-2,shuffle,same-sm,P0:r0=0 x=1,1013760,1013760,yes,allowed
+ptx/imported/dat3m/Manual/PC-bar-sync-sync-2,stress,same-sm,P0:r0=0 x=1,1013760,1013760,yes,allowed
+ptx/imported/dat3m/Manual/SB+acq_rel-cta,plain,same-sm,P0:r1=0 P1:r2=1 x=1 y=1,331264,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+acq_rel-cta,plain,same-sm,P0:r1=1 P1:r2=0 x=1 y=1,17760,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+acq_rel-cta,plain,same-sm,P0:r1=1 P1:r2=1 x=1 y=1,664736,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+acq_rel-cta,shuffle,same-sm,P0:r1=0 P1:r2=1 x=1 y=1,257376,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+acq_rel-cta,shuffle,same-sm,P0:r1=1 P1:r2=0 x=1 y=1,46464,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+acq_rel-cta,shuffle,same-sm,P0:r1=1 P1:r2=1 x=1 y=1,709920,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+acq_rel-cta,stress,same-sm,P0:r1=0 P1:r2=1 x=1 y=1,346944,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+acq_rel-cta,stress,same-sm,P0:r1=1 P1:r2=0 x=1 y=1,94496,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+acq_rel-cta,stress,same-sm,P0:r1=1 P1:r2=1 x=1 y=1,572320,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-const-diff,plain,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,13696,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-const-diff,plain,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,8576,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-const-diff,plain,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,991488,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-const-diff,shuffle,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,91552,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-const-diff,shuffle,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,72800,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-const-diff,shuffle,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,849408,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-const-diff,stress,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,99072,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-const-diff,stress,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,98784,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-const-diff,stress,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,815904,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-const-equal,plain,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+bar-const-equal,shuffle,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+bar-const-equal,stress,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,plain,same-cluster,P0:r0=0 P1:r1=1 x=1 y=1,220857,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,plain,same-cluster,P0:r0=1 P1:r1=0 x=1 y=1,218956,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,plain,same-cluster,P0:r0=1 P1:r1=1 x=1 y=1,561275,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,shuffle,same-cluster,P0:r0=0 P1:r1=0 x=1 y=1,17161,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,shuffle,same-cluster,P0:r0=0 P1:r1=1 x=1 y=1,288401,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,shuffle,same-cluster,P0:r0=1 P1:r1=0 x=1 y=1,254126,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,shuffle,same-cluster,P0:r0=1 P1:r1=1 x=1 y=1,441400,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,stress,same-cluster,P0:r0=0 P1:r1=1 x=1 y=1,140416,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,stress,same-cluster,P0:r0=1 P1:r1=0 x=1 y=1,99774,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+bar-diff-cta,stress,same-cluster,P0:r0=1 P1:r1=1 x=1 y=1,760898,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,plain,same-sm,P0:r2=0 P0:r0=0 P1:r1=1 x=1 z=1 y=1,1009472,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,plain,same-sm,P0:r2=0 P0:r0=1 P1:r1=1 x=1 z=1 y=1,3456,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,plain,same-sm,P0:r2=1 P0:r0=0 P1:r1=1 x=1 z=1 y=1,320,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,plain,same-sm,P0:r2=1 P0:r0=1 P1:r1=0 x=1 z=1 y=1,32,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,plain,same-sm,P0:r2=1 P0:r0=1 P1:r1=1 x=1 z=1 y=1,480,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,shuffle,same-sm,P0:r2=0 P0:r0=0 P1:r1=1 x=1 z=1 y=1,986400,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,shuffle,same-sm,P0:r2=0 P0:r0=1 P1:r1=0 x=1 z=1 y=1,800,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,shuffle,same-sm,P0:r2=0 P0:r0=1 P1:r1=1 x=1 z=1 y=1,20544,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,shuffle,same-sm,P0:r2=1 P0:r0=0 P1:r1=1 x=1 z=1 y=1,2144,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,shuffle,same-sm,P0:r2=1 P0:r0=1 P1:r1=0 x=1 z=1 y=1,1088,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,shuffle,same-sm,P0:r2=1 P0:r0=1 P1:r1=1 x=1 z=1 y=1,2784,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,stress,same-sm,P0:r2=0 P0:r0=0 P1:r1=1 x=1 z=1 y=1,994624,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,stress,same-sm,P0:r2=0 P0:r0=1 P1:r1=0 x=1 z=1 y=1,192,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,stress,same-sm,P0:r2=0 P0:r0=1 P1:r1=1 x=1 z=1 y=1,14784,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,stress,same-sm,P0:r2=1 P0:r0=0 P1:r1=1 x=1 z=1 y=1,1632,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,stress,same-sm,P0:r2=1 P0:r0=1 P1:r1=0 x=1 z=1 y=1,608,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const,stress,same-sm,P0:r2=1 P0:r0=1 P1:r1=1 x=1 z=1 y=1,1920,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff,plain,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,12352,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff,plain,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,7264,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff,plain,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,994144,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff,shuffle,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,93216,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff,shuffle,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,73632,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff,shuffle,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,846912,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff,stress,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,92256,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff,stress,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,97056,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff,stress,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,824448,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-equal,plain,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-equal,shuffle,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-reg-const-equal,stress,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-reg-diff,plain,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,15712,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-diff,plain,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,7392,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-diff,plain,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,990656,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-diff,shuffle,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,92096,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-diff,shuffle,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,73792,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-diff,shuffle,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,847872,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-diff,stress,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,97184,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-diff,stress,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,97216,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-diff,stress,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,819360,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+named-bar-reg-equal,plain,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-reg-equal,shuffle,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-reg-equal,stress,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,plain,same-sm,P0:r2=0 P0:r0=0 P1:r1=1 x=1 z=1 y=1,1009280,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,plain,same-sm,P0:r2=0 P0:r0=1 P1:r1=1 x=1 z=1 y=1,3744,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,plain,same-sm,P0:r2=1 P0:r0=0 P1:r1=1 x=1 z=1 y=1,192,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,plain,same-sm,P0:r2=1 P0:r0=1 P1:r1=0 x=1 z=1 y=1,32,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,plain,same-sm,P0:r2=1 P0:r0=1 P1:r1=1 x=1 z=1 y=1,512,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,shuffle,same-sm,P0:r2=0 P0:r0=0 P1:r1=1 x=1 z=1 y=1,988608,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,shuffle,same-sm,P0:r2=0 P0:r0=1 P1:r1=0 x=1 z=1 y=1,544,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,shuffle,same-sm,P0:r2=0 P0:r0=1 P1:r1=1 x=1 z=1 y=1,18400,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,shuffle,same-sm,P0:r2=1 P0:r0=0 P1:r1=1 x=1 z=1 y=1,1824,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,shuffle,same-sm,P0:r2=1 P0:r0=1 P1:r1=0 x=1 z=1 y=1,1600,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,shuffle,same-sm,P0:r2=1 P0:r0=1 P1:r1=1 x=1 z=1 y=1,2784,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,stress,same-sm,P0:r2=0 P0:r0=0 P1:r1=1 x=1 z=1 y=1,994688,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,stress,same-sm,P0:r2=0 P0:r0=1 P1:r1=0 x=1 z=1 y=1,160,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,stress,same-sm,P0:r2=0 P0:r0=1 P1:r1=1 x=1 z=1 y=1,13824,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,stress,same-sm,P0:r2=1 P0:r0=0 P1:r1=1 x=1 z=1 y=1,1568,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,stress,same-sm,P0:r2=1 P0:r0=1 P1:r1=0 x=1 z=1 y=1,736,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const,stress,same-sm,P0:r2=1 P0:r0=1 P1:r1=1 x=1 z=1 y=1,2784,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-cta,plain,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,477120,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-cta,plain,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,14240,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-cta,plain,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,522400,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-cta,shuffle,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,505088,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-cta,shuffle,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,52384,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-cta,shuffle,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,456288,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-cta,stress,same-sm,P0:r0=0 P1:r1=1 x=1 y=1,653632,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-cta,stress,same-sm,P0:r0=1 P1:r1=0 x=1 y=1,78176,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-cta,stress,same-sm,P0:r0=1 P1:r1=1 x=1 y=1,281952,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,plain,same-cluster,P0:r0=0 P1:r1=1 x=1 y=1,230047,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,plain,same-cluster,P0:r0=1 P1:r1=0 x=1 y=1,242144,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,plain,same-cluster,P0:r0=1 P1:r1=1 x=1 y=1,528897,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,shuffle,same-cluster,P0:r0=0 P1:r1=0 x=1 y=1,81,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,shuffle,same-cluster,P0:r0=0 P1:r1=1 x=1 y=1,501496,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,shuffle,same-cluster,P0:r0=1 P1:r1=0 x=1 y=1,498699,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,shuffle,same-cluster,P0:r0=1 P1:r1=1 x=1 y=1,812,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,stress,same-cluster,P0:r0=0 P1:r1=1 x=1 y=1,160386,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,stress,same-cluster,P0:r0=1 P1:r1=0 x=1 y=1,108120,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-cta-outScope,stress,same-cluster,P0:r0=1 P1:r1=1 x=1 y=1,732582,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu,plain,same-cluster,P0:r1=0 P1:r2=1 x=1 y=1,1056,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu,plain,same-cluster,P0:r1=1 P1:r2=0 x=1 y=1,46,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu,plain,same-cluster,P0:r1=1 P1:r2=1 x=1 y=1,999986,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu,shuffle,same-cluster,P0:r1=0 P1:r2=1 x=1 y=1,488023,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu,shuffle,same-cluster,P0:r1=1 P1:r2=0 x=1 y=1,493424,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu,shuffle,same-cluster,P0:r1=1 P1:r2=1 x=1 y=1,19641,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu,stress,same-cluster,P0:r1=1 P1:r2=1 x=1 y=1,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,plain,same-cluster,P0:r1=1 P1:r2=2 x=2 y=2,10305,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,plain,same-cluster,P0:r1=2 P1:r2=1 x=2 y=2,2324,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,plain,same-cluster,P0:r1=2 P1:r2=2 x=2 y=2,988459,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,shuffle,same-cluster,P0:r1=0 P1:r2=2 x=2 y=2,480088,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,shuffle,same-cluster,P0:r1=1 P1:r2=2 x=2 y=2,9923,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,shuffle,same-cluster,P0:r1=2 P1:r2=0 x=2 y=2,479234,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,shuffle,same-cluster,P0:r1=2 P1:r2=1 x=2 y=2,9772,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,shuffle,same-cluster,P0:r1=2 P1:r2=2 x=2 y=2,22071,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,stress,same-cluster,P0:r1=2 P1:r2=1 x=2 y=2,2,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence,stress,same-cluster,P0:r1=2 P1:r2=2 x=2 y=2,1001086,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,plain,same-cluster,P0:r1=1 P1:r2=2 x=2 y=2,10877,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,plain,same-cluster,P0:r1=2 P1:r2=1 x=2 y=2,2217,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,plain,same-cluster,P0:r1=2 P1:r2=2 x=2 y=2,987994,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,shuffle,same-cluster,P0:r1=0 P1:r2=2 x=2 y=2,477901,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,shuffle,same-cluster,P0:r1=1 P1:r2=2 x=2 y=2,9571,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,shuffle,same-cluster,P0:r1=2 P1:r2=0 x=2 y=2,481267,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,shuffle,same-cluster,P0:r1=2 P1:r2=1 x=2 y=2,9765,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,shuffle,same-cluster,P0:r1=2 P1:r2=2 x=2 y=2,22584,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,stress,same-cluster,P0:r1=1 P1:r2=2 x=2 y=2,64,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,stress,same-cluster,P0:r1=2 P1:r2=1 x=2 y=2,38,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder,stress,same-cluster,P0:r1=2 P1:r2=2 x=2 y=2,1000986,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB+sc-sys-gpu,plain,same-cluster,P0:r1=1 P1:r2=0 x=1 y=1,99,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-sys-gpu,plain,same-cluster,P0:r1=1 P1:r2=1 x=1 y=1,1000989,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-sys-gpu,shuffle,same-cluster,P0:r1=0 P1:r2=1 x=1 y=1,487863,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-sys-gpu,shuffle,same-cluster,P0:r1=1 P1:r2=0 x=1 y=1,491911,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-sys-gpu,shuffle,same-cluster,P0:r1=1 P1:r2=1 x=1 y=1,21314,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-sys-gpu,stress,same-cluster,P0:r1=1 P1:r2=0 x=1 y=1,6,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+sc-sys-gpu,stress,same-cluster,P0:r1=1 P1:r2=1 x=1 y=1,1001082,1001088,no,forbidden
+ptx/imported/dat3m/Manual/SB+twice-bars,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 x0=1 y0=1 x1=1 y1=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+twice-bars,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 x0=1 y0=1 x1=1 y1=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+twice-bars,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 x0=1 y0=1 x1=1 y1=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/SB+twice-bars-diff,plain,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 x0=1 y0=1 x1=1 y1=1,256,1013760,yes,allowed
+ptx/imported/dat3m/Manual/SB+twice-bars-diff,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 x0=1 y0=1 x1=1 y1=1,1013504,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+twice-bars-diff,shuffle,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 x0=1 y0=1 x1=1 y1=1,2848,1013760,yes,allowed
+ptx/imported/dat3m/Manual/SB+twice-bars-diff,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 x0=1 y0=1 x1=1 y1=1,1010912,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB+twice-bars-diff,stress,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 x0=1 y0=1 x1=1 y1=1,1440,1013760,yes,allowed
+ptx/imported/dat3m/Manual/SB+twice-bars-diff,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 x0=1 y0=1 x1=1 y1=1,1012320,1013760,no,allowed
+ptx/imported/dat3m/Manual/SB-weak,plain,same-cluster,P0:r1=0 P1:r2=1 x=1 y=1,283531,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB-weak,plain,same-cluster,P0:r1=1 P1:r2=0 x=1 y=1,375787,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB-weak,plain,same-cluster,P0:r1=1 P1:r2=1 x=1 y=1,341770,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB-weak,shuffle,same-cluster,P0:r1=0 P1:r2=0 x=1 y=1,118,1001088,yes,allowed
+ptx/imported/dat3m/Manual/SB-weak,shuffle,same-cluster,P0:r1=0 P1:r2=1 x=1 y=1,500002,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB-weak,shuffle,same-cluster,P0:r1=1 P1:r2=0 x=1 y=1,500216,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB-weak,shuffle,same-cluster,P0:r1=1 P1:r2=1 x=1 y=1,752,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB-weak,stress,same-cluster,P0:r1=0 P1:r2=1 x=1 y=1,186513,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB-weak,stress,same-cluster,P0:r1=1 P1:r2=0 x=1 y=1,130773,1001088,no,allowed
+ptx/imported/dat3m/Manual/SB-weak,stress,same-cluster,P0:r1=1 P1:r2=1 x=1 y=1,683802,1001088,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,plain,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,2176,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,plain,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,3232,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,1792,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,1408,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,6880,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,2656,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,987168,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,3360,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,8896,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9440,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,8576,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,12448,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,28768,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,933824,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,stress,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,7040,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,stress,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,8064,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,5344,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,10304,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,13024,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,6592,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-exists,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,954944,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,plain,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,2848,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,plain,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,3104,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,1248,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,1344,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,7968,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,2816,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,985984,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,4192,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9696,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9600,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,7776,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,11136,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,29056,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,933856,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,stress,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,7552,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,stress,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9152,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,6464,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9920,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,14272,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,6112,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-instance-id-forall,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,951840,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,plain,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,1248,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,plain,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,3648,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,1408,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,1792,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,6624,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,2624,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,987968,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,3840,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9408,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9568,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9088,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,11552,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,28800,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,933056,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,stress,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,8096,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,stress,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9152,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,5856,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,10368,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,14400,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,6720,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-exists,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,950720,1005312,no,allowed
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,plain,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,2368,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,plain,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,4384,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,1248,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,1728,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,7520,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,3424,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,plain,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,984640,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,3936,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9248,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,8512,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,8288,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,10976,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,28416,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,shuffle,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,935936,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,stress,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,7456,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,stress,same-sm,P0:r0=1 P0:r1=0 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,8800,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=0 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,6112,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,9664,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=0 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,14112,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=0 P3:r1=1 x0=1 y0=1 y1=1 x1=1,6688,1005312,no,forbidden
+ptx/imported/dat3m/Manual/barrier-logical-id-forall,stress,same-sm,P0:r0=1 P0:r1=1 P1:r0=1 P1:r1=1 P2:r0=1 P2:r1=1 P3:r0=1 P3:r1=1 x0=1 y0=1 y1=1 x1=1,952480,1005312,no,forbidden
+ptx/imported/dat3m/Manual/counter-atomic-store-rmw,plain,same-sm,P0:r0=1 P1:r0=2 x=3,531840,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-atomic-store-rmw,plain,same-sm,P0:r0=2 P1:r0=1 x=3,481920,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-atomic-store-rmw,shuffle,same-sm,P0:r0=1 P1:r0=2 x=3,500128,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-atomic-store-rmw,shuffle,same-sm,P0:r0=2 P1:r0=1 x=3,513632,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-atomic-store-rmw,stress,same-sm,P0:r0=1 P1:r0=2 x=3,473472,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-atomic-store-rmw,stress,same-sm,P0:r0=2 P1:r0=1 x=3,540288,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-atomic-load,plain,same-sm,P0:r0=1 P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-atomic-load,shuffle,same-sm,P0:r0=1 P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-atomic-load,stress,same-sm,P0:r0=1 P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-plain-load,plain,same-sm,P0:r0=1 P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-plain-load,shuffle,same-sm,P0:r0=1 P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-plain-load,stress,same-sm,P0:r0=1 P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-rmw,plain,same-sm,P0:r0=1 P1:r0=2 x=3,534944,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-rmw,plain,same-sm,P0:r0=2 P1:r0=1 x=3,478816,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-rmw,shuffle,same-sm,P0:r0=1 P1:r0=2 x=3,496288,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-rmw,shuffle,same-sm,P0:r0=2 P1:r0=1 x=3,517472,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-rmw,stress,same-sm,P0:r0=1 P1:r0=2 x=3,473440,1013760,no,forbidden
+ptx/imported/dat3m/Manual/counter-plain-store-rmw,stress,same-sm,P0:r0=2 P1:r0=1 x=3,540320,1013760,no,forbidden
+ptx/imported/dat3m/Memalloy/IRIW1,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,415655,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,94770,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,104531,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,386132,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,401977,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,95224,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,94483,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,409404,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,477543,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,56428,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,53771,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW1,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,413346,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,427628,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,52916,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,475406,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,45138,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,368657,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,216431,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,226242,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,189758,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,582586,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,49094,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=0 x=1 y=0,345272,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW2,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=0 x=1 y=0,24136,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=0 x=1,288150,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1,151790,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1,108416,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=0 x=1,54000,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1,44494,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1,354238,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=0 x=1,269085,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1,141867,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1,97566,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=0 x=1,38960,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1,60423,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1,393187,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=0 x=1,259553,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1,207122,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1,66516,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=0 x=1,30992,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1,19446,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_gl_cta,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1,417459,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=0 P3:r2=1 x=1,66916,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=0 P3:r2=2 x=1,32,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=0 P3:r2=2 x=2,251261,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=2 P3:r2=1 x=1,19716,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=2 P3:r2=2 x=2,42470,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=1 x=1,33275,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=2 x=2,80958,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=1 x=1,18856,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=2,13392,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r0=1 P3:r2=2 x=2,73503,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=2 x=2,10038,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r0=1 P3:r2=2 x=2,80263,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=2,26152,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=1 x=1,49565,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=2 x=2,67397,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=1 P3:r2=2 x=2,46718,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=1 x=1,75691,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=2,44885,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=0 P3:r2=1 x=1,147910,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=0 P3:r2=2 x=1,951,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=0 P3:r2=2 x=2,117631,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=2 P3:r2=1 x=1,24347,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=2 P3:r2=2 x=1,13,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=2 P3:r2=2 x=2,12192,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=1 x=1,95536,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=2 x=1,557,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=2 x=2,49890,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=1 P3:r2=1 x=1,1,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=1 x=1,48470,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=1,69,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=2,12361,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r0=1 P3:r2=2 x=2,116247,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=2 x=2,12632,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r0=1 P3:r2=2 x=2,86981,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=2,35771,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=1 x=1,70827,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=2 x=1,340,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=2 x=2,27148,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=1 P3:r2=2 x=2,46622,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=1 x=1,60475,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=1,48,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=2,34069,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=0 P3:r2=1 x=1,60372,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=0 P3:r2=2 x=2,291941,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=2 P3:r2=1 x=1,9313,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r0=2 P3:r2=2 x=2,34571,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=1 x=1,25310,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=2 x=2,98991,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=1 x=1,5880,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=2,4344,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r0=1 P3:r2=2 x=2,195271,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=2 x=2,15028,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r0=1 P3:r2=2 x=2,110867,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=2,19248,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=1 x=1,19542,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=0 P3:r2=2 x=2,33584,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=1 P3:r2=2 x=2,38938,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=1 x=1,25409,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r0=2 P3:r2=2 x=2,12479,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,313826,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,91689,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,46253,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,39199,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,49926,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,55680,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,57847,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,70057,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,54874,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,44628,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,177109,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,152782,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,209712,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,26439,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,80368,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,3,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,2,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,26612,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,80363,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,46170,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,75426,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,58015,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,2,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,3,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,59119,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,1,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,186068,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,3,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,224825,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,240673,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,25341,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,31321,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,27997,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,33678,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,30602,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,23222,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,54453,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,48554,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW1,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,260422,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,296935,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,87721,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,49920,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,41048,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,46042,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,47697,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,61922,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,57086,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,64085,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,49256,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,199376,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,162047,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,181237,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,25923,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,71599,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,4,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,3,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,26428,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,71787,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,54140,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,72575,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,64921,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,1,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,3,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,66650,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,203766,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,4,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,206990,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,189080,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,23125,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,31699,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,18349,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,28698,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,41295,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,23857,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,68473,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,67416,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW2,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,302106,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,216083,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,194722,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,6785,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,24665,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,30252,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,3525,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,101693,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,147492,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,1834,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,14871,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,10301,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,977,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,108248,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,114471,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,528,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,11044,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,12116,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,1481,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,553,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,586,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,188481,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,192310,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,64939,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,40565,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,38861,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,66409,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,34,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,120,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,53237,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,78790,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,26059,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,34734,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,13318,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,30566,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,123,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,18,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,53710,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,40848,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,18819,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,12879,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,23290,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,21839,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,18,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,317156,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,249811,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,15284,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,12565,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,13590,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,10872,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,70862,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,136076,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,2773,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,4525,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,2390,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,3857,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,85427,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,65256,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,2436,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,2845,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,2992,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW3,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,2353,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,215204,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,208665,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,4263,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,18498,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,29304,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,2690,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,1213,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,2499,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,103764,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,135363,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,975,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,12802,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,9435,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,632,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,3037,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,3455,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,104933,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,117800,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,386,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,8723,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,10372,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,866,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,1210,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,4967,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,32,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,184073,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,189872,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,71056,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,38924,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,38076,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,67911,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,202,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,222,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,53404,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,70730,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,29283,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,32614,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,13547,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,29234,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,103,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,78,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,48377,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,48770,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,20657,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,14124,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,22772,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,26908,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,52,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,99,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,311098,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,260412,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,15180,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,11675,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,12986,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,12553,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,73416,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,129009,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,2496,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,4153,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,2154,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,4563,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=1 y=1,81084,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=0 P3:r2=1 x=2 y=1,69905,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=1 y=1,2230,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=1 P3:r2=1 x=2 y=1,2518,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=1 y=1,2780,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW4,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P3:r0=2 P3:r2=1 x=2 y=1,2876,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r2=3 P3:r0=0 x=3,301522,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r2=3 P3:r0=2 x=3,46268,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=0 x=3,122371,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=3,34612,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r2=3 P3:r0=1 x=3,71342,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r2=3 P3:r0=2 x=3,10436,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=1 x=3,84189,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=3,29068,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=0 x=3,119648,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=1 x=3,49120,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=3,132512,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r2=3 P3:r0=0 x=1,945,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r2=3 P3:r0=0 x=3,230919,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r2=3 P3:r0=2 x=1,1,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r2=3 P3:r0=2 x=3,41074,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=0 x=1,446,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=0 x=3,140833,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=1,82,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=3,66881,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r2=3 P3:r0=0 x=3,1,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r2=3 P3:r0=1 x=3,99254,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r2=3 P3:r0=2 x=3,17115,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=1 x=3,83187,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=3,38573,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=0 x=1,325,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=0 x=3,107939,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=1 x=3,57386,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=1,75,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=3,116052,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r2=3 P3:r0=0 x=3,345843,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P3:r2=3 P3:r0=2 x=3,19549,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=0 x=3,138373,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=3,14192,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r2=3 P3:r0=1 x=3,175117,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P3:r2=3 P3:r0=2 x=3,18467,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=1 x=3,110907,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=3,23632,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=0 x=3,61698,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=1 x=3,49694,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRRWIW_uniproc,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P3:r2=3 P3:r0=2 x=3,43616,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW1,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,434137,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,58183,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,464363,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,44405,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,376463,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,202033,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,240102,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,182490,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,569326,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,47186,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,363988,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW1,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,20588,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,400758,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,85723,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,96139,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,418468,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,375575,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,87668,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,88507,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,449338,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,416073,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,48224,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=0 P3:r2=1 x=2 y=1,47153,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW2,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P3:r0=2 P3:r2=1 x=2 y=1,489638,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,plain,same-cluster,P0:r0=2 P1:r2=1 P1:r0=0 P2:r0=2 P3:r2=2 P3:r0=0 x=2 y=1,294216,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,plain,same-cluster,P0:r0=2 P1:r2=1 P1:r0=0 P2:r0=2 P3:r2=2 P3:r0=2 x=2 y=1,96572,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,plain,same-cluster,P0:r0=2 P1:r2=1 P1:r0=2 P2:r0=2 P3:r2=2 P3:r0=0 x=2 y=1,458968,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,plain,same-cluster,P0:r0=2 P1:r2=1 P1:r0=2 P2:r0=2 P3:r2=2 P3:r0=2 x=2 y=1,151332,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,shuffle,same-cluster,P0:r0=2 P1:r2=1 P1:r0=0 P2:r0=2 P3:r2=2 P3:r0=0 x=2 y=1,333596,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,shuffle,same-cluster,P0:r0=2 P1:r2=1 P1:r0=0 P2:r0=2 P3:r2=2 P3:r0=2 x=2 y=1,125740,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,shuffle,same-cluster,P0:r0=2 P1:r2=1 P1:r0=2 P2:r0=2 P3:r2=2 P3:r0=0 x=2 y=1,408868,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,shuffle,same-cluster,P0:r0=2 P1:r2=1 P1:r0=2 P2:r0=2 P3:r2=2 P3:r0=2 x=2 y=1,132884,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,stress,same-cluster,P0:r0=2 P1:r2=1 P1:r0=0 P2:r0=2 P3:r2=2 P3:r0=0 x=2 y=1,343072,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,stress,same-cluster,P0:r0=2 P1:r2=1 P1:r0=0 P2:r0=2 P3:r2=2 P3:r0=2 x=2 y=1,54416,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,stress,same-cluster,P0:r0=2 P1:r2=1 P1:r0=2 P2:r0=2 P3:r2=2 P3:r0=0 x=2 y=1,502848,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/IRWIW_gl_cta,stress,same-cluster,P0:r0=2 P1:r2=1 P1:r0=2 P2:r0=2 P3:r2=2 P3:r0=2 x=2 y=1,100752,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC1,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,240132,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC1,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,760956,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/RWC1,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,425601,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC1,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,575487,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/RWC1,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,251601,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC1,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,749487,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/RWC2,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,250509,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC2,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,750579,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/RWC2,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,414749,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC2,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,586339,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/RWC2,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,221051,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC2,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=0 x=1 y=0,780037,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=1 x=1,6089,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=2 x=2,29040,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P2:r2=1 x=1,73237,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P2:r2=2 x=2,50088,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=2 x=2,50855,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P2:r2=2 x=2,495491,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P2:r2=1 x=1,65466,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P2:r2=2 x=2,230822,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=1 x=1,53094,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=2 x=1,126,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=2 x=2,48244,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=1,3,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=2 x=2,1,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P2:r2=1 x=1,142203,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P2:r2=2 x=1,642,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P2:r2=2 x=2,43229,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=1 x=1,4,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=2 x=2,65511,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P2:r2=2 x=2,193859,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=1,1,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P2:r2=1 x=1,207023,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P2:r2=2 x=1,1305,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P2:r2=2 x=2,245843,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=1 x=1,3075,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=2 x=2,11069,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P2:r2=1 x=1,53313,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=2 P2:r0=2 P2:r2=2 x=2,64355,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=2 x=2,71392,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=2 P2:r0=2 P2:r2=2 x=2,498076,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P2:r2=1 x=1,32865,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/RWC_uniproc,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=2 P2:r0=2 P2:r2=2 x=2,266943,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC1,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=1 x=1 y=1,394566,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC1,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,606522,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC1,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=1 x=1 y=1,590813,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC1,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,83,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC1,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=0 P2:r2=1 x=1 y=1,64,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC1,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,410128,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC1,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=1 x=1 y=1,354372,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC1,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,646716,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC2,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=0 x=1 y=1,499237,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC2,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=0 x=1 y=1,501851,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/WRC2,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=0 x=1 y=1,672903,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC2,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=1 P2:r2=0 x=1 y=1,48,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC2,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=0 P2:r2=0 x=1 y=1,64,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC2,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=0 x=1 y=1,328073,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/WRC2,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=0 x=1 y=1,624039,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRC2,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=0 x=1 y=1,377049,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=3 x=1 y=3,76108,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=3 x=2 y=3,65903,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=2 P2:r2=3 x=2 y=3,495685,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=0 P2:r0=2 P2:r2=3 x=1 y=3,85519,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=0 P2:r0=2 P2:r2=3 x=2 y=3,277873,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=3 x=1 y=3,194508,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=3 x=2 y=3,86530,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=2 P2:r2=3 x=1 y=3,38,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=2 P2:r2=3 x=2 y=3,263154,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=0 P2:r0=2 P2:r2=3 x=1 y=3,213110,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=0 P2:r0=2 P2:r2=3 x=2 y=3,243748,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=3 x=1 y=3,64919,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=0 P2:r0=2 P2:r2=3 x=2 y=3,66535,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=0 P2:r0=2 P2:r2=3 x=2 y=3,496066,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=0 P2:r0=2 P2:r2=3 x=1 y=3,45925,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=0 P2:r0=2 P2:r2=3 x=2 y=3,327643,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=1 x=1 y=1,135742,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=1 x=2 y=1,107941,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=1 x=1 y=1,115227,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=1 x=2 y=1,41445,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P2:r2=1 x=1 y=1,600733,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=1 x=1 y=1,139239,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=1 x=2 y=1,290001,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=1 x=1 y=1,101058,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=1 x=2 y=1,102957,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P2:r2=1 x=1 y=1,367784,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P2:r2=1 x=2 y=1,49,1001088,yes,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=1 x=1 y=1,160325,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=0 P2:r0=1 P2:r2=1 x=2 y=1,93881,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=1 x=1 y=1,69137,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=0 P2:r0=1 P2:r2=1 x=2 y=1,10927,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W1,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=0 P2:r0=1 P2:r2=1 x=1 y=1,666818,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,136582,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P2:r2=1 x=2 y=1,110865,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,148293,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,plain,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=1 x=2 y=1,46299,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,559049,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,130775,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P2:r2=1 x=2 y=1,252280,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,135882,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,shuffle,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=1 x=2 y=1,105293,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,376721,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P2:r2=1 x=2 y=1,137,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,103929,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=1 P2:r2=1 x=2 y=1,87808,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,162969,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,stress,same-cluster,P0:r0=2 P1:r0=1 P1:r2=1 P2:r0=1 P2:r2=1 x=2 y=1,12071,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRR+2W2,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=1 P2:r2=1 x=1 y=1,634311,1001088,no,allowed
+ptx/imported/dat3m/Memalloy/WRW+2W1,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,142672,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W1,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,858416,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,263092,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,737996,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W1,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,108776,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W1,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,892312,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W2,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,136965,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W2,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,864123,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,252824,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,748264,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W2,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,100612,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+2W2,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,900476,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=1 y=1,72310,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,67337,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,506305,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=1 y=1,79869,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,275267,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=1 y=1,171538,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,89536,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=1 x=1 y=1,62,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,285614,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=1 y=1,195545,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,258793,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=1 y=1,56202,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,48816,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,513030,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=1 y=1,37604,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR1,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,345436,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=0 x=1 y=1,76479,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,plain,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=0 x=2 y=1,63469,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,plain,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=0 x=2 y=1,446708,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=0 x=1 y=1,90001,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,plain,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=0 x=2 y=1,324431,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=0 x=1 y=1,188001,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,shuffle,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=0 x=2 y=1,83643,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=0 x=1 y=1,106,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,shuffle,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=0 x=2 y=1,267716,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=0 x=1 y=1,212976,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,shuffle,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=0 x=2 y=1,248646,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=0 x=1 y=1,64756,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,stress,same-cluster,P0:r0=1 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=0 x=2 y=1,56892,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,stress,same-cluster,P0:r0=1 P1:r0=1 P1:r2=1 P2:r0=2 P2:r2=0 x=2 y=1,485008,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=0 x=1 y=1,44343,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WRW+WR2,stress,same-cluster,P0:r0=1 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=0 x=2 y=1,350089,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC1,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=1 x=2 y=1,393001,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC1,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,608087,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=1 x=2 y=1,591931,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC1,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,116,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=0 P2:r2=1 x=2 y=1,57,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC1,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,408984,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC1,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=1 x=2 y=1,359865,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC1,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,641223,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC2,plain,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=1 x=2 y=1,397446,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC2,plain,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,603642,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=1 x=2 y=1,594796,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC2,shuffle,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,56,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=0 P2:r2=1 x=2 y=1,72,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC2,shuffle,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,406164,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC2,stress,same-cluster,P0:r0=2 P1:r0=0 P1:r2=1 P2:r0=0 P2:r2=1 x=2 y=1,355544,1001088,no,forbidden
+ptx/imported/dat3m/Memalloy/WWC2,stress,same-cluster,P0:r0=2 P1:r0=2 P1:r2=1 P2:r0=2 P2:r2=1 x=2 y=1,645544,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Atom-SB,plain,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 P1:r4=1 x=2 y=2,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Atom-SB,shuffle,same-cluster,P0:r1=0 P0:r2=0 P1:r3=1 P1:r4=1 x=2 y=2,482190,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Atom-SB,shuffle,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 P1:r4=1 x=2 y=2,37066,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Atom-SB,shuffle,same-cluster,P0:r1=1 P0:r2=1 P1:r3=0 P1:r4=0 x=2 y=2,481832,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Atom-SB,stress,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 P1:r4=1 x=2 y=2,1001056,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Atom-SB,stress,same-cluster,P0:r1=1 P0:r2=1 P1:r3=0 P1:r4=0 x=2 y=2,32,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Atom-SB-ld,plain,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 x=1 y=2,570920,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Atom-SB-ld,plain,same-cluster,P0:r1=0 P0:r2=1 P1:r3=1 x=1 y=2,430168,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Atom-SB-ld,shuffle,same-cluster,P0:r1=0 P0:r2=0 P1:r3=1 x=1 y=1,470646,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Atom-SB-ld,shuffle,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 x=1 y=2,511993,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Atom-SB-ld,shuffle,same-cluster,P0:r1=0 P0:r2=1 P1:r3=1 x=1 y=2,18449,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Atom-SB-ld,stress,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 x=1 y=2,1000374,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Atom-SB-ld,stress,same-cluster,P0:r1=0 P0:r2=1 P1:r3=1 x=1 y=2,714,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,plain,same-cluster,P1:r0=0 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,67057,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,plain,same-cluster,P1:r0=0 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,25615,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,plain,same-cluster,P1:r0=1 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,83736,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,plain,same-cluster,P1:r0=1 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,824680,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,shuffle,same-cluster,P1:r0=0 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,1780,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,shuffle,same-cluster,P1:r0=0 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,109292,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,shuffle,same-cluster,P1:r0=1 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,9828,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,shuffle,same-cluster,P1:r0=1 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,880188,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,stress,same-cluster,P1:r0=0 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,2,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,stress,same-cluster,P1:r0=0 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,95710,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,stress,same-cluster,P1:r0=1 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,77,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff,stress,same-cluster,P1:r0=1 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,905299,1001088,no,allowed
+ptx/imported/dat3m/Nvidia/Release-acquire-pattern,plain,same-cluster,P1:r1=0 P1:r2=1 y=1 x=2,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Release-acquire-pattern,shuffle,same-cluster,P1:r1=0 P1:r2=0 y=1 x=2,487200,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Release-acquire-pattern,shuffle,same-cluster,P1:r1=0 P1:r2=1 y=1 x=2,22528,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Release-acquire-pattern,shuffle,same-cluster,P1:r1=1 P1:r2=1 y=1 x=2,134,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Release-acquire-pattern,shuffle,same-cluster,P1:r1=2 P1:r2=1 y=1 x=2,491226,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/Release-acquire-pattern,stress,same-cluster,P1:r1=0 P1:r2=1 y=1 x=2,1001088,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/SB-cta,plain,same-sm,P0:r0=0 P1:r1=1 x=1 y=2,479136,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/SB-cta,plain,same-sm,P0:r0=2 P1:r1=0 x=1 y=2,16544,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/SB-cta,plain,same-sm,P0:r0=2 P1:r1=1 x=1 y=2,518080,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/SB-cta,shuffle,same-sm,P0:r0=0 P1:r1=1 x=1 y=2,497024,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/SB-cta,shuffle,same-sm,P0:r0=2 P1:r1=0 x=1 y=2,52864,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/SB-cta,shuffle,same-sm,P0:r0=2 P1:r1=1 x=1 y=2,463872,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/SB-cta,stress,same-sm,P0:r0=0 P1:r1=1 x=1 y=2,650976,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/SB-cta,stress,same-sm,P0:r0=2 P1:r1=0 x=1 y=2,80736,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/SB-cta,stress,same-sm,P0:r0=2 P1:r1=1 x=1 y=2,282048,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen,plain,same-sm,P1:r0=0 P1:r1=2 x=2 flag=1,932224,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen,plain,same-sm,P1:r0=1 P1:r1=2 x=2 flag=1,81536,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen,shuffle,same-sm,P1:r0=0 P1:r1=2 x=2 flag=1,923584,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen,shuffle,same-sm,P1:r0=1 P1:r1=2 x=2 flag=1,90176,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen,stress,same-sm,P1:r0=0 P1:r1=2 x=2 flag=1,894816,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen,stress,same-sm,P1:r0=1 P1:r1=2 x=2 flag=1,118944,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1,plain,same-cluster,P1:r0=0 P1:r1=0 x=2 flag=1,79264,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1,plain,same-cluster,P1:r0=0 P1:r1=2 x=2 flag=1,921824,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=2 flag=1,490926,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1,shuffle,same-cluster,P1:r0=0 P1:r1=2 x=2 flag=1,18706,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1,shuffle,same-cluster,P1:r0=1 P1:r1=2 x=2 flag=1,491456,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1,stress,same-cluster,P1:r0=0 P1:r1=0 x=2 flag=1,1009,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1,stress,same-cluster,P1:r0=0 P1:r1=2 x=2 flag=1,1000079,1001088,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-genW-genR,plain,same-sm,P0:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-genW-genR,shuffle,same-sm,P0:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-genW-genR,stress,same-sm,P0:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/mixedproxy/CoMP_volatile,plain,same-cluster,P1:r0=0 P1:r1=0 x=2,825051,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,plain,same-cluster,P1:r0=0 P1:r1=1 x=2,22919,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,plain,same-cluster,P1:r0=0 P1:r1=2 x=2,970,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,plain,same-cluster,P1:r0=1 P1:r1=1 x=2,23709,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,plain,same-cluster,P1:r0=1 P1:r1=2 x=2,16813,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,plain,same-cluster,P1:r0=2 P1:r1=2 x=2,111626,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=2,501802,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=2,177,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,shuffle,same-cluster,P1:r0=0 P1:r1=2 x=2,10,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=2,93,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,shuffle,same-cluster,P1:r0=1 P1:r1=2 x=2,90,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,shuffle,same-cluster,P1:r0=2 P1:r1=2 x=2,498916,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,stress,same-cluster,P1:r0=0 P1:r1=0 x=2,968739,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,stress,same-cluster,P1:r0=0 P1:r1=1 x=2,9968,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,stress,same-cluster,P1:r0=0 P1:r1=2 x=2,196,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,stress,same-cluster,P1:r0=1 P1:r1=1 x=2,3957,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,stress,same-cluster,P1:r0=1 P1:r1=2 x=2,2207,1001088,no,allowed
+ptx/imported/mixedproxy/CoMP_volatile,stress,same-cluster,P1:r0=2 P1:r1=2 x=2,16021,1001088,no,allowed
+ptx/imported/mixedproxy/CoWR+00,plain,same-sm,P0:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/mixedproxy/CoWR+00,shuffle,same-sm,P0:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/mixedproxy/CoWR+00,stress,same-sm,P0:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/imported/mixedproxy/ISA2,plain,same-cluster,P1:r0=0 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,63048,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,plain,same-cluster,P1:r0=0 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,24728,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,plain,same-cluster,P1:r0=1 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,88768,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,plain,same-cluster,P1:r0=1 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,824544,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,shuffle,same-cluster,P1:r0=0 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,2779,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,shuffle,same-cluster,P1:r0=0 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,121125,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,shuffle,same-cluster,P1:r0=1 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,11014,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,shuffle,same-cluster,P1:r0=1 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,866161,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,shuffle,same-cluster,P1:r0=1 P2:r1=1 P2:r2=42 x=42 flag1=1 flag2=1,9,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,stress,same-cluster,P1:r0=0 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,423,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,stress,same-cluster,P1:r0=0 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,110809,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,stress,same-cluster,P1:r0=1 P2:r1=0 P2:r2=0 x=42 flag1=1 flag2=1,220,1001088,no,forbidden
+ptx/imported/mixedproxy/ISA2,stress,same-cluster,P1:r0=1 P2:r1=0 P2:r2=42 x=42 flag1=1 flag2=1,889636,1001088,no,forbidden
+ptx/imported/mixedproxy/MP_cta+00,plain,same-sm,P1:r0=0 P1:r1=2 x=2 flag=1,935168,1013760,no,forbidden
+ptx/imported/mixedproxy/MP_cta+00,plain,same-sm,P1:r0=1 P1:r1=2 x=2 flag=1,78592,1013760,no,forbidden
+ptx/imported/mixedproxy/MP_cta+00,shuffle,same-sm,P1:r0=0 P1:r1=2 x=2 flag=1,921408,1013760,no,forbidden
+ptx/imported/mixedproxy/MP_cta+00,shuffle,same-sm,P1:r0=1 P1:r1=2 x=2 flag=1,92352,1013760,no,forbidden
+ptx/imported/mixedproxy/MP_cta+00,stress,same-sm,P1:r0=0 P1:r1=2 x=2 flag=1,897344,1013760,no,forbidden
+ptx/imported/mixedproxy/MP_cta+00,stress,same-sm,P1:r0=1 P1:r1=2 x=2 flag=1,116416,1013760,no,forbidden
+ptx/imported/mixedproxy/MP_gpu+00,plain,same-cluster,P1:r0=0 P1:r1=0 x=2 flag=1,82255,1001088,no,forbidden
+ptx/imported/mixedproxy/MP_gpu+00,plain,same-cluster,P1:r0=0 P1:r1=2 x=2 flag=1,918833,1001088,no,forbidden
+ptx/imported/mixedproxy/MP_gpu+00,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=2 flag=1,489584,1001088,no,forbidden
+ptx/imported/mixedproxy/MP_gpu+00,shuffle,same-cluster,P1:r0=0 P1:r1=2 x=2 flag=1,18614,1001088,no,forbidden
+ptx/imported/mixedproxy/MP_gpu+00,shuffle,same-cluster,P1:r0=1 P1:r1=2 x=2 flag=1,492890,1001088,no,forbidden
+ptx/imported/mixedproxy/MP_gpu+00,stress,same-cluster,P1:r0=0 P1:r1=0 x=2 flag=1,807,1001088,no,forbidden
+ptx/imported/mixedproxy/MP_gpu+00,stress,same-cluster,P1:r0=0 P1:r1=2 x=2 flag=1,1000281,1001088,no,forbidden
+ptx/imported/mixedproxy/Release_acquire_pattern,plain,same-cluster,P1:r1=0 P1:r3=1 y=1 x=2,1001088,1001088,no,forbidden
+ptx/imported/mixedproxy/Release_acquire_pattern,shuffle,same-cluster,P1:r1=0 P1:r3=0 y=1 x=2,488719,1001088,no,forbidden
+ptx/imported/mixedproxy/Release_acquire_pattern,shuffle,same-cluster,P1:r1=0 P1:r3=1 y=1 x=2,22419,1001088,no,forbidden
+ptx/imported/mixedproxy/Release_acquire_pattern,shuffle,same-cluster,P1:r1=1 P1:r3=1 y=1 x=2,161,1001088,no,forbidden
+ptx/imported/mixedproxy/Release_acquire_pattern,shuffle,same-cluster,P1:r1=2 P1:r3=1 y=1 x=2,489789,1001088,no,forbidden
+ptx/imported/mixedproxy/Release_acquire_pattern,stress,same-cluster,P1:r1=0 P1:r3=1 y=1 x=2,1001088,1001088,no,forbidden
+ptx/imported/mixedproxy/SB_cta,plain,same-sm,P0:r0=0 P1:r1=1 x=1 y=2,473344,1013760,no,forbidden
+ptx/imported/mixedproxy/SB_cta,plain,same-sm,P0:r0=2 P1:r1=0 x=1 y=2,16512,1013760,no,forbidden
+ptx/imported/mixedproxy/SB_cta,plain,same-sm,P0:r0=2 P1:r1=1 x=1 y=2,523904,1013760,no,forbidden
+ptx/imported/mixedproxy/SB_cta,shuffle,same-sm,P0:r0=0 P1:r1=1 x=1 y=2,496704,1013760,no,forbidden
+ptx/imported/mixedproxy/SB_cta,shuffle,same-sm,P0:r0=2 P1:r1=0 x=1 y=2,53024,1013760,no,forbidden
+ptx/imported/mixedproxy/SB_cta,shuffle,same-sm,P0:r0=2 P1:r1=1 x=1 y=2,464032,1013760,no,forbidden
+ptx/imported/mixedproxy/SB_cta,stress,same-sm,P0:r0=0 P1:r1=1 x=1 y=2,642144,1013760,no,forbidden
+ptx/imported/mixedproxy/SB_cta,stress,same-sm,P0:r0=2 P1:r1=0 x=1 y=2,82464,1013760,no,forbidden
+ptx/imported/mixedproxy/SB_cta,stress,same-sm,P0:r0=2 P1:r1=1 x=1 y=2,289152,1013760,no,forbidden
+ptx/imported/mixedproxy/SB_rmw,plain,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 P1:r4=1 x=2 y=2,1001088,1001088,no,forbidden
+ptx/imported/mixedproxy/SB_rmw,shuffle,same-cluster,P0:r1=0 P0:r2=0 P1:r3=1 P1:r4=1 x=2 y=2,483892,1001088,no,forbidden
+ptx/imported/mixedproxy/SB_rmw,shuffle,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 P1:r4=1 x=2 y=2,37708,1001088,no,forbidden
+ptx/imported/mixedproxy/SB_rmw,shuffle,same-cluster,P0:r1=1 P0:r2=1 P1:r3=0 P1:r4=0 x=2 y=2,479488,1001088,no,forbidden
+ptx/imported/mixedproxy/SB_rmw,stress,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 P1:r4=1 x=2 y=2,1001088,1001088,no,forbidden
+ptx/imported/mixedproxy/SB_rmw_2,plain,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 x=1 y=2,575580,1001088,no,allowed
+ptx/imported/mixedproxy/SB_rmw_2,plain,same-cluster,P0:r1=0 P0:r2=1 P1:r3=1 x=1 y=2,425508,1001088,no,allowed
+ptx/imported/mixedproxy/SB_rmw_2,shuffle,same-cluster,P0:r1=0 P0:r2=0 P1:r3=1 x=1 y=1,469979,1001088,no,allowed
+ptx/imported/mixedproxy/SB_rmw_2,shuffle,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 x=1 y=2,513394,1001088,no,allowed
+ptx/imported/mixedproxy/SB_rmw_2,shuffle,same-cluster,P0:r1=0 P0:r2=1 P1:r3=1 x=1 y=2,17715,1001088,no,allowed
+ptx/imported/mixedproxy/SB_rmw_2,stress,same-cluster,P0:r1=0 P0:r2=1 P1:r3=0 x=1 y=2,1000243,1001088,no,allowed
+ptx/imported/mixedproxy/SB_rmw_2,stress,same-cluster,P0:r1=0 P0:r2=1 P1:r3=1 x=1 y=2,845,1001088,no,allowed
 ptx/kamui/families/2+2W/2+2W+fence-sc.cluster+diff-cluster,plain,diff-cluster,x=1 y=2,654,1001088,no,allowed
 ptx/kamui/families/2+2W/2+2W+fence-sc.cluster+diff-cluster,plain,diff-cluster,x=2 y=1,3587,1001088,no,allowed
 ptx/kamui/families/2+2W/2+2W+fence-sc.cluster+diff-cluster,plain,diff-cluster,x=2 y=2,996847,1001088,no,allowed
@@ -3938,6 +5259,9 @@ ptx/kamui/hand/MP+volatile+diff-cluster,shuffle,diff-cluster,P1:r0=1 P1:r1=1 x=1
 ptx/kamui/hand/MP+volatile+diff-cluster,stress,diff-cluster,P1:r0=0 P1:r1=0 x=1 y=1,777344,1001088,no,allowed
 ptx/kamui/hand/MP+volatile+diff-cluster,stress,diff-cluster,P1:r0=0 P1:r1=1 x=1 y=1,105657,1001088,no,allowed
 ptx/kamui/hand/MP+volatile+diff-cluster,stress,diff-cluster,P1:r0=1 P1:r1=1 x=1 y=1,118087,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/2+cp.reduce.async.bulk,plain,same-cluster,g=2,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/async-bulk/2+cp.reduce.async.bulk,shuffle,same-cluster,g=2,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/async-bulk/2+cp.reduce.async.bulk,stress,same-cluster,g=2,1001088,1001088,no,forbidden
 ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,plain,same-sm,P1:r0=0 P1:r1=0 h=1 g=5,362981,1013760,no,allowed
 ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,plain,same-sm,P1:r0=0 P1:r1=1 h=1 g=5,619243,1013760,no,allowed
 ptx/kamui/ptx87/async-bulk/TMA-load+complete-tx-not-transitive,plain,same-sm,P1:r0=1 P1:r1=0 h=1 g=5,1307,1013760,yes,allowed
@@ -4033,24 +5357,60 @@ ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,stress,same-sm,P0:r0=0 P0:r1=0 
 ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,stress,same-sm,P0:r0=1 P0:r1=0 g=6,121944,1013760,no,allowed
 ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,stress,same-sm,P0:r0=1 P0:r1=5 g=6,22969,1013760,yes,allowed
 ptx/kamui/ptx87/async-bulk/TMA-load+stale-source,stress,same-sm,P0:r0=1 P0:r1=6 g=6,860380,1013760,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group+release,plain,same-cluster,P1:r0=0 P1:r1=0 g=1 f=1,637062,1001088,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group+release,plain,same-cluster,P1:r0=0 P1:r1=1 g=1 f=1,364026,1001088,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group+release,shuffle,same-cluster,P1:r0=0 P1:r1=0 g=1 f=1,267200,1001088,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group+release,shuffle,same-cluster,P1:r0=0 P1:r1=1 g=1 f=1,733888,1001088,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group+release,stress,same-cluster,P1:r0=0 P1:r1=0 g=1 f=1,305575,1001088,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group+release,stress,same-cluster,P1:r0=0 P1:r1=1 g=1 f=1,695513,1001088,no,forbidden
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1,plain,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,allowed
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1,shuffle,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,allowed
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1,stress,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,allowed
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1+older,plain,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1+older,shuffle,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1+older,stress,same-sm,P0:r0=1 P0:r1=1 g=1 h=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release,plain,same-cluster,P1:r0=0 P1:r1=0 g=1 f=1,636154,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release,plain,same-cluster,P1:r0=0 P1:r1=1 g=1 f=1,364934,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release,shuffle,same-cluster,P1:r0=0 P1:r1=0 g=1 f=1,276723,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release,shuffle,same-cluster,P1:r0=0 P1:r1=1 g=1 f=1,724365,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release,stress,same-cluster,P1:r0=0 P1:r1=0 g=1 f=1,315313,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release,stress,same-cluster,P1:r0=0 P1:r1=1 g=1 f=1,685775,1001088,no,allowed
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+source-reuse,plain,same-sm,g=1,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+source-reuse,shuffle,same-sm,g=1,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+source-reuse,stress,same-sm,g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic,plain,same-cluster,P1:r0=0 g=2,932990,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic,plain,same-cluster,P1:r0=1 g=2,68098,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic,shuffle,same-cluster,P1:r0=0 g=2,930321,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic,shuffle,same-cluster,P1:r0=1 g=2,70767,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic,stress,same-cluster,P1:r0=0 g=2,961800,1001088,no,allowed
+ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic,stress,same-cluster,P1:r0=1 g=2,39288,1001088,no,allowed
 ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+wait_group,plain,same-sm,P0:r0=3 g=3,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+wait_group,shuffle,same-sm,P0:r0=3 g=3,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+wait_group,stress,same-sm,P0:r0=3 g=3,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/bar/MP+bar.arrive+bar.sync,plain,same-sm,P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/bar/MP+bar.arrive+bar.sync,shuffle,same-sm,P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/bar/MP+bar.arrive+bar.sync,stress,same-sm,P1:r0=1 x=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/bar/MP+bar.sync-count+third-thread,plain,same-sm,P1:r0=1 P2:r1=0 x=1,1024,1013760,yes,allowed
+ptx/kamui/ptx87/bar/MP+bar.sync-count+third-thread,plain,same-sm,P1:r0=1 P2:r1=1 x=1,1012736,1013760,no,allowed
+ptx/kamui/ptx87/bar/MP+bar.sync-count+third-thread,shuffle,same-sm,P1:r0=1 P2:r1=0 x=1,21056,1013760,yes,allowed
+ptx/kamui/ptx87/bar/MP+bar.sync-count+third-thread,shuffle,same-sm,P1:r0=1 P2:r1=1 x=1,992704,1013760,no,allowed
+ptx/kamui/ptx87/bar/MP+bar.sync-count+third-thread,stress,same-sm,P1:r0=1 P2:r1=0 x=1,32448,1013760,yes,allowed
+ptx/kamui/ptx87/bar/MP+bar.sync-count+third-thread,stress,same-sm,P1:r0=1 P2:r1=1 x=1,981312,1013760,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+async-copy,plain,same-cluster,P1:r0=5 g=5,1001088,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+async-copy,shuffle,same-cluster,P1:r0=5 g=5,1001088,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+async-copy,stress,same-cluster,P1:r0=5 g=5,1001088,1001088,no,allowed
 ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,plain,same-cluster,P1:r0=0 x=1,779842,1001088,yes,allowed
 ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,plain,same-cluster,P1:r0=1 x=1,221246,1001088,no,allowed
 ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,shuffle,same-cluster,P1:r0=0 x=1,480170,1001088,yes,allowed
 ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,shuffle,same-cluster,P1:r0=1 x=1,520918,1001088,no,allowed
 ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,stress,same-cluster,P1:r0=0 x=1,449728,1001088,yes,allowed
 ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+between-arrive-and-wait,stress,same-cluster,P1:r0=1 x=1,551360,1001088,no,allowed
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+remote-shared,plain,same-cluster,P1:r0=1,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+remote-shared,shuffle,same-cluster,P1:r0=1,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+remote-shared,stress,same-cluster,P1:r0=1,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta,plain,same-cluster,P1:r0=1,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta,shuffle,same-cluster,P1:r0=1,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta,stress,same-cluster,P1:r0=1,1001088,1001088,no,forbidden
 ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global,plain,same-cluster,P1:r0=0 d=1,30504,1001088,yes,allowed
 ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global,plain,same-cluster,P1:r0=1 d=1,970584,1001088,no,allowed
 ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global,shuffle,same-cluster,P1:r0=0 d=1,10226,1001088,yes,allowed
@@ -4300,12 +5660,60 @@ ptx/kamui/ptx87/ld-st/MP+mmio,stress,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,17946,
 ptx/kamui/ptx87/ld-st/ld.const+initial,plain,same-sm,P0:r0=5 c=5,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/ld-st/ld.const+initial,shuffle,same-sm,P0:r0=5 c=5,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/ld-st/ld.const+initial,stress,same-sm,P0:r0=5 c=5,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote,plain,same-cluster,P1:r0=0 P1:r1=1,746046,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote,plain,same-cluster,P1:r0=1 P1:r1=1,255042,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote,shuffle,same-cluster,P1:r0=0 P1:r1=1,644477,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote,shuffle,same-cluster,P1:r0=1 P1:r1=1,356611,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote,stress,same-cluster,P1:r0=0 P1:r1=0,194,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote,stress,same-cluster,P1:r0=0 P1:r1=1,661426,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote,stress,same-cluster,P1:r0=1 P1:r1=1,339468,1001088,no,forbidden
 ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,plain,same-sm,P2:r0=0 P2:r1=1 x=1,590144,1013760,no,forbidden
 ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,plain,same-sm,P2:r0=1 P2:r1=1 x=1,423616,1013760,no,forbidden
 ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,shuffle,same-sm,P2:r0=0 P2:r1=1 x=1,497888,1013760,no,forbidden
 ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,shuffle,same-sm,P2:r0=1 P2:r1=1 x=1,515872,1013760,no,forbidden
 ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,stress,same-sm,P2:r0=0 P2:r1=1 x=1,469280,1013760,no,forbidden
 ptx/kamui/ptx87/mbarrier/MP+mbarrier-expect-complete-tx,stress,same-sm,P2:r0=1 P2:r1=1 x=1,544480,1013760,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta,plain,same-cluster,P1:r0=0 P1:r1=0 x=1,999064,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta,plain,same-cluster,P1:r0=0 P1:r1=1 x=1,1970,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta,plain,same-cluster,P1:r0=1 P1:r1=0 x=1,54,1001088,yes,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1,972000,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1,29088,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta,stress,same-cluster,P1:r0=0 P1:r1=0 x=1,988976,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta,stress,same-cluster,P1:r0=0 P1:r1=1 x=1,12112,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster,plain,same-cluster,P1:r0=0 P1:r1=0 x=1,532,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster,plain,same-cluster,P1:r0=0 P1:r1=1 x=1,1000269,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster,plain,same-cluster,P1:r0=1 P1:r1=1 x=1,287,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1,5376,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1,995712,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster,stress,same-cluster,P1:r0=0 P1:r1=0 x=1,4628,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster,stress,same-cluster,P1:r0=0 P1:r1=1 x=1,996460,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,plain,same-cluster,P1:r0=0 P1:r1=0 x=1,777,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,plain,same-cluster,P1:r0=0 P1:r1=1 x=1,564040,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,plain,same-cluster,P1:r0=1 P1:r1=1 x=1,436271,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1,9952,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1,461912,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,shuffle,same-cluster,P1:r0=1 P1:r1=0 x=1,103,1001088,yes,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1,529121,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,stress,same-cluster,P1:r0=0 P1:r1=0 x=1,1046,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,stress,same-cluster,P1:r0=0 P1:r1=1 x=1,387530,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,stress,same-cluster,P1:r0=1 P1:r1=0 x=1,341,1001088,yes,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,stress,same-cluster,P1:r0=1 P1:r1=1 x=1,612171,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict,plain,same-cluster,P1:r0=0 P1:r1=0,652,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict,plain,same-cluster,P1:r0=0 P1:r1=1,918487,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict,plain,same-cluster,P1:r0=1 P1:r1=1,81949,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict,shuffle,same-cluster,P1:r0=0 P1:r1=0,13375,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict,shuffle,same-cluster,P1:r0=0 P1:r1=1,967605,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict,shuffle,same-cluster,P1:r0=1 P1:r1=1,20108,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict,stress,same-cluster,P1:r0=0 P1:r1=0,8722,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict,stress,same-cluster,P1:r0=0 P1:r1=1,971198,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict,stress,same-cluster,P1:r0=1 P1:r1=1,21168,1001088,no,forbidden
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global,plain,same-cluster,P1:r0=0 P1:r1=0 d=1,748,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global,plain,same-cluster,P1:r0=0 P1:r1=1 d=1,1000276,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global,plain,same-cluster,P1:r0=1 P1:r1=1 d=1,64,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global,shuffle,same-cluster,P1:r0=0 P1:r1=0 d=1,4086,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global,shuffle,same-cluster,P1:r0=0 P1:r1=1 d=1,997002,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global,stress,same-cluster,P1:r0=0 P1:r1=0 d=1,4565,1001088,no,allowed
+ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global,stress,same-cluster,P1:r0=0 P1:r1=1 d=1,996523,1001088,no,allowed
 ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,plain,same-sm,P2:r0=0 P2:r1=0 P2:r2=0 x=1 y=1,96,1013760,no,forbidden
 ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,plain,same-sm,P2:r0=0 P2:r1=1 P2:r2=0 x=1 y=1,567936,1013760,no,forbidden
 ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-acq.cta,plain,same-sm,P2:r0=0 P2:r1=1 P2:r2=1 x=1 y=1,38240,1013760,no,forbidden
@@ -4393,6 +5801,21 @@ ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,stress,same-sm,P1:r0=0 P1:r
 ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,stress,same-sm,P1:r0=0 P1:r1=1 x=1,33504,1013760,no,allowed
 ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,stress,same-sm,P1:r0=1 P1:r1=0 x=1,9984,1013760,no,allowed
 ptx/kamui/ptx87/mbarrier/mbarrier-wait-false+no-sync,stress,same-sm,P1:r0=1 P1:r1=1 x=1,932160,1013760,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both,plain,same-cluster,P1:r0=0 P1:r1=0 f=1,53672,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both,plain,same-cluster,P1:r0=0 P1:r1=1 f=1,947416,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both,shuffle,same-cluster,P1:r0=0 P1:r1=0 f=1,3767,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both,shuffle,same-cluster,P1:r0=0 P1:r1=1 f=1,996336,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both,shuffle,same-cluster,P1:r0=1 P1:r1=1 f=1,985,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both,stress,same-cluster,P1:r0=0 P1:r1=0 f=1,4215,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both,stress,same-cluster,P1:r0=0 P1:r1=1 f=1,996292,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both,stress,same-cluster,P1:r0=1 P1:r1=1 f=1,581,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared,plain,same-cluster,P1:r0=0 P1:r1=1 f=1,1001050,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared,plain,same-cluster,P1:r0=1 P1:r1=1 f=1,38,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared,shuffle,same-cluster,P1:r0=0 P1:r1=0 f=1,32,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared,shuffle,same-cluster,P1:r0=0 P1:r1=1 f=1,994046,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared,shuffle,same-cluster,P1:r0=1 P1:r1=1 f=1,7010,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared,stress,same-cluster,P1:r0=0 P1:r1=1 f=1,999079,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared,stress,same-cluster,P1:r0=1 P1:r1=1 f=1,2009,1001088,no,forbidden
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,plain,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,91431,1001088,no,allowed
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,plain,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,909657,1001088,no,allowed
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,shuffle,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,494010,1001088,no,allowed
@@ -4400,6 +5823,12 @@ ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,shuffle,same-cluster,P
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,shuffle,same-cluster,P1:r0=1 P1:r1=1 d=1 f=1,488725,1001088,no,allowed
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,stress,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,709,1001088,no,allowed
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+global,stress,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,1000379,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+shared,plain,same-cluster,P1:r0=0 P1:r1=0 f=1,1340,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+shared,plain,same-cluster,P1:r0=0 P1:r1=1 f=1,999748,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+shared,shuffle,same-cluster,P1:r0=0 P1:r1=0 f=1,33,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+shared,shuffle,same-cluster,P1:r0=0 P1:r1=1 f=1,1001055,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+shared,stress,same-cluster,P1:r0=0 P1:r1=0 f=1,71,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+shared,stress,same-cluster,P1:r0=0 P1:r1=1 f=1,1001017,1001088,no,forbidden
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,plain,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,3250,1001088,no,allowed
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,plain,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,981565,1001088,no,allowed
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,plain,same-cluster,P1:r0=1 P1:r1=1 d=1 f=1,16273,1001088,no,allowed
@@ -4409,6 +5838,24 @@ ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,shuffle,same-cluster,P1:r0
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,stress,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,226,1001088,no,allowed
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,stress,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,986843,1001088,no,allowed
 ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+global,stress,same-cluster,P1:r0=1 P1:r1=1 d=1 f=1,14019,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive,plain,same-cluster,P1:r0=0 P1:r1=0 d=1 f=1,1194,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive,plain,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,999894,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive,shuffle,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,1000405,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive,shuffle,same-cluster,P1:r0=1 P1:r1=1 d=1 f=1,683,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive,stress,same-cluster,P1:r0=0 P1:r1=1 d=1 f=1,1000644,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive,stress,same-cluster,P1:r0=1 P1:r1=1 d=1 f=1,444,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared,plain,same-cluster,P1:r0=0 P1:r1=0 f=1,7521,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared,plain,same-cluster,P1:r0=0 P1:r1=1 f=1,993567,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared,shuffle,same-cluster,P1:r0=0 P1:r1=1 f=1,1000184,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared,shuffle,same-cluster,P1:r0=1 P1:r1=1 f=1,904,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared,stress,same-cluster,P1:r0=0 P1:r1=1 f=1,1000619,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared,stress,same-cluster,P1:r0=1 P1:r1=1 f=1,469,1001088,no,allowed
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared,plain,same-cluster,P1:r0=0 P1:r1=1 f=1,1001079,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared,plain,same-cluster,P1:r0=1 P1:r1=1 f=1,9,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared,shuffle,same-cluster,P1:r0=0 P1:r1=1 f=1,975190,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared,shuffle,same-cluster,P1:r0=1 P1:r1=1 f=1,25898,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared,stress,same-cluster,P1:r0=0 P1:r1=1 f=1,999204,1001088,no,forbidden
+ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared,stress,same-cluster,P1:r0=1 P1:r1=1 f=1,1884,1001088,no,forbidden
 ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,plain,diff-cluster,P0:r0=0 P1:r1=1 x=2,587758,1001088,no,allowed
 ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,plain,diff-cluster,P0:r0=1 P1:r1=0 x=2,413330,1001088,no,allowed
 ptx/kamui/ptx87/rmw/2+add.cluster+diff-cluster,shuffle,diff-cluster,P0:r0=0 P1:r1=1 x=2,501024,1001088,no,allowed
@@ -4453,3 +5900,50 @@ ptx/kamui/ptx87/rmw/cas+fail,stress,same-sm,P0:r0=0 x=0,1013760,1013760,no,forbi
 ptx/kamui/ptx87/rmw/red+final,plain,same-cluster,x=2,1001088,1001088,no,forbidden
 ptx/kamui/ptx87/rmw/red+final,shuffle,same-cluster,x=2,1001088,1001088,no,forbidden
 ptx/kamui/ptx87/rmw/red+final,stress,same-cluster,x=2,1001088,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows,plain,same-cluster,P1:r0=0 P1:r1=0,1001087,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows,plain,same-cluster,P1:r0=0 P1:r1=1,1,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows,shuffle,same-cluster,P1:r0=0 P1:r1=0,1000775,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows,shuffle,same-cluster,P1:r0=0 P1:r1=1,127,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows,shuffle,same-cluster,P1:r0=1 P1:r1=1,186,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows,stress,same-cluster,P1:r0=0 P1:r1=0,1001079,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows,stress,same-cluster,P1:r0=0 P1:r1=1,9,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/MP+rel-acq.cluster+remote-shared,plain,same-cluster,P1:r0=0 P1:r1=0 f=1,1720,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/MP+rel-acq.cluster+remote-shared,plain,same-cluster,P1:r0=0 P1:r1=1 f=1,999368,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/MP+rel-acq.cluster+remote-shared,shuffle,same-cluster,P1:r0=0 P1:r1=0 f=1,64,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/MP+rel-acq.cluster+remote-shared,shuffle,same-cluster,P1:r0=0 P1:r1=1 f=1,1001024,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/MP+rel-acq.cluster+remote-shared,stress,same-cluster,P1:r0=0 P1:r1=0 f=1,30,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/MP+rel-acq.cluster+remote-shared,stress,same-cluster,P1:r0=0 P1:r1=1 f=1,1001058,1001088,no,forbidden
+ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared,plain,same-cluster,P1:r0=0 P1:r1=0 f=1,184438,1001088,no,allowed
+ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared,plain,same-cluster,P1:r0=0 P1:r1=1 f=1,816650,1001088,no,allowed
+ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared,shuffle,same-cluster,P1:r0=0 P1:r1=0 f=1,10855,1001088,no,allowed
+ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared,shuffle,same-cluster,P1:r0=0 P1:r1=1 f=1,989225,1001088,no,allowed
+ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared,shuffle,same-cluster,P1:r0=1 P1:r1=1 f=1,1008,1001088,no,allowed
+ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared,stress,same-cluster,P1:r0=0 P1:r1=0 f=1,15304,1001088,no,allowed
+ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared,stress,same-cluster,P1:r0=0 P1:r1=1 f=1,984725,1001088,no,allowed
+ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared,stress,same-cluster,P1:r0=1 P1:r1=1 f=1,1059,1001088,no,allowed
+ptx/kamui/ptx87/st-async/MP+red.async,plain,same-cluster,P1:r0=0 P1:r1=2,9064,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+red.async,plain,same-cluster,P1:r0=0 P1:r1=3,28045,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+red.async,plain,same-cluster,P1:r0=1 P1:r1=3,963979,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+red.async,shuffle,same-cluster,P1:r0=0 P1:r1=2,5803,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+red.async,shuffle,same-cluster,P1:r0=0 P1:r1=3,56219,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+red.async,shuffle,same-cluster,P1:r0=1 P1:r1=3,939066,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+red.async,stress,same-cluster,P1:r0=0 P1:r1=2,3769,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+red.async,stress,same-cluster,P1:r0=0 P1:r1=3,36273,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+red.async,stress,same-cluster,P1:r0=1 P1:r1=3,961046,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+st.async,plain,same-cluster,P1:r0=0 P1:r1=0,2487,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+st.async,plain,same-cluster,P1:r0=0 P1:r1=1,22791,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+st.async,plain,same-cluster,P1:r0=1 P1:r1=1,975810,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+st.async,shuffle,same-cluster,P1:r0=0 P1:r1=0,7871,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+st.async,shuffle,same-cluster,P1:r0=0 P1:r1=1,58209,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+st.async,shuffle,same-cluster,P1:r0=1 P1:r1=1,935008,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+st.async,stress,same-cluster,P1:r0=0 P1:r1=0,5440,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+st.async,stress,same-cluster,P1:r0=0 P1:r1=1,43149,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+st.async,stress,same-cluster,P1:r0=1 P1:r1=1,952499,1001088,no,forbidden
+ptx/kamui/ptx87/st-async/MP+st.async+not-transitive,plain,same-cluster,P1:r0=0 P1:r1=0 h=1,25,1001088,no,allowed
+ptx/kamui/ptx87/st-async/MP+st.async+not-transitive,plain,same-cluster,P1:r0=0 P1:r1=1 h=1,19690,1001088,no,allowed
+ptx/kamui/ptx87/st-async/MP+st.async+not-transitive,plain,same-cluster,P1:r0=1 P1:r1=1 h=1,981373,1001088,no,allowed
+ptx/kamui/ptx87/st-async/MP+st.async+not-transitive,shuffle,same-cluster,P1:r0=0 P1:r1=0 h=1,66,1001088,no,allowed
+ptx/kamui/ptx87/st-async/MP+st.async+not-transitive,shuffle,same-cluster,P1:r0=0 P1:r1=1 h=1,18785,1001088,no,allowed
+ptx/kamui/ptx87/st-async/MP+st.async+not-transitive,shuffle,same-cluster,P1:r0=1 P1:r1=1 h=1,982237,1001088,no,allowed
+ptx/kamui/ptx87/st-async/MP+st.async+not-transitive,stress,same-cluster,P1:r0=0 P1:r1=1 h=1,2512,1001088,no,allowed
+ptx/kamui/ptx87/st-async/MP+st.async+not-transitive,stress,same-cluster,P1:r0=1 P1:r1=1 h=1,998576,1001088,no,allowed

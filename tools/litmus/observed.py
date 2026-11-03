@@ -11,7 +11,7 @@ becomes one row of observed.csv:
 | Column | Meaning |
 |---|---|
 | test | the test id |
-| config | plain, stress or shuffle (see tools/litmus/runner/litmus_runner.c) |
+| config | plain, stress, shuffle or spread (see tools/litmus/runner/litmus_runner.c) |
 | class | where the instance's threads actually ran: same-sm, same-cluster (one cluster, several SMs), diff-cluster |
 | outcome | the final state, e.g. `P1:r0=1 P1:r1=0` |
 | count | how many instances ended in that state |

@@ -1,7 +1,7 @@
 /*
  * litmus_runner: run one generated litmus kernel many times on the GPU and count its outcomes.
  *
- *     litmus_runner SPEC PTX OUT_JSON [--instances N] [--config plain|stress|shuffle] [--seed S]
+ *     litmus_runner SPEC PTX OUT_JSON [--instances N] [--config plain|stress|shuffle|spread] [--seed S]
  *     litmus_runner --plan SPEC [--config C] [--seed S]   print the placement of one launch, touch no GPU
  *
  * SPEC and PTX come from tools/litmus/to_cuda.py (tests/litmus/h100/<test>/spec.txt and kernel.ptx). The PTX is
@@ -22,6 +22,8 @@
  *   shuffle  stress, plus a fresh random placement, location layout and per-thread start delay every launch
  *            (for tests with a cluster barrier or a CTA barrier, whole warps are shuffled, never single lanes:
  *            see make_assign)
+ *   spread   shuffle with start delays up to 16383 loop iterations instead of 255, so that a reader often runs after
+ *            a writer that has more work to do (used for tests whose interesting state is rare otherwise)
  *
  * `init g v` in SPEC: global location g starts at v (the host writes it before each launch).
  * `dsmem 1` in SPEC: the test reaches shared memory of other CTAs of its cluster; the kernel computes the address of
@@ -325,9 +327,11 @@ int main(int argc, char **argv) {
         else if (pos == 1) ptx_path = argv[i], pos++;
         else if (pos == 2) out_path = argv[i], pos++;
     }
-    int stress = !strcmp(config, "stress") || !strcmp(config, "shuffle"), random = !strcmp(config, "shuffle");
+    int spread = !strcmp(config, "spread");
+    int stress = !strcmp(config, "stress") || !strcmp(config, "shuffle") || spread;
+    int random = !strcmp(config, "shuffle") || spread;
     if (!spec_path || (!plan && !out_path) || (strcmp(config, "plain") && !stress)) {
-        fprintf(stderr, "usage: litmus_runner SPEC PTX OUT_JSON [--instances N] [--config plain|stress|shuffle]"
+        fprintf(stderr, "usage: litmus_runner SPEC PTX OUT_JSON [--instances N] [--config plain|stress|shuffle|spread]"
                         " [--seed S]\n       litmus_runner --plan SPEC [--config C] [--seed S]\n");
         return 1;
     }
@@ -395,7 +399,8 @@ int main(int argc, char **argv) {
     CHECK(cuMemcpyHtoD(d_assign, assign, sizeof assign));
     CHECK(cuMemcpyHtoD(d_locoff, locoff, (size_t)nlines * 4));
 
-    unsigned scratch_mask = SCRATCH_WORDS - 1, stress_iters = stress ? 512 : 0, delay_mask = random ? 255 : 0;
+    unsigned scratch_mask = SCRATCH_WORDS - 1, stress_iters = stress ? 512 : 0;
+    unsigned delay_mask = spread ? 16383 : random ? 255 : 0;
     void *args[] = {&d_mem, &d_res, &d_place, &d_assign, &d_locoff, &d_scratch, &scratch_mask, &stress_iters,
                     &delay_mask};
     CUlaunchAttribute attr = {.id = CU_LAUNCH_ATTRIBUTE_CLUSTER_DIMENSION};
