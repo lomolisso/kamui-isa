@@ -507,6 +507,30 @@ def _barriers(t: litmus.Litmus, groups: list[int], rinit) -> tuple[dict[int, lis
                 raise Unsupported(f"{i.text!r}")
             keys.setdefault(key, set()).add(th.tid)
             uses.append((i, th.tid, key, mode, want))
+    # the barriers must complete: simulate the arrivals (Dat3M has tests that deadlock, for example
+    # PC-bar-sync-sync-3, where two threads wait at two barriers in opposite orders)
+    ops = {th.tid: [(key, mode) for _, k_, key, mode, _ in uses if k_ == th.tid] for th in t.threads}
+    need = {(key, g): sum(1 for k in keys[key] if groups[k] == g) for key in keys for g in set(groups)}
+    pos, gen, arrived, waiting = dict.fromkeys(ops, 0), {}, {}, {}
+    progress = True
+    while progress:
+        progress = False
+        for k, seq in ops.items():
+            while pos[k] < len(seq):
+                key, mode = seq[pos[k]]
+                slot = (key, groups[k])
+                if k not in waiting:
+                    gen_k = gen.setdefault((k, key), 0)
+                    gen[(k, key)] += 1
+                    arrived[(slot, gen_k)] = arrived.get((slot, gen_k), 0) + 1
+                    waiting[k] = (slot, gen_k)
+                if mode == "sync" and arrived[waiting[k]] < need[slot]:
+                    break
+                del waiting[k]
+                pos[k] += 1
+                progress = True
+    if any(pos[k] < len(seq) for k, seq in ops.items()):
+        raise Unsupported("the barriers of the test deadlock")
     code = {}
     order = sorted(keys, key=str)
     for i, tid_, key, mode, want in uses:

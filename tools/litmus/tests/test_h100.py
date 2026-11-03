@@ -96,3 +96,11 @@ def test_aliases_are_not_run():
         assert False
     except to_cuda.Unsupported as e:
         assert "alias" in str(e)
+
+
+def test_barrier_deadlock_is_not_run():
+    try:
+        to_cuda.generate87(litmus.load(DAT3M / "Manual" / "PC-bar-sync-sync-3.litmus"), "d")
+        assert False
+    except to_cuda.Unsupported as e:
+        assert "deadlock" in str(e)
