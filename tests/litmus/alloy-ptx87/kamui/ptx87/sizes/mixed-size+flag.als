@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_sizes_mixed_size_flag
 open ptx87
 
 // PTX mixed-size+flag
-// "A full-word store and a half-word load ordered by release/acquire on a flag only when the flag is read as 1: in the execution where it is read as 0 the two accesses race with mixed sizes, so the program has a mixed-size data race and the axioms do not apply to it (6811, D7). Expected: allowed."
+// "A full-word store and a half-word load ordered by release/acquire on a flag only when the flag is read as 1: in the execution where it is read as 0 the two accesses race with mixed sizes, so the program has a mixed-size data race and the axioms do not apply to it (6811); 0 is a value a write committed, the initial one (D38). Expected: allowed."
 // {
 // x[0]=0;
 // x[1]=0;

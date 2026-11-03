@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_tensormap_MP_tensormap_no_acquire_proxy_fence
 open ptx87
 
 // PTX MP+tensormap+no-acquire-proxy-fence
-// "As MP+tensormap+proxy-fences with a plain fence.acq_rel.gpu on the reader: the generic acquire does not order the tensormap-proxy read (D2). Expected: allowed."
+// "As MP+tensormap+proxy-fences with a plain fence.acq_rel.gpu on the reader: the generic acquire does not order the tensormap-proxy read (D37). Expected: allowed."
 // {
 // tm=0;
 // g=5;

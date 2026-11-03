@@ -2055,10 +2055,10 @@ ptx/kamui/ptx87/sizes/mixed-size+flag,plain,1001088,0,0,allowed,weak-unseen
 ptx/kamui/ptx87/sizes/mixed-size+flag,shuffle,1001088,0,0,allowed,weak-unseen
 ptx/kamui/ptx87/sizes/mixed-size+flag,spread,1001088,0,0,allowed,weak-unseen
 ptx/kamui/ptx87/sizes/mixed-size+flag,stress,1001088,0,0,allowed,weak-unseen
-ptx/kamui/ptx87/sizes/mixed-size+race,plain,1001088,0,0,allowed,weak-unseen
-ptx/kamui/ptx87/sizes/mixed-size+race,shuffle,1001088,0,0,allowed,weak-unseen
-ptx/kamui/ptx87/sizes/mixed-size+race,spread,1001088,0,0,allowed,weak-unseen
-ptx/kamui/ptx87/sizes/mixed-size+race,stress,1001088,0,0,allowed,weak-unseen
+ptx/kamui/ptx87/sizes/mixed-size+race,plain,1001088,0,0,forbidden,ok
+ptx/kamui/ptx87/sizes/mixed-size+race,shuffle,1001088,0,0,forbidden,ok
+ptx/kamui/ptx87/sizes/mixed-size+race,spread,1001088,0,0,forbidden,ok
+ptx/kamui/ptx87/sizes/mixed-size+race,stress,1001088,0,0,forbidden,ok
 ptx/kamui/ptx87/sizes/mixed-size+same-thread,plain,1013760,0,0,forbidden,ok
 ptx/kamui/ptx87/sizes/mixed-size+same-thread,shuffle,1013760,0,0,forbidden,ok
 ptx/kamui/ptx87/sizes/mixed-size+same-thread,spread,1013760,0,0,forbidden,ok

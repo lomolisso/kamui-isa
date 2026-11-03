@@ -9984,14 +9984,14 @@ ptx/kamui/ptx87/sizes/mixed-size+flag,spread,same-cluster,P1:r1=0 P1:r0=1 x=6553
 ptx/kamui/ptx87/sizes/mixed-size+flag,spread,same-cluster,P1:r1=1 P1:r0=1 x=65537 f=1,490819,1001088,no,allowed
 ptx/kamui/ptx87/sizes/mixed-size+flag,stress,same-cluster,P1:r1=0 P1:r0=0 x=65537 f=1,446,1001088,no,allowed
 ptx/kamui/ptx87/sizes/mixed-size+flag,stress,same-cluster,P1:r1=0 P1:r0=1 x=65537 f=1,1000642,1001088,no,allowed
-ptx/kamui/ptx87/sizes/mixed-size+race,plain,same-cluster,P1:r0=0 x=65537,892394,1001088,no,allowed
-ptx/kamui/ptx87/sizes/mixed-size+race,plain,same-cluster,P1:r0=1 x=65537,108694,1001088,no,allowed
-ptx/kamui/ptx87/sizes/mixed-size+race,shuffle,same-cluster,P1:r0=0 x=65537,501366,1001088,no,allowed
-ptx/kamui/ptx87/sizes/mixed-size+race,shuffle,same-cluster,P1:r0=1 x=65537,499722,1001088,no,allowed
-ptx/kamui/ptx87/sizes/mixed-size+race,spread,same-cluster,P1:r0=0 x=65537,501859,1001088,no,allowed
-ptx/kamui/ptx87/sizes/mixed-size+race,spread,same-cluster,P1:r0=1 x=65537,499229,1001088,no,allowed
-ptx/kamui/ptx87/sizes/mixed-size+race,stress,same-cluster,P1:r0=0 x=65537,985570,1001088,no,allowed
-ptx/kamui/ptx87/sizes/mixed-size+race,stress,same-cluster,P1:r0=1 x=65537,15518,1001088,no,allowed
+ptx/kamui/ptx87/sizes/mixed-size+race,plain,same-cluster,P1:r0=0 x=65537,892394,1001088,no,forbidden
+ptx/kamui/ptx87/sizes/mixed-size+race,plain,same-cluster,P1:r0=1 x=65537,108694,1001088,no,forbidden
+ptx/kamui/ptx87/sizes/mixed-size+race,shuffle,same-cluster,P1:r0=0 x=65537,501366,1001088,no,forbidden
+ptx/kamui/ptx87/sizes/mixed-size+race,shuffle,same-cluster,P1:r0=1 x=65537,499722,1001088,no,forbidden
+ptx/kamui/ptx87/sizes/mixed-size+race,spread,same-cluster,P1:r0=0 x=65537,501859,1001088,no,forbidden
+ptx/kamui/ptx87/sizes/mixed-size+race,spread,same-cluster,P1:r0=1 x=65537,499229,1001088,no,forbidden
+ptx/kamui/ptx87/sizes/mixed-size+race,stress,same-cluster,P1:r0=0 x=65537,985570,1001088,no,forbidden
+ptx/kamui/ptx87/sizes/mixed-size+race,stress,same-cluster,P1:r0=1 x=65537,15518,1001088,no,forbidden
 ptx/kamui/ptx87/sizes/mixed-size+same-thread,plain,same-sm,P0:r0=2 x=131073,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/sizes/mixed-size+same-thread,shuffle,same-sm,P0:r0=2 x=131073,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/sizes/mixed-size+same-thread,spread,same-sm,P0:r0=2 x=131073,1013760,1013760,no,forbidden
