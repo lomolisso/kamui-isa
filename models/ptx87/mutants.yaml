@@ -1,0 +1,848 @@
+# Mutants of the two PTX 8.7 models, for tools/litmus/mutate.py.
+#
+# A mutant changes one rule of one model: `find` is replaced by `replace` (exactly one occurrence of `find` must
+# exist in `file`). A "weaken" mutant drops an ordering rule (an outcome the model forbids may become allowed); a
+# "strengthen" mutant drops a restriction (an allowed outcome may become forbidden). A good test suite changes at
+# least one verdict for every mutant (the mutant is "killed"); a mutant that changes nothing either finds a gap in
+# the tests or a rule that is redundant (then `equivalent` says why).
+#
+# model: alloy (models/ptx87/ptx87.als) or dartagnan (deps/dat3m/cat/, file relative to that folder)
+# rule: the rule the mutant breaks, in plain words (used by the scorecard)
+
+# ---------------------------------------------------------------------------------------------------- Alloy
+- id: A-coherence
+  model: alloy
+  rule: Coherence axiom (8.10.1)
+  kind: weaken
+  find: "coherence and fence_sc and"
+  replace: "fence_sc and"
+- id: A-fence-sc
+  model: alloy
+  rule: Fence-SC axiom (8.10.2)
+  kind: weaken
+  find: "fence_sc and atomicity and"
+  replace: "atomicity and"
+- id: A-single-copy-atomicity
+  model: alloy
+  rule: single-copy atomicity across granules (8.10.3, D6)
+  kind: weaken
+  find: "  no (Read <: ms_r :> Write) & acc_lift[~rf] & acc_lift[fr]\n"
+  replace: ""
+- id: A-rmw-atomicity
+  model: alloy
+  rule: RMW atomicity (8.10.3)
+  kind: weaken
+  find: "  no (fr & atomic_pair_r).(co & atomic_pair_r) & rmw\n"
+  replace: ""
+- id: A-no-thin-air
+  model: alloy
+  rule: No-Thin-Air axiom (8.10.4)
+  kind: weaken
+  find: "and no_thin_air and"
+  replace: "and"
+- id: A-sc-per-location
+  model: alloy
+  rule: SC per location axiom (8.10.5)
+  kind: weaken
+  find: "and sc_per_location and"
+  replace: "and"
+- id: A-causality
+  model: alloy
+  rule: Causality axiom (8.10.6)
+  kind: weaken
+  find: "sc_per_location and causality"
+  replace: "sc_per_location"
+- id: A-rel-pattern-write
+  model: alloy
+  rule: release pattern starting with a release write (8.8)
+  kind: weaken
+  find: "  (Release <: optional[po_loc] :> StrongW)\n  + (RelFences"
+  replace: "  (RelFences"
+- id: A-rel-pattern-fence
+  model: alloy
+  rule: release pattern starting with a release fence (8.8)
+  kind: weaken
+  find: "  + (RelFences <: ^po :> StrongW)\n"
+  replace: "\n"
+- id: A-acq-pattern-read
+  model: alloy
+  rule: acquire pattern ending with an acquire read (8.8)
+  kind: weaken
+  find: "  (StrongR <: optional[po_loc] :> AcqReads)\n  + (StrongR <: ^po :> AcqFences)"
+  replace: "  (StrongR <: ^po :> AcqFences)"
+- id: A-acq-pattern-fence
+  model: alloy
+  rule: acquire pattern ending with an acquire fence (8.8)
+  kind: weaken
+  find: "  + (StrongR <: ^po :> AcqFences)\n"
+  replace: "\n"
+- id: A-barrier-wait-is-fence
+  model: alloy
+  rule: the wait of a CTA barrier acts as an acq_rel fence (D10)
+  kind: weaken
+  find: |-
+    fun RelFences : Event { FenceRel + FenceAcqRel + BarrierWait }
+    fun AcqFences : Event { FenceAcq + FenceAcqRel + BarrierWait }
+  replace: |-
+    fun RelFences : Event { FenceRel + FenceAcqRel }
+    fun AcqFences : Event { FenceAcq + FenceAcqRel }
+- id: A-false-wait-acquires
+  model: alloy
+  rule: a test_wait/try_wait acquires only when it returns True (9.7.13.15.16)
+  kind: strengthen
+  find: "fun AcqReads : Read { Acquire - FalseWaits }"
+  replace: "fun AcqReads : Read { Acquire }"
+- id: A-observation-rmw-chain
+  model: alloy
+  rule: observation through chains of atomic operations (8.9.3)
+  kind: weaken
+  find: "fun obs : Write->Read { strong[rf].*(rmw.(strong[rf])) }"
+  replace: "fun obs : Write->Read { strong[rf] }"
+- id: A-sync-pattern-ms-ends
+  model: alloy
+  rule: synchronizing patterns need morally strong first and last operations (8.9.4)
+  kind: strengthen
+  find: "fun sync_pattern : Event->Event { strong[rel_pattern.obs.acq_pattern] }"
+  replace: "fun sync_pattern : Event->Event { rel_pattern.obs.acq_pattern }"
+- id: A-sw-fence-sc
+  model: alloy
+  rule: Fence-SC order is part of synchronizes-with (8.9.4)
+  kind: weaken
+  find: "  sc                // fence.sc\n  + synchronizes"
+  replace: "  synchronizes"
+- id: A-sw-cta-barrier
+  model: alloy
+  rule: CTA barriers synchronize (bar.sync, bar.arrive, bar.warp.sync)
+  kind: weaken
+  find: "  + synchronizes    // bar.sync, bar.red, bar.arrive, bar.warp.sync\n"
+  replace: "\n"
+- id: A-sw-cluster-barrier
+  model: alloy
+  rule: cluster barriers synchronize (barrier.cluster)
+  kind: weaken
+  find: "  + cluster_sync    // barrier.cluster\n"
+  replace: "\n"
+- id: A-sw-patterns
+  model: alloy
+  rule: release/acquire patterns synchronize (incl. mbarrier arrive and wait)
+  kind: weaken
+  find: "  + sync_pattern    // release and acquire patterns (incl. mbarrier arrive and test_wait)\n"
+  replace: "\n"
+- id: A-cluster-relaxed-fence
+  model: alloy
+  rule: a fence before a relaxed cluster arrive releases (D11)
+  kind: weaken
+  find: "  + strong[(RelFences <: ^po :> ClusterArriveRelaxed).cgen.cwait]\n"
+  replace: "\n"
+- id: A-cluster-relaxed-releases
+  model: alloy
+  rule: a relaxed cluster arrive gives no ordering of its own (9.7.13.3)
+  kind: strengthen
+  find: "  ((ClusterArrive - ClusterArriveRelaxed) <: cgen.cwait)"
+  replace: "  (ClusterArrive <: cgen.cwait)"
+- id: A-bco-issue
+  model: alloy
+  rule: an asynchronous operation is ordered after the instructions before its issue (6884-6890)
+  kind: weaken
+  find: "^(po + issue + done + gdep +"
+  replace: "^(po + done + gdep +"
+- id: A-bco-done
+  model: alloy
+  rule: a completing wait orders the asynchronous operations before it (D20)
+  kind: weaken
+  find: "^(po + issue + done + gdep +"
+  replace: "^(po + issue + gdep +"
+- id: A-bco-gdep
+  model: alloy
+  rule: griddepcontrol.wait orders the prerequisite grid (D32)
+  kind: weaken
+  find: "^(po + issue + done + gdep +"
+  replace: "^(po + issue + done +"
+- id: A-restricted-edges
+  model: alloy
+  rule: restricted fences and complete-tx still synchronize (D18)
+  kind: weaken
+  find: "    bco_plain + left.sw_restricted.right"
+  replace: "    bco_plain"
+- id: A-sync-restrict-cta-unrestricted
+  model: alloy
+  rule: fence.release.sync_restrict::shared::cta orders only its CTA's shared memory (D18)
+  kind: strengthen
+  find: "fun RRel : Event { SyncRestrictCta + OpRestrictInit + TxAnchor }"
+  replace: "fun RRel : Event { OpRestrictInit + TxAnchor }"
+- id: A-op-restrict-unrestricted
+  model: alloy
+  rule: fence.mbarrier_init orders only mbarrier.init (D18)
+  kind: strengthen
+  find: "fun RRel : Event { SyncRestrictCta + OpRestrictInit + TxAnchor }"
+  replace: "fun RRel : Event { SyncRestrictCta + TxAnchor }"
+- id: A-txanchor-unrestricted
+  model: alloy
+  rule: complete-tx orders only the operations of its own instruction (6897, D21)
+  kind: strengthen
+  find: "fun RRel : Event { SyncRestrictCta + OpRestrictInit + TxAnchor }"
+  replace: "fun RRel : Event { SyncRestrictCta + OpRestrictInit }"
+- id: A-sync-restrict-cluster-unrestricted
+  model: alloy
+  rule: fence.acquire.sync_restrict::shared::cluster orders only later shared-memory operations (D18)
+  kind: strengthen
+  find: "fun RAcq : Event { SyncRestrictCluster }"
+  replace: "fun RAcq : Event { none }"
+- id: A-rleft-sync-restrict-cta
+  model: alloy
+  rule: what a .sync_restrict::shared::cta fence orders (its CTA's shared memory)
+  kind: weaken
+  find: "  ({ x: MemoryEvent, f: SyncRestrictCta | x.address.space = Shared and x.address.owner = f.cta_of }\n     & ^po)\n  + (MbarInit"
+  replace: "  (MbarInit"
+
+- id: A-rleft-mbarrier-init
+  model: alloy
+  rule: what fence.mbarrier_init orders (earlier mbarrier.init)
+  kind: weaken
+  find: "  + (MbarInit <: ^po :> OpRestrictInit)\n"
+  replace: "\n"
+- id: A-rleft-txops
+  model: alloy
+  rule: complete-tx orders its own instruction's operations
+  kind: weaken
+  find: "  + ~(TxAnchor <: txops)\n"
+  replace: "\n"
+- id: A-ppbco-generic
+  model: alloy
+  rule: proxy-preserved causality, same address in the generic proxy (8.9.5)
+  kind: weaken
+  find: "  same_alias[GenericM <: cb :> GenericM]\n  + same_alias[(MemoryEvent"
+  replace: "  same_alias[(MemoryEvent"
+- id: A-ppbco-same-proxy-cta
+  model: alloy
+  rule: proxy-preserved causality, same proxy and same thread block (8.9.5)
+  kind: weaken
+  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+  replace: "\n"
+- id: A-ppbco-src-fence
+  model: alloy
+  rule: proxy fence after a non-generic operation (D2)
+  kind: weaken
+  find: "  + same_alias[(cb & pf_src).cb :> GenericM]\n"
+  replace: "\n"
+- id: A-ppbco-dst-fence
+  model: alloy
+  rule: proxy fence before a non-generic operation (D2)
+  kind: weaken
+  find: "  + same_alias[GenericM <: cb.(pf_dst_with[cb])]\n"
+  replace: "\n"
+- id: A-ppbco-both-fences
+  model: alloy
+  rule: proxy fences on both sides (D2)
+  kind: weaken
+  find: "  + same_alias[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
+  replace: "\n"
+- id: A-ppbco-alias
+  model: alloy
+  rule: alias proxy fence between generic aliases (8.9.5)
+  kind: weaken
+  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
+  replace: "\n"
+- id: A-ppbco-alias-src
+  model: alloy
+  rule: alias fence with a proxy fence after a non-generic operation (D2)
+  kind: weaken
+  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
+  replace: "\n"
+- id: A-ppbco-alias-dst
+  model: alloy
+  rule: alias fence with a proxy fence before a non-generic operation (D2)
+  kind: weaken
+  find: "  + same_location[GenericM <: cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
+  replace: "\n"
+- id: A-ppbco-alias-both
+  model: alloy
+  rule: alias fence with proxy fences on both sides (D2)
+  kind: weaken
+  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb.(pf_dst_with[cb])]\n"
+  replace: "\n"
+- id: A-proxy-fence-any-cta-src
+  model: alloy
+  rule: a proxy fence orders only operations of its own thread block, source side (8.9.5)
+  kind: strengthen
+  find: "  { m: MemoryEvent, f: ProxyFence | m.proxy -> Generic in f.dirs } & same_cta_r & ~pf_space_ok"
+  replace: "  { m: MemoryEvent, f: ProxyFence | m.proxy -> Generic in f.dirs } & ~pf_space_ok"
+- id: A-proxy-fence-any-cta-dst
+  model: alloy
+  rule: a proxy fence orders only operations of its own thread block, destination side (8.9.5)
+  kind: strengthen
+  find: "  { f: ProxyFence, m: MemoryEvent | Generic -> m.proxy in f.dirs } & same_cta_r & pf_space_ok"
+  replace: "  { f: ProxyFence, m: MemoryEvent | Generic -> m.proxy in f.dirs } & pf_space_ok"
+- id: A-proxy-fence-any-space
+  model: alloy
+  rule: a proxy fence with a state space or address orders only that space or address (22660)
+  kind: strengthen
+  find: "  { f: ProxyFence, m: MemoryEvent | (no f.pspace or m.address.space in f.pspace)\n                                     and (no f.paddr or m.address in f.paddr) "
+  replace: "  ProxyFence->MemoryEvent\n"
+
+- id: A-tensormap-pair
+  model: alloy
+  rule: tensormap proxy fences order as a release/acquire pair (D37)
+  kind: weaken
+  find: "  + ((TmFence & FenceRel) <: (cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))"
+  replace: ""
+- id: A-tensormap-alone
+  model: alloy
+  rule: one tensormap proxy fence alone does not order (D37)
+  kind: strengthen
+  find: "  (cb & (pf_dst - (TmFence <: pf_dst)))"
+  replace: "  (cb & pf_dst)"
+- id: A-cause-observation
+  model: alloy
+  rule: causality order includes observation followed by base causality (8.9.6)
+  kind: weaken
+  find: "fun cause : MemoryEvent->MemoryEvent { ppbco + obs.ppbco }"
+  replace: "fun cause : MemoryEvent->MemoryEvent { ppbco }"
+- id: A-ms-scope
+  model: alloy
+  rule: morally strong needs mutually including scopes (8.7)
+  kind: strengthen
+  find: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden"
+  replace: "  (proxy_of.~proxy_of & overlap_ok_r) - iden"
+- id: A-ms-proxy
+  model: alloy
+  rule: morally strong needs the same proxy (8.7)
+  kind: strengthen
+  find: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden"
+  replace: "  (scope_incl_r & overlap_ok_r) - iden"
+- id: A-ms-overlap
+  model: alloy
+  rule: morally strong needs complete overlap (8.7, D6)
+  kind: strengthen
+  find: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden"
+  replace: "  (scope_incl_r & proxy_of.~proxy_of) - iden"
+- id: A-ms-weak
+  model: alloy
+  rule: weak operations are never morally strong with other threads (8.7)
+  kind: strengthen
+  find: "fun Weak : Event { (scope :> Thread).Thread }"
+  replace: "fun Weak : Event { none }"
+- id: A-atomic-pair-partial
+  model: alloy
+  rule: partially overlapping atomic operations stay atomic (8.7.2, 6817)
+  kind: weaken
+  find: "  ms_r + (Atomics <: (scope_incl_r & proxy.~proxy & same_location_r) :> Atomics)"
+  replace: "  ms_r"
+- id: A-co-ms-writes
+  model: alloy
+  rule: morally strong overlapping writes are coherence ordered (8.9.1)
+  kind: weaken
+  find: "  Write <: ms_r :> Write in ^co + ^~co\n"
+  replace: "\n"
+- id: A-co-granules
+  model: alloy
+  rule: writes sharing several granules are ordered the same way on all (D6)
+  kind: weaken
+  find: "  no (~acc.(^co).acc) & ~(~acc.(^co).acc)\n"
+  replace: "\n"
+- id: A-fence-sc-total
+  model: alloy
+  rule: Fence-SC order relates every morally strong pair of fence.sc (8.9.2)
+  kind: weaken
+  find: "  all disj f1, f2: FenceSC | f1->f2 in ms_r => (f1->f2 in sc or f2->f1 in sc)\n"
+  replace: "\n"
+- id: A-barrier-count
+  model: alloy
+  rule: a barrier with a thread count completes when that many threads arrived (9.7.13.1)
+  kind: weaken
+  find: "  all a: BarrierArrive | some a.bcount => #a.bgen = a.bcount\n"
+  replace: "\n"
+- id: A-barrier-once-per-generation
+  model: alloy
+  rule: a thread arrives once per barrier generation (D9)
+  kind: weaken
+  find: "  no ^po & bgen                                          // a thread arrives once per generation\n"
+  replace: "\n"
+- id: A-cluster-barrier-all-threads
+  model: alloy
+  rule: every thread of the cluster takes part in a cluster barrier (9.7.13.3)
+  kind: weaken
+  find: "  all a: ClusterArrive | a.cgen.thd = (a.cluster_of.*subscope & Thread) - AsyncUnit\n"
+  replace: "\n"
+- id: A-mbarrier-state-rf
+  model: alloy
+  rule: an mbarrier operation reads the state the previous one wrote (D12)
+  kind: weaken
+  find: "  all r: Read & MbarEv | some r.~rf =>\n      (r.ph = r.~rf.ph and r.pend = r.~rf.pend and r.expc = r.~rf.expc and r.tx = r.~rf.tx)\n    else\n      (r.ph = r.address.iph and r.pend = r.address.ipend and r.expc = r.address.iexp and r.tx = r.address.itx)\n"
+  replace: "  all r: Read & MbarEv | no r.~rf => r.ph = r.address.iph\n"
+
+- id: A-mbarrier-tx-completes
+  model: alloy
+  rule: a phase completes only when the tx-count also reaches zero (D13)
+  kind: weaken
+  find: "    (p = 0 and t = 0) => (w.ph = plus[r.ph, 1]"
+  replace: "    (p = 0) => (w.ph = plus[r.ph, 1]"
+- id: A-wait-parity
+  model: alloy
+  rule: a wait by parity returns True once that phase completed (D15)
+  kind: weaken
+  find: "  (some r.wpar and rem[r.ph, 2] != r.wpar) or (some r.wtok and r.ph > r.wtok)"
+  replace: "  (some r.wtok and r.ph > r.wtok)"
+- id: A-wait-token
+  model: alloy
+  rule: a wait by state token returns True once that phase completed (D15)
+  kind: weaken
+  find: "  (some r.wpar and rem[r.ph, 2] != r.wpar) or (some r.wtok and r.ph > r.wtok)"
+  replace: "  (some r.wpar and rem[r.ph, 2] != r.wpar)"
+- id: A-ub-invalid-object
+  model: alloy
+  rule: an operation on an invalid mbarrier is undefined behaviour (D7)
+  kind: strengthen
+  find: "  (some r: Read & MbarEv | r.ph < 0)\n  or (some w:"
+  replace: "  (some w:"
+- id: A-ub-too-many-arrivals
+  model: alloy
+  rule: more arrivals than pending is undefined behaviour (D7)
+  kind: strengthen
+  find: "  or (some w: (Write & MbarEv) - MbarInit | w.pend < 0)\n"
+  replace: "\n"
+- id: A-mixed-size-race
+  model: alloy
+  rule: a mixed-size data race frees the program from the axioms (D38)
+  kind: strengthen
+  find: "pred mixed_size_race {\n  some disj e1, e2: MemoryEvent |"
+  replace: "pred mixed_size_race {\n  some none and some disj e1, e2: MemoryEvent |"
+- id: A-mixed-size-race-cause
+  model: alloy
+  rule: operations ordered by causality do not race (8.7.1)
+  kind: weaken
+  find: "    and e1->e2 not in ms_r + cause + ~cause"
+  replace: "    and e1->e2 not in ms_r"
+
+# ------------------------------------------------------------------------------------------------ Dartagnan
+- id: D-coherence
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: Coherence axiom (8.10.1)
+  kind: weaken
+  find: "empty ((([W]; cause; [W]) & loc) \\ co) as axiom-Coherence\n"
+  replace: "\n"
+- id: D-coherence-ms-writes
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: morally strong overlapping writes are coherence ordered (8.9.1)
+  kind: weaken
+  find: "empty ((([W]; morally-strong; [W]) & loc) \\ (co | co^-1)) as axiom-Coherence2\n"
+  replace: "\n"
+- id: D-coherence-granules
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: writes sharing several granules are ordered the same way on all (M15)
+  kind: weaken
+  find: "irreflexive (ms-co; si; ms-co; si) as axiom-Coherence-granules\n"
+  replace: "\n"
+- id: D-fence-sc
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: Fence-SC axiom (8.10.2)
+  kind: weaken
+  find: "empty ((([F & SC]; cause-base; [F & SC]) & morally-strong) \\ sync_fence) as axiom-FenceSC\n"
+  replace: "\n"
+- id: D-single-copy-atomicity
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: single-copy atomicity across granules (8.10.3, M15)
+  kind: weaken
+  find: "irreflexive ((morally-strong & fr); si; (morally-strong & rf); si) as axiom-SingleCopyAtomicity\n"
+  replace: "\n"
+- id: D-rmw-atomicity
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: RMW atomicity (8.10.3)
+  kind: weaken
+  find: "empty (((morally-strong & fr); (morally-strong & co)) & rmw) as axiom-Atomicity\n"
+  replace: "\n"
+- id: D-mixed-size-atomicity
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: partially overlapping atomic operations stay atomic (8.7.2, M17)
+  kind: weaken
+  find: "empty (((atomic-pair & fr); [range(rmw)]; (atomic-pair & co)) & rmw) as axiom-MixedSizeAtomicity\n"
+  replace: "\n"
+- id: D-no-thin-air
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: No-Thin-Air axiom (8.10.4)
+  kind: weaken
+  find: "acyclic (rf | dep) as axiom-NoThinAir\n"
+  replace: "\n"
+- id: D-sc-per-location
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: SC per location axiom (8.10.5)
+  kind: weaken
+  find: "acyclic (morally-strong & (po | rf | co | fr) & vloc) as axiom-ScPerLocation\n"
+  replace: "\n"
+- id: D-causality
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: Causality axiom (8.10.6)
+  kind: weaken
+  find: "irreflexive ((rf | fr); cause) as axiom-Causality\n"
+  replace: "\n"
+- id: D-async-out-of-po
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: asynchronous operations are not in program order (M39)
+  kind: strengthen
+  find: "let po = ((po0 \\ ((AOP * _) | (_ * AOP))) | async-internal | completion | cpasync-arrive-order)+"
+  replace: "let po = (po0 | async-internal | completion | cpasync-arrive-order)+"
+- id: D-async-completion
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: a completing wait orders the asynchronous operations before it (M40)
+  kind: weaken
+  find: "let po = ((po0 \\ ((AOP * _) | (_ * AOP))) | async-internal | completion | cpasync-arrive-order)+"
+  replace: "let po = ((po0 \\ ((AOP * _) | (_ * AOP))) | async-internal | cpasync-arrive-order)+"
+- id: D-cpasync-arrive-order
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: cp.async.mbarrier.arrive follows the prior cp.async (6894-6896)
+  kind: weaken
+  find: "let po = ((po0 \\ ((AOP * _) | (_ * AOP))) | async-internal | completion | cpasync-arrive-order)+"
+  replace: "let po = ((po0 \\ ((AOP * _) | (_ * AOP))) | async-internal | completion)+"
+- id: D-async-internal
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: the accesses of one asynchronous operation are ordered (M39)
+  kind: weaken
+  find: "let po = ((po0 \\ ((AOP * _) | (_ * AOP))) | async-internal | completion | cpasync-arrive-order)+"
+  replace: "let po = ((po0 \\ ((AOP * _) | (_ * AOP))) | completion | cpasync-arrive-order)+"
+- id: D-issue
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: an asynchronous operation is ordered after the instructions before its issue (6886)
+  kind: weaken
+  find: "let cbi = cause-base | (cause-base?; issue)"
+  replace: "let cbi = cause-base"
+- id: D-wgmma-issue-fence
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: wgmma.mma_async is ordered after prior instructions only through a fence (M48)
+  kind: strengthen
+  find: "let issue = ([~AOP]; po0; [AOP & ~WGMMA]) | ([F]; po0; [AOP & WGMMA])"
+  replace: "let issue = ([~AOP]; po0; [AOP])"
+- id: D-release-fence-one-sided
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: fence.release and fence.acquire act on one side only (M2)
+  kind: strengthen
+  find: |-
+    let release-fence = memory-fence | (F & REL)
+    let acquire-fence = memory-fence | (F & ACQ)
+  replace: |-
+    let release-fence = memory-fence | (F & REL) | (F & ACQ)
+    let acquire-fence = memory-fence | (F & ACQ) | (F & REL)
+- id: D-release-fence
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: fence.release starts a release pattern (M2)
+  kind: weaken
+  find: "let release-fence = memory-fence | (F & REL)"
+  replace: "let release-fence = memory-fence"
+- id: D-acquire-fence
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: fence.acquire ends an acquire pattern (M2)
+  kind: weaken
+  find: "let acquire-fence = memory-fence | (F & ACQ)"
+  replace: "let acquire-fence = memory-fence"
+- id: D-ms-po
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: operations of one thread are morally strong when they overlap (8.7)
+  kind: weaken
+  find: "let ms-scope = (po | po^-1) | ([strong-operation]; sr; [strong-operation])"
+  replace: "let ms-scope = ([strong-operation]; sr; [strong-operation])"
+- id: D-ms-scope
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: morally strong needs strong operations with mutually including scopes (8.7)
+  kind: strengthen
+  find: "let ms-scope = (po | po^-1) | ([strong-operation]; sr; [strong-operation])"
+  replace: "let ms-scope = (po | po^-1) | (_ * _)"
+- id: D-ms-complete-tx
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: a complete-tx acts on behalf of the CTA of its mbarrier (M42)
+  kind: weaken
+  find: "              | ([AOP & MBAR]; vloc; [MBAR]) | ([MBAR]; vloc; [AOP & MBAR])\n"
+  replace: "\n"
+- id: D-ms-proxy
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: morally strong needs the same proxy (8.7)
+  kind: strengthen
+  find: "let morally-strong = (ms-scope & same-proxy & ms-overlap) \\ id"
+  replace: "let morally-strong = (ms-scope & ms-overlap) \\ id"
+- id: D-ms-overlap
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: morally strong needs complete overlap (8.7, M14)
+  kind: strengthen
+  find: "let morally-strong = (ms-scope & same-proxy & ms-overlap) \\ id"
+  replace: "let morally-strong = (ms-scope & same-proxy) \\ id"
+- id: D-observation-rmw-chain
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: observation through chains of atomic operations (8.9.2, M6)
+  kind: weaken
+  find: "let observation = ms-rf; (rmw; ms-rf)*"
+  replace: "let observation = ms-rf"
+- id: D-rel-pattern-write
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: release pattern starting with a release write (8.8)
+  kind: weaken
+  find: "let release-pattern = ([W & REL]; po-vloc?; [strong-write]) | ([release-fence]; po; [strong-write])"
+  replace: "let release-pattern = ([release-fence]; po; [strong-write])"
+- id: D-rel-pattern-fence
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: release pattern starting with a release fence (8.8)
+  kind: weaken
+  find: "let release-pattern = ([W & REL]; po-vloc?; [strong-write]) | ([release-fence]; po; [strong-write])"
+  replace: "let release-pattern = ([W & REL]; po-vloc?; [strong-write])"
+- id: D-acq-pattern-read
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: acquire pattern ending with an acquire read (8.8)
+  kind: weaken
+  find: "let acquire-pattern = ([strong-read]; po-vloc?; [R & ACQ]) | ([strong-read]; po; [acquire-fence])"
+  replace: "let acquire-pattern = ([strong-read]; po; [acquire-fence])"
+- id: D-acq-pattern-fence
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: acquire pattern ending with an acquire fence (8.8)
+  kind: weaken
+  find: "let acquire-pattern = ([strong-read]; po-vloc?; [R & ACQ]) | ([strong-read]; po; [acquire-fence])"
+  replace: "let acquire-pattern = ([strong-read]; po-vloc?; [R & ACQ])"
+- id: D-sync-pattern-ms-ends
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: synchronizing patterns need morally strong first and last operations (8.9.4)
+  kind: strengthen
+  find: "let sync-pattern = morally-strong & (release-pattern; observation; acquire-pattern)"
+  replace: "let sync-pattern = (release-pattern; observation; acquire-pattern)"
+- id: D-sync-cta-barrier
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: CTA barriers synchronize (bar.sync, bar.arrive, bar.warp.sync)
+  kind: weaken
+  find: "let sync-barrier = sync-cta-barrier | sync-cluster-barrier"
+  replace: "let sync-barrier = sync-cluster-barrier"
+- id: D-sync-cluster-barrier
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: cluster barriers synchronize (barrier.cluster)
+  kind: weaken
+  find: "let sync-barrier = sync-cta-barrier | sync-cluster-barrier"
+  replace: "let sync-barrier = sync-cta-barrier"
+- id: D-cluster-relaxed-fence
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: a fence before a relaxed cluster arrive releases (M31)
+  kind: weaken
+  find: "                         | ((([release-fence]; po; [BAR_CLUSTER & RLX]); cluster-arrive-wait) & sr)\n"
+  replace: "\n"
+- id: D-cluster-relaxed-releases
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: a relaxed cluster arrive gives no ordering of its own (9.7.13.3)
+  kind: strengthen
+  find: "let sync-cluster-barrier = ([REL]; cluster-arrive-wait)"
+  replace: "let sync-cluster-barrier = cluster-arrive-wait"
+- id: D-sync-grid
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: griddepcontrol.wait orders the prerequisite grid (M49)
+  kind: weaken
+  find: "let sync-any = sync-pattern | sync_fence | sync-barrier | sync-grid"
+  replace: "let sync-any = sync-pattern | sync_fence | sync-barrier"
+- id: D-sync-fence-sc
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: Fence-SC order is part of synchronizes-with (8.9.4)
+  kind: weaken
+  find: "let sync-any = sync-pattern | sync_fence | sync-barrier | sync-grid"
+  replace: "let sync-any = sync-pattern | sync-barrier | sync-grid"
+- id: D-sync-patterns
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: release/acquire patterns synchronize (incl. mbarrier arrive and wait)
+  kind: weaken
+  find: "let sync-any = sync-pattern | sync_fence | sync-barrier | sync-grid"
+  replace: "let sync-any = sync_fence | sync-barrier | sync-grid"
+- id: D-restricted-release-unrestricted
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: restricted release fences order only some earlier operations (M36)
+  kind: strengthen
+  find: "let restricted-release = F & (RESTRICT_CTA | RESTRICT_MBAR_INIT)"
+  replace: "let restricted-release = F & RESTRICT_MBAR_INIT"
+- id: D-mbarrier-init-unrestricted
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: fence.mbarrier_init orders only mbarrier.init (M36)
+  kind: strengthen
+  find: "let restricted-release = F & (RESTRICT_CTA | RESTRICT_MBAR_INIT)"
+  replace: "let restricted-release = F & RESTRICT_CTA"
+- id: D-restricted-acquire-unrestricted
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: restricted acquire fences order only later shared-memory operations (M36)
+  kind: strengthen
+  find: "let restricted-acquire = F & RESTRICT_CLUSTER"
+  replace: "let restricted-acquire = F & RESTRICT_CLUSTER & ~RESTRICT_CLUSTER"
+- id: D-restricted-release-edges
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: restricted release fences still synchronize (M36)
+  kind: weaken
+  find: "               | (restricted-before; sync-restricted-release; cause-normal?)\n"
+  replace: "\n"
+- id: D-restricted-acquire-edges
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: restricted acquire fences still synchronize (M36)
+  kind: weaken
+  find: "               | (cause-normal?; sync-restricted-acquire; restricted-after; cause-normal?)\n"
+  replace: "\n"
+- id: D-restricted-both-edges
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: restricted release and acquire fences together synchronize (M36, M37)
+  kind: weaken
+  find: "               | (restricted-before; sync-restricted-both; restricted-after; cause-normal?)\n"
+  replace: "\n"
+- id: D-proxy-fence-space
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: fence.proxy.async with a state space orders only that space (M25)
+  kind: strengthen
+  find: "let proxy-fence-ops = ([F & ~TMAP_FENCE & ~ASYNC_FROM_GEN]; (same-proxy & scta); [M]) & fence-space"
+  replace: "let proxy-fence-ops = ([F & ~TMAP_FENCE & ~ASYNC_FROM_GEN]; (same-proxy & scta); [M])"
+- id: D-proxy-fence-cta
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: a proxy fence orders only operations of its own thread block (8.9.5)
+  kind: strengthen
+  find: "let proxy-fence-ops = ([F & ~TMAP_FENCE & ~ASYNC_FROM_GEN]; (same-proxy & scta); [M]) & fence-space"
+  replace: "let proxy-fence-ops = ([F & ~TMAP_FENCE & ~ASYNC_FROM_GEN]; same-proxy; [M]) & fence-space"
+- id: D-ppcb-generic
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: proxy-preserved causality, same address in the generic proxy (8.9.5)
+  kind: weaken
+  find: "                = ([GEN]; (vloc & cbi); [GEN])\n                | ([M]; (same-proxy"
+  replace: "                = ([M]; (same-proxy"
+- id: D-ppcb-same-proxy-cta
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: proxy-preserved causality, same proxy and same thread block (8.9.5)
+  kind: weaken
+  find: "                | ([M]; (same-proxy & scta & vloc & cbi); [M])\n"
+  replace: "\n"
+- id: D-ppcb-src-fence
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: proxy fence after a non-generic operation (M21)
+  kind: weaken
+  find: "                | vloc & (cause-base & (proxy-fence-ops^-1); cbi; [GEN])\n"
+  replace: "\n"
+- id: D-ppcb-dst-fence
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: proxy fence before a non-generic operation (M21)
+  kind: weaken
+  find: "                | vloc & ([GEN]; cause-base; cbi & proxy-fence-ops)\n"
+  replace: "\n"
+- id: D-ppcb-both-fences
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: proxy fences on both sides (M21)
+  kind: weaken
+  find: "                | vloc & (cause-base & (proxy-fence-ops^-1); cause-base; cbi & proxy-fence-ops)\n"
+  replace: "\n"
+- id: D-ppcb-alias
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: alias proxy fence between generic aliases (8.9.5)
+  kind: weaken
+  find: "                | loc & ([GEN]; cause-base; [F & ALIAS]; cbi; [GEN])\n"
+  replace: "\n"
+- id: D-ppcb-alias-src
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: alias fence with a proxy fence after a non-generic operation (M21)
+  kind: weaken
+  find: "                | loc & (cause-base & (proxy-fence-ops^-1); cause-base; [F & ALIAS]; cbi; [GEN])\n"
+  replace: "\n"
+- id: D-ppcb-alias-dst
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: alias fence with a proxy fence before a non-generic operation (M21)
+  kind: weaken
+  find: "                | loc & ([GEN]; cause-base; [F & ALIAS]; cause-base; cbi & proxy-fence-ops)\n"
+  replace: "\n"
+- id: D-ppcb-alias-both
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: alias fence with proxy fences on both sides (M21)
+  kind: weaken
+  find: "                | loc & (cause-base & (proxy-fence-ops^-1); cause-base; [F & ALIAS]; cause-base; cbi & proxy-fence-ops)\n"
+  replace: "\n"
+- id: D-ppcb-async-from-generic
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: fence.proxy.async::generic orders generic -> async (M38)
+  kind: weaken
+  find: "                | vloc & ([GEN]; cause-base; (cbi & async-from-generic-ops))\n"
+  replace: "\n"
+- id: D-ppcb-tensormap-pair
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: tensormap proxy fences order as a release/acquire pair (M26)
+  kind: weaken
+  find: "                | vloc & ([GEN]; cause-base; [TMAP_FENCE & REL]; cause-base; [TMAP_FENCE & ACQ]; cbi; [TMAP])\n"
+  replace: "\n"
+- id: D-ppcb-completion
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: completion of an asynchronous operation acts as a proxy fence (M41)
+  kind: weaken
+  find: "                | vloc & ([M & ASYNC]; cause-base; [COMPLETION]; cbi; [GEN])\n"
+  replace: "\n"
+- id: D-cause-observation
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: causality order includes observation followed by base causality (8.9.6)
+  kind: weaken
+  find: "let cause = proxy-preserved-cause-base | (observation; proxy-preserved-cause-base)"
+  replace: "let cause = proxy-preserved-cause-base"
+- id: D-mixed-size-race-cause
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: operations ordered by causality do not race (8.7.1)
+  kind: weaken
+  find: "let mixed-size-race = (conflict & partial-overlap) \\ (cause | cause^-1)"
+  replace: "let mixed-size-race = (conflict & partial-overlap)"
+- id: D-mixed-size-race
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: a mixed-size data race frees the program from the axioms (M16)
+  kind: strengthen
+  find: "flag ~empty mixed-size-race as mixed-size-data-race\n"
+  replace: "\n"
+- id: D-undefined-behaviour
+  model: dartagnan
+  file: ptx-v8.7.cat
+  rule: mbarrier misuse and a missing wgmma.fence are undefined behaviour (M35, M51)
+  kind: strengthen
+  find: "flag ~empty ([UB] | [UB_STATIC]) as undefined-behaviour\n"
+  replace: "\n"

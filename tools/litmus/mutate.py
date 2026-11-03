@@ -1,0 +1,231 @@
+#!/usr/bin/env python3
+"""Mutation testing of the two PTX 8.7 models (models/ptx87/ptx87.als and the Dartagnan fork's cat files).
+
+A mutant changes one rule of one model (models/ptx87/mutants.yaml). Running the litmus suite against the mutant
+shows whether the tests notice the change: a mutant is **killed** when some test changes verdict, **survives**
+when none does (a gap in the tests, or a redundant rule), and is **vacuous** when it only removes every execution
+of some test (Alloy's `consistent` run becomes UNSAT), which does not count as a kill.
+
+    python tools/litmus/mutate.py --check                       # every mutant applies (its text occurs once)
+    python tools/litmus/mutate.py --run A-coherence D-issue     # run some mutants (in the dev container)
+    python tools/litmus/mutate.py --run --model alloy --jobs 48 # run every Alloy mutant
+    python tools/litmus/mutate.py --run ... --first-kill        # stop a mutant at its first killing test
+    python tools/litmus/mutate.py --report build/mutation       # write models/ptx87/mutation.{csv,md}
+    python tools/litmus/mutate.py --report-check                # mutation.md matches mutation.csv
+
+Each run writes build/mutation/<model>/<id>.json. The baseline verdicts are the rows of tests/litmus/expected.csv.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import fnmatch
+import json
+import shutil
+import sys
+import time
+from pathlib import Path
+
+import yaml
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import run_formal  # noqa: E402
+import to_alloy87  # noqa: E402
+
+ROOT = HERE.parent.parent
+MUTANTS = ROOT / "models" / "ptx87" / "mutants.yaml"
+CSV_OUT = ROOT / "models" / "ptx87" / "mutation.csv"
+MD_OUT = ROOT / "models" / "ptx87" / "mutation.md"
+MODEL_NAME = {"alloy": to_alloy87.MODEL_NAME, "dartagnan": "ptx-v8.7"}
+FIELDS = ["id", "model", "kind", "rule", "status", "killed", "vacuous", "tests", "killers", "equivalent"]
+MAX_KILLERS = 50
+ALLOY_MODEL = to_alloy87.MODEL  # the original model folder (to_alloy87.MODEL is redirected per mutant)
+DAT3M = ROOT / "deps" / "dat3m"
+
+
+def load() -> list[dict]:
+    return yaml.safe_load(MUTANTS.read_text()) or []
+
+
+def source(m: dict) -> Path:
+    if m["model"] == "alloy":
+        return ROOT / "models" / "ptx87" / m.get("file", "ptx87.als")
+    return ROOT / "deps" / "dat3m" / "cat" / m["file"]
+
+
+def check(mutants: list[dict]) -> list[str]:
+    errors, seen = [], set()
+    for m in mutants:
+        if m["id"] in seen:
+            errors.append(f"{m['id']}: duplicate id")
+        seen.add(m["id"])
+        if m["model"] not in MODEL_NAME or m.get("kind") not in ("weaken", "strengthen"):
+            errors.append(f"{m['id']}: bad model or kind")
+            continue
+        src = source(m)
+        if not src.exists():
+            errors.append(f"{m['id']}: {src} missing")
+            continue
+        n = src.read_text().count(m["find"])
+        if n != 1:
+            errors.append(f"{m['id']}: its text occurs {n} times in {src.name}")
+    return errors
+
+
+def apply(m: dict, work: Path) -> None:
+    """Write the mutated model into `work` and point run_formal at it."""
+    if work.exists():
+        shutil.rmtree(work)
+    if m["model"] == "alloy":
+        work.mkdir(parents=True)
+        for f in run_formal.Alloy6.files:
+            shutil.copyfile(ALLOY_MODEL / f, work / f)
+        target = work / m.get("file", "ptx87.als")
+        target.write_text(target.read_text().replace(m["find"], m["replace"], 1))
+        to_alloy87.MODEL = work  # Alloy6.run copies the model files from here
+    else:
+        # a Dartagnan home: the fork's files (linked), with a mutated copy of cat/
+        work.mkdir(parents=True)
+        for entry in DAT3M.iterdir():
+            if entry.name not in ("cat", ".git"):
+                (work / entry.name).symlink_to(entry)
+        shutil.copytree(DAT3M / "cat", work / "cat")
+        target = work / "cat" / m["file"]
+        target.write_text(target.read_text().replace(m["find"], m["replace"], 1))
+        fork = run_formal.MODELS["ptx-v8.7"]
+        fork.home = work  # DAT3M_HOME, and the cat files of both runs
+        fork.cat = work / "cat" / "ptx-v8.7.cat"
+
+
+def baseline(model: str) -> dict[str, str]:
+    return {r["test"]: r["result"] for r in run_formal.read_rows() if r["model"] == MODEL_NAME[model]}
+
+
+def run_one(m: dict, jobs: int, first_kill: bool, order: list[str], glob: str = "*") -> dict:
+    model = MODEL_NAME[m["model"]]
+    base = {t: v for t, v in baseline(m["model"]).items() if fnmatch.fnmatch(t, glob)}
+    paths = {run_formal.test_id(p): p for p in run_formal.all_tests()}
+    tests = [t for t in order if t in base] + sorted(t for t in base if t not in order)
+    work = ROOT / "build" / "mutation" / m["model"] / "work" / m["id"]
+    apply(m, work)
+    killers, vacuous, errors = [], [], []
+    t0 = time.monotonic()
+    chunk = len(tests) if not first_kill else max(jobs, 1)
+    for i in range(0, len(tests), chunk):
+        batch = [paths[t] for t in tests[i:i + chunk]]
+        for r in run_formal.run_jobs(run_formal.plan(batch, [model]), jobs):
+            b = base[r["test"]]
+            if r["result"] in ("error", "unknown"):
+                errors.append(r["test"])
+            elif "(no execution)" in r["flags"] and b != "forbidden":
+                vacuous.append(r["test"])
+            elif "(no execution)" in r["flags"]:
+                continue
+            elif r["result"] != b:
+                killers.append(r["test"])
+        if first_kill and killers:
+            break
+    shutil.rmtree(work, ignore_errors=True)
+    status = "killed" if killers else ("vacuous" if vacuous else "survived")
+    return {"id": m["id"], "model": m["model"], "kind": m["kind"], "rule": m["rule"], "status": status,
+            "killers": sorted(killers), "vacuous": sorted(vacuous), "errors": sorted(errors),
+            "tests": len(tests) if not first_kill else None, "first_kill": first_kill,
+            "runtime_s": round(time.monotonic() - t0, 1)}
+
+
+def report(results_dir: Path, mutants: list[dict]) -> None:
+    res = {}
+    for f in sorted(results_dir.rglob("*.json")):
+        r = json.loads(f.read_text())
+        res[r["id"]] = r
+    rows = []
+    for m in mutants:
+        r = res.get(m["id"])
+        status = r["status"] if r else "not run"
+        if status == "survived" and m.get("equivalent"):
+            status = "equivalent"
+        k = r["killers"] if r else []
+        rows.append({"id": m["id"], "model": m["model"], "kind": m["kind"], "rule": m["rule"], "status": status,
+                     "killed": len(k), "vacuous": len(r["vacuous"]) if r else 0,
+                     "tests": r["tests"] if r and r["tests"] is not None else "",
+                     "killers": ";".join(k[:MAX_KILLERS]), "equivalent": m.get("equivalent", "")})
+    with open(CSV_OUT, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=FIELDS, lineterminator="\n")
+        w.writeheader()
+        w.writerows(rows)
+    MD_OUT.write_text(markdown(rows))
+
+
+def markdown(rows: list[dict]) -> str:
+    out = ["# Mutation testing of the PTX 8.7 models", "",
+           "Generated by `tools/litmus/mutate.py --report` from `mutation.csv`; do not edit by hand.", "",
+           "Each mutant changes one rule of one model (`mutants.yaml`): *weaken* drops an ordering rule, "
+           "*strengthen* drops a restriction. **killed**: some litmus test changes verdict; **survived**: none "
+           "does (a gap in the tests); **equivalent**: survived because the rule is implied by others (the "
+           "reason is in `mutants.yaml`); **vacuous**: it only removes every execution of some test.", ""]
+    for model in ("alloy", "dartagnan"):
+        rs = [r for r in rows if r["model"] == model]
+        counts = {}
+        for r in rs:
+            counts[r["status"]] = counts.get(r["status"], 0) + 1
+        title = "Alloy (`ptx87.als`)" if model == "alloy" else "Dartagnan (`deps/dat3m/cat/ptx-v8.7*.cat`)"
+        out += [f"## {title}", "", ", ".join(f"{k} {v}" for k, v in sorted(counts.items())), "",
+                "| Mutant | Kind | Rule | Status | Killing tests | Example |", "|---|---|---|---|---|---|"]
+        for r in rs:
+            ex = r["killers"].split(";")[0] if r["killers"] else (r["equivalent"] or "")
+            out.append(f"| `{r['id']}` | {r['kind']} | {r['rule']} | {r['status']} | {r['killed']} | {ex} |")
+        out.append("")
+    return "\n".join(out)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("ids", nargs="*", help="mutant ids (default: all of --model)")
+    ap.add_argument("--check", action="store_true")
+    ap.add_argument("--run", action="store_true")
+    ap.add_argument("--model", choices=["alloy", "dartagnan"])
+    ap.add_argument("--jobs", type=int, default=32)
+    ap.add_argument("--first-kill", action="store_true", help="stop each mutant at its first killing tests")
+    ap.add_argument("--order", type=Path, help="file of test ids to try first (one per line)")
+    ap.add_argument("--skip-done", action="store_true", help="skip mutants that already have a result file")
+    ap.add_argument("--tests", default="*", help="glob over test ids (a smoke test on a few tests)")
+    ap.add_argument("--report", type=Path, metavar="RESULTS_DIR")
+    ap.add_argument("--report-check", action="store_true")
+    a = ap.parse_args()
+    mutants = load()
+    if a.check or a.run:
+        errors = check(mutants)
+        for e in errors:
+            print(e, file=sys.stderr)
+        if errors:
+            return 1
+        if a.check:
+            print(f"{len(mutants)} mutants apply")
+    if a.run:
+        sel = [m for m in mutants if (not a.ids or m["id"] in a.ids) and (not a.model or m["model"] == a.model)]
+        order = a.order.read_text().split() if a.order else []
+        for m in sel:
+            out = ROOT / "build" / "mutation" / m["model"] / f"{m['id']}.json"
+            out.parent.mkdir(parents=True, exist_ok=True)
+            if a.skip_done and out.exists() and a.tests == "*":
+                continue
+            r = run_one(m, a.jobs, a.first_kill, order, a.tests)
+            out.write_text(json.dumps(r, indent=1))
+            print(f"{m['id']}: {r['status']} ({len(r['killers'])} killing, {len(r['vacuous'])} vacuous, "
+                  f"{len(r['errors'])} errors, {r['runtime_s']} s)", flush=True)
+    if a.report:
+        report(a.report, mutants)
+        print(f"wrote {CSV_OUT.relative_to(ROOT)} and {MD_OUT.relative_to(ROOT)}")
+    if a.report_check:
+        rows = list(csv.DictReader(open(CSV_OUT)))
+        if MD_OUT.read_text() != markdown(rows):
+            print("mutation.md is stale: run --report", file=sys.stderr)
+            return 1
+        print("mutation.md is current")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
