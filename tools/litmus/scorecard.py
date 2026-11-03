@@ -43,7 +43,16 @@ CROSSCHECK = {"ptx/kamui/ptx87/ld-st/MP+ldu", "ptx/kamui/ptx87/mbarrier-init/mba
               "ptx/kamui/ptx87/sizes/mixed-size+flag", "ptx/kamui/ptx87/sizes/mixed-size+race",
               "ptx/kamui/ptx87/tensormap/MP+tensormap+no-release-proxy-fence"}
 # feature -> why it cannot meet a part of the bar ("verdicts", "tests", ...: the part it is excused from)
-BAR_EXCEPTIONS: dict[str, dict[str, str]] = {}
+BAR_EXCEPTIONS: dict[str, dict[str, str]] = {
+    "bar.red": dict.fromkeys(("tests", "verdicts", "placements"),
+                             "the reduction result of bar.red is modelled by neither model (D9); its synchronization is "
+                             "that of bar.sync, which the bar.sync tests cover"),
+    "mbarrier.pending_count": dict.fromkeys(("tests", "verdicts", "scopes", "placements"),
+                                            "reads a state token held in a register, not memory: no memory event (D27)"),
+    "st.param": dict.fromkeys(("tests", "verdicts"),
+                              "a kernel's parameters are read-only; st.param writes the parameters of a called function, "
+                              "which a litmus test has none of"),
+}
 
 
 def required_placements(fid: str) -> tuple:

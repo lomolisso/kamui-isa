@@ -318,6 +318,12 @@ def rule(fid: str):
 # ------------------------------------------------------------------------------- which dimensions are valid
 
 def valid_scopes(fid: str) -> tuple:
+    if fid == "mbarrier.scope.cluster":
+        return ("cluster",)
+    if fid == "red.scope":  # .cluster is the feature red.scope.cluster
+        return ("cta", "gpu", "sys")
+    if fid in ("ld.volatile", "st.volatile"):  # no scope qualifier: volatile is relaxed at .sys
+        return ()
     if fid.startswith(("mbarrier.", "barrier.cluster")) or fid in ("fence.sync_restrict", "fence.op_restrict"):
         return ("cta", "cluster") if fid.startswith("mbarrier.") and fid not in (
             "mbarrier.init", "mbarrier.inval") else ()
@@ -329,12 +335,16 @@ def valid_scopes(fid: str) -> tuple:
 
 
 def valid_spaces(fid: str) -> tuple:
+    if fid in ("atom.vector", "red.vector"):  # vector atomics exist for global memory only (9.7.13.5)
+        return ("global",)
     if re.match(r"(atom|red)\.(scope|sem|half|vector|b128)", fid) or fid in ("red.scope", "red.scope.cluster"):
         return MEM_SPACES
     if re.match(r"(ld|st)\.(scope|sem)", fid):
         return MEM_SPACES
-    if fid in ("ld.volatile", "st.volatile", "ld.generic", "st.generic"):
+    if fid in ("ld.volatile", "st.volatile"):
         return MEM_SPACES
+    if fid in ("ld.generic", "st.generic"):  # a generic address of the own CTA's shared memory, or of global memory
+        return ("global", "shared::cta")
     return ()
 
 

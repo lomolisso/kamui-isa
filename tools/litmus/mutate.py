@@ -99,6 +99,16 @@ def apply(m: dict, work: Path) -> None:
         fork.cat = work / "cat" / "ptx-v8.7.cat"
 
 
+# Default order of the tests for --first-kill: the varied hand-written and per-feature tests first, the large
+# uniform families and the imported tests last.
+PRIORITY = ("ptx/kamui/ptx87/", "ptx/kamui/idioms/", "ptx/kamui/hand/", "ptx/kamui/features/", "ptx/kamui/families/",
+            "ptx/imported/")
+
+
+def priority(tid: str) -> tuple:
+    return (next((k for k, p in enumerate(PRIORITY) if tid.startswith(p)), len(PRIORITY)), tid)
+
+
 def baseline(model: str) -> dict[str, str]:
     return {r["test"]: r["result"] for r in run_formal.read_rows() if r["model"] == MODEL_NAME[model]}
 
@@ -107,7 +117,8 @@ def run_one(m: dict, jobs: int, first_kill: bool, order: list[str], glob: str = 
     model = MODEL_NAME[m["model"]]
     base = {t: v for t, v in baseline(m["model"]).items() if fnmatch.fnmatch(t, glob)}
     paths = {run_formal.test_id(p): p for p in run_formal.all_tests()}
-    tests = [t for t in order if t in base] + sorted(t for t in base if t not in order)
+    rest = sorted((t for t in base if t not in order), key=priority)
+    tests = [t for t in order if t in base] + rest
     work = ROOT / "build" / "mutation" / m["model"] / "work" / m["id"]
     apply(m, work)
     killers, vacuous, errors = [], [], []
