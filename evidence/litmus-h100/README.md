@@ -15,6 +15,7 @@ outcome the formal model forbids but the H100 showed is a finding to investigate
 | Work | 302 tests x 3 configurations x 1,013,760 instances (about 1e6) = 906 runs, 9.2e8 instances, about 15 minutes of GPU time |
 | PTX 8.7 tests | job `20261102T022710Z-q000042` (commit `3efb161`): the 52 runnable tests of `tests/litmus/ptx/kamui/ptx87/`, 156 runs, about 3 minutes; command `h100 submit --gpu 3 -- env TESTS='ptx/kamui/ptx87/*' bash jobs/litmus-h100.sh`. Two earlier runs of the same tests were replaced: one stopped by the queue's watchdog, one with a kernel bug in the copy tests (fixed in `tools/litmus/to_cuda.py`) |
 | Cache hints | job `20261103T024058Z-q000087` (commit `60a260c`): the 16 tests of `tests/litmus/ptx/kamui/ptx87/hints/`, 48 runs; command `h100 submit --gpu 2 -- env TESTS='ptx/kamui/ptx87/hints/*' bash jobs/litmus-h100.sh`. Job `20261103T024305Z-q000088` reran them in the shuffle configuration with 1e7 instances each (`CONFIGS=shuffle INSTANCES=10000000`); its counts are in `jobs/20261103T024305Z-q000088/hints-shuffle.csv` |
+| `2+add.gpu` | job `20261103T041314Z-q000089` (commit `f2ece0b`): `tests/litmus/ptx/kamui/ptx87/rmw/2+add.gpu`, 3 runs; command `h100 submit --gpu 2 -- env TESTS='ptx/kamui/ptx87/rmw/2+add.gpu' bash jobs/litmus-h100.sh`. Its kernel folder was hidden by the `*.gpu` rule of `.gitignore` until then |
 
 ## Files
 

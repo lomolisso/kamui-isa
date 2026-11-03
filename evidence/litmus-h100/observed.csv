@@ -4427,6 +4427,12 @@ ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,shuffle,same-cluster,P0:r0=0 P1:r1=1 x=2,
 ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,shuffle,same-cluster,P0:r0=1 P1:r1=0 x=2,500619,1001088,no,allowed
 ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,stress,same-cluster,P0:r0=0 P1:r1=1 x=2,814566,1001088,no,allowed
 ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,stress,same-cluster,P0:r0=1 P1:r1=0 x=2,186522,1001088,no,allowed
+ptx/kamui/ptx87/rmw/2+add.gpu,plain,same-cluster,P0:r0=0 P1:r1=1 x=2,529565,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.gpu,plain,same-cluster,P0:r0=1 P1:r1=0 x=2,471523,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.gpu,shuffle,same-cluster,P0:r0=0 P1:r1=1 x=2,501471,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.gpu,shuffle,same-cluster,P0:r0=1 P1:r1=0 x=2,499617,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.gpu,stress,same-cluster,P0:r0=0 P1:r1=1 x=2,811046,1001088,no,forbidden
+ptx/kamui/ptx87/rmw/2+add.gpu,stress,same-cluster,P0:r0=1 P1:r1=0 x=2,190042,1001088,no,forbidden
 ptx/kamui/ptx87/rmw/MP+cas-lock,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 l=1,1169,1001088,no,forbidden
 ptx/kamui/ptx87/rmw/MP+cas-lock,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 l=1,999919,1001088,no,forbidden
 ptx/kamui/ptx87/rmw/MP+cas-lock,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 l=1,490549,1001088,no,forbidden

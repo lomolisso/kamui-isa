@@ -1097,6 +1097,9 @@ ptx/kamui/ptx87/rmw/2+add.cluster+same-cluster,stress,1001088,0,0,forbidden,ok
 ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,plain,1001088,0,0,allowed,weak-unseen
 ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,shuffle,1001088,0,0,allowed,weak-unseen
 ptx/kamui/ptx87/rmw/2+add.cta+diff-cta,stress,1001088,0,0,allowed,weak-unseen
+ptx/kamui/ptx87/rmw/2+add.gpu,plain,1001088,0,0,forbidden,ok
+ptx/kamui/ptx87/rmw/2+add.gpu,shuffle,1001088,0,0,forbidden,ok
+ptx/kamui/ptx87/rmw/2+add.gpu,stress,1001088,0,0,forbidden,ok
 ptx/kamui/ptx87/rmw/MP+cas-lock,plain,1001088,0,0,forbidden,ok
 ptx/kamui/ptx87/rmw/MP+cas-lock,shuffle,1001088,0,0,forbidden,ok
 ptx/kamui/ptx87/rmw/MP+cas-lock,stress,1001088,0,0,forbidden,ok
