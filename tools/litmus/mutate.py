@@ -109,8 +109,13 @@ def priority(tid: str) -> tuple:
     return (next((k for k, p in enumerate(PRIORITY) if tid.startswith(p)), len(PRIORITY)), tid)
 
 
+BASELINE: Path | None = None  # --baseline: a frozen copy of expected.csv, so that a long run is not affected by
+                              # later changes of the suite
+
+
 def baseline(model: str) -> dict[str, str]:
-    return {r["test"]: r["result"] for r in run_formal.read_rows() if r["model"] == MODEL_NAME[model]}
+    rows = run_formal.read_rows(BASELINE) if BASELINE else run_formal.read_rows()
+    return {r["test"]: r["result"] for r in rows if r["model"] == MODEL_NAME[model]}
 
 
 def run_one(m: dict, jobs: int, first_kill: bool, order: list[str], glob: str = "*") -> dict:
@@ -200,12 +205,15 @@ def main() -> int:
     ap.add_argument("--jobs", type=int, default=32)
     ap.add_argument("--first-kill", action="store_true", help="stop each mutant at its first killing tests")
     ap.add_argument("--order", type=Path, help="file of test ids to try first (one per line)")
+    ap.add_argument("--baseline", type=Path, help="a frozen copy of tests/litmus/expected.csv")
     ap.add_argument("--skip-done", action="store_true", help="skip mutants that already have a result file")
     ap.add_argument("--tests", default="*", help="glob over test ids (a smoke test on a few tests)")
     ap.add_argument("--report", type=Path, metavar="RESULTS_DIR")
     ap.add_argument("--report-check", action="store_true")
     a = ap.parse_args()
     mutants = load()
+    global BASELINE
+    BASELINE = a.baseline
     if a.check or a.run:
         errors = check(mutants)
         for e in errors:

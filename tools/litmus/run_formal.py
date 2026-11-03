@@ -471,10 +471,12 @@ def run_jobs(jobs, nproc: int) -> list[dict]:
 
 
 def merge(old: list[dict], new: list[dict], models: list[str], tests: set[str]) -> list[dict]:
-    """Drop the old rows this run is responsible for, then add the new ones."""
+    """Drop the old rows this run is responsible for, and the rows of tests that no longer exist, then add the new
+    ones."""
     owned = {(r["test"], r["model"]) for r in new}
-    keep = [r for r in old
-            if (r["test"], r["model"]) not in owned and not (r["model"] in models and r["test"] in tests)]
+    exist = {test_id(p) for p in all_tests()}
+    keep = [r for r in old if r["test"] in exist
+            and (r["test"], r["model"]) not in owned and not (r["model"] in models and r["test"] in tests)]
     return keep + new
 
 

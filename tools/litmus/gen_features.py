@@ -137,7 +137,8 @@ def gen_ldst() -> None:
                   [ld("relaxed", s, rs, "r1", "y"), st("relaxed", s, rs, "x", 1)]],
                  "P0:r0 == 1 /\\ P1:r1 == 1", decls(lk, "x", "y"), where)
     # .volatile (relaxed at .sys, no release or acquire) and .mmio (relaxed .sys on global memory)
-    vol_locs = ["global+same-cta", "global+same-cluster", "global+diff-cluster", "shared-cta", "dsmem-remote-reader"]
+    vol_locs = ["global+same-cta", "global+same-cluster", "global+diff-cluster", "shared-cta", "dsmem-local",
+                "dsmem-remote-reader", "dsmem-remote-writer"]
     for lk in vol_locs:
         where, _, ws, rs, what = LOCS[lk]
         test("ldst", f"MP+volatile+{lk}", f"Message passing in {what}, the flag volatile (no release/acquire)",
@@ -286,6 +287,10 @@ def gen_rmw() -> None:
                  "both elements: can it see one element updated and not the other?",
                  [[f"red.relaxed.{s}.global.v2.f32.add x, y, 1, 1"], [f"atom.relaxed.{s}.global.v2.f32.add r0, r1, x, y, 0, 0"]],
                  "P1:r0 == 1 /\\ P1:r1 == 0", [], where)
+        test("rmw", f"CoWR+red.v2.{s}", f"A thread's .{s} vector red.add, then its own loads of both elements: does "
+             "it miss its own update?",
+             [[f"red.relaxed.{s}.global.v2.f32.add x, y, 1, 1", f"ld.relaxed.{s}.global r0, x", f"ld.relaxed.{s}.global r1, y"]],
+             "P0:r0 == 0 \\/ P0:r1 == 0")
         test("rmw", f"MP+cas.b128.release.{s}", f"Message passing where a 128-bit cas.release.{s} sets the flag",
              [["st.weak x, 1", f"atom.release.{s}.cas.b128 r9, f, 0, 1"], [f"ld.acquire.{s} r0, f", "ld.weak r1, x"]],
              "P1:r0 == 1 /\\ P1:r1 == 0", [], [(0, 0), (1, 0)])
