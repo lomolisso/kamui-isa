@@ -341,10 +341,14 @@ def _locs87(t: litmus.Litmus):
         if m:
             rhs, owner[lhs] = m.group(1).strip(), int(m.group(2))
         m = re.fullmatch(r"mbarrier\((\d*)\)", rhs)
+        g = re.fullmatch(r"(\w+)\[([01])\]", lhs)
         if m:
-            if not m.group(1):
-                raise Unsupported("an mbarrier initialized by the test itself")
-            init[lhs] = ("mbar", int(m.group(1)))
+            # no count: the test initializes the mbarrier itself (the slot starts as zero)
+            init[lhs] = ("mbar", int(m.group(1)) if m.group(1) else None)
+        elif g and re.fullmatch(r"\d+", rhs):
+            # a 16-bit granule of a 32-bit location (D6): x[0] is the low half, x[1] the high half
+            old = init.get(g.group(1), (None, 0))[1]
+            init[g.group(1)] = (None, old | (int(rhs) & 0xffff) << (16 * int(g.group(2))))
         elif re.fullmatch(r"-?\d+", rhs) and re.fullmatch(r"\w+", lhs):
             init[lhs] = (None, int(rhs))
         else:
@@ -352,7 +356,8 @@ def _locs87(t: litmus.Litmus):
     kinds = {}
     for _, i in t.instrs():
         q = i.quals
-        names = [a for a in i.args if re.fullmatch(r"[A-Za-z_]\w*", a) and not re.fullmatch(r"r\d+|_", a)]
+        names = [re.sub(r"\[[01]\]$", "", a) for a in i.args
+                 if re.fullmatch(r"[A-Za-z_]\w*(\[[01]\])?", a) and not re.fullmatch(r"r\d+|_", a)]
         if i.op == "bar":
             names = []
         if set(names) & aliases:
@@ -373,6 +378,8 @@ def _locs87(t: litmus.Litmus):
                 shared = "shared" in q or "shared::cta" in q or "shared::cluster" in q
             kinds[n] = "shared" if shared or kinds.get(n) == "shared" else kinds.get(n, "global")
     _locs87.owner = owner
+    _locs87.granular = {re.sub(r"\[[01]\]$", "", d.split("=")[0].strip()) for d in t.init
+                        if re.fullmatch(r"\s*\w+\[[01]\]\s*=.*", d)}
     return kinds, {n: v for n, (_, v) in init.items()}
 
 
@@ -407,13 +414,36 @@ def _emit87(i: litmus.Instr, ops: dict[str, str], kinds, tx: int = TX_BYTES) -> 
         return [f"mov.u32 {ops[a[0]]}, {a[1]};"]  # a register move in the litmus dialect: ld r0, 1
     if i.op == "ldu":
         return [f"ldu.global.u32 {ops[a[0]]}, [{ops[a[1]]}];"]
+    gm = re.fullmatch(r"(\w+)\[([01])\]", a[1]) if i.op == "ld" and len(a) == 2 else None
+    if gm and gm.group(1) in ops:
+        # a 16-bit granule of a 32-bit location: x[1] is the high half, at byte offset 2 (D6)
+        n, off = gm.group(1), 2 * int(gm.group(2))
+        return wrap([f"ld{_sem87(i, 'weak')}.{sp(n)}{cop}.u16 {ops[a[0]]}, [{ad(n)}+{off}]{tail};"])
     if i.op == "ld" and len(a) == 2 and a[1] in ops and not any(re.fullmatch(r"v\d", x) for x in q):
-        return wrap([f"ld{_sem87(i, 'weak')}.{sp(a[1])}{cop}.u32 {ops[a[0]]}, [{ad(a[1])}]{tail};"])
+        ty = "u16" if "b16" in q else "u32"
+        return wrap([f"ld{_sem87(i, 'weak')}.{sp(a[1])}{cop}.{ty} {ops[a[0]]}, [{ad(a[1])}]{tail};"])
     if i.op == "st" and len(a) == 2 and "async" not in q and not any(re.fullmatch(r"v\d", x) for x in q):
-        val = a[1] if re.fullmatch(r"-?\d+", a[1]) else ops.get(a[1])
+        gv = re.fullmatch(r"(\d+):(\d+)", a[1])  # x, 1:2 writes 1 to the low granule and 2 to the high one
+        val = str(int(gv.group(1)) | int(gv.group(2)) << 16) if gv else \
+            a[1] if re.fullmatch(r"-?\d+", a[1]) else ops.get(a[1])
+        if not gv and a[0] + "#g" in ops and re.fullmatch(r"\d+", a[1]):
+            # one value for a location with two granules writes it to both (the dialect of tests/litmus/README.md)
+            val = str(int(a[1]) | int(a[1]) << 16)
         if val is None:
             raise Unsupported(f"store of a register {i.text!r}")
         return wrap([f"mov.u32 t, {val};", f"st{_sem87(i, 'weak')}.{sp(a[0])}{cop}.u32 [{ad(a[0])}], t{tail};"])
+    if i.op == "st" and "v2" in q and len(a) == 4 and "async" not in q:
+        # st.v2 x, y, 1, 2: one 64-bit store; y is the word after x (the generator places it there)
+        return ["{", ".reg .u32 v0, v1;", f"mov.u32 v0, {a[2]};", f"mov.u32 v1, {a[3]};",
+                f"st{_sem87(i, 'weak')}.{sp(a[0])}.v2.u32 [{ad(a[0])}], {{v0, v1}};", "}"]
+    if i.op == "atom" and "b128" in q and "cas" in q and len(a) == 4:
+        d, loc, cmp_, new = a
+        return ["{", ".reg .b128 qc, qn, qd;", ".reg .b64 lo, hi;", "mov.b64 hi, 0;",
+                f"mov.b64 lo, {cmp_};", "mov.b128 qc, {lo, hi};", f"mov.b64 lo, {new};", "mov.b128 qn, {lo, hi};",
+                f"atom{_sem87(i, 'relaxed')}.{sp(loc)}.cas.b128 qd, [{ad(loc)}], qc, qn;", "mov.b128 {lo, hi}, qd;",
+                f"cvt.u32.u64 {ops[d]}, lo;", "}"]
+    if i.op == "discard" and len(a) == 2 and kinds.get(a[0]) == "global":
+        return [f"discard.global.L2 [{ops[a[0]]}], {a[1]};"]
     if i.op in ("atom", "red") and "async" not in q and "b128" not in q and not any(re.fullmatch(r"v\d", x) for x in q):
         op = next((x for x in q if x in ("add", "sub", "inc", "dec", "min", "max", "and", "or", "xor", "exch", "cas")),
                   None)
@@ -453,6 +483,22 @@ def _emit87(i: litmus.Instr, ops: dict[str, str], kinds, tx: int = TX_BYTES) -> 
         sem = next((x for x in q if x in ("release", "relaxed", "acquire")), None)
         scope = next((x for x in q if x in ("cta", "cluster")), "cta")
         win = "shared::cluster" if a and a[0] + "#cl" in ops and remote else "shared::cta"
+        if kind == "init" and len(a) == 2:
+            return [f"mbarrier.init.shared::cta.b64 [{ops[a[0]]}], {a[1]};"]
+        if kind == "inval" and len(a) == 1:
+            return [f"mbarrier.inval.shared::cta.b64 [{ops[a[0]]}];"]
+        if kind in ("arrive", "arrive_drop") and re.fullmatch(r"r\d+", a[0]) and len(a) == 2 and q[1:2] != ["expect_tx"]:
+            # the arrive returns the phase state (64 bits) in a register: s<r>; the litmus register gets its low half
+            if remote:
+                raise Unsupported(f"a remote arrive returns no state on the GPU {i.text!r}")
+            r, b = a
+            return [f"mbarrier.{kind}.{sem or 'release'}.{scope}.shared::cta.b64 s{r}, [{ops[b]}];",
+                    f"cvt.u32.u64 {ops[r]}, s{r};"]
+        if kind in ("test_wait", "try_wait") and "parity" not in q and len(a) == 3 and re.fullmatch(r"r\d+", a[2]) \
+                and not remote:
+            r, b, tok = a
+            return [f"mbarrier.{kind}.{sem or 'acquire'}.{scope}.shared::cta.b64 p, [{ops[b]}], s{tok};",
+                    f"selp.u32 {ops[r]}, 1, 0, p;"]
         if kind in ("arrive", "arrive_drop"):
             if a[0] not in kinds:
                 raise Unsupported(f"arrive with a state register {i.text!r}")
@@ -608,31 +654,45 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
         for i in th.instrs:
             if i.is_empty:
                 continue
-            writes = i.op in ("ld", "ldu", "atom") or (i.op == "mbarrier" and i.quals[0] in ("test_wait", "try_wait"))
-            if writes and i.args and re.fullmatch(r"r\d+", i.args[0]):
-                if (th.tid, i.args[0]) in regs:
-                    raise Unsupported(f"register P{th.tid}:{i.args[0]} written twice")
+            writes = i.op in ("ld", "ldu", "atom") or (i.op == "mbarrier" and i.quals[0] in
+                                                         ("test_wait", "try_wait", "arrive", "arrive_drop"))
+            # a register written more than once keeps its last value, as in the litmus test
+            if writes and i.args and re.fullmatch(r"r\d+", i.args[0]) and (th.tid, i.args[0]) not in regs:
                 regs.append((th.tid, i.args[0]))
+    split: set = set()
+    # st.v2 x, y: y is the word after x, not a location of its own
+    tied = {i.args[1]: i.args[0] for _, i in t.instrs() if i.op == "st" and "v2" in i.quals and len(i.args) == 4}
+    gl = [n for n in gl if n not in tied]
     for c in litmus.cond_atoms(t.condition):
         for side in (c.lhs, c.rhs):
             side = re.sub(r"^(\d+):", r"P\1:", side)
+            if side in tied:
+                raise Unsupported(f"condition on {side}, the second word of a vector store")
             if re.fullmatch(r"-?\d+", side):
                 continue
             if ":" in side:
                 k, r = side[1:].split(":")
+                part = re.fullmatch(r"(r\d+)\[([01])\]", r)
+                if part:  # a 16-bit half of a 32-bit register (D6)
+                    r = part.group(1)
+                    split.add((int(k), r))
                 if (int(k), r) not in regs:
                     raise Unsupported(f"condition on {side}, which no load writes")
             elif side not in gl:
                 raise Unsupported(f"condition on {side}")
+    # the output slots: a register whose halves the condition names (P1:r0[0]) takes two slots
+    slots = [(k, f"{r}[{h}]") for k, r in regs for h in ((0, 1) if (k, r) in split else (None,))]
+    slots = [(k, n.replace("[None]", "")) for k, n in slots]
     cluster_bar = any(i.op == "barrier" for _, i in t.instrs())
     warp_bar = cluster_bar or bool(nbar) or dsmem
     bodies = []
     for th in t.threads:
         mine = [r for k, r in regs if k == th.tid]
-        used = [n for n in kinds if any(n in i.args for i in th.instrs)]
+        used = [n for n in kinds if any(n in [re.sub(r"\[[01]\]$", "", x) for x in i.args] for i in th.instrs)]
         uses_bar = any(id(i) in barcode for i in th.instrs)
         ops = {r: f"%{n}" for n, r in enumerate(mine)}
         ops.update({n: f"%{len(mine) + k}" for k, n in enumerate(used)})
+        ops.update({n + "#g": "" for n in used if n in _locs87.granular})
         # shared locations through the cluster window: their shared::cluster addresses (in the owner CTA)
         clw = [n for n in used if n in owner and dsmem]
         base = len(mine) + len(used) + (1 if uses_bar else 0)
@@ -641,6 +701,9 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
         local = sorted({x for i in th.instrs for x in i.args if re.fullmatch(r"r\d+", x)} - set(mine))
         ops.update({r: f"q{r}" for r in local})
         pre = [f".reg .u32 q{r};" for r in local] + [f"mov.u32 q{r}, {rinit.get((th.tid, r), 0)};" for r in local]
+        states = sorted({i.args[0] for i in th.instrs if i.op == "mbarrier" and i.quals[:1] in (["arrive"], ["arrive_drop"])
+                         and i.args and re.fullmatch(r"r\d+", i.args[0])})
+        pre += [f".reg .b64 s{r};" for r in states]
         gb_op = f"%{len(mine) + len(used)}"
         if uses_bar:
             pre.append(".reg .u32 bid;")
@@ -659,11 +722,14 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
             + "".join(f"    {'unsigned long long' if kinds[n] == 'global' else 'unsigned'} a_{n} = l.{n};\n" for n in used)
             + "".join(f"    unsigned r_{r} = 0;\n" for r in mine) + mapa
             + f'    asm volatile("{{\\n\\t"\n{asm}\n        "}}"\n        : {outs}\n        : {ins}\n        : "memory");\n'
-            + "".join(f"    out[{regs.index((th.tid, r))}] = r_{r};\n" for r in mine) + "}\n")
+            + "".join(f"    out[{slots.index((th.tid, r + '[0]'))}] = r_{r} & 0xffffu;\n"
+                      f"    out[{slots.index((th.tid, r + '[1]'))}] = r_{r} >> 16;\n" if (th.tid, r) in split
+                      else f"    out[{slots.index((th.tid, r))}] = r_{r};\n" for r in mine) + "}\n")
     fields = "".join(f"    {'unsigned long long' if kinds[n] == 'global' else 'unsigned'} {n};\n" for n in kinds)
     if nbar:
         fields += "    unsigned gb;\n"
     loc_init = "".join(f"    l.{n} = to_global(mem + lo[{gl.index(n)}]);\n" for n in gl)
+    loc_init += "".join(f"    l.{y} = l.{x} + 4;\n" for y, x in tied.items())
     loc_init += "".join(f"    l.{n} = to_shared(&sbuf[({k} * 256 + lslot) * 4]);\n" for k, n in enumerate(sh))
     loc_init += "".join(f"    l.{n} = to_shared(&mbar[{k} * 256 + lslot]);\n" for k, n in enumerate(mb))
     if nbar:
@@ -675,6 +741,7 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
         setup += "".join(f"        mem[lo[{gl.index(n)}]] = {init[n]}u;\n" for n in gl if init[n])
         setup += "".join(f"        sbuf[({k} * 256 + lslot) * 4] = {init[n]}u;\n" for k, n in enumerate(sh))
         setup += "".join(f'        asm volatile("mbarrier.init.shared::cta.b64 [%0], {init[n]};" :: "r"(to_shared(&mbar[{k} * 256 + lslot])) : "memory");\n'
+                         if init[n] is not None else f"        mbar[{k} * 256 + lslot] = 0ull;\n"
                          for k, n in enumerate(mb))
         # the initial values are generic writes; asynchronous copies read through the async proxy
         setup += '        asm volatile("fence.proxy.async;" ::: "memory");\n    }\n    __syncthreads();\n'
@@ -688,27 +755,29 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
         setup += "".join(f"        if (role == {first[owner[n]]}) sbuf[({k} * 256 + lslot) * 4] = {init[n]}u;\n"
                          for k, n in enumerate(sh))
         setup += "".join(f'        if (role == {first[owner[n]]}) asm volatile("mbarrier.init.shared::cta.b64 [%0], {init[n]};" '
-                         f':: "r"(to_shared(&mbar[{k} * 256 + lslot])) : "memory");\n' for k, n in enumerate(mb))
+                         f':: "r"(to_shared(&mbar[{k} * 256 + lslot])) : "memory");\n' if init[n] is not None
+                         else f"        if (role == {first[owner[n]]}) mbar[{k} * 256 + lslot] = 0ull;\n"
+                         for k, n in enumerate(mb))
         setup += ('        asm volatile("fence.mbarrier_init.release.cluster;\\n\\tfence.proxy.async;" ::: "memory");\n'
                   '    }\n    asm volatile("barrier.cluster.arrive;\\n\\tbarrier.cluster.wait;" ::: "memory");\n')
         exit_bar = '    asm volatile("barrier.cluster.arrive;\\n\\tbarrier.cluster.wait;" ::: "memory");\n'
     src = (f"// Generated by tools/litmus/to_cuda.py from tests/litmus/{tid}.litmus. Do not edit.\n"
            + "".join(f"// {ln}\n" for ln in t.format().splitlines()) + KERNEL_HEAD
            + f"struct L {{\n{fields}}};\n\n" + "\n".join(bodies)
-           + KERNEL_MAIN87.format(ngloc=max(len(gl), 1), nregs=max(len(regs), 1), nroles=len(t.threads), setup=setup,
+           + KERNEL_MAIN87.format(ngloc=max(len(gl), 1), nregs=max(len(slots), 1), nroles=len(t.threads), setup=setup,
                                   cluster_bar=('        asm volatile("barrier.cluster.arrive;\\n\\tbarrier.cluster.wait;" ::: "memory");\n'
                                                if cluster_bar else ""),
                                   loc_init=loc_init, exit_none=("    " + exit_bar) if exit_bar else "",
                                   exit_role=exit_bar,
                                   switch="".join(f"    case {k}: role{k}(l, out); break;\n" for k in range(len(t.threads)))))
     spec = "\n".join([f"# Generated by tools/litmus/to_cuda.py from tests/litmus/{tid}.litmus", "kernel litmus",
-                      f"roles {len(t.threads)}", f"placement {place}", f"nregs {len(regs)}", f"ngloc {len(gl)}",
+                      f"roles {len(t.threads)}", f"placement {place}", f"nregs {len(slots)}", f"ngloc {len(gl)}",
                       f"cluster_barrier {int(cluster_bar)}",
                       *(["warp_barrier 1"] if warp_bar and not cluster_bar else []),
                       *(["dsmem 1"] if dsmem else []),
                       *[f"group {k} {g}" for k, g in enumerate(groups) if place == "mixed"],
                       *[f"init {gl.index(n)} {init[n]}" for n in gl if init[n] and place != "same-cta"],
-                      *[f"reg {n} P{k}:{r}" for n, (k, r) in enumerate(regs)],
+                      *[f"reg {n} P{k}:{r}" for n, (k, r) in enumerate(slots)],
                       *[f"gloc {n} {loc}" for n, loc in enumerate(gl)]]) + "\n"
     return src, spec
 

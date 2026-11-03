@@ -112,3 +112,26 @@ def test_distributed_shared_memory_kernel():
     assert "dsmem 1" in spec and "placement same-cluster" in spec
     assert 'mapa.shared::cluster.u32 %0, %1, 1;' in src and "st.weak.shared::cluster.u32 [%2], t;" in src
     assert "ld.weak.shared::cta.u32 %1, [%2];" in src and src.count("barrier.cluster.arrive;") == 3
+
+
+P87 = to_cuda.SUITE / "ptx" / "kamui" / "ptx87"
+
+
+def test_granules_vectors_and_wide_cas():
+    src, spec = to_cuda.generate87(litmus.load(P87 / "sizes" / "tearing+relaxed.litmus"), "t")
+    assert "reg 0 P1:r0[0]" in spec and "reg 1 P1:r0[1]" in spec and "mov.u32 t, 65537;" in src
+    assert "out[0] = r_r0 & 0xffffu;" in src and "out[1] = r_r0 >> 16;" in src
+    src, _ = to_cuda.generate87(litmus.load(P87 / "sizes" / "mixed-size+flag.litmus"), "m")
+    assert "ld.weak.global.u16 %1, [%2+2];" in src
+    src, spec = to_cuda.generate87(litmus.load(P87 / "sizes" / "MP+vector-release.litmus"), "v")
+    assert "l.y = l.x + 4;" in src and "gloc 0 x" in spec and "gloc 1" not in spec and ".v2.u32" in src
+    src, _ = to_cuda.generate87(litmus.load(P87 / "rmw" / "cas.b128.litmus"), "c")
+    assert "atom.relaxed.gpu.global.cas.b128 qd," in src
+
+
+def test_mbarrier_token_and_init():
+    src, _ = to_cuda.generate87(litmus.load(P87 / "mbarrier" / "MP+mbarrier-token.litmus"), "k")
+    assert "mbarrier.arrive.release.cta.shared::cta.b64 sr0," in src
+    assert "mbarrier.test_wait.acquire.cta.shared::cta.b64 p, [%3], sr0;" in src
+    src, _ = to_cuda.generate87(litmus.load(P87 / "mbarrier-init" / "mbarrier-init+same-thread.litmus"), "i")
+    assert "mbar[0 * 256 + lslot] = 0ull;" in src and "mbarrier.init.shared::cta.b64 [%1], 1;" in src

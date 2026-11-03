@@ -222,9 +222,13 @@ reason. Today all 264 Dat3M verdicts and 127 of the 128 mixedproxy annotations m
 ## Running the tests on the H100
 
 The formal verdicts are the reference; running a test on a GPU only shows which outcomes that GPU produces. We run
-our own tests (families and hand-written, 302) on the H100 to see which of the outcomes PTX allows the hardware
-really shows, and to catch anything it shows that PTX forbids. Results and findings:
-[evidence/litmus-h100/](../../evidence/litmus-h100/README.md).
+every test the harness can run (509 of 828: the families, the hand-written tests, the PTX 8.7 tests and the
+imported tests) on the H100 to see which of the outcomes PTX allows the hardware really shows, and to catch
+anything it shows that PTX forbids. `python tools/litmus/to_cuda.py --why` lists the other 319 with the reason:
+accesses through texture, surface or constant proxy aliases (245, almost all of `Nvidia/proxy` and
+`mixedproxy`), loops, more than one GPU, barriers that cannot complete (Dat3M's `*-hang` and deadlock tests),
+tensor maps and multicast copies, and a few PTX 8.7 forms the kernel template does not cover. Results and
+findings: [evidence/litmus-h100/](../../evidence/litmus-h100/README.md).
 
 - `tools/litmus/to_cuda.py` writes one kernel per test. Each litmus thread is one `asm volatile` block holding the
   test's exact PTX instructions (`st.release.gpu.global.u32`, `mbarrier.arrive.release.cta.shared::cta.b64`, ...),
@@ -233,11 +237,19 @@ really shows, and to catch anything it shows that PTX forbids. Results and findi
 - `tools/litmus/runner/litmus_runner.c` runs a kernel about a million times in batches: each launch is 66 clusters
   of 4 CTAs of 256 threads, and the host decides which GPU thread plays which litmus thread of which instance,
   following the test's placement (`same-cta`: different warps of one CTA; `same-cluster`: different CTAs of one
-  cluster; `diff-cluster`: different clusters). 64 threads of every CTA are stress threads. Every location of every
-  instance has its own 128-byte line. Three configurations: `plain` (no stress, fixed placement), `stress` (the
-  stress threads hammer a 64 MiB buffer), `shuffle` (stress, plus a new random placement, location layout and
-  per-thread start delay every launch; for tests with a cluster barrier whole warps are shuffled, because
-  `barrier.cluster.arrive.relaxed` needs a converged warp on the H100).
+  cluster; `diff-cluster`: different clusters; `mixed`: some threads share a CTA, as in Dat3M's Memalloy tests).
+  64 threads of every CTA are stress threads. Every location of every instance has its own 128-byte line. Four
+  configurations: `plain` (no stress, fixed placement), `stress` (the stress threads hammer a 64 MiB buffer),
+  `shuffle` (stress, plus a new random placement, location layout and per-thread start delay of 0 to 255 ns every
+  launch), `spread` (the same with delays up to 16 microseconds, so that a reader often starts after a writer that
+  has more work to do). With a CTA barrier or a cluster barrier whole warps are shuffled, because
+  `barrier.cluster.arrive.relaxed` needs a converged warp on the H100 and every role is one warp of a barrier.
+- CTA barriers: every litmus thread of an instance is one warp, so `bar.sync 1, 2` becomes `barrier.sync id, 64`
+  with one hardware barrier per group of instances of a CTA. Shared memory of another CTA of the cluster
+  (`st.weak.shared::cluster s, 1` with `s=0 @cta 1`): the location lives in the CTA the test names, which
+  initializes it; the other CTAs use its `shared::cluster` address (`mapa`), and two cluster barriers, before and
+  after the test, make the initial values visible and keep every CTA alive until the others are done with its
+  memory.
 - Every run records each final state with where its threads actually ran (same SM, same cluster, different
   clusters). `tools/litmus/run_h100.py` drives the runs (`jobs/litmus-h100.sh` on the H100 server) and
   `tools/litmus/observed.py` joins them with the formal verdicts.
