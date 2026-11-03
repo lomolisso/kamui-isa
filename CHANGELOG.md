@@ -25,6 +25,13 @@ All notable changes to this project are listed here. The format follows
 - H100 litmus harness (inline-PTX kernels, runner with stress and placement control, job) and its results.
 - H100 litmus runs of the imported tests, CTA barriers, shared memory across CTAs, mixed sizes and mbarrier
   initialization, and a `spread` configuration; start delays now use `nanosleep`.
+- PTX 8.7 memory model in a Dartagnan fork (`deps/dat3m`), written independently from the manual, with
+  `ptx-v8.7` verdicts that agree with the Alloy model on every test both decide.
+
+### Changed
+
+- PTX 8.7 Alloy model: tensormap proxy fences act only as a release/acquire pair, and a mixed-size data race
+  frees a program from the axioms but not from written values (decisions D37, D38).
 
 ## [0.1.0] - 2026-10-31
 

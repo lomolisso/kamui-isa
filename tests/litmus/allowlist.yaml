@@ -16,6 +16,11 @@
   model: ptx-v6.0
   reason: Same loop as the ptx-v7.5 row; the manual-reasoning row gives the verdict (forbidden).
 
+- kind: unknown
+  test: ptx/imported/dat3m/Manual/MICRO24-Fig4b-correct
+  model: ptx-v8.7
+  reason: Same loop as the ptx-v7.5 row; the manual-reasoning row gives the verdict (forbidden).
+
 - kind: upstream
   test: ptx/imported/mixedproxy/Release_acquire_pattern
   model: ptx-v7.5
@@ -93,7 +98,7 @@
     Three threads use a barrier with a thread count of 2, so one of them can never complete its barrier
     (9.7.13.1: the barrier completes when 2 threads arrived and is reinitialized; the third waits for a partner
     that never comes). The ptx-v8.7-alloy model counts only executions in which every thread finishes, so the
-    test has no outcome (decision D9 in models/ptx87/decisions.md). Dartagnan (ptx-v7.5, ptx-v6.0) also counts
+    test has no outcome (decision D9 in models/ptx87/decisions.md). Dartagnan (ptx-v7.5, ptx-v6.0, ptx-v8.7) also counts
     executions in which a thread stays blocked, with the blocked thread's later loads keeping their initial
     register values, which makes the condition reachable.
 
