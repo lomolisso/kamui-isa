@@ -1,0 +1,16 @@
+PTX tensormap-update-in-smem+no-acquire
+"Variant of tensormap-update-in-smem without fence.proxy.tensormap::generic.acquire: the copy's tensormap-proxy read of the map is not ordered after the release. CUTLASS acquires before the first load of a new batch (sm90_gemm_array_tma_warpspecialized_cooperative.hpp:671-674). Expected: allowed."
+{
+tms=0 @cta 0;
+tm=0;
+g=5;
+d=0 @cta 0;
+b=mbarrier(1) @cta 0;
+P0:r2=0;
+}
+ P0@cta 0,cluster 0,gpu 0                                                                            ;
+ st.weak.shared::cta tms, 1                                                                          ;
+ tensormap.cp_fenceproxy.global.shared::cta.tensormap::generic.release.gpu.sync.aligned tm, tms, 128 ;
+ cp.async.bulk.tensor.1d.shared::cluster.global.tile.mbarrier::complete_tx::bytes d, g, b, tm, r2    ;
+exists
+(P0:r2 == 0)

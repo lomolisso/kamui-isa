@@ -1,0 +1,17 @@
+PTX tensormap-update-in-smem
+"Grouped GEMM: the producer warp edits its shared-memory copy of the tensor map (tensormap.replace on shared::cta, written here as a generic store), copies it to global memory with tensormap.cp_fenceproxy ... release.gpu, then fence.proxy.tensormap::generic.acquire.gpu and a TMA load with the map (CUTLASS sm90_mma_array_tma_gmma_ss_warpspecialized.hpp:716-755, sm90_gemm_array_tma_warpspecialized_cooperative.hpp:636-673, copy_sm90_desc.hpp:350, 431, 464). The load must use the new map. Expected: forbidden."
+{
+tms=0 @cta 0;
+tm=0;
+g=5;
+d=0 @cta 0;
+b=mbarrier(1) @cta 0;
+P0:r2=0;
+}
+ P0@cta 0,cluster 0,gpu 0                                                                            ;
+ st.weak.shared::cta tms, 1                                                                          ;
+ tensormap.cp_fenceproxy.global.shared::cta.tensormap::generic.release.gpu.sync.aligned tm, tms, 128 ;
+ fence.proxy.tensormap::generic.acquire.gpu tm, 128                                                  ;
+ cp.async.bulk.tensor.1d.shared::cluster.global.tile.mbarrier::complete_tx::bytes d, g, b, tm, r2    ;
+exists
+(P0:r2 == 0)

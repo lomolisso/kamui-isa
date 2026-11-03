@@ -1,0 +1,13 @@
+PTX semaphore-st-release-cumulative
+"Serial split-K semaphore: __syncthreads then one thread st.release.gpu to the lock; the waiting CTA polls with ld.acquire.gpu and __syncthreads before all threads read the output (CUTLASS semaphore.h:72-110). Expected: forbidden."
+{
+w=0;
+l=0;
+P2:r0=0;
+P3:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 | P2@cta 1,cluster 0,gpu 0 | P3@cta 1,cluster 0,gpu 0 ;
+ st.weak.global w, 1      | bar.sync 1, 2            | ld.acquire.gpu r0, l     | bar.sync 1, 2            ;
+ bar.sync 1, 2            | st.release.gpu l, 1      | bar.sync 1, 2            | ld.weak.global r1, w     ;
+exists
+(P2:r0 == 1 /\ P3:r1 == 0)

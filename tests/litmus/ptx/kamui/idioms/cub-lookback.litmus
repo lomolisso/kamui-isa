@@ -1,0 +1,14 @@
+PTX cub-lookback
+"CUB decoupled look-back: a tile stores its aggregate with st.cg, then its status with st.release.gpu; a later tile polls the status with ld.relaxed.gpu, __threadfence (fence.sc.gpu), then reads the aggregate with ld.cg (CCCL cub/agent/single_pass_scan_operators.cuh:935-936, 946-947, 966-978). Expected: forbidden."
+{
+v=0;
+t=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ st.weak.global v, 1      | ld.relaxed.gpu r0, t     ;
+ st.release.gpu t, 1      | fence.sc.gpu             ;
+                          | ld.weak.global r1, v     ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)
