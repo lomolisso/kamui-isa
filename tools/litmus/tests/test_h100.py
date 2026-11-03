@@ -66,3 +66,33 @@ def test_complete(tmp_path):
     assert run_h100.complete(f, 10) and not run_h100.complete(f, 20)
     f.write_text('{"instances": 1')
     assert not run_h100.complete(f, 10)
+
+
+DAT3M = to_cuda.SUITE / "ptx" / "imported" / "dat3m"
+
+
+def test_imported_mixed_placement_and_register_store():
+    t = litmus.load(DAT3M / "Memalloy" / "IRIW1.litmus")
+    src, spec = to_cuda.generate87(t, "ptx/imported/dat3m/Memalloy/IRIW1")
+    assert "placement mixed" in spec and "group 0 0" in spec and "group 1 1" in spec and "group 3 1" in spec
+    assert "mov.u32 %0, 1;" in src and "st.weak.global.u32 [%1], t;" in src
+
+
+def test_imported_barriers():
+    try:
+        to_cuda.generate87(litmus.load(DAT3M / "Barrier" / "quorum1-pass.litmus"), "q")
+        assert False, "a quorum of 2 with 3 arriving threads cannot complete on the GPU"
+    except to_cuda.Unsupported:
+        pass
+    src, spec = to_cuda.generate87(litmus.load(DAT3M / "Manual" / "SB+named-bar-reg-diff.litmus"), "r")
+    assert "warp_barrier 1" in spec
+    assert "mov.u32 qr2, 1;" in src and "barrier.sync bid, 32;" in src and "l.gb = 1 + (lslot >> 5) * 2;" in src
+
+
+def test_aliases_are_not_run():
+    t = litmus.load(next((DAT3M / "Nvidia" / "proxy").glob("*.litmus")))
+    try:
+        to_cuda.generate87(t, "a")
+        assert False
+    except to_cuda.Unsupported as e:
+        assert "alias" in str(e)

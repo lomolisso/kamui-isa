@@ -7,7 +7,12 @@
     python tools/litmus/to_cuda.py --check-ptx     # kernel.ptx is current too (dev container)
     python tools/litmus/to_cuda.py --why           # the tests it cannot run, with the reason
 
-Which tests: our own (`tests/litmus/ptx/kamui/`): the families and the hand-written tests. Each litmus thread
+Which tests: every test of `tests/litmus/ptx/` the harness can run (`--why` lists the others with the reason).
+The families and the hand-written tests use the first kernel template; the PTX 8.7 tests and the imported tests
+(Dat3M, mixedproxy) the second (`generate87`), which also handles CTA barriers (`bar.sync id, n` and Dat3M's
+`bar.cta.sync instance[, id[, quorum]]`), threads that share some CTAs but not others (placement `mixed`),
+register stores and non-zero initial values across CTAs. Never run: accesses through texture, surface or
+constant proxy aliases, more than one GPU, loops, and barriers that cannot complete. Each litmus thread
 becomes one `asm volatile` block holding the exact PTX instructions of the test (`st.release.gpu.global.u32`,
 `fence.sc.cta`, `mbarrier.arrive.release.cta.shared::cta.b64`, ...), so the instructions under test are the
 ones in the litmus file, not whatever clang would choose; only ptxas compiles them further.
@@ -41,6 +46,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SUITE = ROOT / "tests" / "litmus"
 OUT = SUITE / "h100"
 MAX_ROLES = 4
+ROLE_THREADS = 192  # per CTA, must match runner.c
 THREADS = 256  # per CTA, must match runner.c
 
 
@@ -48,13 +54,15 @@ class Unsupported(Exception):
     pass
 
 
-def placement(t: litmus.Litmus) -> str:
+def placement(t: litmus.Litmus, mixed: bool = False) -> str:
     ctas = {(th.gpu, th.cluster, th.cta) for th in t.threads}
     if any(th.gpu != 0 for th in t.threads):
         raise Unsupported("more than one GPU")
     if len(ctas) == 1:
         return "same-cta"
     if len(ctas) != len(t.threads):
+        if mixed and len({th.cluster for th in t.threads}) == 1:
+            return "mixed"
         raise Unsupported("some threads share a CTA and others do not")
     clusters = {th.cluster for th in t.threads}
     if len(clusters) == 1:
@@ -301,12 +309,33 @@ def _sem87(i: litmus.Instr, default: str | None = None) -> str:
     return f".{o}.{scope}"
 
 
+def cta_groups(t: litmus.Litmus) -> list[int]:
+    """The CTA of each thread as an index 0, 1, ... in order of first appearance."""
+    seen: dict = {}
+    return [seen.setdefault((th.cluster, th.cta), len(seen)) for th in t.threads]
+
+
+def reg_init(t: litmus.Litmus) -> dict[tuple[int, str], int]:
+    """(thread, register) -> initial value, from declarators such as P0:r2=1."""
+    out = {}
+    for d in t.init:
+        m = re.fullmatch(r"P?(\d+):(r\d+)\s*=\s*(-?\d+)", d.strip())
+        if m:
+            out[(int(m.group(1)), m.group(2))] = int(m.group(3))
+    return out
+
+
 def _locs87(t: litmus.Litmus):
     """name -> (kind, init): kind global, shared or mbar; init the initial value (mbar: the arrival count)."""
-    init, owner = {}, {}
+    init, owner, aliases = {}, {}, set()
     for d in t.init:
         lhs, rhs = (x.strip() for x in d.split("=", 1)) if "=" in d else (d, "")
         if ":" in lhs:
+            continue
+        m = re.fullmatch(r"(\w+)\s*@\s*\w+\s+aliases\s+\w+", d.strip())
+        if m:
+            # a proxy alias declaration; harmless if the test never uses the alias
+            aliases.add(m.group(1))
             continue
         m = re.fullmatch(r"(.*?)\s*@\s*cta\s+(\d+)", rhs)
         if m:
@@ -324,6 +353,10 @@ def _locs87(t: litmus.Litmus):
     for _, i in t.instrs():
         q = i.quals
         names = [a for a in i.args if re.fullmatch(r"[A-Za-z_]\w*", a) and not re.fullmatch(r"r\d+|_", a)]
+        if i.op == "bar":
+            names = []
+        if set(names) & aliases:
+            raise Unsupported(f"access through a proxy alias {i.text!r}")
         for n in names:
             if n not in init:
                 init[n] = (None, 0)
@@ -365,28 +398,39 @@ def _emit87(i: litmus.Instr, ops: dict[str, str], kinds) -> list[str]:
                 f"cp.async.bulk.prefetch{''.join('.' + x for x in q[3:])} [al], 16;", "}"]
     if i.op == "ld" and "nc" in q:
         return [f"ld.global.nc.u32 {ops[a[0]]}, [{ops[a[1]]}];"]
+    if i.op == "ld" and not q and len(a) == 2 and re.fullmatch(r"-?\d+", a[1]):
+        return [f"mov.u32 {ops[a[0]]}, {a[1]};"]  # a register move in the litmus dialect: ld r0, 1
     if i.op == "ldu":
         return [f"ldu.global.u32 {ops[a[0]]}, [{ops[a[1]]}];"]
     if i.op == "ld" and len(a) == 2 and a[1] in ops and not any(re.fullmatch(r"v\d", x) for x in q):
         return wrap([f"ld{_sem87(i, 'weak')}.{sp(a[1])}{cop}.u32 {ops[a[0]]}, [{ops[a[1]]}]{tail};"])
     if i.op == "st" and len(a) == 2 and "async" not in q and not any(re.fullmatch(r"v\d", x) for x in q):
-        if not re.fullmatch(r"-?\d+", a[1]):
+        val = a[1] if re.fullmatch(r"-?\d+", a[1]) else ops.get(a[1])
+        if val is None:
             raise Unsupported(f"store of a register {i.text!r}")
-        return wrap([f"mov.u32 t, {a[1]};", f"st{_sem87(i, 'weak')}.{sp(a[0])}{cop}.u32 [{ops[a[0]]}], t{tail};"])
+        return wrap([f"mov.u32 t, {val};", f"st{_sem87(i, 'weak')}.{sp(a[0])}{cop}.u32 [{ops[a[0]]}], t{tail};"])
     if i.op in ("atom", "red") and "async" not in q and "b128" not in q and not any(re.fullmatch(r"v\d", x) for x in q):
-        op = next((x for x in q if x in ("add", "inc", "dec", "min", "max", "and", "or", "xor", "exch", "cas")), None)
+        op = next((x for x in q if x in ("add", "sub", "inc", "dec", "min", "max", "and", "or", "xor", "exch", "cas")),
+                  None)
         if op is None:
             raise Unsupported(f"{i.text!r}")
         ty = "b32" if op in ("and", "or", "xor", "exch", "cas") else "u32"
         args = list(a)
         dst = None if i.op == "red" else ops[args.pop(0)]
         loc = args.pop(0)
-        if not all(re.fullmatch(r"-?\d+", v) for v in args):
+        if not all(re.fullmatch(r"-?\d+", v) or v in ops for v in args):
             raise Unsupported(f"register operand {i.text!r}")
+        if op == "sub":  # PTX has no atom.sub: add the negated constant
+            if not all(re.fullmatch(r"-?\d+", v) for v in args):
+                raise Unsupported(f"register operand {i.text!r}")
+            op, args = "add", [str(-int(v)) for v in args]
+        args = [ops.get(v, v) for v in args]
+        if i.op == "red" and ({"acquire", "acq_rel", "sc"} & set(q)):
+            raise Unsupported(f"red with an acquire order is not PTX {i.text!r}")
         head = f"{i.op}{_sem87(i, 'relaxed')}.{sp(loc)}.{op}.{ty}"
         return [f"{head} {dst + ', ' if dst else ''}[{ops[loc]}], {', '.join(args)};"]
     if i.op == "fence" and not ({"tensormap::generic"} & set(q)):
-        if "proxy" in q and not any(x.startswith("async") for x in q):
+        if "proxy" in q and not any(x.startswith("async") or x == "alias" for x in q):
             raise Unsupported(f"{i.text!r}")
         return [f"{i.text};"]
     if i.op == "barrier" and q[:1] == ["cluster"]:
@@ -430,13 +474,66 @@ def _emit87(i: litmus.Instr, ops: dict[str, str], kinds) -> list[str]:
     raise Unsupported(f"instruction {i.text!r}")
 
 
+def _barriers(t: litmus.Litmus, groups: list[int], rinit) -> tuple[dict[int, list[str]], int]:
+    """CTA barriers: the PTX form bar.sync id, count and Dat3M's bar.cta.sync instance[, id[, quorum]].
+
+    Each barrier of the test becomes a hardware barrier `gb + k` (gb: the first barrier id of the instance group,
+    an input of the kernel). Every role of an instance is one warp, so the thread count is 32 per role that takes
+    part in the same CTA. Barriers that cannot complete on the GPU (a count larger or smaller than the number of
+    roles that arrive) are not run. Returns the code for each barrier instruction (keyed by id(instr)) and the
+    number of hardware barriers per instance group."""
+    keys: dict = {}
+    uses = []
+    for th in t.threads:
+        for i in th.instrs:
+            if i.op != "bar":
+                continue
+            q, a = i.quals, i.args
+            if q[:1] == ["warp"]:
+                raise Unsupported(f"bar.warp.sync between roles in different warps {i.text!r}")
+            if q[:1] == ["cta"]:  # Dat3M: bar.cta.sync|arrive instance[, id[, quorum]]
+                mode, inst = q[1], a[0]
+                ids = a[1] if len(a) > 1 else None
+                if ids is not None and not re.fullmatch(r"\d+", ids):
+                    if (th.tid, ids) not in rinit:
+                        raise Unsupported(f"barrier id from a register written by the test {i.text!r}")
+                    ids = str(rinit[(th.tid, ids)])
+                key, want = (inst, ids), (int(a[2]) if len(a) > 2 else None)
+            elif q[:1] in (["sync"], ["arrive"]) and len(a) == 2:  # PTX: bar.sync id, thread count
+                mode, key, want = q[0], ("ptx", a[0]), int(a[1])
+            elif q[:1] == ["sync"] and len(a) == 1:  # bar.sync id: every thread of the CTA
+                mode, key, want = "sync", ("ptx", a[0]), groups.count(groups[th.tid])
+            else:
+                raise Unsupported(f"{i.text!r}")
+            keys.setdefault(key, set()).add(th.tid)
+            uses.append((i, th.tid, key, mode, want))
+    code = {}
+    order = sorted(keys, key=str)
+    for i, tid_, key, mode, want in uses:
+        parts = keys[key]
+        if want is not None and (want != len(parts) or len({groups[k] for k in parts}) != 1):
+            raise Unsupported(f"a barrier that cannot complete as the test intends on the GPU {i.text!r}")
+        n = sum(1 for k in parts if groups[k] == groups[tid_])
+        code[id(i)] = [f"add.u32 bid, %gb, {order.index(key)};",
+                       f"barrier.{'arrive' if mode == 'arrive' else 'sync'} bid, {32 * n};"]
+    return code, len(order)
+
+
 def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
     if len(t.threads) > MAX_ROLES:
         raise Unsupported("more than four threads")
     if t.has_loops or any(th.grid is not None for th in t.threads):
         raise Unsupported("loops or grids")
-    place = placement(t)
+    place = placement(t, mixed=True)
+    groups = cta_groups(t)
+    rinit = reg_init(t)
     kinds, init = _locs87(t)
+    barcode, nbar = _barriers(t, groups, rinit)
+    if nbar:
+        per_cta = max(groups.count(g) for g in set(groups))
+        ninst = (ROLE_THREADS // 32) // per_cta if place in ("same-cta", "mixed") else 1
+        if 1 + ninst * nbar > 16:
+            raise Unsupported("more than 15 hardware barriers per CTA")
     gl = [n for n in kinds if kinds[n] == "global"]
     sh = [n for n in kinds if kinds[n] == "shared"]
     mb = [n for n in kinds if kinds[n] == "mbar"]
@@ -444,8 +541,6 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
         raise Unsupported("shared memory across CTAs (no distributed shared memory in the harness)")
     if len(sh) > 4 or len(mb) > 2:
         raise Unsupported("too many shared locations")
-    if any(v != 0 for n, v in init.items() if n in gl) and place != "same-cta":
-        raise Unsupported("non-zero initial values across CTAs")
     regs: list[tuple[int, str]] = []
     for th in t.threads:
         for i in th.instrs:
@@ -468,16 +563,27 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
             elif side not in gl:
                 raise Unsupported(f"condition on {side}")
     cluster_bar = any(i.op == "barrier" for _, i in t.instrs())
+    warp_bar = cluster_bar or bool(nbar)
     bodies = []
     for th in t.threads:
         mine = [r for k, r in regs if k == th.tid]
         used = [n for n in kinds if any(n in i.args for i in th.instrs)]
+        uses_bar = any(id(i) in barcode for i in th.instrs)
         ops = {r: f"%{n}" for n, r in enumerate(mine)}
         ops.update({n: f"%{len(mine) + k}" for k, n in enumerate(used)})
-        lines = [ln for i in th.instrs if not i.is_empty for ln in _emit87(i, ops, kinds)]
-        asm = "\n".join(f'        "{ln}\\n\\t"' for ln in [".reg .u32 t;", ".reg .pred p;"] + lines)
+        # registers no load writes (initial values such as P0:r2=1): asm-local registers
+        local = sorted({x for i in th.instrs for x in i.args if re.fullmatch(r"r\d+", x)} - set(mine))
+        ops.update({r: f"q{r}" for r in local})
+        pre = [f".reg .u32 q{r};" for r in local] + [f"mov.u32 q{r}, {rinit.get((th.tid, r), 0)};" for r in local]
+        gb_op = f"%{len(mine) + len(used)}"
+        if uses_bar:
+            pre.append(".reg .u32 bid;")
+        lines = [ln.replace("%gb", gb_op) for i in th.instrs if not i.is_empty
+                 for ln in (barcode.get(id(i)) or _emit87(i, ops, kinds))]
+        asm = "\n".join(f'        "{ln}\\n\\t"' for ln in [".reg .u32 t;", ".reg .pred p;"] + pre + lines)
         outs = ", ".join(f'"=r"(r_{r})' for r in mine)
-        ins = ", ".join(f'"{"l" if kinds[n] == "global" else "r"}"(a_{n})' for n in used)
+        ins = ", ".join([f'"{"l" if kinds[n] == "global" else "r"}"(a_{n})' for n in used]
+                        + (['"r"(l.gb)'] if uses_bar else []))
         bodies.append(
             f"// P{th.tid}: {' ; '.join(i.text for i in th.instrs if not i.is_empty)}\n"
             f"__device__ __forceinline__ void role{th.tid}(L &l, unsigned *out) {{\n"
@@ -486,9 +592,14 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
             + f'    asm volatile("{{\\n\\t"\n{asm}\n        "}}"\n        : {outs}\n        : {ins}\n        : "memory");\n'
             + "".join(f"    out[{regs.index((th.tid, r))}] = r_{r};\n" for r in mine) + "}\n")
     fields = "".join(f"    {'unsigned long long' if kinds[n] == 'global' else 'unsigned'} {n};\n" for n in kinds)
+    if nbar:
+        fields += "    unsigned gb;\n"
     loc_init = "".join(f"    l.{n} = to_global(mem + lo[{gl.index(n)}]);\n" for n in gl)
     loc_init += "".join(f"    l.{n} = to_shared(&sbuf[({k} * 256 + lslot) * 4]);\n" for k, n in enumerate(sh))
     loc_init += "".join(f"    l.{n} = to_shared(&mbar[{k} * 256 + lslot]);\n" for k, n in enumerate(mb))
+    if nbar:
+        # one set of hardware barriers per instance group of a CTA (lslot / 32); one role per CTA needs only one
+        loc_init += (f"    l.gb = 1 + (lslot >> 5) * {nbar};\n" if place in ("same-cta", "mixed") else "    l.gb = 1;\n")
     setup = ""
     if place == "same-cta":
         setup = "    if (a != NONE && role == 0) {\n        const unsigned *lo = locoff + inst * NGLOC;\n"
@@ -509,6 +620,9 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
     spec = "\n".join([f"# Generated by tools/litmus/to_cuda.py from tests/litmus/{tid}.litmus", "kernel litmus",
                       f"roles {len(t.threads)}", f"placement {place}", f"nregs {len(regs)}", f"ngloc {len(gl)}",
                       f"cluster_barrier {int(cluster_bar)}",
+                      *(["warp_barrier 1"] if warp_bar and not cluster_bar else []),
+                      *[f"group {k} {g}" for k, g in enumerate(groups) if place == "mixed"],
+                      *[f"init {gl.index(n)} {init[n]}" for n in gl if init[n] and place != "same-cta"],
                       *[f"reg {n} P{k}:{r}" for n, (k, r) in enumerate(regs)],
                       *[f"gloc {n} {loc}" for n, loc in enumerate(gl)]]) + "\n"
     return src, spec
@@ -551,7 +665,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
 
 
 def tests() -> list[Path]:
-    return sorted((SUITE / "ptx" / "kamui").rglob("*.litmus"))
+    return sorted((SUITE / "ptx").rglob("*.litmus"))
 
 
 def test_id(p: Path) -> str:
@@ -567,7 +681,7 @@ def generate_all() -> tuple[dict[Path, str], dict[str, str]]:
     for p in tests():
         tid = test_id(p)
         try:
-            gen = generate87 if tid.startswith("ptx/kamui/ptx87/") else generate
+            gen = generate87 if tid.startswith(("ptx/kamui/ptx87/", "ptx/imported/")) else generate
             src, spec = gen(litmus.load(p), tid)
         except Unsupported as e:
             skipped[tid] = str(e)

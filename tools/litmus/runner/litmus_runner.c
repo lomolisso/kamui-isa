@@ -13,12 +13,17 @@
  *   (in every placement 192 of the 256 threads of a CTA can hold roles; the other 64 are stress threads)
  *   same-cluster  role k is in CTA rank k of a cluster (a random rank permutation with --config shuffle)
  *   diff-cluster  role k is in cluster (c + k * step) mod CLUSTERS, CTA rank k
+ *   mixed         roles share CTAs as the test says (`group k g`: role k is in the g-th CTA of the test), all in one
+ *                 cluster: CTA group g is CTA rank g of a cluster, its roles in different warps of that CTA
  *
  * Configurations:
  *   plain    no stress, fixed placement and location layout
  *   stress   threads with no role read and write a 64 MiB scratch buffer while the test runs
  *   shuffle  stress, plus a fresh random placement, location layout and per-thread start delay every launch
- *            (for tests with a cluster barrier, whole warps are shuffled, never single lanes: see make_assign)
+ *            (for tests with a cluster barrier or a CTA barrier, whole warps are shuffled, never single lanes:
+ *            see make_assign)
+ *
+ * `init g v` in SPEC: global location g starts at v (the host writes it before each launch).
  *
  * Every location of every instance has its own 128-byte line. After each launch the host reads each instance's
  * registers, final location values and the SM and cluster of each role, and counts the outcome together with a
@@ -47,11 +52,14 @@
 #define MAXV 24
 #define HASH_SIZE 65536
 
-enum placement { SAME_CTA, SAME_CLUSTER, DIFF_CLUSTER };
+enum placement { SAME_CTA, SAME_CLUSTER, DIFF_CLUSTER, MIXED };
 static const char *CLASSES[] = {"same-sm", "same-cluster", "diff-cluster"};
 
 struct spec {
-    int roles, nregs, ngloc, cluster_barrier;
+    int roles, nregs, ngloc, cluster_barrier, warp_barrier, ninit;
+    int group[CTAS_PER_CLUSTER];
+    int init_loc[MAXV];
+    unsigned init_val[MAXV];
     enum placement place;
 };
 
@@ -59,20 +67,35 @@ static int read_spec(const char *path, struct spec *s) {
     FILE *f = fopen(path, "r");
     if (!f) return -1;
     char line[512], key[64], val[256];
+    int a, b, groups = 0;
     memset(s, 0, sizeof *s);
     s->place = -1;
     while (fgets(line, sizeof line, f)) {
         if (line[0] == '#' || sscanf(line, "%63s %255s", key, val) != 2) continue;
+        if (sscanf(line, "group %d %d", &a, &b) == 2) {
+            if (a < 0 || a >= CTAS_PER_CLUSTER || b < 0 || b >= CTAS_PER_CLUSTER) return fclose(f), -1;
+            s->group[a] = b, groups++;
+            continue;
+        }
+        if (sscanf(line, "init %d %d", &a, &b) == 2) {
+            if (s->ninit >= MAXV) return fclose(f), -1;
+            s->init_loc[s->ninit] = a, s->init_val[s->ninit++] = (unsigned)b;
+            continue;
+        }
         if (!strcmp(key, "roles")) s->roles = atoi(val);
         else if (!strcmp(key, "nregs")) s->nregs = atoi(val);
         else if (!strcmp(key, "ngloc")) s->ngloc = atoi(val);
         else if (!strcmp(key, "cluster_barrier")) s->cluster_barrier = atoi(val);
+        else if (!strcmp(key, "warp_barrier")) s->warp_barrier = atoi(val);
         else if (!strcmp(key, "placement"))
             s->place = !strcmp(val, "same-cta") ? SAME_CTA : !strcmp(val, "same-cluster") ? SAME_CLUSTER
-                     : !strcmp(val, "diff-cluster") ? DIFF_CLUSTER : -1;
+                     : !strcmp(val, "diff-cluster") ? DIFF_CLUSTER : !strcmp(val, "mixed") ? MIXED : -1;
     }
     fclose(f);
     if (s->roles < 1 || s->roles > CTAS_PER_CLUSTER || (int)s->place < 0 || s->nregs + s->ngloc > MAXV) return -1;
+    if ((s->place == MIXED) != (groups == s->roles)) return -1;
+    for (int i = 0; i < s->ninit; i++)
+        if (s->init_loc[i] < 0 || s->init_loc[i] >= s->ngloc) return -1;
     return 0;
 }
 
@@ -118,6 +141,36 @@ static unsigned make_assign(const struct spec *s, int random, unsigned *assign) 
         }
         return inst;
     }
+    if (s->place == MIXED) {
+        /* group g is CTA rank[g] of each cluster; per CTA, instance group ii uses warps ii*m .. ii*m+m-1 (m: the
+         * largest number of roles in one CTA), role k the warp of its index within its group; lane l of every
+         * such warp is instance ii*32+l of the group */
+        unsigned cnt[CTAS_PER_CLUSTER] = {0}, idx[CTAS_PER_CLUSTER], m = 1, rank[CTAS_PER_CLUSTER];
+        unsigned wperm[CTAS_PER_CLUSTER][THREADS / 32], lperm[CTAS_PER_CLUSTER][32];
+        for (unsigned k = 0; k < n; k++) idx[k] = cnt[s->group[k]]++;
+        for (unsigned g = 0; g < CTAS_PER_CLUSTER; g++) m = cnt[g] > m ? cnt[g] : m;
+        unsigned ni = (ROLE_THREADS / 32) / m;
+        identity(rank, CTAS_PER_CLUSTER);
+        if (random) shuffle(rank, CTAS_PER_CLUSTER);
+        for (unsigned c = 0; c < CLUSTERS; c++) {
+            for (unsigned g = 0; g < CTAS_PER_CLUSTER; g++) {
+                identity(wperm[g], THREADS / 32);
+                if (random) shuffle(wperm[g], THREADS / 32);
+            }
+            for (unsigned ii = 0; ii < ni; ii++) {
+                for (unsigned k = 0; k < n; k++) {
+                    identity(lperm[k], 32);
+                    if (random) shuffle(lperm[k], 32);
+                }
+                for (unsigned l = 0; l < 32; l++, inst++)
+                    for (unsigned k = 0; k < n; k++) {
+                        unsigned g = s->group[k], cta = c * CTAS_PER_CLUSTER + rank[g];
+                        assign[cta * THREADS + wperm[g][ii * m + idx[k]] * 32 + lperm[k][l]] = PACK(inst, k, ii * 32 + l);
+                    }
+            }
+        }
+        return inst;
+    }
     unsigned rank[CTAS_PER_CLUSTER], step = 1;
     identity(rank, CTAS_PER_CLUSTER);
     if (random) shuffle(rank, CTAS_PER_CLUSTER);
@@ -136,7 +189,7 @@ static unsigned make_assign(const struct spec *s, int random, unsigned *assign) 
     for (unsigned c = 0; c < CLUSTERS; c++) {
         for (unsigned k = 0; k < n; k++) {
             identity(sperm[k], THREADS);
-            if (random && s->cluster_barrier) {
+            if (random && (s->cluster_barrier || s->warp_barrier)) {
                 /* Shuffle whole warps only: barrier.cluster.arrive.relaxed compiles to WARPSYNC.ALL; UCGABAR_ARV,
                  * so a warp whose lanes reach different barrier.cluster instructions deadlocks. */
                 unsigned w[THREADS / 32];
@@ -155,6 +208,51 @@ static unsigned make_assign(const struct spec *s, int random, unsigned *assign) 
             }
     }
     return inst;
+}
+
+/* Check one launch's assignment against the spec: every instance has each role exactly once, the roles are in
+ * the CTAs and clusters the placement asks for, and with a barrier every role warp holds one role only.
+ * Returns the number of problems (printed). Used by --plan, which needs no GPU. */
+static int check_assign(const struct spec *s, const unsigned *assign, unsigned ninst) {
+    static unsigned where[NSLOTS][CTAS_PER_CLUSTER];
+    int bad = 0;
+    for (unsigned i = 0; i < ninst; i++)
+        for (int k = 0; k < s->roles; k++) where[i][k] = NONE;
+    for (unsigned t = 0; t < NSLOTS; t++) {
+        unsigned a = assign[t];
+        if (a == NONE) continue;
+        unsigned role = a & 7, inst = a >> 11;
+        if (inst >= ninst || (int)role >= s->roles || where[inst][role] != NONE) {
+            if (bad++ < 5) fprintf(stderr, "slot %u: bad or repeated role %u of instance %u\n", t, role, inst);
+            continue;
+        }
+        where[inst][role] = t;
+        if (s->warp_barrier || s->cluster_barrier || s->place == SAME_CTA || s->place == MIXED) {
+            unsigned w0 = t / 32 * 32;
+            for (unsigned l = 0; l < 32; l++) {
+                unsigned b = assign[w0 + l];
+                if (b == NONE || (b & 7) != role) {
+                    if (bad++ < 5) fprintf(stderr, "slot %u: warp mixes roles or stress threads\n", t);
+                    break;
+                }
+            }
+        }
+    }
+    for (unsigned i = 0; i < ninst; i++)
+        for (int k = 0; k < s->roles; k++) {
+            if (where[i][k] == NONE) {
+                if (bad++ < 5) fprintf(stderr, "instance %u: role %d missing\n", i, k);
+                continue;
+            }
+            unsigned cta = where[i][k] / THREADS, c0 = where[i][0] / THREADS;
+            int same_cta = cta == c0, same_cl = cta / CTAS_PER_CLUSTER == c0 / CTAS_PER_CLUSTER;
+            int want_cta = s->place == SAME_CTA || (s->place == MIXED && s->group[k] == s->group[0]);
+            int want_cl = s->place != DIFF_CLUSTER;
+            if (k > 0 && (same_cta != want_cta || (want_cl && !same_cl) || (s->place == DIFF_CLUSTER && same_cl))) {
+                if (bad++ < 5) fprintf(stderr, "instance %u: role %d in the wrong CTA or cluster\n", i, k);
+            }
+        }
+    return bad;
 }
 
 struct bucket {
@@ -239,7 +337,9 @@ int main(int argc, char **argv) {
                per_launch, used, NSLOTS - used);
         for (unsigned i = 0; i < NSLOTS && i < 2 * THREADS; i += 32)
             printf("slot %u: %08x\n", i, assign[i]);
-        return 0;
+        int bad = check_assign(&s, assign, per_launch);
+        printf("assignment %s\n", bad ? "BAD" : "ok");
+        return bad ? 4 : 0;
     }
     char *ptx = slurp(ptx_path);
     if (!ptx) {
@@ -301,7 +401,15 @@ int main(int argc, char **argv) {
             CHECK(cuMemcpyHtoD(d_assign, assign, sizeof assign));
             CHECK(cuMemcpyHtoD(d_locoff, locoff, (size_t)nlines * 4));
         }
-        CHECK(cuMemsetD32(d_mem, 0, mem_words));
+        if (s.ninit) {
+            /* initial values: the host writes them before the launch, so every thread sees them */
+            memset(mem, 0, mem_words * 4);
+            for (unsigned i = 0; i < per_launch; i++)
+                for (int j = 0; j < s.ninit; j++) mem[locoff[(size_t)i * ngl + s.init_loc[j]]] = s.init_val[j];
+            CHECK(cuMemcpyHtoD(d_mem, mem, mem_words * 4));
+        } else {
+            CHECK(cuMemsetD32(d_mem, 0, mem_words));
+        }
         CHECK(cuMemsetD32(d_res, 0, (size_t)per_launch * nrg));
         CHECK(cuLaunchKernelEx(&cfg, fn, args, NULL));
         CHECK(cuCtxSynchronize());
