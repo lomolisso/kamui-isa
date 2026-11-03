@@ -6,7 +6,7 @@
 #                       gpu.txt, manifest.yaml, job.log
 # Runs on: the H100 job image with one GPU visible as device 0. See docs/tools/h100-jobs.md.
 #
-# TESTS (a glob over test ids, default all), CONFIGS (default plain,stress,shuffle), INSTANCES (per test and
+# TESTS (a glob over test ids, or several separated by commas; default all), CONFIGS (default plain,stress,shuffle), INSTANCES (per test and
 # configuration, default 1000000) and SHARD (K/N, default 0/1) select the work, so a large run can be split into
 # several jobs. RESUME=1 with OUT set to an earlier run's folder finishes an interrupted run, skipping every
 # test and configuration whose result is already complete. Nothing is timed: the results are outcome counts, so the job needs no clock lock.

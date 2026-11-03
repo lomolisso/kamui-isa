@@ -104,3 +104,11 @@ def test_barrier_deadlock_is_not_run():
         assert False
     except to_cuda.Unsupported as e:
         assert "deadlock" in str(e)
+
+
+def test_distributed_shared_memory_kernel():
+    tid = "ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared"
+    src, spec = to_cuda.generate87(litmus.load(to_cuda.SUITE / (tid + ".litmus")), tid)
+    assert "dsmem 1" in spec and "placement same-cluster" in spec
+    assert 'mapa.shared::cluster.u32 %0, %1, 1;' in src and "st.weak.shared::cluster.u32 [%2], t;" in src
+    assert "ld.weak.shared::cta.u32 %1, [%2];" in src and src.count("barrier.cluster.arrive;") == 3

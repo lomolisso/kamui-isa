@@ -61,7 +61,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--runner", required=True, type=Path)
     ap.add_argument("--out", required=True, type=Path)
-    ap.add_argument("--tests", default="*")
+    ap.add_argument("--tests", default="*", help="glob over test ids; several globs separated by commas")
     ap.add_argument("--configs", default="plain,stress,shuffle")
     ap.add_argument("--instances", type=int, default=1000000)
     ap.add_argument("--shard", default="0/1")
@@ -70,7 +70,8 @@ def main() -> int:
     ap.add_argument("--resume", action="store_true", help="skip runs whose complete result already exists")
     a = ap.parse_args()
     k, n = (int(x) for x in a.shard.split("/"))
-    todo = [(tid, d) for tid, d in kernels() if fnmatch.fnmatch(tid, a.tests)][k::n]
+    globs = a.tests.split(",")  # several globs, comma-separated
+    todo = [(tid, d) for tid, d in kernels() if any(fnmatch.fnmatch(tid, g) for g in globs)][k::n]
     configs = [c for c in a.configs.split(",") if c]
     env = dict(os.environ, CUDA_CACHE_DISABLE="1")
     runs, failed = [], 0

@@ -24,6 +24,9 @@
  *            see make_assign)
  *
  * `init g v` in SPEC: global location g starts at v (the host writes it before each launch).
+ * `dsmem 1` in SPEC: the test reaches shared memory of other CTAs of its cluster; the kernel computes the address of
+ * a location in the CTA of test group g as CTA rank g, so ranks are not shuffled (warps, lanes, layout and delays
+ * still are), and all roles of an instance use the same slot (bits 3-10), the instance's index in its cluster.
  *
  * Every location of every instance has its own 128-byte line. After each launch the host reads each instance's
  * registers, final location values and the SM and cluster of each role, and counts the outcome together with a
@@ -56,7 +59,7 @@ enum placement { SAME_CTA, SAME_CLUSTER, DIFF_CLUSTER, MIXED };
 static const char *CLASSES[] = {"same-sm", "same-cluster", "diff-cluster"};
 
 struct spec {
-    int roles, nregs, ngloc, cluster_barrier, warp_barrier, ninit;
+    int roles, nregs, ngloc, cluster_barrier, warp_barrier, dsmem, ninit;
     int group[CTAS_PER_CLUSTER];
     int init_loc[MAXV];
     unsigned init_val[MAXV];
@@ -87,6 +90,7 @@ static int read_spec(const char *path, struct spec *s) {
         else if (!strcmp(key, "ngloc")) s->ngloc = atoi(val);
         else if (!strcmp(key, "cluster_barrier")) s->cluster_barrier = atoi(val);
         else if (!strcmp(key, "warp_barrier")) s->warp_barrier = atoi(val);
+        else if (!strcmp(key, "dsmem")) s->dsmem = atoi(val);
         else if (!strcmp(key, "placement"))
             s->place = !strcmp(val, "same-cta") ? SAME_CTA : !strcmp(val, "same-cluster") ? SAME_CLUSTER
                      : !strcmp(val, "diff-cluster") ? DIFF_CLUSTER : !strcmp(val, "mixed") ? MIXED : -1;
@@ -141,6 +145,7 @@ static unsigned make_assign(const struct spec *s, int random, unsigned *assign) 
         }
         return inst;
     }
+    if (s->dsmem && (s->place == SAME_CTA || s->place == DIFF_CLUSTER)) return 0;
     if (s->place == MIXED) {
         /* group g is CTA rank[g] of each cluster; per CTA, instance group ii uses warps ii*m .. ii*m+m-1 (m: the
          * largest number of roles in one CTA), role k the warp of its index within its group; lane l of every
@@ -151,7 +156,7 @@ static unsigned make_assign(const struct spec *s, int random, unsigned *assign) 
         for (unsigned g = 0; g < CTAS_PER_CLUSTER; g++) m = cnt[g] > m ? cnt[g] : m;
         unsigned ni = (ROLE_THREADS / 32) / m;
         identity(rank, CTAS_PER_CLUSTER);
-        if (random) shuffle(rank, CTAS_PER_CLUSTER);
+        if (random && !s->dsmem) shuffle(rank, CTAS_PER_CLUSTER);
         for (unsigned c = 0; c < CLUSTERS; c++) {
             for (unsigned g = 0; g < CTAS_PER_CLUSTER; g++) {
                 identity(wperm[g], THREADS / 32);
@@ -173,7 +178,7 @@ static unsigned make_assign(const struct spec *s, int random, unsigned *assign) 
     }
     unsigned rank[CTAS_PER_CLUSTER], step = 1;
     identity(rank, CTAS_PER_CLUSTER);
-    if (random) shuffle(rank, CTAS_PER_CLUSTER);
+    if (random && !s->dsmem) shuffle(rank, CTAS_PER_CLUSTER);
     if (s->place == DIFF_CLUSTER && random) {
         /* a step that sends the roles of one instance to n different clusters */
         for (;;) {
@@ -189,7 +194,7 @@ static unsigned make_assign(const struct spec *s, int random, unsigned *assign) 
     for (unsigned c = 0; c < CLUSTERS; c++) {
         for (unsigned k = 0; k < n; k++) {
             identity(sperm[k], THREADS);
-            if (random && (s->cluster_barrier || s->warp_barrier)) {
+            if (random && (s->cluster_barrier || s->warp_barrier || s->dsmem)) {
                 /* Shuffle whole warps only: barrier.cluster.arrive.relaxed compiles to WARPSYNC.ALL; UCGABAR_ARV,
                  * so a warp whose lanes reach different barrier.cluster instructions deadlocks. */
                 unsigned w[THREADS / 32];
@@ -204,7 +209,7 @@ static unsigned make_assign(const struct spec *s, int random, unsigned *assign) 
             for (unsigned k = 0; k < n; k++) {
                 unsigned cl = s->place == SAME_CLUSTER ? c : (c + k * step) % CLUSTERS;
                 unsigned cta = cl * CTAS_PER_CLUSTER + rank[k];
-                assign[cta * THREADS + sperm[k][t]] = PACK(inst, k, sperm[k][t] & 255);
+                assign[cta * THREADS + sperm[k][t]] = PACK(inst, k, s->dsmem ? t : sperm[k][t] & 255);
             }
     }
     return inst;
@@ -227,7 +232,7 @@ static int check_assign(const struct spec *s, const unsigned *assign, unsigned n
             continue;
         }
         where[inst][role] = t;
-        if (s->warp_barrier || s->cluster_barrier || s->place == SAME_CTA || s->place == MIXED) {
+        if (s->warp_barrier || s->cluster_barrier || s->dsmem || s->place == SAME_CTA || s->place == MIXED) {
             unsigned w0 = t / 32 * 32;
             for (unsigned l = 0; l < 32; l++) {
                 unsigned b = assign[w0 + l];
@@ -248,6 +253,10 @@ static int check_assign(const struct spec *s, const unsigned *assign, unsigned n
             int same_cta = cta == c0, same_cl = cta / CTAS_PER_CLUSTER == c0 / CTAS_PER_CLUSTER;
             int want_cta = s->place == SAME_CTA || (s->place == MIXED && s->group[k] == s->group[0]);
             int want_cl = s->place != DIFF_CLUSTER;
+            if (s->dsmem && (((assign[where[i][k]] >> 3) & 255) != ((assign[where[i][0]] >> 3) & 255) ||
+                             cta % CTAS_PER_CLUSTER != (unsigned)(s->place == MIXED ? s->group[k] : k))) {
+                if (bad++ < 5) fprintf(stderr, "instance %u: role %d not at its CTA rank or slot\n", i, k);
+            }
             if (k > 0 && (same_cta != want_cta || (want_cl && !same_cl) || (s->place == DIFF_CLUSTER && same_cl))) {
                 if (bad++ < 5) fprintf(stderr, "instance %u: role %d in the wrong CTA or cluster\n", i, k);
             }
@@ -330,6 +339,10 @@ int main(int argc, char **argv) {
     rng_state = seed * 0x9E3779B97F4A7C15ull + 1;
     static unsigned assign[NSLOTS];
     unsigned per_launch = make_assign(&s, random, assign);
+    if (per_launch == 0) {
+        fprintf(stderr, "%s: no instance fits this placement\n", spec_path);
+        return 2;
+    }
     if (plan) {
         unsigned used = 0;
         for (unsigned i = 0; i < NSLOTS; i++) used += assign[i] != NONE;
