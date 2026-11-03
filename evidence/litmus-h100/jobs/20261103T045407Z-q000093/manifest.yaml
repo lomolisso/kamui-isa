@@ -1,0 +1,14 @@
+job: litmus-h100
+job_id: 20261103T045407Z-q000093
+started: '2026-11-03T04:54:07+00:00'
+finished: '2026-11-03T04:56:04+00:00'
+git_commit: ce1977758885a5a1fd218cc392a6191c55dbcbd2
+git_dirty: false
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-428e544c-5649-1dde-a6bf-95de7485dd6a
+  pci_bus_id: 00000000:C3:00.0
+  driver: 580.126.20
+cuda_toolkit: Build cuda_12.9.r12.9/compiler.36037853_0
+run_exit: 0
+summary: 221 runs, 0 failed

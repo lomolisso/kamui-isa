@@ -20,9 +20,10 @@
  *   plain    no stress, fixed placement and location layout
  *   stress   threads with no role read and write a 64 MiB scratch buffer while the test runs
  *   shuffle  stress, plus a fresh random placement, location layout and per-thread start delay every launch
+ *            (0 to 255 ns, nanosleep)
  *            (for tests with a cluster barrier or a CTA barrier, whole warps are shuffled, never single lanes:
  *            see make_assign)
- *   spread   shuffle with start delays up to 16383 loop iterations instead of 255, so that a reader often runs after
+ *   spread   shuffle with start delays up to 16383 ns instead of 255, so that a reader often runs after
  *            a writer that has more work to do (used for tests whose interesting state is rare otherwise)
  *
  * `init g v` in SPEC: global location g starts at v (the host writes it before each launch).
