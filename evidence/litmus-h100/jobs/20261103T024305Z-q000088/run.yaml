@@ -1,0 +1,92 @@
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-428e544c-5649-1dde-a6bf-95de7485dd6a
+  driver: 580.126.20
+instances: 10000000
+configs:
+- shuffle
+tests: ptx/kamui/ptx87/hints/*
+shard: 0/1
+seconds: 38.6
+failed: 0
+runs:
+- test: ptx/kamui/ptx87/hints/MP+L2-cache_hint
+  config: shuffle
+  exit: 0
+  seconds: 2.42
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+applypriority
+  config: shuffle
+  exit: 0
+  seconds: 2.21
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+bulk-prefetch
+  config: shuffle
+  exit: 0
+  seconds: 2.96
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-evict_first
+  config: shuffle
+  exit: 0
+  seconds: 2.29
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-evict_last
+  config: shuffle
+  exit: 0
+  seconds: 2.43
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate
+  config: shuffle
+  exit: 0
+  seconds: 2.35
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.ca
+  config: shuffle
+  exit: 0
+  seconds: 2.24
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.cv
+  config: shuffle
+  exit: 0
+  seconds: 2.31
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+ld.lu
+  config: shuffle
+  exit: 0
+  seconds: 2.48
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L1
+  config: shuffle
+  exit: 0
+  seconds: 2.41
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L2
+  config: shuffle
+  exit: 0
+  seconds: 2.38
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last
+  config: shuffle
+  exit: 0
+  seconds: 2.39
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+prefetchu
+  config: shuffle
+  exit: 0
+  seconds: 2.42
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+st.L1-no_allocate
+  config: shuffle
+  exit: 0
+  seconds: 2.5
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+st.wb
+  config: shuffle
+  exit: 0
+  seconds: 2.41
+  message: ok 10010880 instances in 790 launches
+- test: ptx/kamui/ptx87/hints/MP+st.wt
+  config: shuffle
+  exit: 0
+  seconds: 2.38
+  message: ok 10010880 instances in 790 launches

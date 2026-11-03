@@ -1,0 +1,17 @@
+test,instances,forbidden,second_load_kept
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,10010880,0,no
+ptx/kamui/ptx87/hints/MP+applypriority,10010880,0,n/a
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,10010880,0,n/a
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,10010880,1,no
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,10010880,1,no
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,10010880,2,no
+ptx/kamui/ptx87/hints/MP+ld.ca,10010880,1,no
+ptx/kamui/ptx87/hints/MP+ld.cv,10010880,0,yes
+ptx/kamui/ptx87/hints/MP+ld.lu,10010880,0,yes
+ptx/kamui/ptx87/hints/MP+prefetch.L1,10010880,0,n/a
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,10010880,0,n/a
+ptx/kamui/ptx87/hints/MP+prefetch.L2,10010880,0,n/a
+ptx/kamui/ptx87/hints/MP+prefetchu,10010880,0,n/a
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,10010880,4,no
+ptx/kamui/ptx87/hints/MP+st.wb,10010880,1,no
+ptx/kamui/ptx87/hints/MP+st.wt,10010880,2,no

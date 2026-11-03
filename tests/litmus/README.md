@@ -190,7 +190,7 @@ rewrites the jar it is started from (seen again here: the copy's checksum change
 `rvwmo` is a baseline, not a PTX verdict: it answers the question for a different program, the test lowered to
 plain RISC-V with C++-style fences (the mapping table is in `tools/litmus/to_riscv.py`).
 
-Today: 812 tests, 2536 rows. The PTX 8.7 model (`ptx-v8.7-alloy`) decides 793 tests (every test without a
+Today: 828 tests, 2552 rows. The PTX 8.7 model (`ptx-v8.7-alloy`) decides 809 tests (every test without a
 loop). Wherever two PTX models decide the same test they agree, with four exceptions: Dat3M barrier tests in
 which a thread can never complete its barrier, which Dartagnan counts and the PTX 8.7 model does not (decision D9
 of `models/ptx87/decisions.md`, explained in `allowlist.yaml`). Dartagnan v7.5 decides 612 tests, the 2019 Alloy

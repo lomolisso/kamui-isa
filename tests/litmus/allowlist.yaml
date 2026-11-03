@@ -260,3 +260,19 @@
   test: ptx/kamui/ptx87/mbarrier/MP2+mbarrier-rel-relaxed.cta+release-side
   model: shuffle
   reason: *mbarrier_gap_ptx87
+
+- kind: h100
+  test: ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate
+  model: shuffle
+  reason: &ptxas_load_merge >-
+    A compiler effect, not a hardware one. The reader loads x, then the flag with ld.acquire.gpu, then x again with
+    the same instruction; ptxas (CUDA 12.8, and the JIT of driver 580) keeps only the first load of x, before the
+    acquire, and reuses its value (every observed outcome has r1 == r2). When both stores of the writer fall between
+    the first load and the flag read, the result is the forbidden outcome. The .cv and .lu variants, whose second
+    load differs and is kept, show the allowed outcome in that window and never the forbidden one. PTX ISA 8.7
+    does not make the race on x undefined, so the model keeps the verdict. Details in evidence/litmus-h100/README.md.
+
+- kind: h100
+  test: ptx/kamui/ptx87/hints/MP+st.wb
+  model: shuffle
+  reason: *ptxas_load_merge

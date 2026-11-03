@@ -4122,6 +4122,135 @@ ptx/kamui/ptx87/cp-async/cp.async+wait_group-1+older,stress,same-sm,P0:r0=1 P0:r
 ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc,plain,same-sm,P1:r0=0 g=1,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc,shuffle,same-sm,P1:r0=0 g=1,1013760,1013760,no,forbidden
 ptx/kamui/ptx87/cp-async/cp.async.mbarrier.arrive+inc,stress,same-sm,P1:r0=0 g=1,1013760,1013760,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,801040,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,200048,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,500889,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9333,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,490866,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,955664,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+L2-cache_hint,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,45424,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,2975,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,998071,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,42,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,489565,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18716,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,492807,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,197,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+applypriority,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000891,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,439658,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,561430,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,488161,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18283,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,494644,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,988247,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+bulk-prefetch,stress,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,12841,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,801869,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,199219,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,500089,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9354,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,491645,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,957365,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,43697,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_first,stress,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,26,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,803356,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,197732,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,499297,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9754,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,492037,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,956919,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,44137,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-evict_last,stress,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,32,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,806016,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,195072,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,501629,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,shuffle,same-cluster,P1:r2=0 P1:r0=1 P1:r1=0 x=1 f=1,1,1001088,yes,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9598,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,489860,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,956615,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,44441,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.L1-no_allocate,stress,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,32,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,803562,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,197526,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,500780,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9415,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,490893,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,953791,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.ca,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,47297,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,2313,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,805912,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,192863,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,489449,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,9736,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9264,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,492639,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,1246,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,951823,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.cv,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,48019,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,2116,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,800038,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,198934,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,487804,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,10141,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9764,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,493379,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,1515,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=1 x=1 f=1,953393,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+ld.lu,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,46180,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,3088,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,997996,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,4,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,488530,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18113,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,494445,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,266,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L1,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000822,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,2999,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,998079,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,10,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,489417,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18453,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,493218,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,204,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000884,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,3225,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,997857,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,6,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,489171,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18470,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,493447,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,679,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetch.L2-evict_last,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000409,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,plain,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,2996,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,plain,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,998073,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,plain,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,19,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,shuffle,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,489267,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,shuffle,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,18771,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,shuffle,same-cluster,P1:r0=1 P1:r1=1 x=1 f=1,493050,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,stress,same-cluster,P1:r0=0 P1:r1=0 x=1 f=1,147,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+prefetchu,stress,same-cluster,P1:r0=0 P1:r1=1 x=1 f=1,1000941,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,800328,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,200760,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,500959,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9112,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,491017,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,955252,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,45832,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.L1-no_allocate,stress,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,4,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,803384,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,197704,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,499007,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,shuffle,same-cluster,P1:r2=0 P1:r0=1 P1:r1=0 x=1 f=1,1,1001088,yes,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9379,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,492701,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,955647,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wb,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,45441,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,plain,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,809365,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,plain,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,191723,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,shuffle,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,499788,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,shuffle,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,9284,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,shuffle,same-cluster,P1:r2=1 P1:r0=1 P1:r1=1 x=1 f=1,492016,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,stress,same-cluster,P1:r2=0 P1:r0=0 P1:r1=0 x=1 f=1,954384,1001088,no,forbidden
+ptx/kamui/ptx87/hints/MP+st.wt,stress,same-cluster,P1:r2=1 P1:r0=0 P1:r1=1 x=1 f=1,46704,1001088,no,forbidden
 ptx/kamui/ptx87/ld-st/CoRR+mmio,plain,same-cluster,P1:r0=0 P1:r1=0 x=1,664028,1001088,no,forbidden
 ptx/kamui/ptx87/ld-st/CoRR+mmio,plain,same-cluster,P1:r0=0 P1:r1=1 x=1,90461,1001088,no,forbidden
 ptx/kamui/ptx87/ld-st/CoRR+mmio,plain,same-cluster,P1:r0=1 P1:r1=1 x=1,246599,1001088,no,forbidden

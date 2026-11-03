@@ -14,6 +14,7 @@ outcome the formal model forbids but the H100 showed is a finding to investigate
 | Driver, toolkit | 580.126.20 (the PTX is JIT-compiled by the driver), CUDA 12.9.1 job image |
 | Work | 302 tests x 3 configurations x 1,013,760 instances (about 1e6) = 906 runs, 9.2e8 instances, about 15 minutes of GPU time |
 | PTX 8.7 tests | job `20261102T022710Z-q000042` (commit `3efb161`): the 52 runnable tests of `tests/litmus/ptx/kamui/ptx87/`, 156 runs, about 3 minutes; command `h100 submit --gpu 3 -- env TESTS='ptx/kamui/ptx87/*' bash jobs/litmus-h100.sh`. Two earlier runs of the same tests were replaced: one stopped by the queue's watchdog, one with a kernel bug in the copy tests (fixed in `tools/litmus/to_cuda.py`) |
+| Cache hints | job `20261103T024058Z-q000087` (commit `60a260c`): the 16 tests of `tests/litmus/ptx/kamui/ptx87/hints/`, 48 runs; command `h100 submit --gpu 2 -- env TESTS='ptx/kamui/ptx87/hints/*' bash jobs/litmus-h100.sh`. Job `20261103T024305Z-q000088` reran them in the shuffle configuration with 1e7 instances each (`CONFIGS=shuffle INSTANCES=10000000`); its counts are in `jobs/20261103T024305Z-q000088/hints-shuffle.csv` |
 
 ## Files
 
@@ -59,6 +60,19 @@ Tables: `python tools/litmus/report_tables.py --table h100` and `--table h100-fa
   asynchronous arrive of `cp.async.mbarrier.arrive`, and several arrivals (`MP2+*`): with one
   `fence.acq_rel.cta` after the wait, each shows the outcome in 0 of about 3 million instances. The tests that need
   distributed shared memory, wgmma, tensor maps, multimem or grids have no kernel (formal verdicts only).
+- **Cache hints (`kamui/ptx87/hints/`)**: each test is MP across two CTAs with one hint on the data accesses.
+  Prefetches (`prefetch` L1, L2, L2 with eviction priority, `prefetchu`, `applypriority`,
+  `cp.async.bulk.prefetch`) and the `.cv` and `.lu` loads never showed the forbidden outcome, in about 1.3e7
+  instances each. The other eight tests (`.ca`, `.wb`, `.wt`, L1 eviction priorities, `L1::no_allocate` on a
+  store, `L2::cache_hint`) read `x` before and after the acquire with the same instruction, and **ptxas (CUDA 12.8,
+  and the JIT of driver 580) merges the two loads**: the SASS has one `LDG` of `x` before `LDG.STRONG.GPU;
+  CCTL.IVALL` and none after, and every observed outcome has `r1 == r2`. When the writer's two stores fall between
+  the first load and the flag read, the merged code returns the forbidden outcome: 1 to 4 times per 1e7 instances
+  in 7 of the 8 tests, 14 times in all. With `.cv` or `.lu` the second load differs, ptxas keeps both, and the
+  same window gives the allowed `r2=0 r0=1 r1=1` (3 per 1e7) and never the forbidden one. PTX does not make the
+  race on `x` undefined, so the model keeps the verdict forbidden; these eight hints are not measured on the H100
+  (the manual's statement that they do not change memory behaviour, 15572, 15696, 16674, is the basis). No other
+  test of the suite has two weak loads of one address around an acquire or a fence in one thread.
 - **One forbidden outcome observed, in three tests: `MP+mbarrier-rel-acq`** (and its `try_wait` and shared-memory
   variants), 0.13% to 1.1% of the instances. A thread whose `mbarrier.test_wait.acquire` (or `try_wait`) returns
   True can still read data older than what the arriving thread wrote before its `mbarrier.arrive.release`; PTX

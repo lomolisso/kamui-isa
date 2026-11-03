@@ -381,7 +381,9 @@ Choice: cache operators, eviction priorities, cache hints, `.level::prefetch_siz
 `prefetch.tensormap`, `cp.async.bulk.prefetch{.tensor}`, `applypriority`, `createpolicy`,
 `griddepcontrol.launch_dependents`, and the address computations `cvta`, `mapa`, `isspacep`, `getctarank` create
 no event. Register-only instructions (`mov`, `cvt`, `prmt`, `shfl.sync`, `vote.sync`, `match.sync`, `redux.sync`,
-`activemask`, `elect.sync`) touch no memory. Tests: `kamui/ptx87/ld-st/MP+cache-operators`.
+`activemask`, `elect.sync`) touch no memory. A cache policy "is treated as a performance hint only, and does not
+change the memory consistency behavior of the program" (16674). Tests: `kamui/ptx87/ld-st/MP+cache-operators`,
+`kamui/ptx87/hints/*` (H100 results in `evidence/litmus-h100/README.md`).
 
 ### D28. .volatile and .mmio
 
