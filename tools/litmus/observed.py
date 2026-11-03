@@ -46,7 +46,7 @@ EVID = ROOT / "evidence" / "litmus-h100"
 RESULTS = EVID / "results"
 OBS_FIELDS = ["test", "config", "class", "outcome", "count", "total", "observed_weak", "model_verdict"]
 SUM_FIELDS = ["test", "config", "instances", "weak", "rate", "verdict", "status"]
-PTX_MODELS = {"ptx-v7.5", "ptx-v6.0", "ptx-2019-alloy", "ptx-2019-alloy+ext", "ptx-v8.7-alloy", "manual-reasoning"}
+PTX_MODELS = {"ptx-v8.7", "ptx-v7.5", "ptx-v6.0", "ptx-2019-alloy", "ptx-2019-alloy+ext", "ptx-v8.7-alloy", "manual-reasoning"}
 
 
 def verdicts(expected: Path = SUITE / "expected.csv") -> dict[str, str]:

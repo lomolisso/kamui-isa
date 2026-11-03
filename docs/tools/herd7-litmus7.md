@@ -23,7 +23,7 @@ litmus test and scope are explained in the [glossary](../glossary.md).
 
 ## Where it runs
 
-Dev container (`kamui-isa-dev:0.2`, see [devcontainer.md](devcontainer.md)). herd7 needs
+Dev container (`kamui-isa-dev:0.3`, see [devcontainer.md](devcontainer.md)). herd7 needs
 no hardware. litmus7 output would run on a RISC-V machine, which we do not have; we do
 not use litmus7 today.
 

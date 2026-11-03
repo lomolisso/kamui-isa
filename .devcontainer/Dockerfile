@@ -97,6 +97,11 @@ COPY requirements.txt /tmp/requirements.txt
 RUN python3 -m venv /opt/venv && /opt/venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt \
     && rm /tmp/requirements.txt
 
+# Maven, to build the Dartagnan fork in deps/dat3m (tools/dat3m/build.sh); a layer of its own so that the
+# layers above stay cached.
+RUN apt-get update && apt-get install -y --no-install-recommends maven \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY bin/ /usr/local/bin/
 RUN chmod +x /usr/local/bin/*
 

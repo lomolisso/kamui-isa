@@ -10,6 +10,8 @@ Checks:
 3. expected.csv: known columns, known results, no duplicate (test, model, tool) row, no row for a missing test,
    every test Dartagnan can parse (no `.cluster` scope, no PTX 8.6 fence) has a `ptx-v7.5` row, every test
    tools/litmus/to_alloy87.py can express has a `ptx-v8.7-alloy` row, and every other test has at least one row.
+   Once expected.csv has any `ptx-v8.7` row (the Dartagnan fork), every test with a `ptx-v8.7-alloy` row needs
+   one too.
    A `ptx-v8.7-alloy` row whose flags say `(no execution)` (the program has no execution at all, for example a
    barrier that never completes) must be explained (kind `no-execution`).
 4. Agreement: an imported test's `ptx-v7.5` and `ptx-v6.0` results equal the upstream verdicts in origin.csv
@@ -99,7 +101,10 @@ def findings(suite: Path = SUITE) -> tuple[list[str], list[tuple[str, str, str, 
         if r["result"] not in RESULTS:
             errors.append(f"expected.csv: bad result {r['result']!r} for {key}")
         by_test[r["test"]][r["model"]] = r["result"]
+    fork_rows = any("ptx-v8.7" in m for m in by_test.values())
     for tid, t in tests.items():
+        if fork_rows and to_alloy87.MODEL_NAME in by_test.get(tid, {}) and "ptx-v8.7" not in by_test[tid]:
+            errors.append(f"{tid}: no ptx-v8.7 row in expected.csv")
         if t.dartagnan_ok and "ptx-v7.5" not in by_test.get(tid, {}):
             errors.append(f"{tid}: no ptx-v7.5 row in expected.csv")
         if not by_test.get(tid):

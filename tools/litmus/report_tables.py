@@ -24,7 +24,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 EXPECTED = ROOT / "tests" / "litmus" / "expected.csv"
 EVID = ROOT / "evidence" / "litmus-h100"
-PTX_MODELS = ["ptx-v8.7-alloy", "ptx-v7.5", "ptx-v6.0", "ptx-2019-alloy", "ptx-2019-alloy+ext", "manual-reasoning"]
+PTX_MODELS = ["ptx-v8.7-alloy", "ptx-v8.7", "ptx-v7.5", "ptx-v6.0", "ptx-2019-alloy", "ptx-2019-alloy+ext", "manual-reasoning"]
 SUITE = ROOT / "tests" / "litmus"
 SCOPES = ["cta", "cluster", "gpu", "sys"]
 PLACES = ["same-cta", "same-cluster", "diff-cluster"]

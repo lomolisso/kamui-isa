@@ -15,6 +15,9 @@ Models (column `model`):
   before the run, which changes nothing when no instruction uses the `.cluster` scope).
 - `ptx-v6.0`: Dartagnan with `cat/ptx-v6.0.cat`, the PTX ISA 6.0 model (no proxies). Tests without `.cluster`
   and without proxy features.
+- `ptx-v8.7`: the PTX ISA 8.7 model in our Dartagnan fork (deps/dat3m, `cat/ptx-v8.7.cat`), built by
+  tools/dat3m/build.sh into build/dat3m/. Every test, with cluster placement; skipped while the fork has no
+  `cat/ptx-v8.7.cat` or no built jar.
 - `ptx-2019-alloy`: the 2019 Alloy model of PTX ISA 6.0 (deps/ptx-memory-model/ptx.als), run with the
   artifact's own driver (RunAlloy) and Alloy 4.2 jar, on the queries tools/litmus/to_alloy.py writes to
   tests/litmus/alloy/. Only the tests to_alloy can express.
@@ -70,6 +73,7 @@ FIELDS = ["test", "source", "condition", "model", "model_version", "tool", "tool
           "runtime_s"]
 DAT3M = Path(os.environ.get("DAT3M_HOME", "/opt/dat3m"))
 DARTAGNAN_FLAGS = "--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec"
+TIMEOUT_S = 600  # per Dartagnan run; a run that takes longer is recorded as unknown
 
 
 def all_tests() -> list[Path]:
@@ -91,10 +95,17 @@ def file_sha(path: Path) -> str:
 
 class Dartagnan:
     tool = "dartagnan"
+    erase_clusters = True
 
     def __init__(self, model: str, cat: str):
         self.model, self.cat = model, DAT3M / "cat" / cat
         self._version = None
+
+    def command(self) -> list[str]:
+        return ["dartagnan"]
+
+    def env(self, env: dict) -> dict:
+        return env
 
     def applies(self, t: litmus.Litmus) -> bool:
         if not t.dartagnan_ok:
@@ -118,12 +129,15 @@ class Dartagnan:
         with tempfile.TemporaryDirectory(dir=_outdir()) as out:
             env = dict(os.environ, DAT3M_OUTPUT=out)
             t = litmus.load(path)
-            if any(th.cluster is not None for th in t.threads):
+            if self.erase_clusters and any(th.cluster is not None for th in t.threads):
                 path = Path(out) / path.name
                 path.write_text(t.without_clusters())
             t0 = time.monotonic()
-            p = subprocess.run(["dartagnan", str(self.cat), *flags.split(), str(path)], capture_output=True,
-                               text=True, env=env, timeout=600)
+            try:
+                p = subprocess.run([*self.command(), str(self.cat), *flags.split(), str(path)],
+                                   capture_output=True, text=True, env=self.env(env), timeout=TIMEOUT_S)
+            except subprocess.TimeoutExpired:
+                return "unknown", time.monotonic() - t0, f"{flags} (timeout {TIMEOUT_S} s)"
             dt = time.monotonic() - t0
         m = re.search(r"^Result:\s*(\w+)", p.stdout, re.M)
         word = m.group(1) if m else "ERROR"
@@ -131,6 +145,32 @@ class Dartagnan:
         if result == "error":
             sys.stderr.write(f"{tid} ({self.model}): {p.stdout[-400:]}{p.stderr[-400:]}\n")
         return result, dt, flags
+
+
+class DartagnanFork(Dartagnan):
+    """The PTX 8.7 model of our Dartagnan fork (deps/dat3m), run from the jar tools/dat3m/build.sh builds."""
+
+    erase_clusters = False
+    home = ROOT / "deps" / "dat3m"
+    jar = ROOT / "build" / "dat3m" / "dartagnan.jar"
+
+    def __init__(self):
+        super().__init__("ptx-v8.7", "ptx-v8.7.cat")
+        self.cat = self.home / "cat" / "ptx-v8.7.cat"
+
+    def applies(self, t: litmus.Litmus) -> bool:
+        return self.cat.exists() and self.jar.exists()
+
+    def command(self) -> list[str]:
+        return ["java", "-jar", str(self.jar)]
+
+    def env(self, env: dict) -> dict:
+        return dict(env, DAT3M_HOME=str(self.home))
+
+    @property
+    def tool_version(self) -> str:
+        commit = self.jar.parent / "commit"
+        return f"fork {commit.read_text().strip()}" if commit.exists() else "fork ?"
 
 
 def _outdir() -> str:
@@ -313,6 +353,7 @@ class Manual:
 MODELS = {
     "ptx-v7.5": Dartagnan("ptx-v7.5", "ptx-v7.5.cat"),
     "ptx-v6.0": Dartagnan("ptx-v6.0", "ptx-v6.0.cat"),
+    "ptx-v8.7": DartagnanFork(),
     "ptx-2019-alloy": Alloy2019("ptx-2019-alloy"),
     "ptx-2019-alloy+ext": Alloy2019("ptx-2019-alloy+ext"),
     to_alloy87.MODEL_NAME: Alloy6(),
