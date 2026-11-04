@@ -80,7 +80,7 @@ equivalent 6, killed 60, vacuous 1
 
 ## Dartagnan (`deps/dat3m/cat/ptx-v8.7*.cat`)
 
-equivalent 6, killed 55
+equivalent 6, killed 57
 
 | Mutant | Kind | Rule | Status | Killing tests | Example |
 |---|---|---|---|---|---|
@@ -131,6 +131,8 @@ equivalent 6, killed 55
 | `D-proxy-fence-cta` | strengthen | a proxy fence orders only operations of its own thread block (8.9.5) | killed | 1 | ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu10 |
 | `D-ppcb-generic` | weaken | proxy-preserved causality, same address in the generic proxy (8.9.5) | killed | 3 | ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+remote-shared |
 | `D-ppcb-same-proxy-cta` | weaken | proxy-preserved causality, same proxy and same thread block (8.9.5) | killed | 2 | ptx/kamui/idioms/tma-pipeline-raw+wgmma |
+| `D-same-block-destination` | weaken | an asynchronous write into shared memory is performed by the destination CTA (M56) | killed | 1 | ptx/kamui/idioms/tma-multicast-war+remote-arrive.cluster |
+| `D-ppcb-war-generic-read` | weaken | a generic read before an async-proxy write needs no proxy fence (M57) | killed | 2 | ptx/kamui/features/async/WAR+ld+bulk-copy.remote |
 | `D-ppcb-src-fence` | weaken | proxy fence after a non-generic operation (M21) | killed | 1 | ptx/imported/dat3m/Manual/proxy/Proxy-SingleThread-rf-surW-surF-genR |
 | `D-ppcb-dst-fence` | weaken | proxy fence before a non-generic operation (M21) | killed | 5 | ptx/kamui/ptx87/async-bulk/2+cp.reduce.async.bulk |
 | `D-ppcb-both-fences` | weaken | proxy fences on both sides (M21) | killed | 1 | ptx/imported/dat3m/Manual/proxy/Proxy-SingleThread-rf-surW-surF-conF-conR |
