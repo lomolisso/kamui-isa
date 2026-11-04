@@ -51,16 +51,23 @@ struct L {
 __device__ __forceinline__ void role0(L &l, unsigned *out) {
     unsigned long long a_x = l.x;
     unsigned long long a_f = l.f;
+    unsigned lead = (threadIdx.x % 32u) == 0;
     asm volatile("{\n\t"
         ".reg .u32 t;\n\t"
         ".reg .pred p;\n\t"
+        ".reg .pred lp;\n\t"
+        "setp.ne.u32 lp, %2, 0;\n\t"
+        "@!lp bra LS0_%=;\n\t"
         "mov.u32 t, 1;\n\t"
         "st.weak.global.u32 [%0], t;\n\t"
+        "LS0_%=:\n\t"
+        "@!lp bra LS1_%=;\n\t"
         "mov.u32 t, 1;\n\t"
         "st.release.gpu.global.u32 [%1], t;\n\t"
+        "LS1_%=:\n\t"
         "}"
         : 
-        : "l"(a_x), "l"(a_f)
+        : "l"(a_x), "l"(a_f), "r"(lead)
         : "memory");
 }
 
@@ -71,22 +78,33 @@ __device__ __forceinline__ void role1(L &l, unsigned *out) {
     unsigned long long a_tm = l.tm;
     unsigned r_r0 = 0;
     unsigned r_r1 = 0;
+    unsigned lead = (threadIdx.x % 32u) == 0;
     asm volatile("{\n\t"
         ".reg .u32 t;\n\t"
         ".reg .pred p;\n\t"
+        ".reg .pred lp;\n\t"
+        "setp.ne.u32 lp, %5, 0;\n\t"
+        "@!lp bra LS0_%=;\n\t"
         "{\n\t"
         ".reg .b32 c0;\n\t"
         "mov.b32 c0, 0;\n\t"
         "cp.async.bulk.prefetch.tensor.1d.L2.global.tile [%4, {c0}];\n\t"
         "}\n\t"
+        "LS0_%=:\n\t"
+        "@!lp bra LS1_%=;\n\t"
         "ld.acquire.gpu.global.u32 %0, [%3];\n\t"
+        "LS1_%=:\n\t"
+        "@!lp bra LS2_%=;\n\t"
         "ld.weak.global.u32 %1, [%2];\n\t"
+        "LS2_%=:\n\t"
         "}"
         : "=r"(r_r0), "=r"(r_r1)
-        : "l"(a_x), "l"(a_f), "l"(a_tm)
+        : "l"(a_x), "l"(a_f), "l"(a_tm), "r"(lead)
         : "memory");
-    out[0] = r_r0;
-    out[1] = r_r1;
+    if (lead) {
+        out[0] = r_r0;
+        out[1] = r_r1;
+    }
 }
 
 #define NGLOC 4
@@ -111,7 +129,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
         }
         return;
     }
-    unsigned d = (slot * 2246822519u >> 13) & delay_mask;
+    unsigned d = ((slot >> 5) * 2246822519u >> 13) & delay_mask;
     if (d)  /* a start delay; an empty loop would not do, ptxas removes it */
         asm volatile("nanosleep.u32 %0;" :: "r"(d) : "memory");
     const unsigned *lo = locoff + inst * NGLOC;

@@ -7,6 +7,7 @@ ngloc 2
 cluster_barrier 0
 warp_barrier 1
 dsmem 1
+uniform 1 1
 tmap 1 0
 init 0 1 2
 gloc 0 g

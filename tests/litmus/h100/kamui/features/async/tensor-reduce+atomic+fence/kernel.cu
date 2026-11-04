@@ -54,33 +54,50 @@ __device__ __forceinline__ void role0(L &l, unsigned *out) {
     unsigned long long a_tm = l.tm;
     unsigned c_s;
     asm("mapa.shared::cluster.u32 %0, %1, 0;" : "=r"(c_s) : "r"(a_s));
+    unsigned lead = (threadIdx.x % 32u) == 0;
     asm volatile("{\n\t"
         ".reg .u32 t;\n\t"
         ".reg .pred p;\n\t"
         ".reg .u32 qr2;\n\t"
         "mov.u32 qr2, 0;\n\t"
+        ".reg .pred lp;\n\t"
+        "setp.ne.u32 lp, %4, 0;\n\t"
+        "@!lp bra LS0_%=;\n\t"
         "mov.u32 t, 1;\n\t"
         "st.weak.shared::cta.u32 [%0], t;\n\t"
+        "LS0_%=:\n\t"
+        "bar.warp.sync -1;\n\t"
         "fence.proxy.async.shared::cta;\n\t"
+        "@!lp bra LS1_%=;\n\t"
         "cp.reduce.async.bulk.tensor.1d.global.shared::cta.add.tile.bulk_group [%2, {0}], [%0];\n\t"
+        "LS1_%=:\n\t"
+        "@!lp bra LS2_%=;\n\t"
         "cp.async.bulk.commit_group;\n\t"
+        "LS2_%=:\n\t"
+        "@!lp bra LS3_%=;\n\t"
         "cp.async.bulk.wait_group 0;\n\t"
+        "LS3_%=:\n\t"
         "}"
         : 
-        : "r"(a_s), "l"(a_g), "l"(a_tm), "r"(c_s)
+        : "r"(a_s), "l"(a_g), "l"(a_tm), "r"(c_s), "r"(lead)
         : "memory");
 }
 
 // P1: red.relaxed.gpu.global.add g, 1
 __device__ __forceinline__ void role1(L &l, unsigned *out) {
     unsigned long long a_g = l.g;
+    unsigned lead = (threadIdx.x % 32u) == 0;
     asm volatile("{\n\t"
         ".reg .u32 t;\n\t"
         ".reg .pred p;\n\t"
+        ".reg .pred lp;\n\t"
+        "setp.ne.u32 lp, %1, 0;\n\t"
+        "@!lp bra LS0_%=;\n\t"
         "red.relaxed.gpu.global.add.u32 [%0], 1;\n\t"
+        "LS0_%=:\n\t"
         "}"
         : 
-        : "l"(a_g)
+        : "l"(a_g), "r"(lead)
         : "memory");
 }
 
@@ -93,16 +110,16 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
                                                        unsigned *scratch, unsigned scratch_mask,
                                                        unsigned stress_iters, unsigned delay_mask) {
     __shared__ __align__(16) unsigned long long mbar[2 * 256];
-    __shared__ __align__(16) unsigned sbuf[4 * 256 * 4];
+    __shared__ __align__(128) unsigned sbuf[1 * 8 * 32];
     unsigned slot = blockIdx.x * blockDim.x + threadIdx.x;
     unsigned a = assign[slot];
     unsigned role = a & 7, lslot = (a >> 3) & 255, inst = a >> 11;
     if (a != NONE) {
-        if (role == 0) sbuf[(0 * 256 + lslot) * 4] = 0u;
-        if (role == 0) {
-            sbuf[(0 * 256 + lslot) * 4 + 1] = 0u;
-            sbuf[(0 * 256 + lslot) * 4 + 2] = 0u;
-            sbuf[(0 * 256 + lslot) * 4 + 3] = 0u;
+        if (role == 0 && (threadIdx.x % 32u) == 0) sbuf[(0 * 8 + lslot) * 32] = 0u;
+        if (role == 0 && (threadIdx.x % 32u) == 0) {
+            sbuf[(0 * 8 + lslot) * 32 + 1] = 0u;
+            sbuf[(0 * 8 + lslot) * 32 + 2] = 0u;
+            sbuf[(0 * 8 + lslot) * 32 + 3] = 0u;
         }
         asm volatile("fence.mbarrier_init.release.cluster;\n\tfence.proxy.async;" ::: "memory");
     }
@@ -117,7 +134,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
         asm volatile("barrier.cluster.arrive;\n\tbarrier.cluster.wait;" ::: "memory");
         return;
     }
-    unsigned d = (slot * 2246822519u >> 13) & delay_mask;
+    unsigned d = ((slot >> 5) * 2246822519u >> 13) & delay_mask;
     if (d)  /* a start delay; an empty loop would not do, ptxas removes it */
         asm volatile("nanosleep.u32 %0;" :: "r"(d) : "memory");
     const unsigned *lo = locoff + inst * NGLOC;
@@ -125,7 +142,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     L l;
     l.g = to_global(mem + lo[0]);
     l.tm = to_global(mem + lo[1]);
-    l.s = to_shared(&sbuf[(0 * 256 + lslot) * 4]);
+    l.s = to_shared(&sbuf[(0 * 8 + lslot) * 32]);
     switch (role) {
     case 0: role0(l, out); break;
     case 1: role1(l, out); break;

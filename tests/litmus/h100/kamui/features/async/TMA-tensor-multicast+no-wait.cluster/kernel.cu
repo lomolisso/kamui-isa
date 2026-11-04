@@ -57,19 +57,26 @@ __device__ __forceinline__ void role0(L &l, unsigned *out) {
     asm("mapa.shared::cluster.u32 %0, %1, 1;" : "=r"(c_d) : "r"(a_d));
     unsigned c_b;
     asm("mapa.shared::cluster.u32 %0, %1, 1;" : "=r"(c_b) : "r"(a_b));
+    unsigned lead = (threadIdx.x % 32u) == 0;
     asm volatile("{\n\t"
         ".reg .u32 t;\n\t"
         ".reg .pred p;\n\t"
+        ".reg .pred lp;\n\t"
+        "setp.ne.u32 lp, %7, 0;\n\t"
+        "@!lp bra LS0_%=;\n\t"
         "{\n\t"
         ".reg .b16 cm;\n\t"
         "mov.b16 cm, 2;\n\t"
         "cp.async.bulk.tensor.1d.shared::cluster.global.tile.mbarrier::complete_tx::bytes.multicast::cluster [%1], [%4, {0}], [%3], cm;\n\t"
         "}\n\t"
+        "LS0_%=:\n\t"
         "}"
         : "=r"(r_r2)
-        : "r"(a_d), "l"(a_g), "r"(a_b), "l"(a_tm), "r"(c_d), "r"(c_b)
+        : "r"(a_d), "l"(a_g), "r"(a_b), "l"(a_tm), "r"(c_d), "r"(c_b), "r"(lead)
         : "memory");
-    out[0] = r_r2;
+    if (lead) {
+        out[0] = r_r2;
+    }
 }
 
 // P1: ld.weak.shared::cta r1, d
@@ -78,15 +85,22 @@ __device__ __forceinline__ void role1(L &l, unsigned *out) {
     unsigned r_r1 = 0;
     unsigned c_d;
     asm("mapa.shared::cluster.u32 %0, %1, 1;" : "=r"(c_d) : "r"(a_d));
+    unsigned lead = (threadIdx.x % 32u) == 0;
     asm volatile("{\n\t"
         ".reg .u32 t;\n\t"
         ".reg .pred p;\n\t"
+        ".reg .pred lp;\n\t"
+        "setp.ne.u32 lp, %3, 0;\n\t"
+        "@!lp bra LS0_%=;\n\t"
         "ld.weak.shared::cta.u32 %0, [%1];\n\t"
+        "LS0_%=:\n\t"
         "}"
         : "=r"(r_r1)
-        : "r"(a_d), "r"(c_d)
+        : "r"(a_d), "r"(c_d), "r"(lead)
         : "memory");
-    out[1] = r_r1;
+    if (lead) {
+        out[1] = r_r1;
+    }
 }
 
 #define NGLOC 2
@@ -98,18 +112,18 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
                                                        unsigned *scratch, unsigned scratch_mask,
                                                        unsigned stress_iters, unsigned delay_mask) {
     __shared__ __align__(16) unsigned long long mbar[2 * 256];
-    __shared__ __align__(16) unsigned sbuf[4 * 256 * 4];
+    __shared__ __align__(128) unsigned sbuf[1 * 8 * 32];
     unsigned slot = blockIdx.x * blockDim.x + threadIdx.x;
     unsigned a = assign[slot];
     unsigned role = a & 7, lslot = (a >> 3) & 255, inst = a >> 11;
     if (a != NONE) {
-        if (role == 1) sbuf[(0 * 256 + lslot) * 4] = 0u;
-        if (role == 1) {
-            sbuf[(0 * 256 + lslot) * 4 + 1] = 0u;
-            sbuf[(0 * 256 + lslot) * 4 + 2] = 0u;
-            sbuf[(0 * 256 + lslot) * 4 + 3] = 0u;
+        if (role == 1 && (threadIdx.x % 32u) == 0) sbuf[(0 * 8 + lslot) * 32] = 0u;
+        if (role == 1 && (threadIdx.x % 32u) == 0) {
+            sbuf[(0 * 8 + lslot) * 32 + 1] = 0u;
+            sbuf[(0 * 8 + lslot) * 32 + 2] = 0u;
+            sbuf[(0 * 8 + lslot) * 32 + 3] = 0u;
         }
-        if (role == 1) asm volatile("mbarrier.init.shared::cta.b64 [%0], 1;" :: "r"(to_shared(&mbar[0 * 256 + lslot])) : "memory");
+        if (role == 1 && (threadIdx.x % 32u) == 0) asm volatile("mbarrier.init.shared::cta.b64 [%0], 1;" :: "r"(to_shared(&mbar[0 * 256 + lslot])) : "memory");
         asm volatile("fence.mbarrier_init.release.cluster;\n\tfence.proxy.async;" ::: "memory");
     }
     asm volatile("barrier.cluster.arrive;\n\tbarrier.cluster.wait;" ::: "memory");
@@ -123,7 +137,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
         asm volatile("barrier.cluster.arrive;\n\tbarrier.cluster.wait;" ::: "memory");
         return;
     }
-    unsigned d = (slot * 2246822519u >> 13) & delay_mask;
+    unsigned d = ((slot >> 5) * 2246822519u >> 13) & delay_mask;
     if (d)  /* a start delay; an empty loop would not do, ptxas removes it */
         asm volatile("nanosleep.u32 %0;" :: "r"(d) : "memory");
     const unsigned *lo = locoff + inst * NGLOC;
@@ -131,7 +145,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     L l;
     l.g = to_global(mem + lo[0]);
     l.tm = to_global(mem + lo[1]);
-    l.d = to_shared(&sbuf[(0 * 256 + lslot) * 4]);
+    l.d = to_shared(&sbuf[(0 * 8 + lslot) * 32]);
     l.b = to_shared(&mbar[0 * 256 + lslot]);
     switch (role) {
     case 0: role0(l, out); break;

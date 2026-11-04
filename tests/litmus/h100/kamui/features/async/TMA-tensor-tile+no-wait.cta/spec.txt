@@ -5,6 +5,7 @@ placement same-cta
 nregs 2
 ngloc 2
 cluster_barrier 0
+uniform 1 1
 tmap 1 0
 init 0 1 2
 reg 0 P0:r2

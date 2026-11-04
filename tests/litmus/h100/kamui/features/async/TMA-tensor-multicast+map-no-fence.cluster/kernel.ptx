@@ -29,7 +29,7 @@
 	// demoted variable
 	.shared .align 16 .b8 _ZZ6litmusE4mbar[4096];
 	// demoted variable
-	.shared .align 16 .b8 _ZZ6litmusE4sbuf[16384];
+	.shared .align 128 .b8 _ZZ6litmusE4sbuf[1024];
 // %bb.0:
 	ld.param.u64 	%rd13, [litmus_param_0];
 	ld.param.u64 	%rd14, [litmus_param_5];
@@ -70,7 +70,7 @@
 	mul.wide.u32 	%rd28, %r28, 4;
 	add.s64 	%rd29, %rd5, %rd28;
 	st.global.u32 	[%rd29], %r27;
-	shl.b32 	%r29, %r4, 2;
+	shl.b32 	%r29, %r4, 5;
 	mul.wide.u32 	%rd30, %r29, 4;
 	mov.u64 	%rd31, _ZZ6litmusE4sbuf;
 	add.s64 	%rd32, %rd31, %rd30;
@@ -133,7 +133,7 @@ $L__BB0_11:
 	// begin inline asm
 	cvta.to.global.u64 %rd40, %rd41;
 	// end inline asm
-	shl.b32 	%r39, %r4, 2;
+	shl.b32 	%r39, %r4, 5;
 	mov.u64 	%rd51, _ZZ6litmusE4sbuf;
 	cvta.shared.u64 	%rd52, %rd51;
 	mul.wide.u32 	%rd53, %r39, 4;

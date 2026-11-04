@@ -729,12 +729,15 @@ WIDE_OPS = ("wgmma", "ldmatrix", "stmatrix", "tensormap", "fence", "membar", "ba
 
 def _widths(t: litmus.Litmus) -> list[int] | None:
     """Uniform roles: a thread with wgmma takes a warpgroup (4 warps), one with a warp-wide instruction (ldmatrix,
-    stmatrix, tensormap.*) a warp; then every role is whole warps (a role without such instructions: one warp).
-    None: lanes are instances, as in every other test."""
+    stmatrix, tensormap.*) or a tensor copy a warp; then every role is whole warps (a role without such instructions:
+    one warp). A tensor copy issued by a diverged warp (lanes of several instances, or with different start delays)
+    hung on the H100 (cp.async.bulk.prefetch.tensor in the shuffle and spread configurations), so it is issued by one
+    lane of a warp that runs one instance. None: lanes are instances, as in every other test."""
     w = []
     for th in t.threads:
         ops = [i.op for i in th.instrs if not i.is_empty]
-        w.append(4 if "wgmma" in ops else 1 if {"ldmatrix", "stmatrix", "tensormap"} & set(ops) else 0)
+        tensor = any(i.op == "cp" and "tensor" in i.quals for i in th.instrs)
+        w.append(4 if "wgmma" in ops else 1 if {"ldmatrix", "stmatrix", "tensormap"} & set(ops) or tensor else 0)
     return [max(1, x) for x in w] if any(w) else None
 
 
@@ -841,6 +844,22 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
     # CTA of the first thread that names it); that CTA initializes it, other CTAs reach it through its
     # shared::cluster address (mapa). The CTA of test group g is CTA rank g of the cluster (spec `dsmem 1`).
     dsmem = bool(sh or mb) and place != "same-cta"
+    # shared slots: 16 bytes each, one per instance slot `lslot` of the CTA. A tensor copy needs a 128-byte aligned
+    # shared address, so with one the slots are 128 bytes, and only as many as lslot can reach in this placement
+    tensor_sh = any(i.op == "cp" and "tensor" in i.quals and "prefetch" not in i.quals for _, i in t.instrs())
+    sw = 32 if tensor_sh else 4
+    if not tensor_sh:
+        ns = 256
+    elif widths:
+        ns = 8  # one slot per instance of the CTA's warps (at most 6)
+    elif place == "same-cta":
+        ns = 6 // len(t.threads) * 32
+    elif place == "mixed":
+        ns = 6 // max(groups.count(g) for g in set(groups)) * 32
+    else:
+        ns = 192 if dsmem else 256
+    if nsh * ns * sw * 4 + 2 * 256 * 8 > 48 * 1024:
+        raise Unsupported("tensor copies with more shared memory than a CTA's static limit")
     owner: dict[str, int] = {}
     if sh or mb:
         if place == "diff-cluster":
@@ -1013,7 +1032,7 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
     loc_init = "".join(f"    l.{n} = to_global(mem + lo[{gl.index(n)}]);\n" for n in gl)
     loc_init += "".join(f"    l.{y} = l.{x} + 4;\n" for y, x in tied.items())
     loc_init += "".join(f"    l.{y} = l.{x} + adelta;\n" for y, x in aliases.items())
-    loc_init += "".join(f"    l.{n} = to_shared(&sbuf[({sidx[n]} * 256 + lslot) * 4]);\n" for n in sh)
+    loc_init += "".join(f"    l.{n} = to_shared(&sbuf[({sidx[n]} * {ns} + lslot) * {sw}]);\n" for n in sh)
     loc_init += "".join(f"    l.{n} = to_shared(&mbar[{midx[n]} * 256 + lslot]);\n" for n in mb)
     loc_init += "".join(f"    l.{n} = to_shared(&wgA[0]);\n" for n in wga)
     loc_init += "".join(f"    l.{n} = to_shared(&wgB[0]);\n" for n in wgb)
@@ -1025,7 +1044,7 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
     lead_of = (lambda k: f" && (threadIdx.x % {32 * widths[k]}u) == 0") if widths else (lambda k: "")
 
     def zero(n):  # tensor copies: the destination's other words start at 0 (word 2 marks the arrival)
-        return "".join(f"        sbuf[({sidx[n]} * 256 + lslot) * 4 + {w}] = 0u;\n" for w in (1, 2, 3)) \
+        return "".join(f"        sbuf[({sidx[n]} * {ns} + lslot) * {sw} + {w}] = 0u;\n" for w in (1, 2, 3)) \
             if n in tensor_dsts or tmaps else ""
     setup = ""
     if place == "same-cta":
@@ -1033,7 +1052,7 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
         # a tensor map location holds the map the host encodes before the launch; its initial value in the test
         # names the map, not a word to write
         setup += "".join(f"        mem[lo[{gl.index(n)}]] = {init[n]}u;\n" for n in gl if init[n] and n not in tmaps)
-        setup += "".join(f"        sbuf[({sidx[n]} * 256 + lslot) * 4] = {init[n]}u;\n" + zero(n) for n in sh)
+        setup += "".join(f"        sbuf[({sidx[n]} * {ns} + lslot) * {sw}] = {init[n]}u;\n" + zero(n) for n in sh)
         setup += "".join(f'        asm volatile("mbarrier.init.shared::cta.b64 [%0], {init[n]};" :: "r"(to_shared(&mbar[{midx[n]} * 256 + lslot])) : "memory");\n'
                          if init[n] is not None else f"        mbar[{midx[n]} * 256 + lslot] = 0ull;\n"
                          for n in mb)
@@ -1051,7 +1070,7 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
         # until the other CTAs are done with it
         first = {g: groups.index(g) for g in set(groups)}
         setup = "    if (a != NONE) {\n"
-        setup += "".join(f"        if (role == {first[owner[n]]}{lead_of(first[owner[n]])}) sbuf[({sidx[n]} * 256 + lslot) * 4] = {init[n]}u;\n"
+        setup += "".join(f"        if (role == {first[owner[n]]}{lead_of(first[owner[n]])}) sbuf[({sidx[n]} * {ns} + lslot) * {sw}] = {init[n]}u;\n"
                          + (f"        if (role == {first[owner[n]]}{lead_of(first[owner[n]])}) {{\n" + zero(n).replace("        sbuf", "            sbuf")
                             + "        }\n" if zero(n) else "") for n in sh)
         setup += "".join(f'        if (role == {first[owner[n]]}{lead_of(first[owner[n]])}) asm volatile("mbarrier.init.shared::cta.b64 [%0], {init[n]};" '
@@ -1065,7 +1084,7 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
     if finals and dsmem:
         # after the cluster barrier at the end, the first role of the owner CTA reads the location
         first = {g: groups.index(g) for g in set(groups)}
-        final = "".join(f"    if (role == {first[owner[n]]}) out[{slots.index((-1, n))}] = sbuf[({sidx[n]} * 256 + lslot) * 4];\n"
+        final = "".join(f"    if (role == {first[owner[n]]}) out[{slots.index((-1, n))}] = sbuf[({sidx[n]} * {ns} + lslot) * {sw}];\n"
                         for n in finals)
     elif finals:
         # same CTA: the role warps of one instance group meet at a hardware barrier of their own, after the
@@ -1076,12 +1095,13 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
             raise Unsupported("more than 15 hardware barriers per CTA")
         nthreads = f"{32 * sum(widths)}u" if widths else "32u * NROLES"
         final = (f'    asm volatile("bar.sync %0, %1;" :: "r"({fb}u + {"lslot" if widths else "(lslot >> 5)"}), "r"({nthreads}) : "memory");\n'
-                 + "".join(f"    if (role == 0) out[{slots.index((-1, n))}] = sbuf[({sidx[n]} * 256 + lslot) * 4];\n"
+                 + "".join(f"    if (role == 0) out[{slots.index((-1, n))}] = sbuf[({sidx[n]} * {ns} + lslot) * {sw}];\n"
                            for n in finals))
     src = (f"// Generated by tools/litmus/to_cuda.py from tests/litmus/{tid}.litmus. Do not edit.\n"
            + "".join(f"// {ln}\n" for ln in t.format().splitlines()) + KERNEL_HEAD
            + f"struct L {{\n{fields}}};\n\n" + "\n".join(bodies)
            + KERNEL_MAIN87.format(ngloc=max(len(gl), 1), nregs=max(len(slots), 1), nroles=len(t.threads), setup=setup,
+                                  salign=sw * 4, swords=f"{max(nsh, 1)} * {ns} * {sw}" if sw != 4 else "4 * 256 * 4",
                                   cluster_bar=('        asm volatile("barrier.cluster.arrive;\\n\\tbarrier.cluster.wait;" ::: "memory");\n'
                                                if cluster_bar else ""),
                                   loc_init=loc_init, exit_none=("    " + exit_bar) if exit_bar else "",
@@ -1119,7 +1139,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
                                                        unsigned *scratch, unsigned scratch_mask,
                                                        unsigned stress_iters, unsigned delay_mask{xparam}) {{
     __shared__ __align__(16) unsigned long long mbar[2 * 256];
-    __shared__ __align__(16) unsigned sbuf[4 * 256 * 4];
+    __shared__ __align__({salign}) unsigned sbuf[{swords}];
 {extra}    unsigned slot = blockIdx.x * blockDim.x + threadIdx.x;
     unsigned a = assign[slot];
     unsigned role = a & 7, lslot = (a >> 3) & 255, inst = a >> 11;

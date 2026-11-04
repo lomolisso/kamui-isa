@@ -125,11 +125,14 @@ def test_tensor_maps_and_multicast():
     assert "tmap " in spec and "init " in spec and "tensormap.replace.tile.global_address.global.b1024.b64" in src
     assert "cp.async.bulk.tensor.1d.shared::cluster.global.tile.mbarrier::complete_tx::bytes" in src
     assert "ld.volatile.shared::cta.u32" in src  # the map value the copy used
+    # a tensor copy needs a 128-byte aligned shared address: 128-byte slots, one per instance of the CTA's warps
+    assert "__shared__ __align__(128) unsigned sbuf[1 * 8 * 32];" in src and "* 8 + lslot) * 32]" in src
     # the host encodes the map; the kernel and the host init lines must not overwrite it with the test's value
     t = litmus.load(FEAT / "misc" / "CoWR+bulk-prefetch-tensor.litmus")
     src, spec = to_cuda.generate87(t, "p")
     tm = next(ln.split()[1] for ln in spec.splitlines() if ln.startswith("tmap "))
     assert f"mem[lo[{tm}]]" not in src and not any(ln.startswith(f"init {tm} ") for ln in spec.splitlines())
+    assert "uniform 1" in spec  # a tensor copy is issued by one lane of a warp that runs one instance
     t = litmus.load(FEAT / "async" / "multicast+reader1.cluster.litmus")
     src, spec = to_cuda.generate87(t, "c")
     assert "dsmem 1" in spec and ".multicast::cluster" in src and "mov.b16 cm, 3;" in src

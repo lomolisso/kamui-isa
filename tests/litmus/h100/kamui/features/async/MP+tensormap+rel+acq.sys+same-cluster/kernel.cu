@@ -127,16 +127,16 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
                                                        unsigned *scratch, unsigned scratch_mask,
                                                        unsigned stress_iters, unsigned delay_mask) {
     __shared__ __align__(16) unsigned long long mbar[2 * 256];
-    __shared__ __align__(16) unsigned sbuf[4 * 256 * 4];
+    __shared__ __align__(128) unsigned sbuf[1 * 8 * 32];
     unsigned slot = blockIdx.x * blockDim.x + threadIdx.x;
     unsigned a = assign[slot];
     unsigned role = a & 7, lslot = (a >> 3) & 255, inst = a >> 11;
     if (a != NONE) {
-        if (role == 1 && (threadIdx.x % 32u) == 0) sbuf[(0 * 256 + lslot) * 4] = 0u;
+        if (role == 1 && (threadIdx.x % 32u) == 0) sbuf[(0 * 8 + lslot) * 32] = 0u;
         if (role == 1 && (threadIdx.x % 32u) == 0) {
-            sbuf[(0 * 256 + lslot) * 4 + 1] = 0u;
-            sbuf[(0 * 256 + lslot) * 4 + 2] = 0u;
-            sbuf[(0 * 256 + lslot) * 4 + 3] = 0u;
+            sbuf[(0 * 8 + lslot) * 32 + 1] = 0u;
+            sbuf[(0 * 8 + lslot) * 32 + 2] = 0u;
+            sbuf[(0 * 8 + lslot) * 32 + 3] = 0u;
         }
         if (role == 1 && (threadIdx.x % 32u) == 0) asm volatile("mbarrier.init.shared::cta.b64 [%0], 1;" :: "r"(to_shared(&mbar[0 * 256 + lslot])) : "memory");
         asm volatile("fence.mbarrier_init.release.cluster;\n\tfence.proxy.async;" ::: "memory");
@@ -162,7 +162,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     l.f = to_global(mem + lo[1]);
     l.g = to_global(mem + lo[2]);
     l.tm__b1 = to_global(mem + lo[3]);
-    l.d = to_shared(&sbuf[(0 * 256 + lslot) * 4]);
+    l.d = to_shared(&sbuf[(0 * 8 + lslot) * 32]);
     l.b = to_shared(&mbar[0 * 256 + lslot]);
     switch (role) {
     case 0: role0(l, out); break;
