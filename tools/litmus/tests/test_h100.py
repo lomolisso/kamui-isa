@@ -89,13 +89,71 @@ def test_imported_barriers():
     assert "mov.u32 qr2, 1;" in src and "barrier.sync bid, 32;" in src and "l.gb = 1 + (lslot >> 5) * 2;" in src
 
 
-def test_aliases_are_not_run():
-    t = litmus.load(next((DAT3M / "Nvidia" / "proxy").glob("*.litmus")))
+def test_aliases():
+    # a surface (or texture, constant) alias has no generic address: not run
+    t = litmus.load(DAT3M / "Nvidia" / "proxy" / "Proxy-MP-sur-tex-fenceCorrectOrder.litmus")
     try:
         to_cuda.generate87(t, "a")
         assert False
     except to_cuda.Unsupported as e:
         assert "alias" in str(e)
+    # a generic alias is the same memory mapped twice: the kernel adds the distance between the mappings
+    t = litmus.load(DAT3M / "Manual" / "proxy" / "Proxy-Alias-AliasFence.litmus")
+    src, spec = to_cuda.generate87(t, "b")
+    assert "alias 1" in spec and "unsigned long long adelta" in src and "+ adelta;" in src
+    assert "fence.proxy.alias;" in src
+
+
+FEAT = to_cuda.SUITE / "ptx" / "kamui" / "features"
+
+
+def test_uniform_roles_and_wgmma():
+    t = litmus.load(FEAT / "wgmma" / "RAW+fence.proxy.async+wgmma.fence+wait0.litmus")
+    src, spec = to_cuda.generate87(t, "w")
+    assert "uniform 4" in spec and "wgmma.mma_async.sync.aligned.m64n8k16.f32.f16.f16" in src
+    assert "wgB[0] = 0x3c00u;" in src and "cvt.rzi.u32.f32" in src and "if (lead) {" in src
+    assert "@!lp bra" in src and "bar.sync 15, 128;" in src  # the leader's store, then the whole warpgroup
+    t = litmus.load(FEAT / "wgmma" / "MP+stmatrix+ldmatrix+bar.sync.litmus")
+    src, spec = to_cuda.generate87(t, "m")
+    assert "uniform 1 1" in spec and "%%laneid" in src and "ldmatrix.sync.aligned.m8n8.x1.shared.b16" in src
+    assert "barrier.sync bid, 64;" in src  # two one-warp roles
+
+
+def test_tensor_maps_and_multicast():
+    t = litmus.load(FEAT / "async" / "TMA-tensor-tile+map.cta.litmus")
+    src, spec = to_cuda.generate87(t, "t")
+    assert "tmap " in spec and "init " in spec and "tensormap.replace.tile.global_address.global.b1024.b64" in src
+    assert "cp.async.bulk.tensor.1d.shared::cluster.global.tile.mbarrier::complete_tx::bytes" in src
+    assert "ld.volatile.shared::cta.u32" in src  # the map value the copy used
+    t = litmus.load(FEAT / "async" / "multicast+reader1.cluster.litmus")
+    src, spec = to_cuda.generate87(t, "c")
+    assert "dsmem 1" in spec and ".multicast::cluster" in src and "mov.b16 cm, 3;" in src
+    # both destinations (and both mbarriers) at one offset in each CTA
+    for n, a in (("d0", "sbuf[(0 * 256 + lslot) * 4]"), ("d1", "sbuf[(0 * 256 + lslot) * 4]"),
+                 ("b0", "mbar[0 * 256 + lslot]"), ("b1", "mbar[0 * 256 + lslot]")):
+        assert f"l.{n} = to_shared(&{a});" in src
+
+
+def test_grids():
+    t = litmus.load(FEAT / "misc" / "MP+griddep.launch.wait.litmus")
+    src, spec = to_cuda.generate87(t, "g")
+    assert "grid 0 0" in spec and "grid 1 1" in spec
+    assert "griddepcontrol.launch_dependents;" in src and "griddepcontrol.wait;" in src
+
+
+def test_barriers_are_per_cta():
+    # bar.sync 1, 2 in CTA 0 and bar.sync 1, 2 in CTA 1 are two barriers, each numbered from 0 in its CTA
+    t = litmus.load(to_cuda.SUITE / "ptx" / "kamui" / "idioms" / "semaphore-st-release-cumulative.litmus")
+    src, spec = to_cuda.generate87(t, "s")
+    assert src.count("add.u32 bid, %") == 4 and "%1, 1;" not in src
+
+
+def test_existing_kernels_unchanged():
+    # the committed kernels of the tests run before must not change with new harness features
+    for d in sorted((to_cuda.OUT / "kamui" / "ptx87").rglob("kernel.cu"))[:40]:
+        tid = "ptx/" + d.parent.relative_to(to_cuda.OUT).as_posix()
+        src, spec = to_cuda.generate87(litmus.load(to_cuda.SUITE / f"{tid}.litmus"), tid)
+        assert src == d.read_text() and spec == (d.parent / "spec.txt").read_text()
 
 
 def test_barrier_deadlock_is_not_run():

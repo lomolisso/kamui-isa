@@ -65,6 +65,8 @@ def check(mutants: list[dict]) -> list[str]:
             errors.append(f"{m['id']}: bad model or kind")
             continue
         src = source(m)
+        if not src.exists() and m["model"] == "dartagnan" and not DAT3M.joinpath("cat").exists():
+            continue  # the fork (a submodule) is not checked out, as in CI
         if not src.exists():
             errors.append(f"{m['id']}: {src} missing")
             continue

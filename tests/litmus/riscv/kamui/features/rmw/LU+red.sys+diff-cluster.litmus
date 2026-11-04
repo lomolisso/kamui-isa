@@ -1,0 +1,9 @@
+RISCV LU+red.sys+diff-cluster
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/features/rmw/LU+red.sys+diff-cluster.litmus"
+{
+0:x5=x; 1:x5=x;
+}
+ P0                  | P1                  ;
+ ori x7,x0,1         | ori x7,x0,1         ;
+ amoadd.w x0,x7,(x5) | amoadd.w x0,x7,(x5) ;
+exists x=1
