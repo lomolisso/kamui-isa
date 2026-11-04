@@ -22,7 +22,7 @@
 )
 .maxntid 256, 1, 1
 {
-	.reg .pred 	%p<13>;
+	.reg .pred 	%p<15>;
 	.reg .b32 	%r<63>;
 	.reg .b64 	%rd<42>;
 	// demoted variable
@@ -114,10 +114,10 @@ $L__BB0_14:
 	cvta.to.shared.u64 %rd23, %rd24;
 	// end inline asm
 	setp.eq.s32 	%p5, %r4, 1;
+	setp.ne.s32 	%p14, %r4, 0;
 	@%p5 bra 	$L__BB0_17;
 // %bb.15:
-	setp.ne.s32 	%p6, %r4, 0;
-	@%p6 bra 	$L__BB0_18;
+	@%p14 bra 	$L__BB0_18;
 // %bb.16:
 	cvt.u32.u64 	%r36, %rd23;
 	// begin inline asm
@@ -154,14 +154,14 @@ $L__BB0_14:
 	bra.uni 	$L__BB0_18;
 $L__BB0_5:
 	ld.param.u32 	%r17, [litmus_param_7];
-	setp.eq.s32 	%p9, %r17, 0;
-	@%p9 bra 	$L__BB0_11;
+	setp.eq.s32 	%p10, %r17, 0;
+	@%p10 bra 	$L__BB0_11;
 // %bb.6:
 	ld.param.u32 	%r16, [litmus_param_6];
 	mul.lo.s32 	%r62, %r2, -1640531535;
 	and.b32  	%r7, %r17, 1;
-	setp.eq.s32 	%p10, %r17, 1;
-	@%p10 bra 	$L__BB0_9;
+	setp.eq.s32 	%p11, %r17, 1;
+	@%p11 bra 	$L__BB0_9;
 // %bb.7:
 	and.b32  	%r61, %r17, -2;
 $L__BB0_8:                              // =>This Inner Loop Header: Depth=1
@@ -182,12 +182,12 @@ $L__BB0_8:                              // =>This Inner Loop Header: Depth=1
 	add.s32 	%r54, %r53, 1;
 	st.volatile.global.u32 	[%rd40], %r54;
 	add.s32 	%r61, %r61, -2;
-	setp.eq.s32 	%p11, %r61, 0;
-	@%p11 bra 	$L__BB0_9;
+	setp.eq.s32 	%p12, %r61, 0;
+	@%p12 bra 	$L__BB0_9;
 	bra.uni 	$L__BB0_8;
 $L__BB0_9:
-	setp.eq.s32 	%p12, %r7, 0;
-	@%p12 bra 	$L__BB0_11;
+	setp.eq.s32 	%p13, %r7, 0;
+	@%p13 bra 	$L__BB0_11;
 // %bb.10:
 	mad.lo.s32 	%r55, %r62, 1664525, 1013904223;
 	shr.u32 	%r56, %r55, 8;
@@ -202,7 +202,7 @@ $L__BB0_11:
 	barrier.cluster.arrive;
 	barrier.cluster.wait;
 	// end inline asm
-	bra.uni 	$L__BB0_19;
+	bra.uni 	$L__BB0_21;
 $L__BB0_17:
 	and.b32  	%r34, %r1, 31;
 	setp.eq.s32 	%p7, %r34, 0;
@@ -235,7 +235,17 @@ $L__BB0_18:
 	barrier.cluster.arrive;
 	barrier.cluster.wait;
 	// end inline asm
-$L__BB0_19:
+	@%p14 bra 	$L__BB0_20;
+// %bb.19:
+	// begin inline asm
+	cp.async.bulk.wait_group 0;
+	// end inline asm
+$L__BB0_20:
+	// begin inline asm
+	barrier.cluster.arrive;
+	barrier.cluster.wait;
+	// end inline asm
+$L__BB0_21:
 	ret;
                                         // -- End function
 }

@@ -49,18 +49,29 @@ __device__ __forceinline__ void role0(L &l, unsigned *out) {
     unsigned long long a_x = l.x;
     unsigned long long a_tm = l.tm;
     unsigned r_r0 = 0;
+    unsigned lead = (threadIdx.x % 32u) == 0;
     asm volatile("{\n\t"
         ".reg .u32 t;\n\t"
         ".reg .pred p;\n\t"
+        ".reg .pred lp;\n\t"
+        "setp.ne.u32 lp, %3, 0;\n\t"
+        "@!lp bra LS0_%=;\n\t"
         "mov.u32 t, 1;\n\t"
         "st.weak.global.u32 [%1], t;\n\t"
+        "LS0_%=:\n\t"
+        "@!lp bra LS1_%=;\n\t"
         "prefetch.tensormap [%2];\n\t"
+        "LS1_%=:\n\t"
+        "@!lp bra LS2_%=;\n\t"
         "ld.weak.global.u32 %0, [%1];\n\t"
+        "LS2_%=:\n\t"
         "}"
         : "=r"(r_r0)
-        : "l"(a_x), "l"(a_tm)
+        : "l"(a_x), "l"(a_tm), "r"(lead)
         : "memory");
-    out[0] = r_r0;
+    if (lead) {
+        out[0] = r_r0;
+    }
 }
 
 #define NGLOC 3
@@ -76,7 +87,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     unsigned slot = blockIdx.x * blockDim.x + threadIdx.x;
     unsigned a = assign[slot];
     unsigned role = a & 7, lslot = (a >> 3) & 255, inst = a >> 11;
-    if (a != NONE && role == 0) {
+    if (a != NONE && role == 0 && (threadIdx.x % 32u) == 0) {
         const unsigned *lo = locoff + inst * NGLOC;
         asm volatile("fence.proxy.async;" ::: "memory");
     }
@@ -90,7 +101,7 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
         }
         return;
     }
-    unsigned d = (slot * 2246822519u >> 13) & delay_mask;
+    unsigned d = ((slot >> 5) * 2246822519u >> 13) & delay_mask;
     if (d)  /* a start delay; an empty loop would not do, ptxas removes it */
         asm volatile("nanosleep.u32 %0;" :: "r"(d) : "memory");
     const unsigned *lo = locoff + inst * NGLOC;

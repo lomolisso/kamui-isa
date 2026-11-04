@@ -131,4 +131,5 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     case 1: role1(l, out); break;
     }
     place[inst * NROLES + role] = (sreg_clusterid() << 8) | sreg_smid();
+    if (role == 1) asm volatile("cp.async.bulk.wait_group 0;" ::: "memory");
 }

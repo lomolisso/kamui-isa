@@ -133,4 +133,6 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     }
     place[inst * NROLES + role] = (sreg_clusterid() << 8) | sreg_smid();
     asm volatile("barrier.cluster.arrive;\n\tbarrier.cluster.wait;" ::: "memory");
+    if (role == 0) asm volatile("cp.async.bulk.wait_group 0;" ::: "memory");
+    asm volatile("barrier.cluster.arrive;\n\tbarrier.cluster.wait;" ::: "memory");
 }

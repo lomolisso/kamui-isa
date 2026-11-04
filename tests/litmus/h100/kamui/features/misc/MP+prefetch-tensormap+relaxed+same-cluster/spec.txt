@@ -5,6 +5,7 @@ placement same-cluster
 nregs 2
 ngloc 4
 cluster_barrier 0
+uniform 1 1
 tmap 2 3
 init 3 1 2
 reg 0 P1:r0

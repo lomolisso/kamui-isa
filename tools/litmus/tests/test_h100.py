@@ -136,6 +136,9 @@ def test_tensor_maps_and_multicast():
     t = litmus.load(FEAT / "async" / "multicast+reader1.cluster.litmus")
     src, spec = to_cuda.generate87(t, "c")
     assert "dsmem 1" in spec and ".multicast::cluster" in src and "mov.b16 cm, 3;" in src
+    # before the end, each mbarrier owner waits for the copy, then a second cluster barrier
+    assert "mbarrier.test_wait.parity.shared::cta.b64 p, [%1], 0;" in src
+    assert src.count("barrier.cluster.arrive;") >= 3
     # both destinations (and both mbarriers) at one offset in each CTA
     for n, a in (("d0", "sbuf[(0 * 256 + lslot) * 4]"), ("d1", "sbuf[(0 * 256 + lslot) * 4]"),
                  ("b0", "mbar[0 * 256 + lslot]"), ("b1", "mbar[0 * 256 + lslot]")):
