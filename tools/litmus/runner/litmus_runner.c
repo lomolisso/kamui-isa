@@ -36,7 +36,7 @@
  * `alias 1` in SPEC: the global memory is mapped twice (driver virtual memory API); the kernel gets the distance
  * between the two mappings as a tenth argument, so that a location and its alias are one memory location.
  * `tmap t b` in SPEC: global location t holds a tensor map (1-dimensional, 4 32-bit elements) whose global address
- * is global location b; the host encodes it before each launch.
+ * is global location b; the host encodes it before each launch, and its final value is recorded as 0.
  * `dsmem 1` in SPEC: the test reaches shared memory of other CTAs of its cluster; the kernel computes the address of
  * a location in the CTA of test group g as CTA rank g, so ranks are not shuffled (warps, lanes, layout and delays
  * still are), and all roles of an instance use the same slot (bits 3-10), the instance's index in its cluster.
@@ -640,6 +640,8 @@ int main(int argc, char **argv) {
             unsigned v[MAXV];
             for (int r = 0; r < s.nregs; r++) v[r] = res[(size_t)i * nrg + r];
             for (int g = 0; g < s.ngloc; g++) v[s.nregs + g] = mem[locoff[(size_t)i * ngl + g]];
+            /* a tensor map's first word is part of an address, different for every instance: not an outcome */
+            for (int j = 0; j < s.ntmap; j++) v[s.nregs + s.tmap_loc[j]] = 0;
             int same_sm = 1, same_cl = 1;
             for (int k = 1; k < s.roles; k++) {
                 unsigned a = place[(size_t)i * s.roles], b = place[(size_t)i * s.roles + k];
