@@ -27,11 +27,16 @@ All notable changes to this project are listed here. The format follows
   initialization, and a `spread` configuration; start delays now use `nanosleep`.
 - PTX 8.7 memory model in a Dartagnan fork (`deps/dat3m`), written independently from the manual, with
   `ptx-v8.7` verdicts that agree with the Alloy model on every test both decide.
+- Feature and NVIDIA-idiom litmus tests for every PTX 8.7 memory feature, a per-feature scorecard, mutation
+  testing of both PTX 8.7 models, and H100 harness support for wgmma, tensor maps, multicast, griddepcontrol and
+  virtual aliases.
 
 ### Changed
 
 - PTX 8.7 Alloy model: tensormap proxy fences act only as a release/acquire pair, and a mixed-size data race
   frees a program from the axioms but not from written values (decisions D37, D38).
+- PTX 8.7 Alloy model: a bulk copy from `.shared::cta` into the issuing CTA is undefined behaviour, and a generic
+  read is ordered before a later async-proxy write without a proxy fence (decisions D39, D40).
 
 ## [0.1.0] - 2026-10-31
 

@@ -23,7 +23,9 @@ checked against.
 | `ptx/imported/origin.csv` | where every imported test comes from, its licence, its original quantifier and the upstream verdicts |
 | `ptx/kamui/families/` | 288 generated tests: 8 classic shapes x orderings x the 4 scopes x 3 thread placements (`tools/litmus/gen_families.py`) |
 | `ptx/kamui/hand/` | 14 hand-written tests of `mbarrier`, `barrier.cluster`, the async proxy and `.volatile`, with verdicts argued in `manual-reasoning.yaml` |
-| `ptx/kamui/ptx87/` | 113 tests of the PTX 8.7 features, one or more per feature and per interpretation decision of the PTX 8.7 model (`models/ptx87/decisions.md`); each says which verdict it expects and why |
+| `ptx/kamui/ptx87/` | 133 tests of the PTX 8.7 features, one or more per feature and per interpretation decision of the PTX 8.7 model (`models/ptx87/decisions.md`); each says which verdict it expects and why |
+| `ptx/kamui/features/` | 1058 generated tests, at least eight per memory feature of `models/ptx87/coverage.yaml` (ld/st, atom and red, fences, CTA barriers, mbarrier, async copies, wgmma, others), over every valid scope, placement and state space, written by `tools/litmus/gen_features.py`; `tools/litmus/scorecard.py` checks the bar per feature |
+| `ptx/kamui/idioms/` | 30 tests of synchronization patterns found in NVIDIA's public code (CUTLASS, CCCL), written as our own litmus tests; each cites the file and line it follows and says which outcome that code relies on never happening |
 | `alloy/` | the Alloy queries for the 2019 PTX model, generated from the tests (`tools/litmus/to_alloy.py`) |
 | `alloy-ptx87/` | the Alloy queries for the PTX 8.7 model (`models/ptx87`), generated from the tests (`tools/litmus/to_alloy87.py`) |
 | `riscv/` | the naive RISC-V lowering of each test, for herd7 and RVWMO (`tools/litmus/to_riscv.py`) |

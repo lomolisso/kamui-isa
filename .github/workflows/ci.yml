@@ -127,3 +127,4 @@ jobs:
         run: |
           python tools/litmus/scorecard.py --check
           python tools/litmus/mutate.py --check
+          python tools/litmus/mutate.py --report-check

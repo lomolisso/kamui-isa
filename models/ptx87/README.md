@@ -8,7 +8,10 @@ a mechanical answer, and the list of choices the formal version makes where the 
 | File | What it is |
 |---|---|
 | `ptx87.als` | the model: events, the scope tree (system, gpu, cluster, cta, thread), proxies, state spaces, morally strong, release and acquire patterns, the orders of chapter 8 and its six axioms, CTA and cluster barriers, mbarrier objects, asynchronous operations |
-| `decisions.md` | the numbered interpretation decisions `D1` to `D36`: the manual text, the alternatives, the choice, the tests that depend on it |
+| `decisions.md` | the numbered interpretation decisions `D1` to `D40`: the manual text, the alternatives, the choice, the tests that depend on it |
+| `mutants.yaml` | the mutants of both PTX 8.7 models: one rule removed per mutant, to find rules that no test depends on (`tools/litmus/mutate.py`) |
+| `mutation.csv`, `mutation.md` | the result per mutant: killed (some verdict changes), equivalent (the rule is implied by others; the reason is in `mutants.yaml`) or vacuous |
+| `scorecard.md` | per memory feature: the tests that use it, their verdicts in both models, H100 runs, decisions and the mutants its tests kill (`tools/litmus/scorecard.py`) |
 | `coverage.yaml` | every memory-related feature of the PTX feature catalog (`tests/corpus/catalog.yaml`) and how the model treats it |
 | `compile_src11_ptx87.als`, `src11.als` | the scoped C++ (scoped RC11) to PTX 8.7 mapping check |
 | `check_mapping.sh` | runs the mapping check |
@@ -120,7 +123,16 @@ at bound 6 had not finished after 3 h 45 min on the same machine and solver.
   decide, they first agreed on 799. The other ten came from four readings of the manual, each settled from its
   text and recorded here: D37 (tensormap proxy fences act as a pair; this model changed), D38 (mixed-size data
   races; both changed), and the cross-check notes of D7 (mbarrier misuse) and D29 (`ldu`), where the Dartagnan
-  model changed. Now they agree on every test, apart from the four barrier tests above.
+  model changed. Later rounds, on the feature and idiom tests, settled what orders a wgmma (the cross-check note of
+  D24), D39 and D40, and the cross-check notes of D10 (the wait of a CTA barrier) and D21 (the CTA that performs
+  an asynchronous write). Now they agree on all 1897 tests both decide, apart from the four barrier tests above.
+- By mutation (`tools/litmus/mutate.py`, `mutation.md`): each mutant removes one rule of one model and the whole
+  suite is run against it. Every mutant changes some verdict, except those whose rule is implied by others (each
+  with its reason in `mutants.yaml`) and one that only removes executions.
+- Against NVIDIA's code (`tests/litmus/ptx/kamui/idioms/`): both models forbid the outcomes CUTLASS and CCCL rely
+  on, except two where the manual promises less than the code assumes (a `.cta`-scope remote mbarrier arrive
+  used across CTAs, and `cp.async.bulk.wait_group.read` before overwriting a tensor map that TMA loads completing
+  on an mbarrier may still read); the tests say so in their comments.
 
 The model is our reading of the manual, not NVIDIA's. Where the manual is ambiguous, `decisions.md` says so and
 states the choice.

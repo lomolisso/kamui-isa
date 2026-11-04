@@ -254,7 +254,7 @@ and a model written from the PTX ISA 8.7 manual without looking at the Alloy mod
 |---|---|
 | `cat/ptx-v8.7.cat` | the model; it includes `cat/ptx-v8.7-common.cat` |
 | `cat/ptx-v8.7-noaxioms.cat` | the same executions with no axioms, for programs with a mixed-size data race |
-| `cat/ptx-v8.7.md` | the interpretation log, entries `M1` to `M51`, each with the manual's words and line numbers |
+| `cat/ptx-v8.7.md` | the interpretation log, entries `M1` to `M57`, each with the manual's words and line numbers |
 | `litmus/PTX/Kamui/` | our litmus tests without their comment lines (written by `tools/dat3m/strip_tests.py`) |
 | `dartagnan/src/test/.../LitmusPTXv8_7*Test.java` | the fork's unit tests: Dat3M's PTX tests (same verdicts as PTX 7.5) and our tests |
 
@@ -266,14 +266,16 @@ tools/dev.sh 'python tools/litmus/run_formal.py --models ptx-v8.7'
 ```
 
 `run_formal.py` takes two Dartagnan runs per test for this model. The first, with `--property=cat_spec`, reports
-the model's flags. A flag `undefined-behaviour` (an mbarrier used before `init` or after `inval`, a missing
-`wgmma.fence`) makes every outcome allowed (decision D7 of `models/ptx87/decisions.md`); a flag
+the model's flags. A flag `undefined-behaviour` (an mbarrier used before `init` or after `inval`, an arrive that takes
+its pending count below zero, a bulk copy from `.shared::cta` into the issuing CTA's own shared memory, a missing
+`wgmma.fence`) makes every outcome allowed (decisions D7 and D39 of `models/ptx87/decisions.md`); a flag
 `mixed-size-data-race` sends the condition to `ptx-v8.7-noaxioms.cat` (D38); otherwise the second run checks the
 condition with `ptx-v8.7.cat`. The whole suite takes about 4 minutes on 32 cores.
 
 The two models were compared test by test: they agree on every test both decide, apart from the four barrier
-tests where the tools count blocked threads differently (`tests/litmus/allowlist.yaml`). The ten tests where
-they first disagreed were settled from the manual (decisions D37, D38 and the cross-check notes of D7 and D29).
+tests where the tools count blocked threads differently (`tests/litmus/allowlist.yaml`). Every test where they
+first disagreed was settled from the manual: decisions D37 to D40 and the cross-check notes of D7, D10, D21, D24
+and D29 in `models/ptx87/decisions.md`.
 
 ### Full `Xkmscope` (tier 2)
 
