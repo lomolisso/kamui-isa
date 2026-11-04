@@ -46,6 +46,7 @@
   kind: weaken
   find: "and sc_per_location and"
   replace: "and"
+  equivalent: "implied by Coherence and Causality: program order on one location is part of causality order, so every cycle the axiom forbids is already a read or write that precedes, in causality order, the write it reads from or a write before it"
 - id: A-causality
   model: alloy
   rule: Causality axiom (8.10.6)
@@ -92,6 +93,7 @@
   kind: strengthen
   find: "fun AcqReads : Read { Acquire - FalseWaits }"
   replace: "fun AcqReads : Read { Acquire }"
+  equivalent: "a wait synchronizes only with the arrive that completes the phase; a wait that returns False has seen no completion, so its acquire has nothing to synchronize with"
 - id: A-observation-rmw-chain
   model: alloy
   rule: observation through chains of atomic operations (8.9.3)
@@ -321,12 +323,14 @@
   kind: strengthen
   find: "fun Weak : Event { (scope :> Thread).Thread }"
   replace: "fun Weak : Event { none }"
+  equivalent: "a weak operation has the thread scope, so it is never morally strong with another thread's operation: a weak write counted as strong in a release pattern still never precedes another thread's read in observation order, which needs morally strong rf"
 - id: A-atomic-pair-partial
   model: alloy
   rule: partially overlapping atomic operations stay atomic (8.7.2, 6817)
   kind: weaken
   find: "  ms_r + (Atomics <: (scope_incl_r & proxy.~proxy & same_location_r) :> Atomics)"
   replace: "  ms_r"
+  equivalent: "partially overlapping atomic operations that are not ordered by causality are a mixed-size data race, which turns the axioms off (D38); ordered ones cannot have the other write between their read and write without a Causality cycle"
 - id: A-co-ms-writes
   model: alloy
   rule: morally strong overlapping writes are coherence ordered (8.9.1)
@@ -442,6 +446,7 @@
   kind: weaken
   find: "empty ((([F & SC]; cause-base; [F & SC]) & morally-strong) \\ sync_fence) as axiom-FenceSC\n"
   replace: "\n"
+  equivalent: "sync_fence only adds causality edges: an order that disagrees with base causality between two fences can be replaced by one that follows it without adding any edge, so the axiom never removes an allowed outcome"
 - id: D-single-copy-atomicity
   model: dartagnan
   file: ptx-v8.7.cat
@@ -456,6 +461,7 @@
   kind: weaken
   find: "empty (((morally-strong & fr); (morally-strong & co)) & rmw) as axiom-Atomicity\n"
   replace: "\n"
+  equivalent: "Dartagnan compiles an atomic read-modify-write into a read and a write that its program encoding already keeps adjacent in coherence order (the lost-update tests stay forbidden without the axiom)"
 - id: D-mixed-size-atomicity
   model: dartagnan
   file: ptx-v8.7.cat
@@ -463,6 +469,7 @@
   kind: weaken
   find: "empty (((atomic-pair & fr); [range(rmw)]; (atomic-pair & co)) & rmw) as axiom-MixedSizeAtomicity\n"
   replace: "\n"
+  equivalent: "partially overlapping atomic operations that are not ordered by causality are a mixed-size data race, which turns the axioms off (D38); ordered ones cannot have the other write between their read and write without a Causality cycle"
 - id: D-no-thin-air
   model: dartagnan
   file: ptx-v8.7.cat
@@ -477,6 +484,7 @@
   kind: weaken
   find: "acyclic (morally-strong & (po | rf | co | fr) & vloc) as axiom-ScPerLocation\n"
   replace: "\n"
+  equivalent: "implied by Coherence and Causality: program order is part of base causality order (cause-normal), so every cycle the axiom forbids is already a Causality cycle"
 - id: D-causality
   model: dartagnan
   file: ptx-v8.7.cat
@@ -558,6 +566,7 @@
   kind: weaken
   find: "let ms-scope = (po | po^-1) | ([strong-operation]; sr; [strong-operation])"
   replace: "let ms-scope = ([strong-operation]; sr; [strong-operation])"
+  equivalent: "two operations of one thread are always ordered by base causality (po is part of cause-normal), and Causality already orders them the way the rules that need morally strong would"
 - id: D-ms-scope
   model: dartagnan
   file: ptx-v8.7-common.cat
@@ -586,6 +595,7 @@
   kind: strengthen
   find: "let morally-strong = (ms-scope & same-proxy & ms-overlap) \\ id"
   replace: "let morally-strong = (ms-scope & same-proxy) \\ id"
+  equivalent: "mixed-size-race is defined without morally-strong: partially overlapping conflicting operations outside causality send the program to the axiom-free run, and those inside causality are ordered by Causality, so making them morally strong changes no verdict"
 - id: D-observation-rmw-chain
   model: dartagnan
   file: ptx-v8.7-common.cat

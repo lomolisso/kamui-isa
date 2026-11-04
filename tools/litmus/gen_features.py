@@ -907,7 +907,8 @@ def gen_mutation_gaps() -> None:
     """Tests for the rules no other test exercised (survivors of tools/litmus/mutate.py)."""
     # the wait of a CTA barrier acts as an acq_rel fence (D10): a relaxed flag after it passes on the writes of the
     # threads that arrived before; a relaxed flag after a plain fence-less wait elsewhere does not
-    for sync, tag in ((["bar.sync 0"], "bar.sync"), (["barrier.sync 0"], "barrier.sync")):
+    # (the barrier counts two threads, so the third thread need not arrive)
+    for sync, tag in ((["bar.sync 0, 2"], "bar.sync"), (["barrier.sync 0, 2"], "barrier.sync")):
         for fs, fr in (("relaxed", "acquire"), ("relaxed", "relaxed"), ("release", "acquire")):
             test("bar", f"WRC+{tag}+{fs}-{fr}", f"P0 writes x, meets P1 at {tag}; P1 then sets a {fs} flag that P2 "
                  f"(same CTA) reads {fr}: does P2 see x?",
@@ -947,6 +948,23 @@ def gen_mutation_gaps() -> None:
          [["st.weak.shared::cta s, 1", "fence.proxy.async::generic.release.sync_restrict::shared::cta.cluster", "bar.sync 0"],
           ["bar.sync 0", "cp.async.bulk.global.shared::cta.bulk_group g, s", "cp.async.bulk.commit_group",
            "cp.async.bulk.wait_group 0", "ld.weak.global r0, g"]], "P1:r0 == 0", ["s=0 @cta 0"])
+    # a wgmma is ordered only after what precedes its latest wgmma.fence (D24): an acquire after the fence does not
+    # order the operand read
+    test("wgmma", "RAW-other-thread+acquire-after-wgmma.fence", "Another thread writes the operand and releases a "
+         "flag; the wgmma thread issues wgmma.fence, then acquires the flag and multiplies",
+         [["st.weak.shared::cta a, 1", "fence.proxy.async.shared::cta", "st.release.cta.shared::cta f, 1"],
+          ["wgmma.fence.sync.aligned", "ld.acquire.cta.shared::cta r1, f", "wgmma.mma_async.sync.aligned r0, a, c",
+           "wgmma.commit_group.sync.aligned", "wgmma.wait_group.sync.aligned 0"]],
+         "P1:r1 == 1 /\\ P1:r0 == 0", ["a=0 @cta 0", "c=0 @cta 0", "f=0 @cta 0"])
+    # morally strong writes to several granules are ordered the same way on every granule (M15, D6): a read cannot
+    # take the newest value of each granule from two different writes
+    for s, where in (("cta", [(0, 0)] * 3), ("gpu", [(0, 0), (1, 0), (2, 0)])):
+        for sem in ("relaxed", "weak"):
+            st = f"st.relaxed.{s}" if sem == "relaxed" else "st.weak"
+            test("ldst", f"2W+tear+{sem}.{s}", f"Two {sem} 32-bit stores of two 16-bit granules and a relaxed 32-bit "
+                 f"load (.{s}): can the load see one store in one granule and the other store in the other?",
+                 [[f"{st}.b32 x, 1"], [f"{st}.b32 x, 2"], [f"ld.relaxed.{s}.b32 r0, x"]],
+                 "P2:r0[0] == 1 /\\ P2:r0[1] == 2", ["x[0]=0", "x[1]=0", "P2:r0[0]=0", "P2:r0[1]=0"], where)
 
 
 GENERATORS = [gen_ldst, gen_rmw, gen_fence, gen_bar, gen_mbarrier, gen_async, gen_wgmma, gen_misc, gen_more,

@@ -11,8 +11,8 @@ open ptx87
 // P2:r1=0;
 // }
 //  P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 | P2@cta 0,cluster 0,gpu 0 ;
-//  st.weak x, 1             | barrier.sync 0           | ld.acquire.cta r0, f     ;
-//  barrier.sync 0           | st.release.cta f, 1      | ld.weak r1, x            ;
+//  st.weak x, 1             | barrier.sync 0, 2        | ld.acquire.cta r0, f     ;
+//  barrier.sync 0, 2        | st.release.cta f, 1      | ld.weak r1, x            ;
 // exists
 // (P2:r0 == 1 /\ P2:r1 == 0)
 
@@ -63,9 +63,9 @@ fact shape {
   ProxyFence = none
   E0.val = 1
   E1.bid = 0
-  no E1.bcount
+  E1.bcount = 2
   E3.bid = 0
-  no E3.bcount
+  E3.bcount = 2
   E5.val = 1
 }
 

@@ -21,7 +21,7 @@
 )
 .maxntid 256, 1, 1
 {
-	.reg .pred 	%p<10>;
+	.reg .pred 	%p<11>;
 	.reg .b32 	%r<54>;
 	.reg .b64 	%rd<37>;
 
@@ -36,33 +36,41 @@
 	cvta.to.global.u64 	%rd15, %rd14;
 	cvta.to.global.u64 	%rd3, %rd13;
 	cvta.to.global.u64 	%rd4, %rd11;
-	mov.u32 	%r18, %ctaid.x;
-	mov.u32 	%r19, %ntid.x;
-	mov.u32 	%r20, %tid.x;
-	mad.lo.s32 	%r1, %r18, %r19, %r20;
+	mov.u32 	%r19, %ctaid.x;
+	mov.u32 	%r20, %ntid.x;
+	mov.u32 	%r21, %tid.x;
+	mad.lo.s32 	%r1, %r19, %r20, %r21;
 	mul.wide.u32 	%rd16, %r1, 4;
 	add.s64 	%rd17, %rd15, %rd16;
-	ld.global.u32 	%r21, [%rd17];
-	setp.ne.s32 	%p1, %r21, -1;
-	@%p1 bra 	$L__BB0_7;
-	bra.uni 	$L__BB0_1;
-$L__BB0_7:
-	ld.param.u32 	%r17, [litmus_param_8];
+	ld.global.u32 	%r2, [%rd17];
+	and.b32  	%r3, %r2, 7;
+	setp.ne.s32 	%p1, %r3, 0;
+	@%p1 bra 	$L__BB0_2;
+// %bb.1:
+	// begin inline asm
+	fence.proxy.async;
+	// end inline asm
+$L__BB0_2:
+	bar.sync 	0;
+	setp.ne.s32 	%p2, %r2, -1;
+	@%p2 bra 	$L__BB0_9;
+	bra.uni 	$L__BB0_3;
+$L__BB0_9:
+	ld.param.u32 	%r18, [litmus_param_8];
 	ld.param.u64 	%rd9, [litmus_param_0];
-	and.b32  	%r2, %r21, 7;
-	bfe.u32 	%r3, %r21, 8, 3;
-	shr.u32 	%r4, %r21, 11;
+	bfe.u32 	%r4, %r2, 8, 3;
+	shr.u32 	%r5, %r2, 11;
 	mul.lo.s32 	%r22, %r1, -2048144777;
 	shr.u32 	%r23, %r22, 13;
-	and.b32  	%r24, %r17, %r23;
-	setp.eq.s32 	%p2, %r24, 0;
-	@%p2 bra 	$L__BB0_9;
-// %bb.8:
+	and.b32  	%r24, %r18, %r23;
+	setp.eq.s32 	%p3, %r24, 0;
+	@%p3 bra 	$L__BB0_11;
+// %bb.10:
 	// begin inline asm
 	nanosleep.u32 %r24;
 	// end inline asm
-$L__BB0_9:
-	shl.b32 	%r25, %r4, 1;
+$L__BB0_11:
+	shl.b32 	%r25, %r5, 1;
 	mul.wide.u32 	%rd22, %r25, 4;
 	add.s64 	%rd23, %rd2, %rd22;
 	add.s64 	%rd5, %rd4, %rd22;
@@ -78,16 +86,15 @@ $L__BB0_9:
 	// begin inline asm
 	cvta.to.global.u64 %rd20, %rd21;
 	// end inline asm
-	add.s32 	%r13, %r3, 1;
-	setp.eq.s32 	%p3, %r2, 2;
-	@%p3 bra 	$L__BB0_14;
-// %bb.10:
-	setp.eq.s32 	%p4, %r2, 1;
-	@%p4 bra 	$L__BB0_13;
-// %bb.11:
-	setp.ne.s32 	%p5, %r2, 0;
-	@%p5 bra 	$L__BB0_15;
+	add.s32 	%r14, %r4, 1;
+	setp.eq.s32 	%p4, %r3, 2;
+	@%p4 bra 	$L__BB0_16;
 // %bb.12:
+	setp.eq.s32 	%p5, %r3, 1;
+	@%p5 bra 	$L__BB0_15;
+// %bb.13:
+	@%p1 bra 	$L__BB0_17;
+// %bb.14:
 	// begin inline asm
 	{
 	.reg .u32 t;
@@ -95,26 +102,26 @@ $L__BB0_9:
 	mov.u32 t, 1;
 	st.weak.global.u32 [%rd18], t;
 	mov.u32 t, 1;
-	st.release.gpu.global.u32 [%rd20], t;
+	st.release.cta.global.u32 [%rd20], t;
 	}
 	// end inline asm
-	bra.uni 	$L__BB0_15;
-$L__BB0_1:
-	ld.param.u32 	%r16, [litmus_param_7];
-	setp.eq.s32 	%p6, %r16, 0;
-	@%p6 bra 	$L__BB0_16;
-// %bb.2:
-	ld.param.u32 	%r15, [litmus_param_6];
+	bra.uni 	$L__BB0_17;
+$L__BB0_3:
+	ld.param.u32 	%r17, [litmus_param_7];
+	setp.eq.s32 	%p7, %r17, 0;
+	@%p7 bra 	$L__BB0_18;
+// %bb.4:
+	ld.param.u32 	%r16, [litmus_param_6];
 	mul.lo.s32 	%r53, %r1, -1640531535;
-	and.b32  	%r6, %r16, 1;
-	setp.eq.s32 	%p7, %r16, 1;
-	@%p7 bra 	$L__BB0_5;
-// %bb.3:
-	and.b32  	%r51, %r16, -2;
-$L__BB0_4:                              // =>This Inner Loop Header: Depth=1
+	and.b32  	%r7, %r17, 1;
+	setp.eq.s32 	%p8, %r17, 1;
+	@%p8 bra 	$L__BB0_7;
+// %bb.5:
+	and.b32  	%r51, %r17, -2;
+$L__BB0_6:                              // =>This Inner Loop Header: Depth=1
 	mad.lo.s32 	%r37, %r53, 1664525, 1013904223;
 	shr.u32 	%r38, %r37, 8;
-	and.b32  	%r39, %r38, %r15;
+	and.b32  	%r39, %r38, %r16;
 	mul.wide.u32 	%rd32, %r39, 4;
 	add.s64 	%rd33, %rd1, %rd32;
 	ld.volatile.global.u32 	%r40, [%rd33];
@@ -122,55 +129,55 @@ $L__BB0_4:                              // =>This Inner Loop Header: Depth=1
 	st.volatile.global.u32 	[%rd33], %r41;
 	mad.lo.s32 	%r53, %r53, 389569705, 1196435762;
 	shr.u32 	%r42, %r53, 8;
-	and.b32  	%r43, %r42, %r15;
+	and.b32  	%r43, %r42, %r16;
 	mul.wide.u32 	%rd34, %r43, 4;
 	add.s64 	%rd35, %rd1, %rd34;
 	ld.volatile.global.u32 	%r44, [%rd35];
 	add.s32 	%r45, %r44, 1;
 	st.volatile.global.u32 	[%rd35], %r45;
 	add.s32 	%r51, %r51, -2;
-	setp.eq.s32 	%p8, %r51, 0;
-	@%p8 bra 	$L__BB0_5;
-	bra.uni 	$L__BB0_4;
-$L__BB0_5:
-	setp.eq.s32 	%p9, %r6, 0;
-	@%p9 bra 	$L__BB0_16;
-// %bb.6:
+	setp.eq.s32 	%p9, %r51, 0;
+	@%p9 bra 	$L__BB0_7;
+	bra.uni 	$L__BB0_6;
+$L__BB0_7:
+	setp.eq.s32 	%p10, %r7, 0;
+	@%p10 bra 	$L__BB0_18;
+// %bb.8:
 	mad.lo.s32 	%r46, %r53, 1664525, 1013904223;
 	shr.u32 	%r47, %r46, 8;
-	and.b32  	%r48, %r47, %r15;
+	and.b32  	%r48, %r47, %r16;
 	mul.wide.u32 	%rd36, %r48, 4;
 	add.s64 	%rd8, %rd1, %rd36;
 	ld.volatile.global.u32 	%r49, [%rd8];
 	add.s32 	%r50, %r49, 1;
 	st.volatile.global.u32 	[%rd8], %r50;
-	bra.uni 	$L__BB0_16;
-$L__BB0_13:
+	bra.uni 	$L__BB0_18;
+$L__BB0_15:
 	// begin inline asm
 	{
 	.reg .u32 t;
 	.reg .pred p;
 	.reg .u32 bid;
-	ld.relaxed.gpu.global.u32 %r30, [%rd20];
-	add.u32 bid, %r13, 0;
+	ld.relaxed.cta.global.u32 %r30, [%rd20];
+	add.u32 bid, %r14, 0;
 	barrier.sync bid, 64;
 	}
 	// end inline asm
 	st.global.u32 	[%rd5], %r30;
-	bra.uni 	$L__BB0_15;
-$L__BB0_14:
+	bra.uni 	$L__BB0_17;
+$L__BB0_16:
 	// begin inline asm
 	{
 	.reg .u32 t;
 	.reg .pred p;
 	.reg .u32 bid;
-	add.u32 bid, %r13, 0;
+	add.u32 bid, %r14, 0;
 	barrier.sync bid, 64;
 	ld.weak.global.u32 %r28, [%rd18];
 	}
 	// end inline asm
 	st.global.u32 	[%rd5+4], %r28;
-$L__BB0_15:
+$L__BB0_17:
 	// begin inline asm
 	mov.u32 %r32, %clusterid.x;
 	// end inline asm
@@ -179,11 +186,11 @@ $L__BB0_15:
 	mov.u32 %r33, %smid;
 	// end inline asm
 	or.b32  	%r35, %r34, %r33;
-	mad.lo.s32 	%r36, %r4, 3, %r2;
+	mad.lo.s32 	%r36, %r5, 3, %r3;
 	mul.wide.u32 	%rd30, %r36, 4;
 	add.s64 	%rd31, %rd3, %rd30;
 	st.global.u32 	[%rd31], %r35;
-$L__BB0_16:
+$L__BB0_18:
 	ret;
                                         // -- End function
 }

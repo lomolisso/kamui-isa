@@ -1,0 +1,12 @@
+PTX 2W+tear+weak.gpu
+"Two weak 32-bit stores of two 16-bit granules and a relaxed 32-bit load (.gpu): can the load see one store in one granule and the other store in the other?"
+{
+x[0]=0;
+x[1]=0;
+P2:r0[0]=0;
+P2:r0[1]=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 | P2@cta 2,cluster 0,gpu 0 ;
+ st.weak.b32 x, 1         | st.weak.b32 x, 2         | ld.relaxed.gpu.b32 r0, x ;
+exists
+(P2:r0[0] == 1 /\ P2:r0[1] == 2)
