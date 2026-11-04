@@ -158,7 +158,11 @@ $L__BB0_11:
 	@!lp bra LS0_0;
 	{
 	.reg .b16 cm;
-	mov.b16 cm, 1;
+	.reg .u32 cr, c1;
+	mov.u32 cr, %cluster_ctarank;
+	mov.u32 c1, 1;
+	shl.b32 cr, c1, cr;
+	cvt.u16.u32 cm, cr;
 	cp.async.bulk.tensor.1d.shared::cluster.global.tile.mbarrier::complete_tx::bytes.multicast::cluster [%r16], [%rd35, {0}], [%r47], cm;
 	}
 	LS0_0:

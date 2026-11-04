@@ -291,6 +291,14 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
 # and mbarrier belongs to the one CTA of a same-cta test; tests across CTAs use global memory only.
 
 TX_BYTES = 16  # one transaction unit of a litmus test (one copied location) = one 16-byte bulk copy
+
+
+def _mask_lines(mask: str) -> list[str]:
+    """The ctaMask register `cm` of a multicast copy: a constant, or "rank" for the bit of the issuing CTA."""
+    if mask != "rank":
+        return [".reg .b16 cm;", f"mov.b16 cm, {mask};"]
+    return [".reg .b16 cm;", ".reg .u32 cr, c1;", "mov.u32 cr, %%cluster_ctarank;", "mov.u32 c1, 1;",
+            "shl.b32 cr, c1, cr;", "cvt.u16.u32 cm, cr;"]
 SEM = ("weak", "relaxed", "acquire", "release", "acq_rel", "sc", "volatile")
 COPS = ("ca", "cg", "cs", "lu", "cv", "wb", "wt")
 
@@ -440,7 +448,7 @@ def _emit87(i: litmus.Instr, ops: dict[str, str], kinds, tx: int = TX_BYTES) -> 
                 (ops.get(d + "#cl", ops[d]), ops.get(b + "#cl", ops[b]))
             ins = (f"cp.async.bulk.tensor.1d.shared::cluster.global.tile.mbarrier::complete_tx::bytes"
                    f"{'.multicast::cluster' if mc else ''} [{dst}], [{ops[tm]}, {{0}}], [{mb}]{', cm' if mc else ''};")
-            return ["{", ".reg .b16 cm;", f"mov.b16 cm, {ops['#mask']};", ins, "}"] if mc else [ins]
+            return ["{", *_mask_lines(ops["#mask"]), ins, "}"] if mc else [ins]
         if q[:2] == ["async", "bulk"] and q[3:5] == ["1d", "global"]:
             g, s_, tm, _ = a
             return [f"cp.async.bulk.tensor.1d.global.shared::cta.tile.bulk_group [{ops[tm]}, {{0}}], [{ops[s_]}];"]
@@ -450,7 +458,7 @@ def _emit87(i: litmus.Instr, ops: dict[str, str], kinds, tx: int = TX_BYTES) -> 
                     f"[{ops[s_]}];"]
     if i.op == "cp" and "multicast::cluster" in q and "tensor" not in q and q[:2] == ["async", "bulk"]:
         d, g, b = a
-        return ["{", ".reg .b16 cm;", f"mov.b16 cm, {ops['#mask']};",
+        return ["{", *_mask_lines(ops["#mask"]),
                 f"cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes.multicast::cluster "
                 f"[{ops[d.split('+')[0]]}], [{ops[g]}], {TX_BYTES}, [{ops[b.split('+')[0]]}], cm;", "}"]
     remote = "shared::cluster" in q
@@ -969,7 +977,9 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
             pre.append(f".reg .f32 wd{k}0, wd{k}1, wd{k}2, wd{k}3;")
         for i in th.instrs:
             if i.op == "cp" and "multicast::cluster" in i.quals:
-                ops["#mask"] = str(sum(1 << owner[m] for m in i.args[0].split("+")))
+                # with distributed shared memory, test group g is CTA rank g; in one CTA (same-cta), the instance's
+                # CTA may have any rank in its cluster, so the mask is computed from %cluster_ctarank
+                ops["#mask"] = str(sum(1 << owner[m] for m in i.args[0].split("+"))) if dsmem else "rank"
         gb_op = f"%{len(mine) + len(used)}"
         if uses_bar:
             pre.append(".reg .u32 bid;")

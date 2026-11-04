@@ -133,6 +133,10 @@ def test_tensor_maps_and_multicast():
     tm = next(ln.split()[1] for ln in spec.splitlines() if ln.startswith("tmap "))
     assert f"mem[lo[{tm}]]" not in src and not any(ln.startswith(f"init {tm} ") for ln in spec.splitlines())
     assert "uniform 1" in spec  # a tensor copy is issued by one lane of a warp that runs one instance
+    # multicast within one CTA: the instance's CTA may have any rank, so the mask comes from %cluster_ctarank
+    t = litmus.load(FEAT / "async" / "TMA-tensor-multicast+reader.cta.litmus")
+    src, spec = to_cuda.generate87(t, "m")
+    assert "placement same-cta" in spec and "mov.u32 cr, %%cluster_ctarank;" in src and "mov.b16 cm, 1;" not in src
     t = litmus.load(FEAT / "async" / "multicast+reader1.cluster.litmus")
     src, spec = to_cuda.generate87(t, "c")
     assert "dsmem 1" in spec and ".multicast::cluster" in src and "mov.b16 cm, 3;" in src
