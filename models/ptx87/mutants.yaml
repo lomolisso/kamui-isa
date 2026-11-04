@@ -221,6 +221,12 @@
   kind: weaken
   find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
   replace: "\n"
+- id: A-ppbco-war-generic-read
+  model: alloy
+  rule: a generic read before an async-proxy write needs no proxy fence (D40)
+  kind: weaken
+  find: "  + same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]\n"
+  replace: ""
 - id: A-ppbco-src-fence
   model: alloy
   rule: proxy fence after a non-generic operation (D2)

@@ -421,6 +421,8 @@ fun ppbco_with[cb: Event->Event] : MemoryEvent->MemoryEvent {
   // no proxy fence or alias fence
   same_alias[GenericM <: cb :> GenericM]
   + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]
+  // a generic read before an async-proxy write: the read was performed before the write is issued (D40)
+  + same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]
   // proxy fence for the source, for the destination, for both
   + same_alias[(cb & pf_src).cb :> GenericM]
   + same_alias[GenericM <: cb.(pf_dst_with[cb])]

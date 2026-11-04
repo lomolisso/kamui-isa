@@ -2,15 +2,15 @@
 
 The PTX ISA 8.7 manual defines the memory model in English (chapter 8) and adds ordering rules in the
 instruction descriptions (chapter 9). Where the text leaves room, the model in `ptx87.als` makes a choice. This
-file lists every such choice, numbered `D1` to `D38`: the text it interprets (section and line of the plain-text
+file lists every such choice, numbered `D1` to `D40`: the text it interprets (section and line of the plain-text
 manual, PTX ISA 8.7, February 2025), the alternatives, the choice, and the litmus tests whose verdict depends on
 it (under `tests/litmus/ptx/`; most are in `kamui/ptx87/`).
 
 The list is written so that the model can be implemented again from it, without reading `ptx87.als`: a second
 implementation that makes the same choices must give the same verdicts. A second model was written independently
 from the manual in Dartagnan (`deps/dat3m`, `cat/ptx-v8.7.cat`, with its own interpretation log `cat/ptx-v8.7.md`,
-entries `M1` to `M51`); the two disagreed on ten tests, and the readings settled then are D37 and D38 and the
-notes "Cross-check" below. Terms: *po* program order, *rf*
+entries `M1` to `M51` at first); the two disagreed on ten tests at first and on five more after the feature tests
+were added. The readings settled then are D37 to D40 and the notes "Cross-check" below. Terms: *po* program order, *rf*
 reads-from, *co* coherence order, *fr* from-reads, *bco* base causality order, *ms* morally strong.
 
 ## Base relations and axioms
@@ -181,6 +181,14 @@ see the allow-list), `kamui/ptx87/bar/*`.
 Choice (the 2019 model): the wait half of `bar.sync`/`bar.red` acts as an `acq_rel` fence in release and
 acquire patterns, in addition to synchronizing with its generation. Tests: `imported/dat3m/Manual/*bar*`.
 
+Cross-check: the Dartagnan model treated the barrier as synchronization only (8.9.4, and 6653-6655 list
+`membar`, `fence.sc` and `fence.acq_rel` as the memory fences), so a relaxed store after the barrier did not
+carry the other threads' writes to a third thread. Decided for this reading, which is also that of NVIDIA's 2019
+model (`deps/ptx-memory-model/ptx.als`, `BarrierWait` in both fence sets). The fence is at the wait, after the
+thread's own arrival, so an acquire pattern that ends at the wait does not reach the threads its arrival
+synchronizes with. Tests: `kamui/features/bar/WRC+{bar,barrier}.sync+*` (relaxed-acquire and release-acquire
+forbidden, relaxed-relaxed and reader-side allowed).
+
 ### D11. barrier.cluster
 
 > "The optional .relaxed qualifier on barrier.cluster.arrive specifies that there are no memory ordering and
@@ -329,6 +337,12 @@ destination for multicast); writes to global memory stay in the issuing CTA. Thi
 copy issued by another CTA of the cluster, waited for at the default `.cta` scope) synchronize. The copy's memory
 operations are weak (their scope is their unit). The instruction precedes its first operation in base causality
 order. Tests: `kamui/ptx87/async-bulk/TMA-multicast`, `kamui/ptx87/st-async/*`.
+
+Cross-check: the Dartagnan model attributed every operation of a copy to the issuing thread, so a multicast write
+into another CTA's shared memory and a wgmma read there were not "by the same thread block" (8.9.5, 7001) and a
+write-after-read between them was unordered. Decided for this reading (19133-19135: the data is multicast "in the
+shared memory of each destination CTA", like the mbarrier signal). Test:
+`kamui/idioms/tma-multicast-war+remote-arrive.cluster` (forbidden).
 
 ### D22. cp.async (non-bulk)
 
@@ -522,3 +536,35 @@ axioms. (The first model allowed every outcome, the Dartagnan model judged each 
 merges the per-program part of the first with the values part of the second.) Tests:
 `kamui/ptx87/sizes/mixed-size+race` (forbidden: no write produces 7), `mixed-size+flag` (allowed: the race is in
 the execution that reads the flag as 0).
+
+### D39. A shared::cta to shared::cluster copy into the issuing CTA
+
+> "When the source of the copy is .shared::cta and the destination is .shared::cluster, the destination has to be
+> in the shared memory of a different CTA within the cluster." (9.7.9.25.4.1, 19067-19068) The sentence before it,
+> on .shared::cta destinations: "the destination address has to be in the shared memory of the executing CTA
+> within the cluster, otherwise the behavior is undefined." (19064-19065)
+
+- A: an ordinary copy, since no consequence is stated.
+- B: a requirement on the program, worded like its neighbour; breaking it is undefined behaviour.
+
+Choice: **B** (decided at the cross-check). The breach is visible in the program text, so the test allows every
+outcome of a program that has an execution (D7). The same reading applies to an arrive-on that takes the pending
+arrival count below zero, outside its valid range of 0 to 2^20 - 1 (9.7.13.15.2, 23989-23993; D7). Tests:
+`kamui/features/async/self-copy+*` (allowed), `kamui/features/mbarrier/arrive-beyond-pending` (allowed).
+
+### D40. Write-after-read from the generic proxy to the async proxy
+
+> "A proxy fence is required to synchronize memory operations across different proxies." (8.6, 6779) "A memory
+> read (e.g., by ld or atom) has been performed when the value read has been transmitted from memory and cannot be
+> modified by another thread participating in the barrier." (9.7.13.1, 22306-22307)
+
+- A: follow 6779 and 22645 literally: without `fence.proxy.async`, a generic read is not ordered before a later
+  async-proxy write, even through a release and an acquire.
+- B: a generic read that precedes an async-proxy write to the same location in base causality order has been
+  performed before the write is issued, and cannot return its value.
+
+Choice: **B** (decided at the cross-check): a generic read before an async-proxy write in base causality order is
+in proxy-preserved base causality order. CUTLASS's RS main loop
+(`sm90_mma_tma_gmma_rs_warpspecialized.hpp:666-684`) relies on it: the consumer reads the stage with `ldmatrix`,
+arrives on the mbarrier, and the producer refills the stage with a TMA copy, with no proxy fence. Test:
+`kamui/idioms/rs-mainloop-war+ldmatrix` (forbidden).

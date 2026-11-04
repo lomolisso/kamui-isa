@@ -956,6 +956,27 @@ def gen_mutation_gaps() -> None:
           ["wgmma.fence.sync.aligned", "ld.acquire.cta.shared::cta r1, f", "wgmma.mma_async.sync.aligned r0, a, c",
            "wgmma.commit_group.sync.aligned", "wgmma.wait_group.sync.aligned 0"]],
          "P1:r1 == 1 /\\ P1:r0 == 0", ["a=0 @cta 0", "c=0 @cta 0", "f=0 @cta 0"])
+    # a generic read before an async-proxy write in causality order needs no proxy fence (D40); the copy is issued by
+    # another CTA, so its own implicit proxy fence (in the issuing CTA) cannot order the pair
+    test("async", "WAR+ld+bulk-copy.remote", "CTA 1 reads its shared location, then arrives remotely on CTA 0's "
+         "mbarrier; CTA 0 waits and overwrites the location with a bulk copy: can the read see the later value?",
+         [["mbarrier.try_wait.parity.acquire.cluster r0, e, 0",
+           "cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes d, g, b"],
+          ["ld.weak.shared::cta r1, d", "mbarrier.arrive.release.cluster.shared::cluster e"]],
+         "P0:r0 == 1 /\\ P1:r1 == 7", ["g=7", "d=5 @cta 1", "e=mbarrier(1) @cta 0", "b=mbarrier(1) @cta 1"],
+         [(0, 0), (1, 0)])
+    # undefined behaviour of mbarrier objects (D7): a wait on an invalidated object, an arrive beyond the pending count
+    test("mbarrier", "inval+wait", "A wait on an invalidated mbarrier object is undefined behaviour: any outcome",
+         [["mbarrier.inval.shared::cta b", "mbarrier.test_wait.parity.acquire.cta r0, b, 0"]], "P0:r0 == 7",
+         ["b=mbarrier(1) @cta 0"])
+    test("mbarrier", "arrive-beyond-pending", "An arrive with a count larger than the pending count is undefined "
+         "behaviour: any outcome, even a load that misses the thread's own earlier store",
+         [["st.weak x, 1", "mbarrier.arrive.release.cta r1, b, 2", "ld.weak r0, x"]], "P0:r0 == 0",
+         ["b=mbarrier(1) @cta 0"])
+    # a thread arrives at most once in each generation of a CTA barrier (D9)
+    test("bar", "MP+bar.sync.2gen", "Two barrier generations: P0 stores between them, P1 loads after the second",
+         [["bar.sync 0, 2", "st.weak x, 1", "bar.sync 0, 2"], ["bar.sync 0, 2", "bar.sync 0, 2", "ld.weak r0, x"]],
+         "P1:r0 == 0")
     # morally strong writes to several granules are ordered the same way on every granule (M15, D6): a read cannot
     # take the newest value of each granule from two different writes
     for s, where in (("cta", [(0, 0)] * 3), ("gpu", [(0, 0), (1, 0), (2, 0)])):
