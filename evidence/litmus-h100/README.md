@@ -20,6 +20,7 @@ outcome the formal model forbids but the H100 showed is a finding to investigate
 | Shared memory across CTAs | job `20261103T045153Z-q000092` (commit `29b3ef5`): the 25 PTX 8.7 tests that use the shared memory of another CTA of the cluster, and 2 `bar` tests, 81 runs; `TESTS` lists them, comma-separated |
 | Start delays | job `20261103T045407Z-q000093` (commit `ce19777`) ran the new `spread` configuration and showed no change at all: ptxas had removed the empty loop that was meant to delay each thread's start, so no `shuffle` run before it had a start delay. Job `20261103T050216Z-q000094` (commit `49ee74a`, the delay now a `nanosleep`) reran `shuffle` and `spread` on all 509 runnable tests, 1018 runs, 9 minutes; its results replace the earlier `shuffle` results and those of job q000093 |
 | Remaining PTX 8.7 forms | job `20261103T053509Z-q000095` (commit `95d8aeb`): 15 tests with mixed sizes and tearing, vector stores, `atom.cas.b128`, several atomic operations on one register, `discard`, mbarrier `init`/`inval` and the state token, in all four configurations, 60 runs |
+| Feature and idiom tests | folder `20261104T180346Z-q000157`, filled by several jobs that resume into it: q000157 (the new harness features first: wgmma, `ldmatrix`, tensor maps and tensor copies, multicast, griddepcontrol, generic aliases, the idiom tests), q000213 (the same, after the harness fixes below), q000219 (all of `tests/litmus/ptx/kamui/features/`) and q000227 (the 10 PTX 8.7 tests that the new harness features made runnable); 4940 runs in all four configurations, at commit `983703c` and earlier commits that changed only other kernels. Runs that failed before five harness fixes were run again, and the results of the six tests the last fix affects were deleted and run again: the kernel wrote the test's initial value over the tensor map; tensor-copy buffers in shared memory were 16-byte aligned (the hardware needs 128); a tensor copy or tensor-map prefetch issued by a diverged warp hung; a CTA could exit while a copy into its shared memory was still in flight; and in one-CTA tests the multicast mask named CTA rank 0 instead of the instance's own CTA. The final value of a tensor-map location (the map's first word, part of an address) is recorded as 0; the runs made before the runner did so were rewritten the same way, merging the outcomes that became equal |
 
 ## Files
 
@@ -79,12 +80,8 @@ Tables: `python tools/litmus/report_tables.py --table h100` and `--table h100-fa
   race on `x` undefined, so the model keeps the verdict forbidden; these eight hints are not measured on the H100
   (the manual's statement that they do not change memory behaviour, 15572, 15696, 16674, is the basis). No other
   test of the suite has two weak loads of one address around an acquire or a fence in one thread.
-- **Coverage**: 524 of the 828 tests run (`python tools/litmus/to_cuda.py --why` lists the rest with the reason):
-  all families and hand-written tests, 111 of the 393 imported tests (the others access memory through texture,
-  surface or constant proxy aliases, loop, use two GPUs, use `red` with an acquire order, which is not PTX, or
-  wait at barriers that never complete) and 111 of the 133 PTX 8.7 tests (the others need two GPUs or multimem,
-  tensor maps, a multicast copy, matrix instructions, `griddepcontrol` across kernels, `bar.warp.sync` within one
-  warp, the state returned by a remote arrive, which the GPU does not return, or never finish by design).
+- **Coverage**: 1591 of the 1916 tests run (`python tools/litmus/to_cuda.py --why` lists the rest with the
+  reason; see `tests/litmus/README.md`).
 - **Imported tests**: no outcome the formal models forbid; 65 of 444 runs show an allowed weak outcome.
 - **Shared memory of another CTA** (`st.weak.shared::cluster`, remote `mbarrier.arrive`, `st.async`,
   `red.async`, bulk copies into another CTA, restricted fences): no forbidden outcome. In several of these tests
@@ -97,6 +94,24 @@ Tables: `python tools/litmus/report_tables.py --table h100` and `--table h100-fa
 - **Real start delays** (`shuffle`, `spread`) make the mbarrier gap below show in two more tests,
   `MP+mbarrier-expect-complete-tx` (about 9%) and `MP+mbarrier-token` (0.2% to 0.3%), and in more runs of the
   tests that already showed it.
+- **Feature and idiom tests** (`kamui/features/`, `kamui/idioms/`; 1045 tests, 4180 runs): 177 of the 406
+  tests the models allow show their weak outcome. The outcome the models forbid appears in 21 tests, all with the
+  mbarrier gap below: an `.acquire.cta` mbarrier wait with no fence after it, after a bulk, tensor or multicast
+  copy, `st.async`, `red.async`, `cp.async.mbarrier.arrive.noinc` or `arrive_drop`. Over all the H100 runs, the
+  gap shows in 33 of the 62 tests that end an acquire at such a wait, in none of the 8 with a fence after the
+  wait, and in none of the 27 that wait at `.cluster` scope.
+- **wgmma**: a generic store to the operand tile and then a wgmma that reads it, without `fence.proxy.async`
+  between them, reads the old value in the `stress`, `shuffle` and `spread` configurations, with or without
+  `wgmma.fence`; with `fence.proxy.async` and `wgmma.fence` it never did. This is the async proxy fence the
+  manual asks for (`wgmma.fence`, 33416-33443).
+- **Tensor maps**: a copy never used the old map after `tensormap.replace`, even without the proxy fences
+  (`fence.proxy.tensormap::generic`) that the manual requires; the models allow that outcome, the H100 does not
+  show it.
+- **griddepcontrol**: the dependent grid reads a stale value without `griddepcontrol.wait` and never with it.
+- **Generic aliases** (one memory mapped at two virtual addresses): no weak outcome in the 13 tests that run
+  (Dat3M's `proxy` alias tests and mixedproxy's `synonym` tests).
+- **mbarrier state**: the state that `mbarrier.arrive` returns is an opaque 64-bit value on the GPU, so the 6 tests
+  whose condition reads it are not run.
 - **One forbidden outcome observed, in three tests: `MP+mbarrier-rel-acq`** (and its `try_wait` and shared-memory
   variants), 0.13% to 1.1% of the instances. A thread whose `mbarrier.test_wait.acquire` (or `try_wait`) returns
   True can still read data older than what the arriving thread wrote before its `mbarrier.arrive.release`; PTX

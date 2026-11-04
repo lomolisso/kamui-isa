@@ -1,0 +1,5 @@
+{"instances": 1001088, "launches": 79, "config": "plain", "seed": 1483094325, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 12672}, "seconds": 0.053, "histogram": [
+  {"values": [0, 1, 1], "class": "same-cluster", "count": 75846},
+  {"values": [0, 0, 1], "class": "same-cluster", "count": 709902},
+  {"values": [1, 1, 1], "class": "same-cluster", "count": 215340}
+]}

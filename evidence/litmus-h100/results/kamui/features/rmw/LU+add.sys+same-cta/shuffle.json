@@ -1,0 +1,4 @@
+{"instances": 1013760, "launches": 40, "config": "shuffle", "seed": 3402959114, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 25344}, "seconds": 0.107, "histogram": [
+  {"values": [1, 0, 2], "class": "same-sm", "count": 640282},
+  {"values": [0, 1, 2], "class": "same-sm", "count": 373478}
+]}

@@ -226,14 +226,15 @@ reason. Today all 264 Dat3M verdicts and 127 of the 128 mixedproxy annotations m
 ## Running the tests on the H100
 
 The formal verdicts are the reference; running a test on a GPU only shows which outcomes that GPU produces. We run
-every test the harness can run (524 of 828: the 302 families and hand-written tests, 111 of the 133 PTX 8.7
-tests and 111 of the 393 imported tests) on the H100 to see which of the outcomes PTX allows the hardware really
-shows, and to catch anything it shows that PTX forbids. `python tools/litmus/to_cuda.py --why` lists the other
-304 with the reason: accesses through texture, surface or constant proxy aliases (245, almost all of
-`Nvidia/proxy` and `mixedproxy`), loops (21), barriers that cannot complete (11, Dat3M's `*-hang` and deadlock
-tests), more than one GPU (8), tensor maps and multicast copies (5), and a few forms the GPU cannot express
-(`red` with an acquire order, the state of a remote `mbarrier.arrive`, `bar.warp.sync` between warps, matrix
-instructions). Results and
+every test the harness can run (1591 of 1916: the 288 families, the 14 hand-written tests, 1020 of the 1058 feature
+tests, 25 of the 30 idiom tests, 120 of the 133 PTX 8.7 tests and 124 of the 393 imported tests) on the H100 to see
+which of the outcomes PTX allows the hardware really shows, and to catch anything it shows that PTX forbids.
+`python tools/litmus/to_cuda.py --why` lists the other 325 with the reason: accesses through texture, surface or
+constant proxy aliases (231, almost all of `Nvidia/proxy` and `mixedproxy`; generic aliases do run), loops (19), more
+than one GPU (12), `bar.warp.sync` between warps (10), barriers that cannot complete (9, Dat3M's `*-hang` and
+deadlock tests), `im2col` tensor copies and `tensormap.cp_fenceproxy` (8 each), conditions on the opaque state an
+`mbarrier.arrive` returns (6), and a few forms the GPU cannot express (`red` with an acquire order, shared memory
+across clusters, wgmma operands in another CTA). Results and
 findings: [evidence/litmus-h100/](../../evidence/litmus-h100/README.md).
 
 - `tools/litmus/to_cuda.py` writes one kernel per test. Each litmus thread is one `asm volatile` block holding the
@@ -259,6 +260,25 @@ findings: [evidence/litmus-h100/](../../evidence/litmus-h100/README.md).
 - Every run records each final state with where its threads actually ran (same SM, same cluster, different
   clusters). `tools/litmus/run_h100.py` drives the runs (`jobs/litmus-h100.sh` on the H100 server) and
   `tools/litmus/observed.py` joins them with the formal verdicts.
+- Warp-wide roles (spec `uniform`): a litmus thread with a warp-wide instruction (`ldmatrix`, `stmatrix`,
+  `tensormap.*`), a tensor copy or a tensor-map prefetch is one whole warp running one instance, and one with
+  `wgmma` is a warpgroup of four warps; the instructions that are not warp-wide run on one lane. A tensor copy or
+  prefetch issued by a warp whose lanes belong to different instances, or start at different times, hung on the
+  H100, so it is always issued this way.
+- Tensor maps (spec `tmap`): the host encodes a one-dimensional map of four 32-bit elements for every instance
+  before each launch (`cuTensorMapEncodeTiled`), over the instance's buffer; `tensormap.replace` switches it to a
+  second buffer, and the value the copy brings back shows which map it used. A shared-memory buffer that a tensor
+  copy reads or writes is 128-byte aligned, as the hardware requires.
+- Multicast copies: the destinations, and their mbarriers, sit at the same offset in every CTA of the cluster; the
+  CTA mask comes from the CTAs the test names, or from `%cluster_ctarank` when the whole test runs in one CTA.
+- Before a CTA exits, it waits (a bounded time) for the asynchronous copies into its shared memory and for its
+  bulk async-groups, and in a cluster a last cluster barrier keeps every CTA alive until all have done so: a copy
+  the test does not wait for must not land in the shared memory of a CTA that has already exited. This happens
+  after the outcome is recorded.
+- `griddepcontrol` (spec `grid`): the roles of grid 1 run in a second kernel launched right after the first with
+  programmatic dependent launch. Virtual aliases (spec `alias`): the global memory is mapped at two virtual
+  addresses (`cuMemCreate`, two `cuMemMap`), and an alias is the same location at the second address.
+- A run that does not finish within `TIMEOUT` seconds (default 600) is stopped and reported as failed.
 
 ## The Fence-SC question
 
