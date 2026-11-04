@@ -934,6 +934,10 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
                     split.add((int(k), r))
                 if (int(k), r) not in regs:
                     raise Unsupported(f"condition on {side}, which no load writes")
+                if any(i.op == "mbarrier" and i.quals[:1] in (["arrive"], ["arrive_drop"]) and i.args[:1] == [r]
+                       for i in t.threads[int(k)].instrs):
+                    # the GPU returns the mbarrier state as an opaque 64-bit value, not the model's phase state
+                    raise Unsupported(f"condition on {side}, the state an mbarrier arrive returns")
             elif side in sh and (place == "same-cta" or dsmem):
                 if side not in finals:  # the final value of a shared location: read once every role is done
                     finals.append(side)
