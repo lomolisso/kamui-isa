@@ -1,5 +1,5 @@
 PTX tensormap-update-after-use
-"Grouped GEMM, batch change: TMA loads of the previous batch were issued with the old map; the producer then does cp.async.bulk.commit_group and wait_group.read 0 and overwrites the map with tensormap.cp_fenceproxy (CUTLASS sm90_gemm_array_tma_warpspecialized_cooperative.hpp:704-720, sm90_mma_array_tma_gmma_ss_warpspecialized.hpp:737-747, copy_sm90_tma.hpp:1262-1268). The earlier load must still read the old map. Expected: forbidden."
+"Grouped GEMM, batch change: TMA loads of the previous batch were issued with the old map; the producer then does cp.async.bulk.commit_group and wait_group.read 0 and overwrites the map with tensormap.cp_fenceproxy (CUTLASS sm90_gemm_array_tma_warpspecialized_cooperative.hpp:704-720, sm90_mma_array_tma_gmma_ss_warpspecialized.hpp:737-747, copy_sm90_tma.hpp:1262-1268). The earlier load must still read the old map. Expected: allowed by the manual, since loads that complete on an mbarrier are in no bulk async-group, so cp.async.bulk.wait_group.read does not wait for them (9.7.9.25.6); CUTLASS relies on it being forbidden, so it depends on more than PTX documents."
 {
 tms=0 @cta 0;
 tm=0;

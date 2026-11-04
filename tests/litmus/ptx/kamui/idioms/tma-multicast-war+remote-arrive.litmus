@@ -1,5 +1,5 @@
 PTX tma-multicast-war+remote-arrive
-"Multicast mainloop, cross-CTA buffer reuse. The consumer in CTA 1 finishes its wgmma on the stage and releases it with a remote arrive on CTA 0's empty barrier, mapa + mbarrier.arrive.shared::cluster with the default .release.cta (CUTLASS sm90_pipeline.hpp:628-630, barrier.h:490-494); CTA 0's producer waits (default .acquire.cta, barrier.h:420) and multicasts the next tile into both CTAs (copy_sm90_tma.hpp:642). The wgmma in CTA 1 must not see it. Expected: forbidden."
+"Multicast mainloop, cross-CTA buffer reuse. The consumer in CTA 1 finishes its wgmma on the stage and releases it with a remote arrive on CTA 0's empty barrier, mapa + mbarrier.arrive.shared::cluster with the default .release.cta (CUTLASS sm90_pipeline.hpp:628-630, barrier.h:490-494); CTA 0's producer waits (default .acquire.cta, barrier.h:420) and multicasts the next tile into both CTAs (copy_sm90_tma.hpp:642). The wgmma in CTA 1 must not see it. Expected: allowed by the manual, since a .cta-scope arrive and wait do not synchronize threads of two CTAs (8.5, 8.7); CUTLASS relies on it being forbidden, so it depends on more than PTX documents."
 {
 g=7;
 d0=5 @cta 0;
