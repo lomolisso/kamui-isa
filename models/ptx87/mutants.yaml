@@ -22,6 +22,7 @@
   kind: weaken
   find: "fence_sc and atomicity and"
   replace: "atomicity and"
+  equivalent: "Fence-SC order is part of synchronizes-with, so it only adds causality edges: an execution whose Fence-SC order contradicts base causality stays consistent when Fence-SC order is replaced by one that follows base causality without the Fence-SC edges (acyclic on fences, or Causality fails), since that removes causality edges and adds none; the outcome sets are the same"
 - id: A-single-copy-atomicity
   model: alloy
   rule: single-copy atomicity across granules (8.10.3, D6)
@@ -367,6 +368,7 @@
   kind: weaken
   find: "  no ^po & bgen                                          // a thread arrives once per generation\n"
   replace: "\n"
+  equivalent: "implied by the next line, generations of a resource follow program order: two arrivals a, b of one thread in one generation give b bgen a and a po b, a self-loop of bgen.(^po & bid.~bid)"
 - id: A-cluster-barrier-all-threads
   model: alloy
   rule: every thread of the cluster takes part in a cluster barrier (9.7.13.3)
@@ -761,7 +763,21 @@
   file: ptx-v8.7-common.cat
   rule: proxy-preserved causality, same proxy and same thread block (8.9.5)
   kind: weaken
-  find: "                | ([M]; (same-proxy & scta & vloc & cbi); [M])\n"
+  find: "                | ([M]; (same-proxy & same-block & vloc & cbi); [M])\n"
+  replace: "\n"
+- id: D-same-block-destination
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: an asynchronous write into shared memory is performed by the destination CTA (M56)
+  kind: weaken
+  find: "(same-proxy & same-block & vloc & cbi)"
+  replace: "(same-proxy & scta & vloc & cbi)"
+- id: D-ppcb-war-generic-read
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: a generic read before an async-proxy write needs no proxy fence (M57)
+  kind: weaken
+  find: "                | vloc & ([GEN & R]; cbi; [ASYNC & W])\n"
   replace: "\n"
 - id: D-ppcb-src-fence
   model: dartagnan
