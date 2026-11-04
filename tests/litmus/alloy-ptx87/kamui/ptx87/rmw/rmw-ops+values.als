@@ -73,3 +73,5 @@ pred outcome { ((E14.val != 7) or ((some E1 and (E3 + E5 + E7 + E9 + E11 + E13 +
 
 run test { ptx_mm and (outcome or undefined) } for 16 but 7 Int
 run consistent { ptx_mm } for 16 but 7 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 16 but 7 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 16 but 7 Int  // the outcome without the axioms (D38)

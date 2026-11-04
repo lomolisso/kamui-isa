@@ -1,0 +1,11 @@
+PTX pdl-early-trigger+war
+"Programmatic dependent launch, anti-dependence: the primary reads a buffer after launch_dependents (for example its epilogue source); the dependent overwrites it after griddepcontrol.wait (CUTLASS sm90_gemm_tma_warpspecialized_cooperative.hpp:567, 813). The primary must not see the dependent's write. Expected: forbidden."
+{
+x=0;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0,grid 0            | P1@cta 0,gpu 0,grid 1 ;
+ griddepcontrol.launch_dependents | griddepcontrol.wait   ;
+ ld.weak.global r0, x             | st.weak.global x, 1   ;
+exists
+(P0:r0 == 1)

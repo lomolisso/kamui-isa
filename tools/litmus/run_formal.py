@@ -15,6 +15,9 @@ Models (column `model`):
   before the run, which changes nothing when no instruction uses the `.cluster` scope).
 - `ptx-v6.0`: Dartagnan with `cat/ptx-v6.0.cat`, the PTX ISA 6.0 model (no proxies). Tests without `.cluster`
   and without proxy features.
+- `ptx-v8.7`: the PTX ISA 8.7 model in our Dartagnan fork (deps/dat3m, `cat/ptx-v8.7.cat`), built by
+  tools/dat3m/build.sh into build/dat3m/. Every test, with cluster placement; skipped while the fork has no
+  `cat/ptx-v8.7.cat` or no built jar.
 - `ptx-2019-alloy`: the 2019 Alloy model of PTX ISA 6.0 (deps/ptx-memory-model/ptx.als), run with the
   artifact's own driver (RunAlloy) and Alloy 4.2 jar, on the queries tools/litmus/to_alloy.py writes to
   tests/litmus/alloy/. Only the tests to_alloy can express.
@@ -70,6 +73,7 @@ FIELDS = ["test", "source", "condition", "model", "model_version", "tool", "tool
           "runtime_s"]
 DAT3M = Path(os.environ.get("DAT3M_HOME", "/opt/dat3m"))
 DARTAGNAN_FLAGS = "--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec"
+TIMEOUT_S = 600  # per Dartagnan run; a run that takes longer is recorded as unknown
 
 
 def all_tests() -> list[Path]:
@@ -91,10 +95,17 @@ def file_sha(path: Path) -> str:
 
 class Dartagnan:
     tool = "dartagnan"
+    erase_clusters = True
 
     def __init__(self, model: str, cat: str):
         self.model, self.cat = model, DAT3M / "cat" / cat
         self._version = None
+
+    def command(self) -> list[str]:
+        return ["dartagnan"]
+
+    def env(self, env: dict) -> dict:
+        return env
 
     def applies(self, t: litmus.Litmus) -> bool:
         if not t.dartagnan_ok:
@@ -112,18 +123,22 @@ class Dartagnan:
             self._version = out.splitlines()[-1] if out else "?"
         return self._version
 
-    def run(self, path: Path, extra: str) -> tuple[str, float, str]:
+    def run(self, path: Path, extra: str, cat: Path | None = None) -> tuple[str, float, str]:
         flags = f"{DARTAGNAN_FLAGS} {extra}".strip()
         tid = test_id(path)
+        cat = cat or self.cat  # runs share this object across threads, so a different model is an argument
         with tempfile.TemporaryDirectory(dir=_outdir()) as out:
             env = dict(os.environ, DAT3M_OUTPUT=out)
             t = litmus.load(path)
-            if any(th.cluster is not None for th in t.threads):
+            if self.erase_clusters and any(th.cluster is not None for th in t.threads):
                 path = Path(out) / path.name
                 path.write_text(t.without_clusters())
             t0 = time.monotonic()
-            p = subprocess.run(["dartagnan", str(self.cat), *flags.split(), str(path)], capture_output=True,
-                               text=True, env=env, timeout=600)
+            try:
+                p = subprocess.run([*self.command(), str(cat), *flags.split(), str(path)],
+                                   capture_output=True, text=True, env=self.env(env), timeout=TIMEOUT_S)
+            except subprocess.TimeoutExpired:
+                return "unknown", time.monotonic() - t0, f"{flags} (timeout {TIMEOUT_S} s)"
             dt = time.monotonic() - t0
         m = re.search(r"^Result:\s*(\w+)", p.stdout, re.M)
         word = m.group(1) if m else "ERROR"
@@ -131,6 +146,77 @@ class Dartagnan:
         if result == "error":
             sys.stderr.write(f"{tid} ({self.model}): {p.stdout[-400:]}{p.stderr[-400:]}\n")
         return result, dt, flags
+
+
+class DartagnanFork(Dartagnan):
+    """The PTX 8.7 model of our Dartagnan fork (deps/dat3m), run from the jar tools/dat3m/build.sh builds."""
+
+    erase_clusters = False
+    home = ROOT / "deps" / "dat3m"
+    jar = ROOT / "build" / "dat3m" / "dartagnan.jar"
+
+    def __init__(self):
+        super().__init__("ptx-v8.7", "ptx-v8.7.cat")
+        self.cat = self.home / "cat" / "ptx-v8.7.cat"
+
+    def applies(self, t: litmus.Litmus) -> bool:
+        return self.cat.exists() and self.jar.exists()
+
+    def command(self) -> list[str]:
+        return ["java", "-jar", str(self.jar)]
+
+    def env(self, env: dict) -> dict:
+        return dict(env, DAT3M_HOME=str(self.home))
+
+    @property
+    def model_version(self) -> str:
+        # the verdict reads ptx-v8.7.cat, ptx-v8.7-noaxioms.cat and the file both include
+        cats = sorted((self.home / "cat").glob("ptx-v8.7*.cat"))
+        h = hashlib.sha256(b"".join(c.read_bytes() for c in cats)).hexdigest()[:12]
+        return f"{'+'.join(c.name for c in cats)} sha256:{h}"
+
+    @property
+    def tool_version(self) -> str:
+        commit = self.jar.parent / "commit"
+        return f"fork {commit.read_text().strip()}" if commit.exists() else "fork ?"
+
+    def run(self, path: Path, extra: str) -> tuple[str, float, str]:
+        """Undefined behaviour needs a look at every execution, which one Dartagnan run cannot express, so the
+        verdict takes two runs (decisions D7 and D38 in models/ptx87/decisions.md). First `cat_spec` reports the
+        model's flags over the executions that satisfy the axioms. An `undefined-behaviour` flag (mbarrier
+        misuse, a missing wgmma.fence) allows every outcome. A `mixed-size-data-race` flag frees the program from
+        the axioms, so the condition is checked with the model without axioms (`ptx-v8.7-noaxioms.cat`). Otherwise
+        the condition is checked with the model."""
+        flags_out, dt1 = self.flags_of(path, extra)
+        if flags_out is None:
+            return "error", dt1, f"{DARTAGNAN_FLAGS} {extra}".strip()
+        if flags_out == "timeout":
+            return "unknown", dt1, f"{DARTAGNAN_FLAGS} {extra}".strip() + f" (cat_spec timeout {TIMEOUT_S} s)"
+        if "undefined-behaviour" in flags_out:
+            return "allowed", dt1, f"{DARTAGNAN_FLAGS} {extra}".strip() + " (undefined behaviour)"
+        if "mixed-size-data-race" in flags_out:
+            res, dt2, fl = super().run(path, extra, cat=self.home / "cat" / "ptx-v8.7-noaxioms.cat")
+            return res, dt1 + dt2, fl + " (mixed-size data race: ptx-v8.7-noaxioms.cat)"
+        res, dt2, fl = super().run(path, extra)
+        return res, dt1 + dt2, fl
+
+    def flags_of(self, path: Path, extra: str) -> tuple[set | str | None, float]:
+        """The model flags a `cat_spec` run finds ("timeout" after TIMEOUT_S, None if the run fails). UNKNOWN (a loop
+        Dartagnan cannot unroll completely) counts as no flag found: the condition check then decides, usually
+        UNKNOWN as well."""
+        flags = f"{DARTAGNAN_FLAGS} {extra}".replace("--property=program_spec", "--property=cat_spec").split()
+        with tempfile.TemporaryDirectory(dir=_outdir()) as out:
+            t0 = time.monotonic()
+            try:
+                p = subprocess.run([*self.command(), str(self.cat), *flags, str(path)], capture_output=True,
+                                   text=True, env=self.env(dict(os.environ, DAT3M_OUTPUT=out)), timeout=TIMEOUT_S)
+            except subprocess.TimeoutExpired:
+                return "timeout", time.monotonic() - t0
+            dt = time.monotonic() - t0
+        if not re.search(r"^Result:\s*(PASS|FAIL|UNKNOWN)", p.stdout, re.M):
+            sys.stderr.write(f"{test_id(path)} ({self.model}, cat_spec): {p.stdout[-400:]}{p.stderr[-400:]}\n")
+            return None, dt
+        return set(re.findall(r"^\s*Flag\s+(\S+)", p.stdout, re.M)), dt
 
 
 def _outdir() -> str:
@@ -242,16 +328,20 @@ class Alloy6:
                                timeout=3600)
             dt = time.monotonic() - t0
         out = p.stdout + p.stderr
-        m = re.search(r"\d+\.\s+run\s+test\b[^\n]*?\b(UNSAT|SAT)\b", out)
-        c = re.search(r"\d+\.\s+run\s+consistent\b[^\n]*?\b(UNSAT|SAT)\b", out)
-        if not m or not c:
+        sat = {k: re.search(rf"\d+\.\s+run\s+{k}\b[^\n]*?\b(UNSAT|SAT)\b", out)
+               for k in ("test", "consistent", "racy", "unconstrained")}
+        if not all(sat.values()):
             sys.stderr.write(f"{tid} ({self.model}): {p.stdout[-600:]}{p.stderr[-600:]}\n")
             return "error", dt, self.flags
-        if c.group(1) == "UNSAT":
+        sat = {k: m.group(1) == "SAT" for k, m in sat.items()}
+        if not sat["consistent"]:
             # The program has no execution at all, so every condition is forbidden: a barrier that can never
             # complete, or a bug in the query. check_suite.py requires each such test to be explained.
             return "forbidden", dt, self.flags + " (no execution)"
-        return ("allowed" if m.group(1) == "SAT" else "forbidden"), dt, self.flags
+        # A program with a mixed-size data race is not constrained by the axioms, but its reads still return
+        # written values: its outcomes are those of the executions that satisfy only the facts (D38).
+        allowed = sat["test"] or (sat["racy"] and sat["unconstrained"])
+        return ("allowed" if allowed else "forbidden"), dt, self.flags
 
 
 class Herd7:
@@ -313,6 +403,7 @@ class Manual:
 MODELS = {
     "ptx-v7.5": Dartagnan("ptx-v7.5", "ptx-v7.5.cat"),
     "ptx-v6.0": Dartagnan("ptx-v6.0", "ptx-v6.0.cat"),
+    "ptx-v8.7": DartagnanFork(),
     "ptx-2019-alloy": Alloy2019("ptx-2019-alloy"),
     "ptx-2019-alloy+ext": Alloy2019("ptx-2019-alloy+ext"),
     to_alloy87.MODEL_NAME: Alloy6(),
@@ -380,10 +471,12 @@ def run_jobs(jobs, nproc: int) -> list[dict]:
 
 
 def merge(old: list[dict], new: list[dict], models: list[str], tests: set[str]) -> list[dict]:
-    """Drop the old rows this run is responsible for, then add the new ones."""
+    """Drop the old rows this run is responsible for, and the rows of tests that no longer exist, then add the new
+    ones."""
     owned = {(r["test"], r["model"]) for r in new}
-    keep = [r for r in old
-            if (r["test"], r["model"]) not in owned and not (r["model"] in models and r["test"] in tests)]
+    exist = {test_id(p) for p in all_tests()}
+    keep = [r for r in old if r["test"] in exist
+            and (r["test"], r["model"]) not in owned and not (r["model"] in models and r["test"] in tests)]
     return keep + new
 
 

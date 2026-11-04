@@ -1,0 +1,11 @@
+PTX param+initial+global+diff-cluster
+"Loads from the read-only .param space return the initial value"
+{
+c=3;
+P0:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 1,gpu 0 ;
+ ld.param r0, c           | ld.param r1, c           ;
+exists
+(P0:r0 == 3 /\ P1:r1 == 3)

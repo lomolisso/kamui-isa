@@ -13,3 +13,8 @@
 	url = https://github.com/NVlabs/PTXMemoryModel
 	branch = master
 	shallow = true
+[submodule "deps/dat3m"]
+	path = deps/dat3m
+	url = https://github.com/lomolisso/Dat3M
+	branch = ptx-v8.7
+	shallow = true

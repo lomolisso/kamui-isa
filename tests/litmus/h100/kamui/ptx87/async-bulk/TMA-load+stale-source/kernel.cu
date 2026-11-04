@@ -104,8 +104,8 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
         return;
     }
     unsigned d = (slot * 2246822519u >> 13) & delay_mask;
-    for (unsigned k = 0; k < d; k++)
-        asm volatile("" ::: "memory");
+    if (d)  /* a start delay; an empty loop would not do, ptxas removes it */
+        asm volatile("nanosleep.u32 %0;" :: "r"(d) : "memory");
     const unsigned *lo = locoff + inst * NGLOC;
     unsigned *out = res + inst * NREGS;
     L l;
@@ -116,4 +116,10 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     case 0: role0(l, out); break;
     }
     place[inst * NROLES + role] = (sreg_clusterid() << 8) | sreg_smid();
+    if (role == 0) {
+        unsigned ok = 0;
+        for (unsigned w = 0; w < 4096u && !ok; w++)
+            asm volatile("{\n\t.reg .pred p;\n\tmbarrier.test_wait.parity.shared::cta.b64 p, [%1], 0;\n\tselp.u32 %0, 1, 0, p;\n\t@!p nanosleep.u32 64;\n\t}" : "=r"(ok) : "r"(to_shared(&mbar[0 * 256 + lslot])) : "memory");
+    }
+    if (role == 0) asm volatile("cp.async.bulk.wait_group 0;" ::: "memory");
 }

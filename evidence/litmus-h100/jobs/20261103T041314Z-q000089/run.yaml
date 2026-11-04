@@ -1,0 +1,29 @@
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-428e544c-5649-1dde-a6bf-95de7485dd6a
+  driver: 580.126.20
+instances: 1000000
+configs:
+- plain
+- stress
+- shuffle
+tests: ptx/kamui/ptx87/rmw/2+add.gpu
+shard: 0/1
+seconds: 1.5
+failed: 0
+runs:
+- test: ptx/kamui/ptx87/rmw/2+add.gpu
+  config: plain
+  exit: 0
+  seconds: 0.57
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.gpu
+  config: stress
+  exit: 0
+  seconds: 0.5
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/rmw/2+add.gpu
+  config: shuffle
+  exit: 0
+  seconds: 0.45
+  message: ok 1001088 instances in 79 launches

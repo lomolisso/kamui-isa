@@ -1,0 +1,1679 @@
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-428e544c-5649-1dde-a6bf-95de7485dd6a
+  driver: 580.126.20
+instances: 1000000
+configs:
+- plain
+- stress
+- shuffle
+tests: ptx/imported/*
+shard: 0/1
+seconds: 109.7
+failed: 0
+runs:
+- test: ptx/imported/dat3m/Barrier/barrier-inscope
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/barrier-inscope
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/barrier-inscope
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/barrier-not-inscope
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/barrier-not-inscope
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/barrier-not-inscope
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/quorum1-fail
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/quorum1-fail
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/quorum1-fail
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/quorum2-fail
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/quorum2-fail
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Barrier/quorum2-fail
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Atom-minus-location_
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Atom-minus-location_
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Atom-minus-location_
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Atom-plus-location-weak_
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Atom-plus-location-weak_
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Atom-plus-location-weak_
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Atom-plus-location_
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Atom-plus-location_
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Atom-plus-location_
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Cause-base-strong
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Cause-base-strong
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Cause-base-strong
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Cause-base-weak
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Cause-base-weak
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Cause-base-weak
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Co-Total-3-threads-scope-same
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Co-Total-3-threads-scope-same
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Co-Total-3-threads-scope-same
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Co-Total-4-threads
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Co-Total-4-threads
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Co-Total-4-threads
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRR-acquire-weak
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRR-acquire-weak
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRR-acquire-weak
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRR-weak-acquire
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRR-weak-acquire
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRR-weak-acquire
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRW-R
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRW-R
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRW-R
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRW-WW
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRW-WW
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRW-WW
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRW_
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRW_
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoRW_
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWR_
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWR_
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWR_
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWW-R
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWW-R
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWW-R
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWW-RR
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWW-RR
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWW-RR
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWW_
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWW_
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/CoWW_
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Coherence
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Coherence
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Coherence
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Coherence-weak
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Coherence-weak
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/Coherence-weak
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+NoThinAir-location_
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+NoThinAir-location_
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+NoThinAir-location_
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+NoThinAir-register
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+NoThinAir-register
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+NoThinAir-register
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+RMW-a
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+RMW-a
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+RMW-a
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+RMW-b
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+RMW-b
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+RMW-b
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+RMW-c
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+RMW-c
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB+RMW-c
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB-dlb
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB-dlb
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB-dlb
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB-dlb-no-fence-1
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB-dlb-no-fence-1
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB-dlb-no-fence-1
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB-dlb-no-fence-2
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB-dlb-no-fence-2
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/LB-dlb-no-fence-2
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP+RMW
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP+RMW
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP+RMW
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-3-transitive
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-3-transitive
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-3-transitive
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-cta
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-cta
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-cta
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-cta-gpu
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-cta-gpu
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-cta-gpu
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-gpu
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-gpu
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-gpu
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-relaxed
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-relaxed
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-relaxed
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-sys
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-sys
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-sys
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-sys-fence
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-sys-fence
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/MP-sys-fence
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/PC-bar-sync-arrive
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/PC-bar-sync-arrive
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/PC-bar-sync-arrive
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/PC-bar-sync-sync-1
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/PC-bar-sync-sync-1
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/PC-bar-sync-sync-1
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/PC-bar-sync-sync-2
+  config: plain
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/PC-bar-sync-sync-2
+  config: stress
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/PC-bar-sync-sync-2
+  config: shuffle
+  exit: 0
+  seconds: 0
+  message: reused
+- test: ptx/imported/dat3m/Manual/SB+acq_rel-cta
+  config: plain
+  exit: 0
+  seconds: 0.44
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+acq_rel-cta
+  config: stress
+  exit: 0
+  seconds: 0.49
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+acq_rel-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.41
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+bar-const-diff
+  config: plain
+  exit: 0
+  seconds: 0.43
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+bar-const-diff
+  config: stress
+  exit: 0
+  seconds: 0.38
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+bar-const-diff
+  config: shuffle
+  exit: 0
+  seconds: 0.39
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+bar-const-equal
+  config: plain
+  exit: 0
+  seconds: 0.54
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+bar-const-equal
+  config: stress
+  exit: 0
+  seconds: 0.37
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+bar-const-equal
+  config: shuffle
+  exit: 0
+  seconds: 0.55
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+bar-diff-cta
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+bar-diff-cta
+  config: stress
+  exit: 0
+  seconds: 0.49
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+bar-diff-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const
+  config: plain
+  exit: 0
+  seconds: 0.37
+  message: ok 1013760 instances in 60 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const
+  config: stress
+  exit: 0
+  seconds: 0.52
+  message: ok 1013760 instances in 60 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-dyn-reg-const
+  config: shuffle
+  exit: 0
+  seconds: 0.43
+  message: ok 1013760 instances in 60 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff
+  config: stress
+  exit: 0
+  seconds: 0.47
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-const-diff
+  config: shuffle
+  exit: 0
+  seconds: 0.41
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-const-equal
+  config: plain
+  exit: 0
+  seconds: 0.44
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-const-equal
+  config: stress
+  exit: 0
+  seconds: 0.55
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-const-equal
+  config: shuffle
+  exit: 0
+  seconds: 0.42
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-diff
+  config: plain
+  exit: 0
+  seconds: 0.44
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-diff
+  config: stress
+  exit: 0
+  seconds: 0.36
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-diff
+  config: shuffle
+  exit: 0
+  seconds: 0.54
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-equal
+  config: plain
+  exit: 0
+  seconds: 0.36
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-equal
+  config: stress
+  exit: 0
+  seconds: 0.39
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-reg-equal
+  config: shuffle
+  exit: 0
+  seconds: 0.49
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const
+  config: plain
+  exit: 0
+  seconds: 0.37
+  message: ok 1013760 instances in 60 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const
+  config: stress
+  exit: 0
+  seconds: 0.58
+  message: ok 1013760 instances in 60 launches
+- test: ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const
+  config: shuffle
+  exit: 0
+  seconds: 0.44
+  message: ok 1013760 instances in 60 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-cta
+  config: plain
+  exit: 0
+  seconds: 0.36
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-cta
+  config: stress
+  exit: 0
+  seconds: 0.48
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.5
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-cta-outScope
+  config: plain
+  exit: 0
+  seconds: 0.46
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-cta-outScope
+  config: stress
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-cta-outScope
+  config: shuffle
+  exit: 0
+  seconds: 0.55
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-gpu
+  config: plain
+  exit: 0
+  seconds: 0.38
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-gpu
+  config: stress
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-gpu
+  config: shuffle
+  exit: 0
+  seconds: 0.5
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence
+  config: plain
+  exit: 0
+  seconds: 0.6
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence
+  config: stress
+  exit: 0
+  seconds: 0.62
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence
+  config: shuffle
+  exit: 0
+  seconds: 0.57
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder
+  config: plain
+  exit: 0
+  seconds: 0.51
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-gpu-multiFence-TotalOrder
+  config: shuffle
+  exit: 0
+  seconds: 0.65
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-sys-gpu
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-sys-gpu
+  config: stress
+  exit: 0
+  seconds: 0.51
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+sc-sys-gpu
+  config: shuffle
+  exit: 0
+  seconds: 0.52
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB+twice-bars
+  config: plain
+  exit: 0
+  seconds: 0.55
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+twice-bars
+  config: stress
+  exit: 0
+  seconds: 0.44
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+twice-bars
+  config: shuffle
+  exit: 0
+  seconds: 0.49
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+twice-bars-diff
+  config: plain
+  exit: 0
+  seconds: 0.41
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+twice-bars-diff
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB+twice-bars-diff
+  config: shuffle
+  exit: 0
+  seconds: 0.48
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/SB-weak
+  config: plain
+  exit: 0
+  seconds: 0.37
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB-weak
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/SB-weak
+  config: shuffle
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Manual/barrier-instance-id-exists
+  config: plain
+  exit: 0
+  seconds: 0.47
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-instance-id-exists
+  config: stress
+  exit: 0
+  seconds: 0.51
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-instance-id-exists
+  config: shuffle
+  exit: 0
+  seconds: 0.56
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-instance-id-forall
+  config: plain
+  exit: 0
+  seconds: 0.55
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-instance-id-forall
+  config: stress
+  exit: 0
+  seconds: 0.51
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-instance-id-forall
+  config: shuffle
+  exit: 0
+  seconds: 0.56
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-logical-id-exists
+  config: plain
+  exit: 0
+  seconds: 0.45
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-logical-id-exists
+  config: stress
+  exit: 0
+  seconds: 0.56
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-logical-id-exists
+  config: shuffle
+  exit: 0
+  seconds: 0.6
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-logical-id-forall
+  config: plain
+  exit: 0
+  seconds: 0.45
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-logical-id-forall
+  config: stress
+  exit: 0
+  seconds: 0.52
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/barrier-logical-id-forall
+  config: shuffle
+  exit: 0
+  seconds: 0.57
+  message: ok 1005312 instances in 119 launches
+- test: ptx/imported/dat3m/Manual/counter-atomic-store-rmw
+  config: plain
+  exit: 0
+  seconds: 0.42
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-atomic-store-rmw
+  config: stress
+  exit: 0
+  seconds: 0.33
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-atomic-store-rmw
+  config: shuffle
+  exit: 0
+  seconds: 0.4
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-plain-store-atomic-load
+  config: plain
+  exit: 0
+  seconds: 0.33
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-plain-store-atomic-load
+  config: stress
+  exit: 0
+  seconds: 0.4
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-plain-store-atomic-load
+  config: shuffle
+  exit: 0
+  seconds: 0.37
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-plain-store-plain-load
+  config: plain
+  exit: 0
+  seconds: 0.4
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-plain-store-plain-load
+  config: stress
+  exit: 0
+  seconds: 0.33
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-plain-store-plain-load
+  config: shuffle
+  exit: 0
+  seconds: 0.56
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-plain-store-rmw
+  config: plain
+  exit: 0
+  seconds: 0.41
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-plain-store-rmw
+  config: stress
+  exit: 0
+  seconds: 0.34
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Manual/counter-plain-store-rmw
+  config: shuffle
+  exit: 0
+  seconds: 0.46
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW1
+  config: plain
+  exit: 0
+  seconds: 0.37
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW1
+  config: stress
+  exit: 0
+  seconds: 0.71
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW1
+  config: shuffle
+  exit: 0
+  seconds: 0.76
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW2
+  config: plain
+  exit: 0
+  seconds: 0.48
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW2
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW2
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW_gl_cta
+  config: plain
+  exit: 0
+  seconds: 0.39
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW_gl_cta
+  config: stress
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW_gl_cta
+  config: shuffle
+  exit: 0
+  seconds: 0.82
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW_uniproc
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW_uniproc
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRIW_uniproc
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW1
+  config: plain
+  exit: 0
+  seconds: 0.37
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW1
+  config: stress
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW1
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW2
+  config: plain
+  exit: 0
+  seconds: 0.37
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW2
+  config: stress
+  exit: 0
+  seconds: 0.74
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW2
+  config: shuffle
+  exit: 0
+  seconds: 0.88
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW3
+  config: plain
+  exit: 0
+  seconds: 0.51
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW3
+  config: stress
+  exit: 0
+  seconds: 0.8
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW3
+  config: shuffle
+  exit: 0
+  seconds: 0.89
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW4
+  config: plain
+  exit: 0
+  seconds: 0.46
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW4
+  config: stress
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW4
+  config: shuffle
+  exit: 0
+  seconds: 0.86
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW_uniproc
+  config: plain
+  exit: 0
+  seconds: 0.4
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW_uniproc
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRRWIW_uniproc
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRWIW1
+  config: plain
+  exit: 0
+  seconds: 0.37
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRWIW1
+  config: stress
+  exit: 0
+  seconds: 0.83
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRWIW1
+  config: shuffle
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRWIW2
+  config: plain
+  exit: 0
+  seconds: 0.47
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRWIW2
+  config: stress
+  exit: 0
+  seconds: 0.76
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRWIW2
+  config: shuffle
+  exit: 0
+  seconds: 0.77
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRWIW_gl_cta
+  config: plain
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRWIW_gl_cta
+  config: stress
+  exit: 0
+  seconds: 0.78
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/IRWIW_gl_cta
+  config: shuffle
+  exit: 0
+  seconds: 0.79
+  message: ok 1001088 instances in 237 launches
+- test: ptx/imported/dat3m/Memalloy/RWC1
+  config: plain
+  exit: 0
+  seconds: 0.36
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/RWC1
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/RWC1
+  config: shuffle
+  exit: 0
+  seconds: 0.91
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/RWC2
+  config: plain
+  exit: 0
+  seconds: 0.36
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/RWC2
+  config: stress
+  exit: 0
+  seconds: 0.6
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/RWC2
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/RWC_uniproc
+  config: plain
+  exit: 0
+  seconds: 0.32
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/RWC_uniproc
+  config: stress
+  exit: 0
+  seconds: 0.53
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/RWC_uniproc
+  config: shuffle
+  exit: 0
+  seconds: 0.58
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRC1
+  config: plain
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRC1
+  config: stress
+  exit: 0
+  seconds: 0.63
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRC1
+  config: shuffle
+  exit: 0
+  seconds: 0.61
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRC2
+  config: plain
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRC2
+  config: stress
+  exit: 0
+  seconds: 0.64
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRC2
+  config: shuffle
+  exit: 0
+  seconds: 0.62
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRR+2W
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRR+2W
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRR+2W
+  config: shuffle
+  exit: 0
+  seconds: 0.63
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRR+2W1
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRR+2W1
+  config: stress
+  exit: 0
+  seconds: 0.6
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRR+2W1
+  config: shuffle
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRR+2W2
+  config: plain
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRR+2W2
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRR+2W2
+  config: shuffle
+  exit: 0
+  seconds: 0.72
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+2W1
+  config: plain
+  exit: 0
+  seconds: 0.36
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+2W1
+  config: stress
+  exit: 0
+  seconds: 0.65
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+2W1
+  config: shuffle
+  exit: 0
+  seconds: 0.65
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+2W2
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+2W2
+  config: stress
+  exit: 0
+  seconds: 0.67
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+2W2
+  config: shuffle
+  exit: 0
+  seconds: 0.62
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+WR1
+  config: plain
+  exit: 0
+  seconds: 0.54
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+WR1
+  config: stress
+  exit: 0
+  seconds: 0.61
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+WR1
+  config: shuffle
+  exit: 0
+  seconds: 0.63
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+WR2
+  config: plain
+  exit: 0
+  seconds: 0.53
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+WR2
+  config: stress
+  exit: 0
+  seconds: 0.62
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WRW+WR2
+  config: shuffle
+  exit: 0
+  seconds: 0.62
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WWC1
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WWC1
+  config: stress
+  exit: 0
+  seconds: 0.64
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WWC1
+  config: shuffle
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WWC2
+  config: plain
+  exit: 0
+  seconds: 0.42
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WWC2
+  config: stress
+  exit: 0
+  seconds: 0.66
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Memalloy/WWC2
+  config: shuffle
+  exit: 0
+  seconds: 0.63
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Nvidia/Atom-SB
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/Atom-SB
+  config: stress
+  exit: 0
+  seconds: 0.45
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/Atom-SB
+  config: shuffle
+  exit: 0
+  seconds: 0.51
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/Atom-SB-ld
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/Atom-SB-ld
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/Atom-SB-ld
+  config: shuffle
+  exit: 0
+  seconds: 0.58
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff
+  config: plain
+  exit: 0
+  seconds: 0.37
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff
+  config: stress
+  exit: 0
+  seconds: 0.7
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Nvidia/Co-Total-3-threads-scope-diff
+  config: shuffle
+  exit: 0
+  seconds: 0.63
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/dat3m/Nvidia/Release-acquire-pattern
+  config: plain
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/Release-acquire-pattern
+  config: stress
+  exit: 0
+  seconds: 0.55
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/Release-acquire-pattern
+  config: shuffle
+  exit: 0
+  seconds: 0.53
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/SB-cta
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Nvidia/SB-cta
+  config: stress
+  exit: 0
+  seconds: 0.36
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Nvidia/SB-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.51
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen
+  config: plain
+  exit: 0
+  seconds: 0.42
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen
+  config: stress
+  exit: 0
+  seconds: 0.47
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gen
+  config: shuffle
+  exit: 0
+  seconds: 0.4
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1
+  config: stress
+  exit: 0
+  seconds: 0.56
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/proxy/Proxy-MP-gpu1
+  config: shuffle
+  exit: 0
+  seconds: 0.61
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-genW-genR
+  config: plain
+  exit: 0
+  seconds: 0.33
+  message: ok 1013760 instances in 20 launches
+- test: ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-genW-genR
+  config: stress
+  exit: 0
+  seconds: 0.32
+  message: ok 1013760 instances in 20 launches
+- test: ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-genW-genR
+  config: shuffle
+  exit: 0
+  seconds: 0.35
+  message: ok 1013760 instances in 20 launches
+- test: ptx/imported/mixedproxy/CoMP_volatile
+  config: plain
+  exit: 0
+  seconds: 0.5
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/CoMP_volatile
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/CoMP_volatile
+  config: shuffle
+  exit: 0
+  seconds: 0.55
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/CoWR+00
+  config: plain
+  exit: 0
+  seconds: 0.31
+  message: ok 1013760 instances in 20 launches
+- test: ptx/imported/mixedproxy/CoWR+00
+  config: stress
+  exit: 0
+  seconds: 0.33
+  message: ok 1013760 instances in 20 launches
+- test: ptx/imported/mixedproxy/CoWR+00
+  config: shuffle
+  exit: 0
+  seconds: 0.63
+  message: ok 1013760 instances in 20 launches
+- test: ptx/imported/mixedproxy/ISA2
+  config: plain
+  exit: 0
+  seconds: 0.37
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/mixedproxy/ISA2
+  config: stress
+  exit: 0
+  seconds: 0.69
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/mixedproxy/ISA2
+  config: shuffle
+  exit: 0
+  seconds: 1.1
+  message: ok 1001088 instances in 158 launches
+- test: ptx/imported/mixedproxy/MP_cta+00
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/mixedproxy/MP_cta+00
+  config: stress
+  exit: 0
+  seconds: 0.42
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/mixedproxy/MP_cta+00
+  config: shuffle
+  exit: 0
+  seconds: 0.39
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/mixedproxy/MP_gpu+00
+  config: plain
+  exit: 0
+  seconds: 0.52
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/MP_gpu+00
+  config: stress
+  exit: 0
+  seconds: 0.52
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/MP_gpu+00
+  config: shuffle
+  exit: 0
+  seconds: 0.48
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/Release_acquire_pattern
+  config: plain
+  exit: 0
+  seconds: 0.46
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/Release_acquire_pattern
+  config: stress
+  exit: 0
+  seconds: 0.51
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/Release_acquire_pattern
+  config: shuffle
+  exit: 0
+  seconds: 0.53
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/SB_cta
+  config: plain
+  exit: 0
+  seconds: 0.48
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/mixedproxy/SB_cta
+  config: stress
+  exit: 0
+  seconds: 0.46
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/mixedproxy/SB_cta
+  config: shuffle
+  exit: 0
+  seconds: 0.51
+  message: ok 1013760 instances in 40 launches
+- test: ptx/imported/mixedproxy/SB_rmw
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/SB_rmw
+  config: stress
+  exit: 0
+  seconds: 0.45
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/SB_rmw
+  config: shuffle
+  exit: 0
+  seconds: 0.49
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/SB_rmw_2
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/SB_rmw_2
+  config: stress
+  exit: 0
+  seconds: 0.63
+  message: ok 1001088 instances in 79 launches
+- test: ptx/imported/mixedproxy/SB_rmw_2
+  config: shuffle
+  exit: 0
+  seconds: 0.46
+  message: ok 1001088 instances in 79 launches

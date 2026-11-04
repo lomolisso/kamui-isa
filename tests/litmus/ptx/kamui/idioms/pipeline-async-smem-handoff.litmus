@@ -1,0 +1,14 @@
+PTX pipeline-async-smem-handoff
+"Group tile scheduler: one producer thread writes the next work tile to shared memory, fence.proxy.async.shared::cta, and arrives on the full mbarrier; a consumer waits and reads it (CUTLASS sm90_tile_scheduler_group.hpp:477-480, 604-607; sm90_pipeline.hpp:1193-1196, 1219-1225). Expected: forbidden."
+{
+s=0 @cta 0;
+f=mbarrier(1) @cta 0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0      | P1@cta 0,cluster 0,gpu 0                      ;
+ st.weak.shared::cta s, 1      | mbarrier.try_wait.parity.acquire.cta r0, f, 0 ;
+ fence.proxy.async.shared::cta | ld.weak.shared::cta r1, s                     ;
+ mbarrier.arrive.release.cta f |                                               ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

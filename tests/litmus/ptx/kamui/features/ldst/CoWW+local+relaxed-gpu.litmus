@@ -1,0 +1,12 @@
+PTX CoWW+local+relaxed-gpu
+"Two stores to local memory, then a read: the last one is read"
+{
+l=0;
+P0:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0   ;
+ st.relaxed.gpu.local l, 1  ;
+ st.relaxed.gpu.local l, 2  ;
+ ld.relaxed.gpu.local r0, l ;
+exists
+(P0:r0 == 1)

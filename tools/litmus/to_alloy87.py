@@ -10,7 +10,9 @@ program in `fact shape` (program order, addresses, scopes, proxies, read-modify-
 units and their issue and completion edges, the values written), and asks Alloy for an execution that
 satisfies the model and the test's condition: `run test { ptx_mm and (outcome or undefined) }`. An instance
 means **allowed**, no instance means **forbidden** (the bound covers every atom of the test, so the answer is
-exact for the test).
+exact for the test). Two more runs handle mixed-size data races: `racy` (an execution that satisfies the model
+has one) and `unconstrained` (the condition holds in an execution that satisfies only the facts); a racy
+program allows the outcome when `unconstrained` is SAT (decision D38).
 
 Events carry integer values (`val`), so conditions are written on values: `P1:r0 == 1` becomes "the value of the
 read that wrote r0 is 1". A register holds an expression over the values of earlier reads; stores of registers
@@ -112,6 +114,7 @@ class Query:
         self.bwait: list[tuple[str, str]] = []
         self.cwait: list[tuple[str, str]] = []
         self.facts: list[str] = []
+        self.static_ub: str | None = None           # undefined behaviour visible in the program text (D39)
         self.consts: list[int] = [0, 1, 2]
         self.arith = 0
         self.locs: dict[str, Loc] = {}
@@ -1060,6 +1063,8 @@ class Query:
             if len(didx) != len(sidx):
                 raise Unsupported(f"instruction {ins.text!r}")
             self.note_space(th, [dsp], dloc)
+            if (dsp, ssp) == ("shared::cluster", "shared::cta") and self.dest_cta(th, dloc) == self.cta_of[tid]:
+                self.static_ub = "a copy from .shared::cta into the issuing CTA's own shared memory (D39)"
             ud = self.new_unit(th, self.dest_cta(th, dloc))  # the writes and the completion, per destination
             ws = []
             for r, di in zip(reads, didx):
@@ -1259,7 +1264,9 @@ class Query:
     def bitwidth(self) -> int:
         m = max(abs(v) for v in self.consts)
         bound = m * (self.arith + 1) + self.arith + len(self.events)
-        return max(4, math.ceil(math.log2(bound + 1)) + 1)
+        # bitand/bitor/bitxor (ptx87.als) work on 4-bit values with products up to 8 and sums up to 15: 5 bits
+        low = 5 if any(re.search(r"\bbit(and|or|xor)\[", f) for f in self.facts) else 4
+        return max(low, math.ceil(math.log2(bound + 1)) + 1)
 
     def po_alternatives(self) -> list[str]:
         """Program order: each thread's chain of events; a failing CAS's write may be absent; the elements of a
@@ -1417,8 +1424,13 @@ class Query:
         lines.append("")
         n = max(len(self.events), len(self.node_order), len(addrs), self.n_access, 6)
         bound = f"for {n} but {self.bitwidth()} Int"
-        lines.append(f"run test {{ ptx_mm and (outcome or undefined) }} {bound}")
+        if self.static_ub:
+            lines.append(f"run test {{ ptx_mm }} {bound}  // undefined behaviour: {self.static_ub}, so every outcome")
+        else:
+            lines.append(f"run test {{ ptx_mm and (outcome or undefined) }} {bound}")
         lines.append(f"run consistent {{ ptx_mm }} {bound}  // the program has an execution: the test is not vacuous")
+        lines.append(f"run racy {{ ptx_mm and mixed_size_race }} {bound}  // a mixed-size data race (D38)")
+        lines.append(f"run unconstrained {{ outcome }} {bound}  // the outcome without the axioms (D38)")
         lines.append("")
         return HEADER.format(test=self.name) + "\n".join(lines)
 

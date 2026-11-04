@@ -1,0 +1,14 @@
+PTX dsmem-st.async+remote-mbarrier
+"CuTe's remote shared-memory store: st.async to CTA 1's shared memory that completes the transaction on CTA 1's mbarrier (CUTLASS cute/arch/cluster_sm90.hpp:236-242; defined, no SM90 call site in v4.4.2). CTA 1 arrives with expect_tx, waits, reads. Expected: forbidden."
+{
+d=0 @cta 1;
+b=mbarrier(1) @cta 1;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0                                          | P1@cta 1,cluster 0,gpu 0                      ;
+ st.async.shared::cluster.mbarrier::complete_tx::bytes.b32 d, 1, b | mbarrier.arrive.expect_tx.release.cta b, 1    ;
+                                                                   | mbarrier.try_wait.parity.acquire.cta r0, b, 0 ;
+                                                                   | ld.weak.shared::cta r1, d                     ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

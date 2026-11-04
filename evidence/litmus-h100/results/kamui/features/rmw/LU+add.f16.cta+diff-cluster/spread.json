@@ -1,0 +1,4 @@
+{"instances": 1001088, "launches": 79, "config": "spread", "seed": 646592455, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 12672}, "seconds": 0.214, "histogram": [
+  {"values": [1, 0, 16384], "class": "diff-cluster", "count": 501390},
+  {"values": [0, 1, 16384], "class": "diff-cluster", "count": 499698}
+]}

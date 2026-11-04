@@ -65,3 +65,5 @@ pred outcome { ((E0.val = 5) and ((some E1 and (E2) in ^co.E1 and E1.val = 4) or
 
 run test { ptx_mm and (outcome or undefined) } for 6 but 5 Int
 run consistent { ptx_mm } for 6 but 5 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 6 but 5 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 6 but 5 Int  // the outcome without the axioms (D38)

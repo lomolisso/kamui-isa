@@ -1,0 +1,6 @@
+{"instances": 1013760, "launches": 20, "config": "stress", "seed": 3174182406, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 50688}, "seconds": 0.051, "histogram": [
+  {"values": [0, 0, 5], "class": "same-sm", "count": 78},
+  {"values": [1, 0, 5], "class": "same-sm", "count": 234},
+  {"values": [1, 5, 5], "class": "same-sm", "count": 1008088},
+  {"values": [0, 5, 5], "class": "same-sm", "count": 5360}
+]}

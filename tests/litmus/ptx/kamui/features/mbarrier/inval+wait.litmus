@@ -1,0 +1,11 @@
+PTX inval+wait
+"A wait on an invalidated mbarrier object is undefined behaviour: any outcome"
+{
+b=mbarrier(1) @cta 0;
+P0:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0                       ;
+ mbarrier.inval.shared::cta b                   ;
+ mbarrier.test_wait.parity.acquire.cta r0, b, 0 ;
+exists
+(P0:r0 == 7)

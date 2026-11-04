@@ -1,0 +1,7 @@
+{"instances": 1001088, "launches": 158, "config": "stress", "seed": 918550203, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 6336}, "seconds": 0.279, "histogram": [
+  {"values": [2, 1, 0, 1, 1, 1, 1], "class": "same-cluster", "count": 69137},
+  {"values": [2, 2, 0, 1, 1, 1, 1], "class": "same-cluster", "count": 666818},
+  {"values": [2, 1, 0, 1, 1, 2, 1], "class": "same-cluster", "count": 10927},
+  {"values": [2, 0, 0, 1, 1, 1, 1], "class": "same-cluster", "count": 160325},
+  {"values": [2, 0, 0, 1, 1, 2, 1], "class": "same-cluster", "count": 93881}
+]}

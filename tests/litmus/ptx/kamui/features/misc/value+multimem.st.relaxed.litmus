@@ -1,0 +1,11 @@
+PTX value+multimem.st.relaxed
+"multimem.st (relaxed) writes every copy"
+{
+x=0;
+y=0;
+m=multimem(x, y);
+}
+ P0@cta 0,gpu 0                          ;
+ multimem.st.relaxed.sys.global.u32 m, 1 ;
+exists
+(x != 1 \/ y != 1)

@@ -23,7 +23,9 @@ checked against.
 | `ptx/imported/origin.csv` | where every imported test comes from, its licence, its original quantifier and the upstream verdicts |
 | `ptx/kamui/families/` | 288 generated tests: 8 classic shapes x orderings x the 4 scopes x 3 thread placements (`tools/litmus/gen_families.py`) |
 | `ptx/kamui/hand/` | 14 hand-written tests of `mbarrier`, `barrier.cluster`, the async proxy and `.volatile`, with verdicts argued in `manual-reasoning.yaml` |
-| `ptx/kamui/ptx87/` | 113 tests of the PTX 8.7 features, one or more per feature and per interpretation decision of the PTX 8.7 model (`models/ptx87/decisions.md`); each says which verdict it expects and why |
+| `ptx/kamui/ptx87/` | 133 tests of the PTX 8.7 features, one or more per feature and per interpretation decision of the PTX 8.7 model (`models/ptx87/decisions.md`); each says which verdict it expects and why |
+| `ptx/kamui/features/` | 1058 generated tests, at least eight per memory feature of `models/ptx87/coverage.yaml` (ld/st, atom and red, fences, CTA barriers, mbarrier, async copies, wgmma, others), over every valid scope, placement and state space, written by `tools/litmus/gen_features.py`; `tools/litmus/scorecard.py` checks the bar per feature |
+| `ptx/kamui/idioms/` | 30 tests of synchronization patterns found in NVIDIA's public code (CUTLASS, CCCL), written as our own litmus tests; each cites the file and line it follows and says which outcome that code relies on never happening |
 | `alloy/` | the Alloy queries for the 2019 PTX model, generated from the tests (`tools/litmus/to_alloy.py`) |
 | `alloy-ptx87/` | the Alloy queries for the PTX 8.7 model (`models/ptx87`), generated from the tests (`tools/litmus/to_alloy87.py`) |
 | `riscv/` | the naive RISC-V lowering of each test, for herd7 and RVWMO (`tools/litmus/to_riscv.py`) |
@@ -181,6 +183,7 @@ that applies and writes this file; `--check` re-runs everything and fails if a r
 | `ptx-2019-alloy+ext` | the same model with our extensions: a cluster level in the scope tree, and `fence.acquire`/`fence.release` as the model's FenceAcq/FenceRel | tests with the `.cluster` scope or a PTX 8.6 fence |
 | `rvwmo` | herd7 7.58 with RISC-V's `riscv.cat`, on the naive RISC-V lowering in `riscv/` (scopes erased) | tests `to_riscv.py` can lower |
 | `ptx-v8.7-alloy` | the PTX ISA 8.7 model (`models/ptx87/ptx87.als`) on Alloy 6.2.0, on the queries in `alloy-ptx87/` | tests `to_alloy87.py` can express: every test without loops |
+| `ptx-v8.7` | Dartagnan with our fork's PTX ISA 8.7 model (`deps/dat3m/cat/ptx-v8.7.cat`, written independently of `ptx-v8.7-alloy`; see `docs/tools/dartagnan.md`) | every test |
 | `manual-reasoning` | an argument from the PTX ISA 8.7 manual, in `manual-reasoning.yaml` | tests no tool decides |
 
 Dartagnan runs with `--method=eager --bound=1 --solver=z3`, as in Dat3M's own tests. Alloy answers within a bound
@@ -190,8 +193,9 @@ rewrites the jar it is started from (seen again here: the copy's checksum change
 `rvwmo` is a baseline, not a PTX verdict: it answers the question for a different program, the test lowered to
 plain RISC-V with C++-style fences (the mapping table is in `tools/litmus/to_riscv.py`).
 
-Today: 828 tests, 2562 rows. The PTX 8.7 model (`ptx-v8.7-alloy`) decides 809 tests (every test without a
-loop). Wherever two PTX models decide the same test they agree, with four exceptions: Dat3M barrier tests in
+Today: 828 tests, 3390 rows. The PTX 8.7 Alloy model (`ptx-v8.7-alloy`) decides 809 tests (every test without a
+loop); the PTX 8.7 Dartagnan model (`ptx-v8.7`) decides 827 (one spin loop stays unknown, as with v7.5).
+Wherever two PTX models decide the same test they agree, with four exceptions: Dat3M barrier tests in
 which a thread can never complete its barrier, which Dartagnan counts and the PTX 8.7 model does not (decision D9
 of `models/ptx87/decisions.md`, explained in `allowlist.yaml`). Dartagnan v7.5 decides 612 tests, the 2019 Alloy
 model 377. On the 388 lowered tests, RVWMO forbids every outcome that PTX forbids, so the naive lowering is sound;
@@ -222,9 +226,16 @@ reason. Today all 264 Dat3M verdicts and 127 of the 128 mixedproxy annotations m
 ## Running the tests on the H100
 
 The formal verdicts are the reference; running a test on a GPU only shows which outcomes that GPU produces. We run
-our own tests (families and hand-written, 302) on the H100 to see which of the outcomes PTX allows the hardware
-really shows, and to catch anything it shows that PTX forbids. Results and findings:
-[evidence/litmus-h100/](../../evidence/litmus-h100/README.md).
+every test the harness can run (1591 of 1916: the 288 families, the 14 hand-written tests, 1020 of the 1058 feature
+tests, 25 of the 30 idiom tests, 120 of the 133 PTX 8.7 tests and 124 of the 393 imported tests) on the H100 to see
+which of the outcomes PTX allows the hardware really shows, and to catch anything it shows that PTX forbids.
+`python tools/litmus/to_cuda.py --why` lists the other 325 with the reason: accesses through texture, surface or
+constant proxy aliases (231, almost all of `Nvidia/proxy` and `mixedproxy`; generic aliases do run), loops (19), more
+than one GPU (12), `bar.warp.sync` between warps (10), barriers that cannot complete (9, Dat3M's `*-hang` and
+deadlock tests), `im2col` tensor copies and `tensormap.cp_fenceproxy` (8 each), conditions on the opaque state an
+`mbarrier.arrive` returns (6), and a few forms the GPU cannot express (`red` with an acquire order, shared memory
+across clusters, wgmma operands in another CTA). Results and
+findings: [evidence/litmus-h100/](../../evidence/litmus-h100/README.md).
 
 - `tools/litmus/to_cuda.py` writes one kernel per test. Each litmus thread is one `asm volatile` block holding the
   test's exact PTX instructions (`st.release.gpu.global.u32`, `mbarrier.arrive.release.cta.shared::cta.b64`, ...),
@@ -233,14 +244,41 @@ really shows, and to catch anything it shows that PTX forbids. Results and findi
 - `tools/litmus/runner/litmus_runner.c` runs a kernel about a million times in batches: each launch is 66 clusters
   of 4 CTAs of 256 threads, and the host decides which GPU thread plays which litmus thread of which instance,
   following the test's placement (`same-cta`: different warps of one CTA; `same-cluster`: different CTAs of one
-  cluster; `diff-cluster`: different clusters). 64 threads of every CTA are stress threads. Every location of every
-  instance has its own 128-byte line. Three configurations: `plain` (no stress, fixed placement), `stress` (the
-  stress threads hammer a 64 MiB buffer), `shuffle` (stress, plus a new random placement, location layout and
-  per-thread start delay every launch; for tests with a cluster barrier whole warps are shuffled, because
-  `barrier.cluster.arrive.relaxed` needs a converged warp on the H100).
+  cluster; `diff-cluster`: different clusters; `mixed`: some threads share a CTA, as in Dat3M's Memalloy tests).
+  64 threads of every CTA are stress threads. Every location of every instance has its own 128-byte line. Four
+  configurations: `plain` (no stress, fixed placement), `stress` (the stress threads hammer a 64 MiB buffer),
+  `shuffle` (stress, plus a new random placement, location layout and per-thread start delay of 0 to 255 ns every
+  launch), `spread` (the same with delays up to 16 microseconds, so that a reader often starts after a writer that
+  has more work to do). With a CTA barrier or a cluster barrier whole warps are shuffled, because
+  `barrier.cluster.arrive.relaxed` needs a converged warp on the H100 and every role is one warp of a barrier.
+- CTA barriers: every litmus thread of an instance is one warp, so `bar.sync 1, 2` becomes `barrier.sync id, 64`
+  with one hardware barrier per group of instances of a CTA. Shared memory of another CTA of the cluster
+  (`st.weak.shared::cluster s, 1` with `s=0 @cta 1`): the location lives in the CTA the test names, which
+  initializes it; the other CTAs use its `shared::cluster` address (`mapa`), and two cluster barriers, before and
+  after the test, make the initial values visible and keep every CTA alive until the others are done with its
+  memory.
 - Every run records each final state with where its threads actually ran (same SM, same cluster, different
   clusters). `tools/litmus/run_h100.py` drives the runs (`jobs/litmus-h100.sh` on the H100 server) and
   `tools/litmus/observed.py` joins them with the formal verdicts.
+- Warp-wide roles (spec `uniform`): a litmus thread with a warp-wide instruction (`ldmatrix`, `stmatrix`,
+  `tensormap.*`), a tensor copy or a tensor-map prefetch is one whole warp running one instance, and one with
+  `wgmma` is a warpgroup of four warps; the instructions that are not warp-wide run on one lane. A tensor copy or
+  prefetch issued by a warp whose lanes belong to different instances, or start at different times, hung on the
+  H100, so it is always issued this way.
+- Tensor maps (spec `tmap`): the host encodes a one-dimensional map of four 32-bit elements for every instance
+  before each launch (`cuTensorMapEncodeTiled`), over the instance's buffer; `tensormap.replace` switches it to a
+  second buffer, and the value the copy brings back shows which map it used. A shared-memory buffer that a tensor
+  copy reads or writes is 128-byte aligned, as the hardware requires.
+- Multicast copies: the destinations, and their mbarriers, sit at the same offset in every CTA of the cluster; the
+  CTA mask comes from the CTAs the test names, or from `%cluster_ctarank` when the whole test runs in one CTA.
+- Before a CTA exits, it waits (a bounded time) for the asynchronous copies into its shared memory and for its
+  bulk async-groups, and in a cluster a last cluster barrier keeps every CTA alive until all have done so: a copy
+  the test does not wait for must not land in the shared memory of a CTA that has already exited. This happens
+  after the outcome is recorded.
+- `griddepcontrol` (spec `grid`): the roles of grid 1 run in a second kernel launched right after the first with
+  programmatic dependent launch. Virtual aliases (spec `alias`): the global memory is mapped at two virtual
+  addresses (`cuMemCreate`, two `cuMemMap`), and an alias is the same location at the second address.
+- A run that does not finish within `TIMEOUT` seconds (default 600) is stopped and reported as failed.
 
 ## The Fence-SC question
 

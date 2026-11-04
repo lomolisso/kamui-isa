@@ -1,0 +1,11 @@
+PTX CoWR+local+relaxed-cta
+"A thread stores to its local memory and reads it back"
+{
+l=0;
+P0:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0   ;
+ st.relaxed.cta.local l, 1  ;
+ ld.relaxed.cta.local r0, l ;
+exists
+(P0:r0 == 0)

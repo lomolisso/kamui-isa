@@ -1,0 +1,9 @@
+PTX LU+red.cluster+shared-cta
+"Two relaxed .cluster red.add on one location in the shared memory of the threads' CTA"
+{
+x=0 @cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0                 | P1@cta 0,cluster 0,gpu 0                 ;
+ red.relaxed.cluster.shared::cta.add x, 1 | red.relaxed.cluster.shared::cta.add x, 1 ;
+exists
+(x == 1)

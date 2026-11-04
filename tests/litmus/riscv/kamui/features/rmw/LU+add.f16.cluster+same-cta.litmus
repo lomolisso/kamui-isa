@@ -1,0 +1,9 @@
+RISCV LU+add.f16.cluster+same-cta
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/features/rmw/LU+add.f16.cluster+same-cta.litmus"
+{
+0:x5=x; 1:x5=x;
+}
+ P0                   | P1                   ;
+ ori x7,x0,1          | ori x7,x0,1          ;
+ amoadd.w x10,x7,(x5) | amoadd.w x11,x7,(x5) ;
+exists (0:x10=0 /\ 1:x11=0)

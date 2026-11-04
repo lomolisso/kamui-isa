@@ -1,0 +1,11 @@
+RISCV MP+red-release.cluster+diff-cluster
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/features/rmw/MP+red-release.cluster+diff-cluster.litmus"
+{
+0:x5=x; 0:x6=f; 1:x5=f; 1:x6=x;
+}
+ P0                     | P1           ;
+ ori x7,x0,1            | lw x10,0(x5) ;
+ sw x7,0(x5)            | fence r,rw   ;
+ ori x7,x0,1            | lw x11,0(x6) ;
+ amoadd.w.rl x0,x7,(x6) |              ;
+exists (1:x10=1 /\ 1:x11=0)

@@ -1,5 +1,7 @@
 {"instances": 1013760, "launches": 60, "config": "shuffle", "seed": 3516901883, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 16896}, "seconds": 0.136, "histogram": [
-  {"values": [0, 1, 0, 1, 1], "class": "same-sm", "count": 2560},
-  {"values": [1, 1, 1, 1, 1], "class": "same-sm", "count": 328037},
-  {"values": [0, 1, 1, 1, 1], "class": "same-sm", "count": 683163}
+  {"values": [0, 0, 1, 1, 1], "class": "same-sm", "count": 46182},
+  {"values": [0, 0, 0, 1, 1], "class": "same-sm", "count": 17185},
+  {"values": [0, 1, 0, 1, 1], "class": "same-sm", "count": 45963},
+  {"values": [1, 1, 1, 1, 1], "class": "same-sm", "count": 107828},
+  {"values": [0, 1, 1, 1, 1], "class": "same-sm", "count": 796602}
 ]}

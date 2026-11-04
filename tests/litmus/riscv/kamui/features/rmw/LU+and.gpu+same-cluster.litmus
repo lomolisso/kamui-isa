@@ -1,0 +1,9 @@
+RISCV LU+and.gpu+same-cluster
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/features/rmw/LU+and.gpu+same-cluster.litmus"
+{
+0:x5=x; 1:x5=x; x=3;
+}
+ P0                   | P1                   ;
+ ori x7,x0,1          | ori x7,x0,1          ;
+ amoand.w x10,x7,(x5) | amoand.w x11,x7,(x5) ;
+exists (0:x10=3 /\ 1:x11=3)

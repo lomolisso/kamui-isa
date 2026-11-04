@@ -1,0 +1,17 @@
+PTX rs-mainloop-war+ldmatrix
+"RS mainloop: the consumer reads operand A from the stage with ldmatrix (generic proxy) and releases the stage with a plain mbarrier arrive, with no fence.proxy.async in between (CUTLASS sm90_mma_tma_gmma_rs_warpspecialized.hpp:666-684); the producer then refills the stage with an async-proxy copy. The ldmatrix must not see the refill. Expected: forbidden (NVIDIA relies on it without a proxy fence)."
+{
+g=7;
+d=5 @cta 0;
+c=0 @cta 0;
+e=mbarrier(1) @cta 0;
+f=mbarrier(1) @cta 0;
+P0:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0                                                  | P1@cta 0,cluster 0,gpu 0                       ;
+ mbarrier.try_wait.parity.acquire.cta r0, e, 0                             | ldmatrix.sync.aligned.m8n8.x1.shared.b16 r1, d ;
+ mbarrier.arrive.expect_tx.release.cta f, 1                                | mbarrier.arrive.release.cta e                  ;
+ cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes d, g, f |                                                ;
+exists
+(P0:r0 == 1 /\ P1:r1 == 7)

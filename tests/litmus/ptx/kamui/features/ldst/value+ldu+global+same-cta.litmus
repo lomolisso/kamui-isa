@@ -1,0 +1,10 @@
+PTX value+ldu+global+same-cta
+"ldu.global returns only values some write committed (global memory, both threads in one CTA)"
+{
+x=0;
+P1:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ st.weak.global x, 1      | ldu.global r0, x         ;
+exists
+(P1:r0 == 7)

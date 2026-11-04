@@ -4,19 +4,20 @@
 
 | Machine | What runs there | Disk |
 |---|---|---|
-| **iacoma227** | editing files and git | NFS home only. Its local `/scratch` is almost full with other users' data. |
-| **iacoma231** (build host) | every compile, image build, container, test and check, through `tools/dev.sh` | a large local `/scratch` (about 1 TB free in October 2026), the same disk as its `/srv/docker` |
+| **iacoma227** | editing files and git; also a build host, through `tools/dev.sh` | a local `/scratch` with about 530 GB free (November 2026); its `/tmp` is a small shared volume, never used for builds |
+| **iacoma231** (default build host) | every compile, image build, container, test and check, through `tools/dev.sh` | a large local `/scratch` (about 1 TB free in October 2026), the same disk as its `/srv/docker` |
+| **iacoma232** (build host) | the same as 231 | the same as 231 |
 | **H100 host** | only work that needs the GPU (see `tools/h100-jobs.md`) | its own disks; it does **not** share the NFS home |
 
 The NFS home, and so your checkout, is the same path on iacoma227, iacoma231 and iacoma232. A file you edit on 227
 is the file the container on 231 compiles. Local `/scratch` is different on every machine: a build made on 231
 does not exist on 227.
 
-Nothing heavy runs on iacoma227: no `docker run`, no `docker build`, no `cmake`, no test runs. Even a quick check
-goes through `tools/dev.sh`, which costs about one second for the ssh hop.
+Nothing runs on iacoma227 outside `tools/dev.sh`: no `docker run`, no `cmake`, no test runs by hand. Even a quick
+check goes through `tools/dev.sh`, which costs about one second for the ssh hop.
 
-iacoma231 and iacoma232 both have 96 cores and about 375 GB of RAM. They are shared with other users and reached
-by passwordless ssh. The home directory is shared, so one key in `~/.ssh/authorized_keys` works on all of them:
+iacoma231 and iacoma232 both have 96 cores and about 375 GB of RAM; iacoma227 has 64 cores and about 500 GB. They
+are shared with other users and reached by passwordless ssh. The home directory is shared, so one key in `~/.ssh/authorized_keys` works on all of them:
 
 ```bash
 ssh-keygen -t ed25519                                    # once, if you have no key
@@ -24,8 +25,9 @@ cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
 ssh -o BatchMode=yes iacoma231 docker image ls kamui-isa-dev   # must work without a password
 ```
 
-You need to be in the `docker` group on iacoma231; ask the maintainers. 231 is the default build host. Use 232 only
-when 231 is very loaded, and only after copying the image there (see "The image on another host").
+You need to be in the `docker` group on the build hosts; ask the maintainers. 231 is the default build host. For long
+runs pick the least loaded of 227, 231 and 232 (`KAMUI_BUILD_HOST=iacoma227 tools/dev.sh ...`), after copying the
+image there (see "The image on another host").
 
 ## The dev container
 
@@ -78,7 +80,7 @@ On any machine other than the build host it runs itself again on the build host 
 | `--memory 128g` | a runaway build cannot starve other users |
 
 Environment variables: `KAMUI_BUILD_HOST` (default `iacoma231`; `local` runs on the current machine and is meant for
-CI), `KAMUI_BUILD_AREA` (default `/scratch/$USER/kamui-isa`), `KAMUI_DEV_IMAGE` (default `kamui-isa-dev:0.2`),
+CI), `KAMUI_BUILD_AREA` (default `/scratch/$USER/kamui-isa`), `KAMUI_DEV_IMAGE` (default `kamui-isa-dev:0.3`),
 `KAMUI_DEV_MEMORY` (default `128g`), `KAMUI_EXTRA_MOUNTS`.
 
 Long runs: start them in the background and wait. Killing the local ssh client does not always stop the container
@@ -88,7 +90,7 @@ on 231; `tools/build-area.sh ps` lists yours and `tools/build-area.sh stop <name
 
 | Command | What it does |
 |---|---|
-| `tools/build-area.sh status` | size of each `build/*` and `keep/*`, total against the 50 GB budget, free disk, load of 231 and 232, your running containers; prints a WARNING when over budget or under 100 GB free |
+| `tools/build-area.sh status` | size of each `build/*` and `keep/*`, total against the 50 GB budget, free disk, load of 227, 231 and 232, your running containers; prints a WARNING when over budget or under 100 GB free |
 | `tools/build-area.sh clean [<name>]` | deletes `build/<name>`; without a name, the checkout the script is called from |
 | `tools/build-area.sh prune` | deletes `build/<name>` for every worktree that no longer exists |
 | `tools/build-area.sh ps` / `stop [<container>]` | lists or stops your dev containers |
@@ -117,18 +119,20 @@ Persistent means "kept because rebuilding is slow", never "cannot be rebuilt". E
 
 | Item | Where | Size | Rebuild time | Rebuild |
 |---|---|---|---|---|
-| `kamui-isa-dev:0.2` (only the current tag) | Docker on iacoma231 (`/srv/docker`) | 16 GB | about 35 min | `docker build` on 231, see `tools/devcontainer.md` |
+| `kamui-isa-dev:0.3` (only the current tag) | Docker on iacoma231 (`/srv/docker`) | 16 GB | about 35 min | `docker build` on 231, see `tools/devcontainer.md` |
 
-`keep/` is empty today. The Sail model build of `main` (about 12 minutes to rebuild) is expected to be the first
-entry once the Kamui Sail model exists.
+| `keep/m2` | build area of the build host that builds the Dartagnan fork | about 200 MB | about 3 min | `tools/dat3m/build.sh` (Maven downloads it again) |
+
+The Sail model build of `main` (about 12 minutes to rebuild) is expected to be the next entry once the Kamui Sail
+model exists.
 
 ## The image on another host
 
 Images do not move with the NFS home. Copy one by streaming it, with no temporary file:
 
 ```bash
-docker save kamui-isa-dev:0.2 | ssh iacoma232 docker load              # run on the host that has it
-ssh iacoma232 docker image inspect kamui-isa-dev:0.2 --format '{{.Id}}'  # must match the source
+docker save kamui-isa-dev:0.3 | ssh iacoma232 docker load              # run on the host that has it
+ssh iacoma232 docker image inspect kamui-isa-dev:0.3 --format '{{.Id}}'  # must match the source
 ```
 
 ## H100 results

@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_sizes_mixed_size_race
 open ptx87
 
 // PTX mixed-size+race
-// "A 32-bit store racing with a 16-bit load of half of it: a mixed-size data race, for which the axioms do not apply (6811): every outcome is allowed, even this impossible one (D7). Expected: allowed."
+// "A 32-bit store racing with a 16-bit load of half of it: a mixed-size data race, for which the axioms do not apply (6811), but a read still returns a value some write committed (6511): no write produces 7 (D38). Expected: forbidden."
 // {
 // x[0]=0;
 // x[1]=0;
@@ -63,3 +63,5 @@ pred outcome { (E2.val = 7) }
 
 run test { ptx_mm and (outcome or undefined) } for 6 but 5 Int
 run consistent { ptx_mm } for 6 but 5 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 6 but 5 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 6 but 5 Int  // the outcome without the axioms (D38)

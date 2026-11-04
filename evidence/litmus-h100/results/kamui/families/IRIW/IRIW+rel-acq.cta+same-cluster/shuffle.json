@@ -1,17 +1,17 @@
-{"instances": 1001088, "launches": 79, "config": "shuffle", "seed": 568588849, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 12672}, "seconds": 0.190, "histogram": [
-  {"values": [0, 1, 1, 1, 1, 1], "class": "same-cluster", "count": 45372},
-  {"values": [0, 0, 1, 0, 1, 1], "class": "same-cluster", "count": 38884},
-  {"values": [0, 0, 0, 0, 1, 1], "class": "same-cluster", "count": 163024},
-  {"values": [1, 0, 0, 0, 1, 1], "class": "same-cluster", "count": 38713},
-  {"values": [1, 1, 1, 1, 1, 1], "class": "same-cluster", "count": 170380},
-  {"values": [0, 0, 0, 1, 1, 1], "class": "same-cluster", "count": 43818},
-  {"values": [1, 0, 1, 1, 1, 1], "class": "same-cluster", "count": 39620},
-  {"values": [1, 1, 1, 0, 1, 1], "class": "same-cluster", "count": 39588},
-  {"values": [1, 1, 0, 0, 1, 1], "class": "same-cluster", "count": 83113},
-  {"values": [0, 1, 0, 1, 1, 1], "class": "same-cluster", "count": 1},
-  {"values": [1, 1, 0, 1, 1, 1], "class": "same-cluster", "count": 45081},
-  {"values": [0, 1, 0, 0, 1, 1], "class": "same-cluster", "count": 44064},
-  {"values": [0, 1, 1, 0, 1, 1], "class": "same-cluster", "count": 83050},
-  {"values": [0, 0, 1, 1, 1, 1], "class": "same-cluster", "count": 83684},
-  {"values": [1, 0, 0, 1, 1, 1], "class": "same-cluster", "count": 82696}
+{"instances": 1001088, "launches": 79, "config": "shuffle", "seed": 568588849, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 12672}, "seconds": 0.170, "histogram": [
+  {"values": [0, 1, 1, 1, 1, 1], "class": "same-cluster", "count": 45135},
+  {"values": [0, 0, 1, 0, 1, 1], "class": "same-cluster", "count": 38706},
+  {"values": [0, 0, 0, 0, 1, 1], "class": "same-cluster", "count": 163029},
+  {"values": [1, 0, 0, 0, 1, 1], "class": "same-cluster", "count": 38446},
+  {"values": [1, 1, 1, 1, 1, 1], "class": "same-cluster", "count": 170182},
+  {"values": [0, 0, 0, 1, 1, 1], "class": "same-cluster", "count": 43863},
+  {"values": [1, 0, 1, 1, 1, 1], "class": "same-cluster", "count": 39314},
+  {"values": [1, 1, 1, 0, 1, 1], "class": "same-cluster", "count": 39877},
+  {"values": [1, 1, 0, 0, 1, 1], "class": "same-cluster", "count": 84026},
+  {"values": [0, 1, 0, 1, 1, 1], "class": "same-cluster", "count": 4},
+  {"values": [1, 1, 0, 1, 1, 1], "class": "same-cluster", "count": 45296},
+  {"values": [0, 1, 0, 0, 1, 1], "class": "same-cluster", "count": 44004},
+  {"values": [0, 1, 1, 0, 1, 1], "class": "same-cluster", "count": 82925},
+  {"values": [0, 0, 1, 1, 1, 1], "class": "same-cluster", "count": 83435},
+  {"values": [1, 0, 0, 1, 1, 1], "class": "same-cluster", "count": 82846}
 ]}

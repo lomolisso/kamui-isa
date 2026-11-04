@@ -1,0 +1,13 @@
+PTX tma-store-epilogue+no-proxy-fence
+"Variant of tma-store-epilogue without fence.proxy.async: the bar.sync orders the generic write for generic readers only, so the async-proxy read of the bulk store may miss it. CUTLASS fences first (sm90_epilogue_tma_warpspecialized.hpp:736). Expected: allowed."
+{
+s=0 @cta 0;
+g=9;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0                         ;
+ st.weak.shared::cta s, 1 | bar.sync 1, 2                                    ;
+ bar.sync 1, 2            | cp.async.bulk.global.shared::cta.bulk_group g, s ;
+                          | cp.async.bulk.commit_group                       ;
+                          | cp.async.bulk.wait_group.read 0                  ;
+exists
+(g == 0)

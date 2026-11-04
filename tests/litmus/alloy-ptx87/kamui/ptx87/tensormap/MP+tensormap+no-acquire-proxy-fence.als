@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_tensormap_MP_tensormap_no_acquire_proxy_fence
 open ptx87
 
 // PTX MP+tensormap+no-acquire-proxy-fence
-// "As MP+tensormap+proxy-fences with a plain fence.acq_rel.gpu on the reader: the generic acquire does not order the tensormap-proxy read (D2). Expected: allowed."
+// "As MP+tensormap+proxy-fences with a plain fence.acq_rel.gpu on the reader: the generic acquire does not order the tensormap-proxy read (D37). Expected: allowed."
 // {
 // tm=0;
 // g=5;
@@ -92,3 +92,5 @@ pred outcome { ((E3.val = 1) and (E5.val = 0)) }
 
 run test { ptx_mm and (outcome or undefined) } for 13 but 6 Int
 run consistent { ptx_mm } for 13 but 6 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 13 but 6 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 13 but 6 Int  // the outcome without the axioms (D38)

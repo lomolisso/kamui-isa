@@ -1,0 +1,419 @@
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-428e544c-5649-1dde-a6bf-95de7485dd6a
+  driver: 580.126.20
+instances: 1000000
+configs:
+- plain
+- stress
+- shuffle
+tests: ptx/kamui/ptx87/async-bulk/2+cp.reduce.async.bulk,ptx/kamui/ptx87/async-bulk/TMA-store+wait_group+release,ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release,ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic,ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+async-copy,ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+remote-shared,ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta,ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote,ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta,ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster,ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta,ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global,ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict,ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared,ptx/kamui/ptx87/restrict/MP+fence-restrict-both,ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+shared,ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive,ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared,ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared,ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows,ptx/kamui/ptx87/spaces/MP+rel-acq.cluster+remote-shared,ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared,ptx/kamui/ptx87/st-async/MP+red.async,ptx/kamui/ptx87/st-async/MP+st.async+not-transitive,ptx/kamui/ptx87/st-async/MP+st.async,ptx/kamui/ptx87/bar/*
+shard: 0/1
+seconds: 37.0
+failed: 0
+runs:
+- test: ptx/kamui/ptx87/async-bulk/2+cp.reduce.async.bulk
+  config: plain
+  exit: 0
+  seconds: 0.42
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/2+cp.reduce.async.bulk
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/2+cp.reduce.async.bulk
+  config: shuffle
+  exit: 0
+  seconds: 0.51
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group+release
+  config: plain
+  exit: 0
+  seconds: 0.37
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group+release
+  config: stress
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group+release
+  config: shuffle
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release
+  config: plain
+  exit: 0
+  seconds: 0.35
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release
+  config: stress
+  exit: 0
+  seconds: 0.61
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-store+wait_group.read+release
+  config: shuffle
+  exit: 0
+  seconds: 0.49
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic
+  config: plain
+  exit: 0
+  seconds: 0.39
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/cp.reduce.async.bulk+generic-atomic
+  config: shuffle
+  exit: 0
+  seconds: 0.53
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/bar/MP+bar.arrive+bar.sync
+  config: plain
+  exit: 0
+  seconds: 0.3
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/bar/MP+bar.arrive+bar.sync
+  config: stress
+  exit: 0
+  seconds: 0.42
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/bar/MP+bar.arrive+bar.sync
+  config: shuffle
+  exit: 0
+  seconds: 0.36
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/bar/MP+bar.sync-count+third-thread
+  config: plain
+  exit: 0
+  seconds: 0.42
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/bar/MP+bar.sync-count+third-thread
+  config: stress
+  exit: 0
+  seconds: 0.45
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/bar/MP+bar.sync-count+third-thread
+  config: shuffle
+  exit: 0
+  seconds: 0.4
+  message: ok 1013760 instances in 60 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+async-copy
+  config: plain
+  exit: 0
+  seconds: 0.42
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+async-copy
+  config: stress
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+async-copy
+  config: shuffle
+  exit: 0
+  seconds: 0.73
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+remote-shared
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+remote-shared
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+remote-shared
+  config: shuffle
+  exit: 0
+  seconds: 0.5
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta
+  config: plain
+  exit: 0
+  seconds: 0.32
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta
+  config: stress
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta
+  config: shuffle
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote
+  config: plain
+  exit: 0
+  seconds: 0.31
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote
+  config: stress
+  exit: 0
+  seconds: 0.52
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote
+  config: shuffle
+  exit: 0
+  seconds: 0.5
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta
+  config: plain
+  exit: 0
+  seconds: 0.45
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta
+  config: stress
+  exit: 0
+  seconds: 0.42
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta
+  config: shuffle
+  exit: 0
+  seconds: 0.57
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster
+  config: plain
+  exit: 0
+  seconds: 0.39
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cluster
+  config: shuffle
+  exit: 0
+  seconds: 0.56
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta
+  config: plain
+  exit: 0
+  seconds: 0.32
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta
+  config: shuffle
+  exit: 0
+  seconds: 0.65
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict
+  config: plain
+  exit: 0
+  seconds: 0.33
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict
+  config: stress
+  exit: 0
+  seconds: 0.51
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict
+  config: shuffle
+  exit: 0
+  seconds: 0.42
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global
+  config: plain
+  exit: 0
+  seconds: 0.4
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global
+  config: stress
+  exit: 0
+  seconds: 0.61
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-try_wait-relaxed+fence-restrict+global
+  config: shuffle
+  exit: 0
+  seconds: 0.47
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-both
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-both
+  config: stress
+  exit: 0
+  seconds: 0.51
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-both
+  config: shuffle
+  exit: 0
+  seconds: 0.48
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-both+producer-shared
+  config: shuffle
+  exit: 0
+  seconds: 0.57
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+shared
+  config: plain
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+shared
+  config: stress
+  exit: 0
+  seconds: 0.5
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cluster+shared
+  config: shuffle
+  exit: 0
+  seconds: 0.5
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive
+  config: plain
+  exit: 0
+  seconds: 0.4
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive
+  config: stress
+  exit: 0
+  seconds: 0.63
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive
+  config: shuffle
+  exit: 0
+  seconds: 0.47
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared
+  config: plain
+  exit: 0
+  seconds: 0.42
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+remote-shared
+  config: shuffle
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared
+  config: plain
+  exit: 0
+  seconds: 0.32
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+shared
+  config: shuffle
+  exit: 0
+  seconds: 0.54
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows
+  config: plain
+  exit: 0
+  seconds: 0.31
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows
+  config: stress
+  exit: 0
+  seconds: 0.59
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows
+  config: shuffle
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/spaces/MP+rel-acq.cluster+remote-shared
+  config: plain
+  exit: 0
+  seconds: 0.32
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/spaces/MP+rel-acq.cluster+remote-shared
+  config: stress
+  exit: 0
+  seconds: 0.63
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/spaces/MP+rel-acq.cluster+remote-shared
+  config: shuffle
+  exit: 0
+  seconds: 0.6
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared
+  config: plain
+  exit: 0
+  seconds: 0.34
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared
+  config: stress
+  exit: 0
+  seconds: 0.4
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/spaces/MP+rel-acq.cta+remote-shared
+  config: shuffle
+  exit: 0
+  seconds: 0.44
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/st-async/MP+red.async
+  config: plain
+  exit: 0
+  seconds: 0.47
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/st-async/MP+red.async
+  config: stress
+  exit: 0
+  seconds: 0.43
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/st-async/MP+red.async
+  config: shuffle
+  exit: 0
+  seconds: 0.54
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/st-async/MP+st.async
+  config: plain
+  exit: 0
+  seconds: 0.32
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/st-async/MP+st.async
+  config: stress
+  exit: 0
+  seconds: 0.41
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/st-async/MP+st.async
+  config: shuffle
+  exit: 0
+  seconds: 0.62
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/st-async/MP+st.async+not-transitive
+  config: plain
+  exit: 0
+  seconds: 0.32
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/st-async/MP+st.async+not-transitive
+  config: stress
+  exit: 0
+  seconds: 0.62
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/st-async/MP+st.async+not-transitive
+  config: shuffle
+  exit: 0
+  seconds: 0.46
+  message: ok 1001088 instances in 79 launches

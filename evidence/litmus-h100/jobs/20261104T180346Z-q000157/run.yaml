@@ -1,0 +1,215 @@
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126
+  driver: 580.126.20
+instances: 1000000
+configs:
+- plain
+- stress
+- shuffle
+- spread
+tests: ptx/kamui/ptx87/async-bulk/TMA-multicast,ptx/kamui/ptx87/ld-st/MP+ldmatrix+bar.sync,ptx/kamui/ptx87/griddep/*,ptx/kamui/ptx87/wgmma/*,ptx/kamui/ptx87/tensormap/*
+shard: 0/1
+seconds: 131.1
+failed: 0
+runs:
+- test: ptx/kamui/ptx87/async-bulk/TMA-multicast
+  config: plain
+  exit: 0
+  seconds: 0.94
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-multicast
+  config: stress
+  exit: 0
+  seconds: 1.08
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-multicast
+  config: shuffle
+  exit: 0
+  seconds: 0.97
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/async-bulk/TMA-multicast
+  config: spread
+  exit: 0
+  seconds: 0.96
+  message: ok 1001088 instances in 79 launches
+- test: ptx/kamui/ptx87/griddep/MP+griddepcontrol+no-wait
+  config: plain
+  exit: 0
+  seconds: 0.74
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/griddep/MP+griddepcontrol+no-wait
+  config: stress
+  exit: 0
+  seconds: 0.65
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/griddep/MP+griddepcontrol+no-wait
+  config: shuffle
+  exit: 0
+  seconds: 0.67
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/griddep/MP+griddepcontrol+no-wait
+  config: spread
+  exit: 0
+  seconds: 1.17
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/griddep/MP+griddepcontrol.wait
+  config: plain
+  exit: 0
+  seconds: 0.59
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/griddep/MP+griddepcontrol.wait
+  config: stress
+  exit: 0
+  seconds: 0.9
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/griddep/MP+griddepcontrol.wait
+  config: shuffle
+  exit: 0
+  seconds: 1.08
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/griddep/MP+griddepcontrol.wait
+  config: spread
+  exit: 0
+  seconds: 0.77
+  message: ok 1013760 instances in 40 launches
+- test: ptx/kamui/ptx87/ld-st/MP+ldmatrix+bar.sync
+  config: plain
+  exit: 0
+  seconds: 0.66
+  message: ok 1000296 instances in 1263 launches
+- test: ptx/kamui/ptx87/ld-st/MP+ldmatrix+bar.sync
+  config: stress
+  exit: 0
+  seconds: 1.64
+  message: ok 1000296 instances in 1263 launches
+- test: ptx/kamui/ptx87/ld-st/MP+ldmatrix+bar.sync
+  config: shuffle
+  exit: 0
+  seconds: 1.5
+  message: ok 1000296 instances in 1263 launches
+- test: ptx/kamui/ptx87/ld-st/MP+ldmatrix+bar.sync
+  config: spread
+  exit: 0
+  seconds: 1.59
+  message: ok 1000296 instances in 1263 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+no-acquire-proxy-fence
+  config: plain
+  exit: 0
+  seconds: 3.72
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+no-acquire-proxy-fence
+  config: stress
+  exit: 0
+  seconds: 6.5
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+no-acquire-proxy-fence
+  config: shuffle
+  exit: 0
+  seconds: 7.23
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+no-acquire-proxy-fence
+  config: spread
+  exit: 0
+  seconds: 7.09
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+no-release-proxy-fence
+  config: plain
+  exit: 0
+  seconds: 4.08
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+no-release-proxy-fence
+  config: stress
+  exit: 0
+  seconds: 6.53
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+no-release-proxy-fence
+  config: shuffle
+  exit: 0
+  seconds: 7.08
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+no-release-proxy-fence
+  config: spread
+  exit: 0
+  seconds: 6.88
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+proxy-fences
+  config: plain
+  exit: 0
+  seconds: 3.96
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+proxy-fences
+  config: stress
+  exit: 0
+  seconds: 6.52
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+proxy-fences
+  config: shuffle
+  exit: 0
+  seconds: 7.02
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/tensormap/MP+tensormap+proxy-fences
+  config: spread
+  exit: 0
+  seconds: 6.8
+  message: ok 1000296 instances in 2526 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+fence.proxy.async+wgmma.fence
+  config: plain
+  exit: 0
+  seconds: 1.21
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+fence.proxy.async+wgmma.fence
+  config: stress
+  exit: 0
+  seconds: 4.0
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+fence.proxy.async+wgmma.fence
+  config: shuffle
+  exit: 0
+  seconds: 4.62
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+fence.proxy.async+wgmma.fence
+  config: spread
+  exit: 0
+  seconds: 4.21
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+no-proxy-fence
+  config: plain
+  exit: 0
+  seconds: 0.75
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+no-proxy-fence
+  config: stress
+  exit: 0
+  seconds: 4.46
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+no-proxy-fence
+  config: shuffle
+  exit: 0
+  seconds: 4.2
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+no-proxy-fence
+  config: spread
+  exit: 0
+  seconds: 4.43
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+no-wgmma.fence
+  config: plain
+  exit: 0
+  seconds: 0.82
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+no-wgmma.fence
+  config: stress
+  exit: 0
+  seconds: 4.29
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+no-wgmma.fence
+  config: shuffle
+  exit: 0
+  seconds: 4.5
+  message: ok 1000032 instances in 3788 launches
+- test: ptx/kamui/ptx87/wgmma/wgmma+no-wgmma.fence
+  config: spread
+  exit: 0
+  seconds: 4.21
+  message: ok 1000032 instances in 3788 launches

@@ -1,0 +1,10 @@
+RISCV CoWR+local+weak
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/features/ldst/CoWR+local+weak.litmus"
+{
+0:x5=l;
+}
+ P0           ;
+ ori x7,x0,1  ;
+ sw x7,0(x5)  ;
+ lw x10,0(x5) ;
+exists 0:x10=0

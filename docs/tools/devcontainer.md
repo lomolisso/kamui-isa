@@ -29,7 +29,7 @@ iacoma231 is the same disk as `/scratch`. From the repository root on iacoma227:
 ssh iacoma231 df -h /srv/docker          # the image is about 16 GB; keep at least 100 GB free
 ssh iacoma231 "cd $PWD && docker build \
   --build-arg USER_UID=$(id -u) --build-arg USER_GID=$(id -g) \
-  -t kamui-isa-dev:0.2 .devcontainer"
+  -t kamui-isa-dev:0.3 .devcontainer"
 ```
 
 A clean build takes about 30 to 40 minutes (Spike, Dartagnan and herdtools7 are built from source).
@@ -59,7 +59,7 @@ Use `tools/dev.sh` for everything. A plain `docker run` (for debugging the wrapp
 iacoma231, and it gets no build-area mount:
 
 ```bash
-ssh iacoma231 "docker run --rm -v $PWD:/workspaces/kamui-isa -w /workspaces/kamui-isa kamui-isa-dev:0.2 \
+ssh iacoma231 "docker run --rm -v $PWD:/workspaces/kamui-isa -w /workspaces/kamui-isa kamui-isa-dev:0.3 \
   bash -lc 'clang --version'"
 ```
 
@@ -145,6 +145,7 @@ Image history:
 |---|---|
 | `0.1` | First image. |
 | `0.2` | Removed Jupyter (`jupyterlab`, `nbconvert`, `nbformat`, `ipykernel`): the project writes Markdown, not notebooks. Built on iacoma227, streamed to iacoma231 on 2026-10-31 and removed from iacoma227. |
+| `0.3` | Added Maven, to build the Dartagnan fork in `deps/dat3m` (`tools/dat3m/build.sh`). Built on iacoma231 on 2026-11-03 and streamed to iacoma227 and iacoma232. |
 
 ## Gotchas
 

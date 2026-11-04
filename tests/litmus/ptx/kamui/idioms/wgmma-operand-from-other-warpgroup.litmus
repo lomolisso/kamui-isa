@@ -1,0 +1,17 @@
+PTX wgmma-operand-from-other-warpgroup
+"FMHA backward: warpgroup 0 stores dS to shared memory, fence.proxy.async.shared::cta, then arrives on an ordered sequence mbarrier; warpgroup 1 waits on it, then wgmma.fence and a wgmma that reads dS (CUTLASS examples/88_hopper_fmha/collective/fmha_collective_bwd_tma_warpspecialized.hpp:771-791, sm90_pipeline.hpp:1340-1343). Expected: forbidden."
+{
+a=0 @cta 0;
+c=0 @cta 0;
+o=mbarrier(1) @cta 0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0      | P1@cta 0,cluster 0,gpu 0                      ;
+ st.weak.shared::cta a, 1      | mbarrier.try_wait.parity.acquire.cta r0, o, 0 ;
+ fence.proxy.async.shared::cta | wgmma.fence.sync.aligned                      ;
+ mbarrier.arrive.release.cta o | wgmma.mma_async.sync.aligned r1, a, c         ;
+                               | wgmma.commit_group.sync.aligned               ;
+                               | wgmma.wait_group.sync.aligned 0               ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

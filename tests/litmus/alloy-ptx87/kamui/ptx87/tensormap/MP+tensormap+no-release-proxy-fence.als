@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_tensormap_MP_tensormap_no_release_proxy_fence
 open ptx87
 
 // PTX MP+tensormap+no-release-proxy-fence
-// "As MP+tensormap+proxy-fences with a plain fence.acq_rel.gpu on the writer. The acquire proxy fence alone suffices in this model: the release orders the generic write, the acquire proxy fence carries it into the tensormap proxy in the reader's thread block (D2). Expected: forbidden."
+// "As MP+tensormap+proxy-fences with a plain fence.acq_rel.gpu on the writer. The tensormap proxy fences act only as a pair (22662): without the release proxy fence, the acquire proxy fence does not carry the generic write into the tensormap proxy (D37). Expected: allowed."
 // {
 // tm=0;
 // g=5;
@@ -92,3 +92,5 @@ pred outcome { ((E3.val = 1) and (E5.val = 0)) }
 
 run test { ptx_mm and (outcome or undefined) } for 13 but 6 Int
 run consistent { ptx_mm } for 13 but 6 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 13 but 6 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 13 but 6 Int  // the outcome without the axioms (D38)

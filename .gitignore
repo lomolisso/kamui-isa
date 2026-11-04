@@ -14,6 +14,7 @@ build/
 !tests/corpus/*/*.gpu/
 !tests/goldens/*.gpu/
 !tests/litmus/h100/**/*.gpu/
+!evidence/litmus-h100/results/**/*.gpu/
 
 # PTX that the project commits on purpose
 !tests/**/*.ptx

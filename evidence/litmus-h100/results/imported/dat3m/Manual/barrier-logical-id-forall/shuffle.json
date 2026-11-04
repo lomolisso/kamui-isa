@@ -1,0 +1,9 @@
+{"instances": 1005312, "launches": 119, "config": "shuffle", "seed": 2333179022, "grid": {"clusters": 66, "ctas_per_cluster": 4, "threads": 256, "instances_per_launch": 8448}, "seconds": 0.281, "histogram": [
+  {"values": [1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1], "class": "same-sm", "count": 47696},
+  {"values": [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1], "class": "same-sm", "count": 37472},
+  {"values": [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], "class": "same-sm", "count": 40682},
+  {"values": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], "class": "same-sm", "count": 795348},
+  {"values": [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1], "class": "same-sm", "count": 15475},
+  {"values": [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1], "class": "same-sm", "count": 50069},
+  {"values": [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1], "class": "same-sm", "count": 18570}
+]}

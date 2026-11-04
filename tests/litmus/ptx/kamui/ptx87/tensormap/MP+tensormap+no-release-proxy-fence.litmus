@@ -1,5 +1,5 @@
 PTX MP+tensormap+no-release-proxy-fence
-"As MP+tensormap+proxy-fences with a plain fence.acq_rel.gpu on the writer. The acquire proxy fence alone suffices in this model: the release orders the generic write, the acquire proxy fence carries it into the tensormap proxy in the reader's thread block (D2). Expected: forbidden."
+"As MP+tensormap+proxy-fences with a plain fence.acq_rel.gpu on the writer. The tensormap proxy fences act only as a pair (22662): without the release proxy fence, the acquire proxy fence does not carry the generic write into the tensormap proxy (D37). Expected: allowed."
 {
 tm=0;
 g=5;

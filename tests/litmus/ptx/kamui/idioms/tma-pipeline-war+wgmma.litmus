@@ -1,0 +1,19 @@
+PTX tma-pipeline-war+wgmma
+"TMA mainloop, empty barrier (buffer reuse). The consumer's wgmma reads the stage, wgmma.wait_group, then consumer_release arrives on the empty barrier (CUTLASS sm90_mma_tma_gmma_ss_warpspecialized.hpp:541-551, sm90_pipeline.hpp:628-630); the producer waits on it and refills the stage with the next copy (sm90_pipeline.hpp:512-516). The wgmma must not see the refill (r1 == 7). Expected: forbidden."
+{
+g=7;
+d=5 @cta 0;
+c=0 @cta 0;
+e=mbarrier(1) @cta 0;
+f=mbarrier(1) @cta 0;
+P0:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0                                                  | P1@cta 0,cluster 0,gpu 0              ;
+ mbarrier.try_wait.parity.acquire.cta r0, e, 0                             | wgmma.fence.sync.aligned              ;
+ mbarrier.arrive.expect_tx.release.cta f, 1                                | wgmma.mma_async.sync.aligned r1, d, c ;
+ cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes d, g, f | wgmma.commit_group.sync.aligned       ;
+                                                                           | wgmma.wait_group.sync.aligned 0       ;
+                                                                           | mbarrier.arrive.release.cta e         ;
+exists
+(P0:r0 == 1 /\ P1:r1 == 7)

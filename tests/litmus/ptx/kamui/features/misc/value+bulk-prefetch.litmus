@@ -1,0 +1,11 @@
+PTX value+bulk-prefetch
+"cp.async.bulk.prefetch.L2.global does not change the value read"
+{
+x=0;
+P0:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0           ;
+ cp.async.bulk.prefetch.L2.global x ;
+ ld.weak.global r0, x               ;
+exists
+(P0:r0 != 0)

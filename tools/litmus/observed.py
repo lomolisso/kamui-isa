@@ -11,7 +11,7 @@ becomes one row of observed.csv:
 | Column | Meaning |
 |---|---|
 | test | the test id |
-| config | plain, stress or shuffle (see tools/litmus/runner/litmus_runner.c) |
+| config | plain, stress, shuffle or spread (see tools/litmus/runner/litmus_runner.c) |
 | class | where the instance's threads actually ran: same-sm, same-cluster (one cluster, several SMs), diff-cluster |
 | outcome | the final state, e.g. `P1:r0=1 P1:r1=0` |
 | count | how many instances ended in that state |
@@ -46,7 +46,7 @@ EVID = ROOT / "evidence" / "litmus-h100"
 RESULTS = EVID / "results"
 OBS_FIELDS = ["test", "config", "class", "outcome", "count", "total", "observed_weak", "model_verdict"]
 SUM_FIELDS = ["test", "config", "instances", "weak", "rate", "verdict", "status"]
-PTX_MODELS = {"ptx-v7.5", "ptx-v6.0", "ptx-2019-alloy", "ptx-2019-alloy+ext", "ptx-v8.7-alloy", "manual-reasoning"}
+PTX_MODELS = {"ptx-v8.7", "ptx-v7.5", "ptx-v6.0", "ptx-2019-alloy", "ptx-2019-alloy+ext", "ptx-v8.7-alloy", "manual-reasoning"}
 
 
 def verdicts(expected: Path = SUITE / "expected.csv") -> dict[str, str]:

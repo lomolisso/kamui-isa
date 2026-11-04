@@ -15,7 +15,7 @@
 #   KAMUI_BUILD_AREA       build area (default /scratch/$USER/kamui-isa)
 #   KAMUI_BUILD_BUDGET_GB  soft limit for the whole build area (default 50)
 #   KAMUI_MIN_FREE_GB      free space to keep on the build area's disk (default 100)
-#   KAMUI_LOAD_HOSTS       hosts whose load "status" prints (default "iacoma231 iacoma232")
+#   KAMUI_LOAD_HOSTS       hosts whose load "status" prints (default "iacoma227 iacoma231 iacoma232")
 #   KAMUI_DOCKER           docker command (default docker)
 set -euo pipefail
 
@@ -41,7 +41,7 @@ case "$top" in
 esac
 area="${KAMUI_BUILD_AREA:-/scratch/$USER/kamui-isa}"
 prefix="kamui-isa-$USER-"
-load_hosts="${KAMUI_LOAD_HOSTS-iacoma231 iacoma232}"
+load_hosts="${KAMUI_LOAD_HOSTS-iacoma227 iacoma231 iacoma232}"
 read -r -a docker <<< "${KAMUI_DOCKER:-docker}"
 
 ours() { "${docker[@]}" ps --filter "name=^$prefix" --format '{{.Names}}\t{{.Status}}\t{{.Command}}'; }
