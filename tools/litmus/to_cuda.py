@@ -1030,7 +1030,9 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
     setup = ""
     if place == "same-cta":
         setup = f"    if (a != NONE && role == 0{lead_of(0)}) {{\n        const unsigned *lo = locoff + inst * NGLOC;\n"
-        setup += "".join(f"        mem[lo[{gl.index(n)}]] = {init[n]}u;\n" for n in gl if init[n])
+        # a tensor map location holds the map the host encodes before the launch; its initial value in the test
+        # names the map, not a word to write
+        setup += "".join(f"        mem[lo[{gl.index(n)}]] = {init[n]}u;\n" for n in gl if init[n] and n not in tmaps)
         setup += "".join(f"        sbuf[({sidx[n]} * 256 + lslot) * 4] = {init[n]}u;\n" + zero(n) for n in sh)
         setup += "".join(f'        asm volatile("mbarrier.init.shared::cta.b64 [%0], {init[n]};" :: "r"(to_shared(&mbar[{midx[n]} * 256 + lslot])) : "memory");\n'
                          if init[n] is not None else f"        mbar[{midx[n]} * 256 + lslot] = 0ull;\n"
@@ -1100,7 +1102,7 @@ def generate87(t: litmus.Litmus, tid: str) -> tuple[str, str]:
                       *(["alias 1"] if aliases else []),
                       *[f"tmap {gl.index(tm)} {gl.index(src)}" for tm, (src, _) in tmaps.items()],
                       *[f"group {k} {g}" for k, g in enumerate(groups) if place == "mixed"],
-                      *[f"init {gl.index(n)} {init[n]}" for n in gl if init[n] and place != "same-cta"],
+                      *[f"init {gl.index(n)} {init[n]}" for n in gl if init[n] and place != "same-cta" and n not in tmaps],
                       *[f"init {gl.index(n)} {v} {w}" for n, v, w in extra_init],
                       *[f"reg {n} P{k}:{r}" if k >= 0 else f"reg {n} {r}" for n, (k, r) in enumerate(slots)],
                       *[f"gloc {n} {loc}" for n, loc in enumerate(gl)]]) + "\n"

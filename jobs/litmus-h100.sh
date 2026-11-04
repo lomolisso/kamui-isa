@@ -9,7 +9,8 @@
 # TESTS (a glob over test ids, or several separated by commas; default all), CONFIGS (default plain,stress,shuffle), INSTANCES (per test and
 # configuration, default 1000000) and SHARD (K/N, default 0/1) select the work, so a large run can be split into
 # several jobs. RESUME=1 with OUT set to an earlier run's folder finishes an interrupted run, skipping every
-# test and configuration whose result is already complete. Nothing is timed: the results are outcome counts, so the job needs no clock lock.
+# test and configuration whose result is already complete. TIMEOUT (seconds, default 600) stops a run that hangs.
+# Nothing is timed: the results are outcome counts, so the job needs no clock lock.
 set -uo pipefail
 
 REPO=${REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}
@@ -20,6 +21,7 @@ CONFIGS=${CONFIGS:-plain,stress,shuffle}
 INSTANCES=${INSTANCES:-1000000}
 SHARD=${SHARD:-0/1}
 RESUME=${RESUME:-0}
+TIMEOUT=${TIMEOUT:-600}
 WORK=${WORK:-$(mktemp -d)}
 export CUDA_CACHE_DISABLE=1
 mkdir -p "$OUT"
@@ -39,7 +41,7 @@ fi
 EXTRA=()
 [[ $RESUME == 1 ]] && EXTRA+=(--resume)
 python3 tools/litmus/run_h100.py --runner "$WORK/runner/litmus_runner" --out "$OUT" --tests "$TESTS" \
-    --configs "$CONFIGS" --instances "$INSTANCES" --shard "$SHARD" "${EXTRA[@]}" | tee -a "$OUT/run.log"
+    --configs "$CONFIGS" --instances "$INSTANCES" --shard "$SHARD" --timeout "$TIMEOUT" "${EXTRA[@]}" | tee -a "$OUT/run.log"
 RC=${PIPESTATUS[0]}
 
 python3 - "$OUT" "$REPO" "$JOB_ID" "$STARTED" "$RC" <<'PY'

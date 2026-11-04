@@ -108,7 +108,6 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     if (a != NONE && role == 0) {
         const unsigned *lo = locoff + inst * NGLOC;
         mem[lo[0]] = 5u;
-        mem[lo[1]] = 1u;
         sbuf[(0 * 256 + lslot) * 4] = 0u;
         sbuf[(0 * 256 + lslot) * 4 + 1] = 0u;
         sbuf[(0 * 256 + lslot) * 4 + 2] = 0u;
