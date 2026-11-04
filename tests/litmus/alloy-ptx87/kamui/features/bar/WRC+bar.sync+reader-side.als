@@ -3,22 +3,22 @@ module ptx_kamui_features_bar_WRC_bar_sync_reader_side
 open ptx87
 
 // PTX WRC+bar.sync+reader-side
-// "P1 (another CTA) sets a flag; P2 reads it relaxed, then meets P3 at bar.sync; does P3, after the barrier, see the data P1 released?"
+// "P0 sets a released flag; P1 reads it relaxed, then meets P2 at bar.sync (all in one CTA); does P2, after the barrier, see the data P0 released?"
 // {
 // x=0;
 // f=0;
 // P1:r0=0;
 // P2:r1=0;
 // }
-//  P0@cta 1,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 | P2@cta 0,cluster 0,gpu 0 ;
-//  st.weak x, 1             | ld.relaxed.gpu r0, f     | bar.sync 0               ;
-//  st.release.gpu f, 1      | bar.sync 0               | ld.weak r1, x            ;
+//  P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 | P2@cta 0,cluster 0,gpu 0 ;
+//  st.weak x, 1             | ld.relaxed.cta r0, f     | bar.sync 0               ;
+//  st.release.cta f, 1      | bar.sync 0               | ld.weak r1, x            ;
 // exists
 // (P1:r0 == 1 /\ P2:r1 == 0)
 
 one sig Sys, Gpu0 extends Scope {}
 one sig Cl0_0_0 extends ClusterScope {}
-one sig Cta0_0_1, Cta0_0_0 extends CtaScope {}
+one sig Cta0_0_0 extends CtaScope {}
 one sig T0, T1, T2 extends Thread {}
 one sig L_x, L_f extends Address {}
 one sig E0 extends Write {}
@@ -29,16 +29,16 @@ one sig E4, E6 extends BarrierWait {}
 
 fact shape {
   Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7
-  Scope = Sys + Gpu0 + Cl0_0_0 + Cta0_0_1 + Cta0_0_0 + T0 + T1 + T2
+  Scope = Sys + Gpu0 + Cl0_0_0 + Cta0_0_0 + T0 + T1 + T2
   Address = L_x + L_f
   Access = none
   acc = none->none
-  subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_1 + Cl0_0_0->Cta0_0_0 + Cta0_0_1->T0 + Cta0_0_0->T1 + Cta0_0_0->T2
+  subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->T1 + Cta0_0_0->T2
   start = T0->E0 + T1->E2 + T2->E5
   po = E0->E1 + E2->E3 + E3->E4 + E5->E6 + E6->E7
   address = E0->L_x + E1->L_f + E2->L_f + E7->L_x
   proxy = E0->Generic + E1->Generic + E2->Generic + E7->Generic
-  scope = E0->T0 + E1->Gpu0 + E2->Gpu0 + E3->Cta0_0_0 + E4->Cta0_0_0 + E5->Cta0_0_0 + E6->Cta0_0_0 + E7->T2
+  scope = E0->T0 + E1->Cta0_0_0 + E2->Cta0_0_0 + E3->Cta0_0_0 + E4->Cta0_0_0 + E5->Cta0_0_0 + E6->Cta0_0_0 + E7->T2
   rmw = none->none
   dep = none->none
   issue = none->none

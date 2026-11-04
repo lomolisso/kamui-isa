@@ -277,9 +277,8 @@
   model: alloy
   rule: a proxy fence with a state space or address orders only that space or address (22660)
   kind: strengthen
-  find: "  { f: ProxyFence, m: MemoryEvent | (no f.pspace or m.address.space in f.pspace)\n                                     and (no f.paddr or m.address in f.paddr) "
-  replace: "  ProxyFence->MemoryEvent\n"
-
+  find: "  { f: ProxyFence, m: MemoryEvent | (no f.pspace or m.address.space in f.pspace)\n                                     and (no f.paddr or m.address in f.paddr) }"
+  replace: "  ProxyFence->MemoryEvent"
 - id: A-tensormap-pair
   model: alloy
   rule: tensormap proxy fences order as a release/acquire pair (D37)
@@ -434,7 +433,7 @@
   file: ptx-v8.7.cat
   rule: writes sharing several granules are ordered the same way on all (M15)
   kind: weaken
-  find: "irreflexive (ms-co; si; ms-co; si) as axiom-Coherence-granules\n"
+  find: "irreflexive (ms-co; granules; ms-co; granules) as axiom-Coherence-granules\n"
   replace: "\n"
 - id: D-fence-sc
   model: dartagnan
@@ -448,7 +447,7 @@
   file: ptx-v8.7.cat
   rule: single-copy atomicity across granules (8.10.3, M15)
   kind: weaken
-  find: "irreflexive ((morally-strong & fr); si; (morally-strong & rf); si) as axiom-SingleCopyAtomicity\n"
+  find: "irreflexive ((morally-strong & fr); granules; (morally-strong & rf); granules) as axiom-SingleCopyAtomicity\n"
   replace: "\n"
 - id: D-rmw-atomicity
   model: dartagnan
@@ -523,9 +522,9 @@
 - id: D-wgmma-issue-fence
   model: dartagnan
   file: ptx-v8.7-common.cat
-  rule: wgmma.mma_async is ordered after prior instructions only through a fence (M48)
+  rule: wgmma.mma_async is ordered after prior instructions only through wgmma.fence (M48, D24)
   kind: strengthen
-  find: "let issue = ([~AOP]; po0; [AOP & ~WGMMA]) | ([F]; po0; [AOP & WGMMA])"
+  find: "let issue = ([~AOP]; po0; [AOP & ~WGMMA]) | ([~AOP]; po0?; [WGMMA_FENCE]; po0; [AOP & WGMMA])"
   replace: "let issue = ([~AOP]; po0; [AOP])"
 - id: D-release-fence-one-sided
   model: dartagnan

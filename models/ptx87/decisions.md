@@ -365,6 +365,12 @@ without one); completion by `wgmma.wait_group` (D20). Register accumulators are 
 memory). The litmus form `wgmma.mma_async r, a, b` puts the value read from `a` into `r`. Tests:
 `kamui/ptx87/wgmma/*`.
 
+Cross-check: the Dartagnan model ordered the wgmma only after memory fences (M48), so a wgmma after an mbarrier wait
+and `wgmma.fence` could read stale data. Decided for this reading: the proxy-fence sentence concerns generic writes
+crossing into the async proxy, and the exclusion of 6886 leaves `wgmma.fence` as the point where the warpgroup orders
+its earlier instructions before a wgmma, which is where CUTLASS's sm90 main loop synchronizes
+(`kamui/idioms/tma-pipeline-raw+wgmma`).
+
 ### D25. No atomicity across proxies
 
 > "Each reduction operation performed by the cp.reduce.async.bulk has individually .relaxed.gpu memory ordering

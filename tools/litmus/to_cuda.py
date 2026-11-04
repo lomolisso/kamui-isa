@@ -491,6 +491,11 @@ def _emit87(i: litmus.Instr, ops: dict[str, str], kinds, tx: int = TX_BYTES) -> 
     if i.op == "ld" and len(a) == 2 and a[1] in ops and not any(re.fullmatch(r"v\d", x) for x in q):
         ty = "u16" if "b16" in q else "u32"
         return wrap([f"ld{_sem87(i, 'weak')}.{sp(a[1])}{cop}.{ty} {ops[a[0]]}, [{ad(a[1])}]{tail};"])
+    gs = re.fullmatch(r"(\w+)\[([01])\]", a[0]) if i.op == "st" and len(a) == 2 and "async" not in q else None
+    if gs and gs.group(1) in ops and re.fullmatch(r"\d+", a[1]):
+        # a 16-bit store to one granule of a 32-bit location (D6)
+        n, off = gs.group(1), 2 * int(gs.group(2))
+        return wrap([f"mov.u32 t, {a[1]};", f"st{_sem87(i, 'weak')}.{sp(n)}{cop}.u16 [{ad(n)}+{off}], t{tail};"])
     if i.op == "st" and len(a) == 2 and "async" not in q and not any(re.fullmatch(r"v\d", x) for x in q):
         gv = re.fullmatch(r"(\d+):(\d+)", a[1])  # x, 1:2 writes 1 to the low granule and 2 to the high one
         val = str(int(gv.group(1)) | int(gv.group(2)) << 16) if gv else \

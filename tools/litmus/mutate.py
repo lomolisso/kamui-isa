@@ -146,7 +146,9 @@ def run_one(m: dict, jobs: int, first_kill: bool, order: list[str], glob: str = 
         if first_kill and killers:
             break
     shutil.rmtree(work, ignore_errors=True)
-    status = "killed" if killers else ("vacuous" if vacuous else "survived")
+    # a mutant whose runs mostly fail (the mutated model does not load) tells nothing
+    status = "killed" if killers else "invalid" if len(errors) > len(tests) // 2 else \
+        ("vacuous" if vacuous else "survived")
     return {"id": m["id"], "model": m["model"], "kind": m["kind"], "rule": m["rule"], "status": status,
             "killers": sorted(killers), "vacuous": sorted(vacuous), "errors": sorted(errors),
             "tests": len(tests) if not first_kill else None, "first_kill": first_kill,

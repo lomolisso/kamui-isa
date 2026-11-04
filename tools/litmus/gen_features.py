@@ -903,7 +903,54 @@ def gen_more() -> None:
                  where)
 
 
-GENERATORS = [gen_ldst, gen_rmw, gen_fence, gen_bar, gen_mbarrier, gen_async, gen_wgmma, gen_misc, gen_more]
+def gen_mutation_gaps() -> None:
+    """Tests for the rules no other test exercised (survivors of tools/litmus/mutate.py)."""
+    # the wait of a CTA barrier acts as an acq_rel fence (D10): a relaxed flag after it passes on the writes of the
+    # threads that arrived before; a relaxed flag after a plain fence-less wait elsewhere does not
+    for sync, tag in ((["bar.sync 0"], "bar.sync"), (["barrier.sync 0"], "barrier.sync")):
+        for fs, fr in (("relaxed", "acquire"), ("relaxed", "relaxed"), ("release", "acquire")):
+            test("bar", f"WRC+{tag}+{fs}-{fr}", f"P0 writes x, meets P1 at {tag}; P1 then sets a {fs} flag that P2 "
+                 f"(same CTA) reads {fr}: does P2 see x?",
+                 [["st.weak x, 1"] + sync, sync + [f"st.{fs}.cta f, 1"], [f"ld.{fr}.cta r0, f", "ld.weak r1, x"]],
+                 "P2:r0 == 1 /\\ P2:r1 == 0", [], [(0, 0), (0, 0), (0, 0)])
+        test("bar", f"WRC+{tag}+reader-side", f"P0 sets a released flag; P1 reads it relaxed, then meets P2 at "
+             f"{tag} (all in one CTA); does P2, after the barrier, see the data P0 released?",
+             [["st.weak x, 1", "st.release.cta f, 1"], ["ld.relaxed.cta r0, f"] + sync, sync + ["ld.weak r1, x"]],
+             "P1:r0 == 1 /\\ P2:r1 == 0", [], [(0, 0), (0, 0), (0, 0)])
+    # one-sided fences on the wrong side give no ordering (M2, D5)
+    for s in ("cta", "gpu"):
+        for wf, rf in (("acquire", "release"), ("acquire", "acquire"), ("release", "release")):
+            test("fence", f"MP+fence.{wf}-{rf}.{s}", f"Message passing with fence.{wf} before the flag store and "
+                 f"fence.{rf} after the flag load (.{s})",
+                 [["st.weak x, 1", f"fence.{wf}.{s}", f"st.relaxed.{s} f, 1"],
+                  [f"ld.relaxed.{s} r0, f", f"fence.{rf}.{s}", "ld.weak r1, x"]],
+                 "P1:r0 == 1 /\\ P1:r1 == 0", [], [(0, 0), (1, 0)])
+    # partially overlapping strong accesses: a mixed-size race frees the program from the axioms (D38)
+    for s in ("cta", "gpu"):
+        test("ldst", f"CoRR+mixed-size.{s}", f"A relaxed 32-bit store and two relaxed 16-bit loads of its low half "
+             f"(.{s}): can the second load miss what the first saw?",
+             [[f"st.relaxed.{s}.b32 x, 1"], [f"ld.relaxed.{s}.b16 r0, x[0]", f"ld.relaxed.{s}.b16 r1, x[0]"]],
+             "P1:r0 == 1 /\\ P1:r1 == 0", ["x[0]=0", "x[1]=0"], [(0, 0), (1, 0)])
+        test("ldst", f"CoRR+same-size.{s}", f"The same with 16-bit stores and loads of one granule (.{s})",
+             [[f"st.relaxed.{s}.b16 x[0], 1"], [f"ld.relaxed.{s}.b16 r0, x[0]", f"ld.relaxed.{s}.b16 r1, x[0]"]],
+             "P1:r0 == 1 /\\ P1:r1 == 0", ["x[0]=0", "x[1]=0"], [(0, 0), (1, 0)])
+    # the uni-directional generic -> async proxy fence of shared memory (fence.proxy.async::generic)
+    for sem, restrict in (("release", "sync_restrict::shared::cta"), ("acquire", "sync_restrict::shared::cluster")):
+        f = f"fence.proxy.async::generic.{sem}.{restrict}.cluster"
+        test("async", f"generic-to-async+{sem}-restrict", f"A generic store to shared memory, {f}, then a bulk store "
+             "of it to global memory by the same thread",
+             [["st.weak.shared::cta s, 1", f, "cp.async.bulk.global.shared::cta.bulk_group g, s",
+               "cp.async.bulk.commit_group", "cp.async.bulk.wait_group 0", "ld.weak.global r0, g"]],
+             "P0:r0 == 0", ["s=0 @cta 0"])
+    test("async", "generic-to-async+release-restrict+other-thread", "A generic store and the release proxy fence in "
+         "one thread, bar.sync, then a bulk store of the location by another thread",
+         [["st.weak.shared::cta s, 1", "fence.proxy.async::generic.release.sync_restrict::shared::cta.cluster", "bar.sync 0"],
+          ["bar.sync 0", "cp.async.bulk.global.shared::cta.bulk_group g, s", "cp.async.bulk.commit_group",
+           "cp.async.bulk.wait_group 0", "ld.weak.global r0, g"]], "P1:r0 == 0", ["s=0 @cta 0"])
+
+
+GENERATORS = [gen_ldst, gen_rmw, gen_fence, gen_bar, gen_mbarrier, gen_async, gen_wgmma, gen_misc, gen_more,
+              gen_mutation_gaps]
 
 
 def generate() -> dict[Path, str]:
