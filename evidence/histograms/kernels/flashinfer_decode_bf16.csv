@@ -1,0 +1,7 @@
+workload,kernel,regs,local_bytes,shared_static_bytes,dynamic_shared_bytes,const_bytes,max_threads_per_block,ptx_version,grid,block,cluster,required_cluster,max_r,max_ur,max_p,max_up,static_instrs,setmaxnreg,n_BSSY,n_BSYNC,n_BMOV,n_BREAK,n_WARPSYNC,n_BPT,n_YIELD,n_USETMAXREG,n_REDUX,n_VOTEU,n_S2UR,n_R2UR,n_ELECT,n_QSPC,n_MEMBAR,n_CCTL,n_ERRBAR,n_FENCE,n_SYNCS,n_HGMMA,n_UTMALDG,n_UBLKCP,n_LDGSTS,n_CALL,n_RET
+flashinfer_decode_bf16,void at::native::#5b34bd44,44,0,0,0,72,256,90,1056x1x1,256x1x1,0x0x0,0x0x0,41,11,4,0,504,,6,6,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,3,2
+flashinfer_decode_bf16,void flashinfer::MergeStatesLargeNumIndexSetsKernel#c41ba567,32,0,0,8704,0,1024,90,1x16x1,16x8x1,0x0x0,0x0x0,29,19,3,0,864,,8,8,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,9,0,0
+flashinfer_decode_bf16,void flashinfer::SingleDecodeWithKVCacheKernel#a8c4a5ec,89,0,0,65600,0,640,90,8x16x1,16x1x8,0x0x0,0x0x0,86,19,8,0,2416,,0,0,0,0,0,0,0,0,0,0,6,2,0,0,0,0,0,0,0,0,0,0,80,0,0
+flashinfer_decode_bf16,void at::native::unrolled_elementwise_kernel#78375d6c,30,0,0,0,0,128,90,4x1x1,128x1x1,0x0x0,0x0x0,27,37,2,-1,1864,,33,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0
+flashinfer_decode_bf16,void at::native::vectorized_elementwise_kernel#4f12660b,32,0,0,0,0,128,90,2x1x1,128x1x1,0x0x0,0x0x0,29,5,6,-1,168,,2,2,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+flashinfer_decode_bf16,void at::native::reduce_kernel#a18218d1,32,0,16,2048,0,512,90,1x1x1,512x1x1,0x0x0,0x0x0,29,61,4,-1,3776,,24,24,0,0,0,0,0,0,0,1,7,0,0,0,4,2,2,0,0,0,0,0,0,4,0

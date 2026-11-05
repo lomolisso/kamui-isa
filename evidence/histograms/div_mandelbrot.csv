@@ -1,0 +1,53 @@
+# job 20261105T023255Z-q000231
+# gpu NVIDIA H100 NVL, driver 580.126.20
+# tool kamui_sass_hist (tools/evidence/nvbit), NVBit 1.8.1
+# cuda_toolkit Build cuda_12.9.r12.9/compiler.36037853_0, cutlass 4.4.2, torch 2.11.0+cu129, triton 3.6.0, flash_attn 2.8.3.post2, flashinfer 0.7.2.post1
+workload,kernel,sass_opcode,opcode_class,static_count,warp_inst_executed,thread_inst_executed,thread_inst_executed_pred_true
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FADD,fp32,6,141134740,4261186000,4261186000
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FMUL,fp32,4,70698442,2134787304,2134787304
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FFMA,fp32,20,36528869,1105142388,1105142388
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,BRA,branch,21,35618277,1075806836,1070578249
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,ISETP.GE.AND,int_alu,7,35480293,1071587956,1071587956
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,VIADD,int_alu,6,35219301,1063203444,1063203444
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FSETP.LT.AND,fp32,1,35218149,1063199348,1063199348
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,ULDC,mem_const,5,655360,20971520,20971520
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,BSYNC,convergence,5,558041,12587008,12587008
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,IMAD.MOV.U32,int_alu,10,527744,16789504,16785408
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,I2FP.F32.S32,convert,4,524288,16777216,16777216
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,S2R,move,4,524288,16777216,16777216
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,BSSY,convergence,5,394368,12587008,12587008
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,IMAD,int_alu,5,393216,12582912,12582912
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,EXIT,branch,2,262144,8388608,4194304
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FCHK,fp32,2,262144,8388608,8388608
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,LDC,mem_const,2,262144,8388608,8388608
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,MUFU.RCP,mufu,3,262144,8388608,8388608
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,ULDC.64,mem_const,2,262144,8388608,8388608
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,CS2R,move,1,131072,4194304,4194304
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,IMAD.WIDE,int_alu,1,131072,4194304,4194304
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,ISETP.GE.OR,int_alu,1,131072,4194304,4194304
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,LDC.64,mem_const,1,131072,4194304,4194304
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,STG.E,mem_global,1,131072,4194304,4194304
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,LOP3.LUT,int_alu,17,5760,20480,20480
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FSETP.NEU.FTZ.AND,fp32,4,3456,12288,12288
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FSETP.GTU.FTZ.AND,fp32,2,2304,8192,8192
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,PLOP3.LUT,int_alu,4,2304,8192,8192
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,SHF.R.U32.HI,int_alu,5,2304,8192,8192
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,CALL.REL.NOINC,branch,2,1152,4096,4096
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,IADD3,int_alu,4,1152,4096,4096
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,ISETP.GT.U32.AND,int_alu,1,1152,4096,4096
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,ISETP.GT.U32.OR,int_alu,1,1152,4096,4096
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,MOV,move,2,1152,4096,4096
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,RET.REL.NODEC,branch,1,1152,4096,4096
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FADD.FTZ,fp32,2,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FFMA.RM,fp32,1,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FFMA.RP,fp32,1,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,FFMA.RZ,fp32,1,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,IMAD.IADD,int_alu,3,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,ISETP.GE.U32.AND,int_alu,1,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,ISETP.GT.AND,int_alu,1,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,ISETP.NE.AND,int_alu,3,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,LEA,int_alu,1,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,MUFU.RSQ,mufu,1,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,NOP,other,12,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,SEL,int_alu,2,0,0,0
+div_mandelbrot,kamui_mandelbrot#3e8cdfed,SHF.L.U32,int_alu,1,0,0,0

@@ -1,0 +1,34 @@
+# job 20261105T023255Z-q000231
+# gpu NVIDIA H100 NVL, driver 580.126.20
+# tool kamui_sass_hist (tools/evidence/nvbit), NVBit 1.8.1
+# cuda_toolkit Build cuda_12.9.r12.9/compiler.36037853_0, cutlass 4.4.2, torch 2.11.0+cu129, triton 3.6.0, flash_attn 2.8.3.post2, flashinfer 0.7.2.post1
+workload,kernel,sass_opcode,opcode_class,static_count,warp_inst_executed,thread_inst_executed,thread_inst_executed_pred_true
+div_bfs,kamui_bfs#f98733f4,S2R,move,4,24,520,520
+div_bfs,kamui_bfs#f98733f4,ULDC,mem_const,2,16,512,512
+div_bfs,kamui_bfs#f98733f4,LDG.E,mem_global,6,15,15,15
+div_bfs,kamui_bfs#f98733f4,ISETP.GE.AND,int_alu,3,13,261,261
+div_bfs,kamui_bfs#f98733f4,BRA,branch,4,12,12,3
+div_bfs,kamui_bfs#f98733f4,IMAD.WIDE,int_alu,5,11,11,11
+div_bfs,kamui_bfs#f98733f4,EXIT,branch,3,10,258,256
+div_bfs,kamui_bfs#f98733f4,LDC,mem_const,2,9,257,257
+div_bfs,kamui_bfs#f98733f4,LDC.64,mem_const,6,9,9,9
+div_bfs,kamui_bfs#f98733f4,IADD3,int_alu,2,8,8,8
+div_bfs,kamui_bfs#f98733f4,IMAD,int_alu,1,8,256,256
+div_bfs,kamui_bfs#f98733f4,ISETP.NE.AND,int_alu,2,8,8,8
+div_bfs,kamui_bfs#f98733f4,POPC,int_alu,2,8,8,8
+div_bfs,kamui_bfs#f98733f4,ATOMG.E.ADD.STRONG.GPU,atomic,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,ATOMG.E.CAS.STRONG.GPU,atomic,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,BSSY,convergence,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,BSYNC,convergence,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,FLO.U32,int_alu,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,IMAD.IADD,int_alu,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,IMAD.X,int_alu,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,ISETP.EQ.U32.AND,int_alu,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,LOP3.LUT,int_alu,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,MOV,move,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,SHFL.IDX,warp,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,STG.E,mem_global,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,VIADD,int_alu,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,VOTEU.ANY,warp,1,4,4,4
+div_bfs,kamui_bfs#f98733f4,ULDC.64,mem_const,1,1,1,1
+div_bfs,kamui_bfs#f98733f4,NOP,other,15,0,0,0

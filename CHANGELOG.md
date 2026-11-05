@@ -30,6 +30,8 @@ All notable changes to this project are listed here. The format follows
 - Feature and NVIDIA-idiom litmus tests for every PTX 8.7 memory feature, a per-feature scorecard, mutation
   testing of both PTX 8.7 models, and H100 harness support for wgmma, tensor maps, multicast, griddepcontrol and
   virtual aliases.
+- Per-kernel register and uniform-register counts and histograms of 34 more workloads, and probe kernels for
+  forward progress, reconvergence, address windows, scope costs and setmaxnreg, with their H100 results.
 
 ### Changed
 

@@ -1,0 +1,389 @@
+# job 20261105T023255Z-q000231
+# gpu NVIDIA H100 NVL, driver 580.126.20
+# tool kamui_sass_hist (tools/evidence/nvbit), NVBit 1.8.1
+# cuda_toolkit Build cuda_12.9.r12.9/compiler.36037853_0, cutlass 4.4.2, torch 2.11.0+cu129, triton 3.6.0, flash_attn 2.8.3.post2, flashinfer 0.7.2.post1
+workload,kernel,sass_opcode,opcode_class,static_count,warp_inst_executed,thread_inst_executed,thread_inst_executed_pred_true
+torch_sort,at::native::#4584348e,IMAD.MOV.U32,int_alu,19,3670016,117440512,117440512
+torch_sort,at::native::#4584348e,IADD3,int_alu,23,3145728,100663296,100663296
+torch_sort,at::native::#4584348e,IMAD,int_alu,14,2097152,67108864,67108864
+torch_sort,at::native::#4584348e,ISETP.GE.U32.AND,int_alu,7,2097152,67108864,67108864
+torch_sort,at::native::#4584348e,ISETP.NE.U32.AND,int_alu,5,2097152,67108864,67108864
+torch_sort,at::native::#4584348e,LOP3.LUT,int_alu,4,2097152,67108864,50331648
+torch_sort,at::native::#4584348e,VIADD,int_alu,4,2097152,67108864,33554432
+torch_sort,at::native::#4584348e,BRA,branch,6,1572864,50331648,16777216
+torch_sort,at::native::#4584348e,IADD3.X,int_alu,10,1572864,50331648,50331648
+torch_sort,at::native::#4584348e,IMAD.HI.U32,int_alu,16,1572864,50331648,50331648
+torch_sort,at::native::#4584348e,ULDC,mem_const,3,1572864,50331648,50331648
+torch_sort,at::native::#4584348e,ULDC.64,mem_const,6,1572864,50331648,50331648
+torch_sort,at::native::#4584348e,BSSY,convergence,2,1048576,33554432,33554432
+torch_sort,at::native::#4584348e,BSYNC,convergence,2,1048576,33554432,33554432
+torch_sort,at::native::#4584348e,EXIT,branch,3,1048576,33554432,16777216
+torch_sort,at::native::#4584348e,ISETP.NE.AND.EX,int_alu,3,1048576,33554432,33554432
+torch_sort,at::native::#4584348e,LDC,mem_const,2,1048576,33554432,33554432
+torch_sort,at::native::#4584348e,F2I.FTZ.U32.TRUNC.NTZ,convert,1,524288,16777216,16777216
+torch_sort,at::native::#4584348e,HFMA2.MMA,fp16x2,3,524288,16777216,16777216
+torch_sort,at::native::#4584348e,I2F.U32.RP,convert,1,524288,16777216,16777216
+torch_sort,at::native::#4584348e,IMAD.IADD,int_alu,4,524288,16777216,0
+torch_sort,at::native::#4584348e,IMAD.MOV,int_alu,4,524288,16777216,16777216
+torch_sort,at::native::#4584348e,IMAD.WIDE.U32,int_alu,7,524288,16777216,16777216
+torch_sort,at::native::#4584348e,IMAD.X,int_alu,8,524288,16777216,16777216
+torch_sort,at::native::#4584348e,ISETP.GE.AND.EX,int_alu,2,524288,16777216,16777216
+torch_sort,at::native::#4584348e,ISETP.GE.U32.AND.EX,int_alu,3,524288,16777216,16777216
+torch_sort,at::native::#4584348e,LEA.HI.X.SX32,int_alu,2,524288,16777216,16777216
+torch_sort,at::native::#4584348e,MOV,move,5,524288,16777216,16777216
+torch_sort,at::native::#4584348e,MUFU.RCP,mufu,2,524288,16777216,16777216
+torch_sort,at::native::#4584348e,S2R,move,1,524288,16777216,16777216
+torch_sort,at::native::#4584348e,S2UR,move,1,524288,16777216,16777216
+torch_sort,at::native::#4584348e,SHF.R.S64,int_alu,2,524288,16777216,16777216
+torch_sort,at::native::#4584348e,SHF.R.U32.HI,int_alu,5,524288,16777216,16777216
+torch_sort,at::native::#4584348e,STG.E.64,mem_global,5,524288,16777216,16777216
+torch_sort,at::native::#4584348e,UIADD3,uniform,1,524288,16777216,16777216
+torch_sort,at::native::#4584348e,USHF.R.S32.HI,uniform,1,524288,16777216,16777216
+torch_sort,at::native::#4584348e,CALL.REL.NOINC,branch,1,0,0,0
+torch_sort,at::native::#4584348e,F2I.U64.TRUNC,convert,1,0,0,0
+torch_sort,at::native::#4584348e,I2F.U64.RP,convert,1,0,0,0
+torch_sort,at::native::#4584348e,IMAD.WIDE,int_alu,3,0,0,0
+torch_sort,at::native::#4584348e,NOP,other,14,0,0,0
+torch_sort,at::native::#4584348e,RET.REL.NODEC,branch,1,0,0,0
+torch_sort,at::native::#4584348e,SEL,int_alu,8,0,0,0
+torch_sort,void at::native::#2e60dc56,FFMA,fp32,39,4849664,155189248,146538496
+torch_sort,void at::native::#2e60dc56,LOP3.LUT,int_alu,47,3176448,101646336,101376000
+torch_sort,void at::native::#2e60dc56,IMAD.WIDE.U32,int_alu,43,2466816,78938112,78938112
+torch_sort,void at::native::#2e60dc56,IADD3,int_alu,40,1859072,59490304,58679296
+torch_sort,void at::native::#2e60dc56,BRA,branch,19,1495296,47849472,22151168
+torch_sort,void at::native::#2e60dc56,FMUL,fp32,10,1343744,42999808,34349056
+torch_sort,void at::native::#2e60dc56,IMAD,int_alu,23,1259264,40296448,40296448
+torch_sort,void at::native::#2e60dc56,MOV,move,25,1250304,40009728,35684352
+torch_sort,void at::native::#2e60dc56,IMAD.MOV.U32,int_alu,20,1233408,39469056,35143680
+torch_sort,void at::native::#2e60dc56,VIADD,int_alu,21,1165824,37306368,37036032
+torch_sort,void at::native::#2e60dc56,ISETP.GE.U32.AND,int_alu,12,971520,31088640,31088640
+torch_sort,void at::native::#2e60dc56,BSSY,convergence,6,811008,25952256,25952256
+torch_sort,void at::native::#2e60dc56,BSYNC,convergence,6,811008,25952256,25952256
+torch_sort,void at::native::#2e60dc56,ISETP.GE.AND.EX,int_alu,6,684288,21897216,21897216
+torch_sort,void at::native::#2e60dc56,ISETP.NE.AND,int_alu,7,549120,17571840,17571840
+torch_sort,void at::native::#2e60dc56,FMUL.FTZ,fp32,7,540672,17301504,17301504
+torch_sort,void at::native::#2e60dc56,FSEL,fp32,4,540672,17301504,17301504
+torch_sort,void at::native::#2e60dc56,I2FP.F32.U32,convert,4,540672,17301504,17301504
+torch_sort,void at::native::#2e60dc56,FMUL.RZ,fp32,4,532736,17047552,17047552
+torch_sort,void at::native::#2e60dc56,LEA.HI.X.SX32,int_alu,4,524288,16777216,16777216
+torch_sort,void at::native::#2e60dc56,STG.E,mem_global,4,524288,16777216,16777216
+torch_sort,void at::native::#2e60dc56,IMAD.HI.U32,int_alu,17,447744,14327808,14327808
+torch_sort,void at::native::#2e60dc56,IMAD.X,int_alu,9,287232,9191424,8921088
+torch_sort,void at::native::#2e60dc56,HFMA2.MMA,fp16x2,5,278784,8921088,8921088
+torch_sort,void at::native::#2e60dc56,FADD,fp32,2,270336,8650752,8650752
+torch_sort,void at::native::#2e60dc56,FSETP.GEU.AND,fp32,2,270336,8650752,8650752
+torch_sort,void at::native::#2e60dc56,FSETP.NEU.AND,fp32,2,270336,8650752,8650752
+torch_sort,void at::native::#2e60dc56,I2FP.F32.S32,convert,2,270336,8650752,8650752
+torch_sort,void at::native::#2e60dc56,IADD3.X,int_alu,11,270336,8650752,8650752
+torch_sort,void at::native::#2e60dc56,ISETP.GT.U32.AND,int_alu,2,270336,8650752,8650752
+torch_sort,void at::native::#2e60dc56,LEA,int_alu,2,270336,8650752,8650752
+torch_sort,void at::native::#2e60dc56,MUFU.COS,mufu,2,270336,8650752,8650752
+torch_sort,void at::native::#2e60dc56,MUFU.RSQ,mufu,3,270336,8650752,8650752
+torch_sort,void at::native::#2e60dc56,MUFU.SIN,mufu,2,262400,8396800,8396800
+torch_sort,void at::native::#2e60dc56,LDC,mem_const,7,185856,5947392,5947392
+torch_sort,void at::native::#2e60dc56,IMAD.IADD,int_alu,2,143616,4595712,4595712
+torch_sort,void at::native::#2e60dc56,ULDC,mem_const,3,143616,4595712,4595712
+torch_sort,void at::native::#2e60dc56,BAR.SYNC.DEFER_BLOCKING,barrier,1,135168,4325376,4325376
+torch_sort,void at::native::#2e60dc56,NOP,other,9,135168,4325376,4325376
+torch_sort,void at::native::#2e60dc56,WARPSYNC.ALL,barrier,1,135168,4325376,4325376
+torch_sort,void at::native::#2e60dc56,ULDC.64,mem_const,5,42240,1351680,1351680
+torch_sort,void at::native::#2e60dc56,EXIT,branch,2,16896,540672,270336
+torch_sort,void at::native::#2e60dc56,IMAD.MOV,int_alu,2,16896,540672,540672
+torch_sort,void at::native::#2e60dc56,ISETP.NE.U32.AND,int_alu,3,16896,540672,540672
+torch_sort,void at::native::#2e60dc56,LDC.64,mem_const,2,16896,540672,270336
+torch_sort,void at::native::#2e60dc56,LDG.E.64,mem_global,2,16896,540672,0
+torch_sort,void at::native::#2e60dc56,SHF.R.U64,int_alu,2,16896,540672,540672
+torch_sort,void at::native::#2e60dc56,F2I.FTZ.U32.TRUNC.NTZ,convert,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,I2F.U32.RP,convert,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,IMAD.SHL.U32,int_alu,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,IMAD.U32,int_alu,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,MUFU.RCP,mufu,2,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,S2R,move,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,S2UR,move,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,SHF.L.U32,int_alu,2,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,SHF.L.U64.HI,int_alu,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,SHF.R.U32.HI,int_alu,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,UIADD3,uniform,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,UIADD3.X,uniform,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,ULDC.U8,mem_const,1,8448,270336,270336
+torch_sort,void at::native::#2e60dc56,CALL.REL.NOINC,branch,3,0,0,0
+torch_sort,void at::native::#2e60dc56,F2I.U64.TRUNC,convert,1,0,0,0
+torch_sort,void at::native::#2e60dc56,FADD.FTZ,fp32,2,0,0,0
+torch_sort,void at::native::#2e60dc56,FSETP.GEU.FTZ.AND,fp32,1,0,0,0
+torch_sort,void at::native::#2e60dc56,FSETP.GTU.FTZ.AND,fp32,1,0,0,0
+torch_sort,void at::native::#2e60dc56,FSETP.NEU.FTZ.AND,fp32,1,0,0,0
+torch_sort,void at::native::#2e60dc56,I2F.U64.RP,convert,1,0,0,0
+torch_sort,void at::native::#2e60dc56,ISETP.GE.U32.AND.EX,int_alu,2,0,0,0
+torch_sort,void at::native::#2e60dc56,ISETP.LE.AND,int_alu,1,0,0,0
+torch_sort,void at::native::#2e60dc56,ISETP.NE.AND.EX,int_alu,1,0,0,0
+torch_sort,void at::native::#2e60dc56,RET.REL.NODEC,branch,2,0,0,0
+torch_sort,void at::native::#2e60dc56,SEL,int_alu,12,0,0,0
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.NE.AND,int_alu,362,737813,23544402,22714930
+torch_sort,void at::native::reduce_kernel#6605ac83,LOP3.LUT,int_alu,80,694035,22192672,21363200
+torch_sort,void at::native::reduce_kernel#6605ac83,PRMT,int_alu,46,685472,21918732,21089260
+torch_sort,void at::native::reduce_kernel#6605ac83,SEL,int_alu,79,618435,19757104,18927632
+torch_sort,void at::native::reduce_kernel#6605ac83,BRA,branch,346,376373,12043795,8793055
+torch_sort,void at::native::reduce_kernel#6605ac83,ULDC,mem_const,417,225664,7172143,7172143
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.GE.U32.AND,int_alu,40,181873,5819919,5819919
+torch_sort,void at::native::reduce_kernel#6605ac83,LEA,int_alu,2,139520,4464639,4464639
+torch_sort,void at::native::reduce_kernel#6605ac83,IMAD.WIDE.U32,int_alu,2,131600,4194831,4194831
+torch_sort,void at::native::reduce_kernel#6605ac83,LDG.E,mem_global,1,131072,4194303,4194303
+torch_sort,void at::native::reduce_kernel#6605ac83,VIADD,int_alu,1,131072,4194303,4194303
+torch_sort,void at::native::reduce_kernel#6605ac83,IMAD,int_alu,587,94048,2976800,2976272
+torch_sort,void at::native::reduce_kernel#6605ac83,SHF.R.S32.HI,int_alu,9,84640,2708480,2708480
+torch_sort,void at::native::reduce_kernel#6605ac83,BSYNC,convergence,24,69203,2163712,2163712
+torch_sort,void at::native::reduce_kernel#6605ac83,IADD3,int_alu,155,68756,2167349,1067541
+torch_sort,void at::native::reduce_kernel#6605ac83,MOV,move,128,67680,2165760,1895424
+torch_sort,void at::native::reduce_kernel#6605ac83,BAR.SYNC.DEFER_BLOCKING,barrier,9,67664,2165248,2165248
+torch_sort,void at::native::reduce_kernel#6605ac83,BSSY,convergence,24,67616,2163712,2163712
+torch_sort,void at::native::reduce_kernel#6605ac83,IMAD.MOV.U32,int_alu,218,59168,1893376,1893376
+torch_sort,void at::native::reduce_kernel#6605ac83,STS.U8,mem_shared,9,51312,1625616,796144
+torch_sort,void at::native::reduce_kernel#6605ac83,LDC,mem_const,37,51249,1623569,1623569
+torch_sort,void at::native::reduce_kernel#6605ac83,ULDC.64,mem_const,295,51234,1623058,1623058
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.GE.AND,int_alu,7,50784,1625088,1625088
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.GT.AND,int_alu,6,50784,1625088,1625088
+torch_sort,void at::native::reduce_kernel#6605ac83,SHFL.DOWN,warp,2,42320,1354240,1354240
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.GE.U32.OR,int_alu,5,42304,1353728,1353728
+torch_sort,void at::native::reduce_kernel#6605ac83,LDS.U8,mem_shared,5,42304,1353728,524256
+torch_sort,void at::native::reduce_kernel#6605ac83,S2R,move,7,34848,1082400,1082400
+torch_sort,void at::native::reduce_kernel#6605ac83,S2UR,move,7,34848,1082400,1082400
+torch_sort,void at::native::reduce_kernel#6605ac83,IMAD.IADD,int_alu,26,33890,1084448,1084448
+torch_sort,void at::native::reduce_kernel#6605ac83,ULEA,uniform,5,25888,812048,812048
+torch_sort,void at::native::reduce_kernel#6605ac83,UMOV,move,4,25872,811536,811536
+torch_sort,void at::native::reduce_kernel#6605ac83,UIADD3,uniform,4,17440,541712,541712
+torch_sort,void at::native::reduce_kernel#6605ac83,IMAD.U32,int_alu,21,16912,541184,541184
+torch_sort,void at::native::reduce_kernel#6605ac83,PLOP3.LUT,int_alu,20,16896,540672,540672
+torch_sort,void at::native::reduce_kernel#6605ac83,IMAD.X,int_alu,5,8978,270866,530
+torch_sort,void at::native::reduce_kernel#6605ac83,ULDC.U8,mem_const,10,8466,270850,270850
+torch_sort,void at::native::reduce_kernel#6605ac83,EXIT,branch,13,8465,270849,270336
+torch_sort,void at::native::reduce_kernel#6605ac83,IADD3.X,int_alu,33,8465,270864,270864
+torch_sort,void at::native::reduce_kernel#6605ac83,CCTL.IVALL,fence,2,8464,270848,270848
+torch_sort,void at::native::reduce_kernel#6605ac83,CGAERRBAR,cluster,2,8464,270848,270848
+torch_sort,void at::native::reduce_kernel#6605ac83,ERRBAR,fence,2,8464,270848,270848
+torch_sort,void at::native::reduce_kernel#6605ac83,LEA.HI,int_alu,2,8464,270848,270848
+torch_sort,void at::native::reduce_kernel#6605ac83,MEMBAR.ALL.CTA,fence,2,8464,270848,270848
+torch_sort,void at::native::reduce_kernel#6605ac83,MEMBAR.SC.GPU,fence,2,8464,270848,270848
+torch_sort,void at::native::reduce_kernel#6605ac83,USHF.R.U32.HI,uniform,2,8464,270848,270848
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.NE.AND.EX,int_alu,3,8449,270337,270337
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.NE.U32.AND,int_alu,3,8449,270337,270337
+torch_sort,void at::native::reduce_kernel#6605ac83,CS2R,move,1,8448,270336,270336
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.GE.OR,int_alu,1,8448,270336,270336
+torch_sort,void at::native::reduce_kernel#6605ac83,LDC.U8,mem_const,1,8448,270336,270336
+torch_sort,void at::native::reduce_kernel#6605ac83,POPC,int_alu,2,1056,1056,1056
+torch_sort,void at::native::reduce_kernel#6605ac83,HFMA2.MMA,fp16x2,52,544,1040,1040
+torch_sort,void at::native::reduce_kernel#6605ac83,STG.E.U8,mem_global,9,529,529,529
+torch_sort,void at::native::reduce_kernel#6605ac83,ATOMG.E.ADD.STRONG.GPU,atomic,1,528,528,528
+torch_sort,void at::native::reduce_kernel#6605ac83,FLO.U32,int_alu,1,528,528,528
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.EQ.U32.AND,int_alu,1,528,528,528
+torch_sort,void at::native::reduce_kernel#6605ac83,LDC.64,mem_const,16,528,528,528
+torch_sort,void at::native::reduce_kernel#6605ac83,SHFL.IDX,warp,1,528,528,528
+torch_sort,void at::native::reduce_kernel#6605ac83,VOTEU.ANY,warp,1,528,528,528
+torch_sort,void at::native::reduce_kernel#6605ac83,LDG.E.U8,mem_global,32,18,531,531
+torch_sort,void at::native::reduce_kernel#6605ac83,LEA.HI.X.SX32,int_alu,1,1,3,3
+torch_sort,void at::native::reduce_kernel#6605ac83,CALL.ABS.NOINC,branch,4,0,0,0
+torch_sort,void at::native::reduce_kernel#6605ac83,IMAD.HI.U32,int_alu,275,0,0,0
+torch_sort,void at::native::reduce_kernel#6605ac83,IMAD.MOV,int_alu,180,0,0,0
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.EQ.AND,int_alu,1,0,0,0
+torch_sort,void at::native::reduce_kernel#6605ac83,ISETP.GT.U32.OR,int_alu,1,0,0,0
+torch_sort,void at::native::reduce_kernel#6605ac83,LEPC,other,4,0,0,0
+torch_sort,void at::native::reduce_kernel#6605ac83,NOP,other,13,0,0,0
+torch_sort,void at::native::reduce_kernel#6605ac83,SHF.R.U32.HI,int_alu,275,0,0,0
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,IMAD,int_alu,9,1179648,37748735,37748734
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,LDC.64,mem_const,9,1179648,37748736,37748734
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,IMAD.WIDE.U32,int_alu,8,1048576,33554432,33554430
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,ISETP.GE.AND,int_alu,11,1048576,33554432,33554432
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,LDG.E,mem_global,8,1048576,33554432,33554430
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,VIADD,int_alu,10,917504,29360128,29360128
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,FSETP.GE.AND,fp32,4,524288,16777215,16777215
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,IADD3,int_alu,4,524288,16777215,16777215
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,IMAD.X,int_alu,4,524288,16777215,16777215
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,LDC,mem_const,4,524288,16777216,16777216
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,SEL,int_alu,16,524288,16777215,16777215
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,STG.E.U8,mem_global,4,524288,16777215,16777215
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,BRA,branch,9,393216,12582911,4194304
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,CS2R,move,3,393216,12582912,12582912
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,IMAD.MOV.U32,int_alu,3,393216,12582912,12582912
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,ULDC.64,mem_const,3,393216,12582911,12582911
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,BSYNC,convergence,2,262145,8388608,8388608
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,BSSY,convergence,2,262144,8388608,8388608
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,EXIT,branch,2,262144,8388607,4194304
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,S2R,move,2,262144,8388608,8388608
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,BRX,branch,1,131072,4194304,4194304
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,IMAD.SHL.U32,int_alu,1,131072,4194304,4194304
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,SHF.R.S32.HI,int_alu,1,131072,4194304,4194304
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,VIMNMX.U32,int_alu,1,131072,4194304,4194304
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,FSETP.GEU.AND,fp32,4,0,0,0
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,FSETP.GT.AND,fp32,4,0,0,0
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,FSETP.GTU.AND,fp32,4,0,0,0
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,ISETP.NE.AND,int_alu,1,0,0,0
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,NOP,other,13,0,0,0
+torch_sort,void at::native::unrolled_elementwise_kernel#9d6c3f1b,PRMT,int_alu,5,0,0,0
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,S2R,move,3,96,3072,3072
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,IADD3,int_alu,21,68,2176,2176
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,IMAD,int_alu,3,68,2176,2176
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,BAR.SYNC.DEFER_BLOCKING,barrier,2,64,2048,2048
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,EXIT,branch,2,64,2048,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,LDS.64,mem_shared,9,64,2048,2048
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,STS.64,mem_shared,9,64,2048,2048
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,IMAD.X,int_alu,18,56,1792,1792
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,SEL,int_alu,18,40,1280,1280
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,SHFL.UP,warp,20,40,1280,1280
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,BRA,branch,3,32,1024,896
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,IMAD.WIDE,int_alu,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,ISETP.GT.AND,int_alu,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,ISETP.GT.U32.AND,int_alu,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,LDC,mem_const,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,LDC.64,mem_const,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,LDG.E.64,mem_global,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,LEA,int_alu,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,LEA.HI,int_alu,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,MOV,move,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,NOP,other,9,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,STG.E.64,mem_global,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,ULDC.64,mem_const,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,WARPSYNC.ALL,barrier,1,32,1024,1024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,IADD3.X,int_alu,3,12,384,384
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,BRA.DIV,branch,1,4,128,128
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,UMOV,move,1,4,128,128
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,ENDCOLLECTIVE,convergence,10,0,0,0
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,IMAD.MOV.U32,int_alu,22,0,0,0
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortExclusiveSumKernel#5b761b16,WARPSYNC.COLLECTIVE,barrier,10,0,0,0
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,LOP3.LUT,int_alu,33,2752512,88080384,88080384
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,IMAD,int_alu,28,2321154,74040370,74040370
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ATOMS.POPC.INC.32,atomic,16,2097152,67108864,67108864
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,SHF.R.U32.HI,int_alu,16,2097152,67108864,67108864
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,SEL,int_alu,33,1179648,37748736,37748736
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ISETP.NE.AND,int_alu,28,790528,25296896,25296896
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ISETP.GE.AND,int_alu,35,689152,22052864,22052864
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,LDG.E,mem_global,32,524288,16777216,16777216
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,VIADD,int_alu,30,439554,13829170,13829170
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,BRA,branch,28,433152,13860864,7101390
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,IMAD.MOV.U32,int_alu,33,242946,7537714,7537714
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UMOV,move,8,181760,5816320,5816320
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,IADD3,int_alu,2,163840,5242880,5242880
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UIADD3,uniform,10,133120,4259840,4259840
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,SHF.L.U32,int_alu,1,131072,4194304,4194304
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,BSYNC,convergence,10,125698,3751936,3751936
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,BSSY,convergence,10,117248,3751936,3751936
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,PLOP3.LUT,int_alu,10,116224,3719168,3719168
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UIADD3.X,uniform,5,115200,3686400,3686400
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ULDC.64,mem_const,7,107776,3448832,3448832
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,LEA,int_alu,6,99328,3178496,3178496
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UISETP.GE.U32.AND,uniform,4,75008,2400256,2400256
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,LDS,mem_shared,7,67584,2162688,2162688
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,STS,mem_shared,7,67584,2162688,2162688
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,S2R,move,5,66560,2129920,2129920
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,IMAD.WIDE,int_alu,7,59138,1655858,1655858
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,REDG.E.ADD.64.STRONG.GPU,atomic,7,59138,1655858,1655858
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,IMAD.U32,int_alu,4,50688,1622016,1622016
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,MOV,move,2,49664,1589248,1589248
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ULDC,mem_const,3,49664,1589248,1589248
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ULEA,uniform,4,49664,1589248,1589248
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,LDC,mem_const,2,41216,1318912,1318912
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UISETP.GE.U32.AND.EX,uniform,2,41216,1318912,1318912
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UISETP.GT.U32.AND,uniform,2,41216,1318912,1318912
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UISETP.GT.U32.AND.EX,uniform,2,41216,1318912,1318912
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,BAR.SYNC.DEFER_BLOCKING,barrier,4,33792,1081344,1081344
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,IADD3.X,int_alu,1,32768,1048576,1048576
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,LEA.HI.X,int_alu,1,32768,1048576,1048576
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,S2UR,move,4,25344,811008,811008
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ULOP3.LUT,uniform,3,25344,811008,811008
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,USEL,uniform,3,25344,811008,811008
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,EXIT,branch,2,16896,540672,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ISETP.LT.OR,int_alu,2,16896,540672,540672
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,LDC.64,mem_const,4,16896,540672,540672
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ULEA.HI,uniform,2,16896,540672,540672
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,USHF.L.U32,uniform,2,16896,540672,540672
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,USHF.R.S32.HI,uniform,2,16896,540672,540672
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ISETP.GT.AND,int_alu,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ISETP.NE.AND.EX,int_alu,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ISETP.NE.U32.AND,int_alu,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,SHF.R.S32.HI,int_alu,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UISETP.GE.AND,uniform,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UISETP.LT.U32.AND,uniform,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UISETP.LT.U32.AND.EX,uniform,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UISETP.NE.AND.EX,uniform,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UISETP.NE.U32.AND,uniform,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,ULEA.HI.X,uniform,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UPLOP3.LUT,uniform,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,USHF.L.U64.HI,uniform,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,USHF.R.U64,uniform,1,8448,270336,270336
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,NOP,other,10,0,0,0
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortHistogramKernel#31eca0e4,UISETP.NE.AND,uniform,4,0,0,0
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LOP3.LUT,int_alu,365,12142983,388227313,320708104
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,VOTE.ANY,warp,114,4365531,139696992,139696992
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,IMAD,int_alu,91,2633372,83291328,83291328
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,SEL,int_alu,113,2621560,83889920,83889920
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ISETP.NE.AND,int_alu,75,2343083,74978656,74978656
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LEA,int_alu,111,2247233,71911456,71908992
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LDS,mem_shared,80,1760204,56326528,56326528
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,IADD3,int_alu,84,1713401,54828832,53630368
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,BSYNC,convergence,46,1648737,38108736,38108736
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LDS.64,mem_shared,89,1635364,52331648,51131904
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,SHF.R.U32.HI,int_alu,57,1610396,51532672,51532672
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,BRA,branch,66,1561619,49971808,18328399
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,STS,mem_shared,57,1501201,47941681,47941681
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,NOP,other,77,1369371,43819872,43819872
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ISETP.GE.AND,int_alu,159,1320067,42242144,42242144
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,BSSY,convergence,46,1190898,38108736,38108736
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LEA.HI.X,int_alu,75,1123673,35957536,35955072
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,VIADD,int_alu,104,1103658,35317056,35317056
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,IMAD.IADD,int_alu,56,1051029,33284785,33188034
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,IMAD.MOV.U32,int_alu,69,627581,19985841,19985841
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LEA.HI.X.SX32,int_alu,46,624316,19978112,19978112
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,SHF.R.S32.HI,int_alu,17,599076,19170432,17971968
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,STS.64,mem_shared,18,574264,18376448,18376448
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,STG.E.64,mem_global,58,561780,17976960,16777216
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LDG.E.64,mem_global,58,549293,17577376,17576192
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ATOMS.ADD,atomic,14,524328,15801920,15801920
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ATOMS.POPC.INC.32,atomic,14,524328,16778496,16778496
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,FLO.U32,int_alu,14,524328,16778496,16778496
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,POPC,int_alu,14,524328,16778496,16778496
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,R2P,move,14,524328,16778496,16778496
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,SHFL.IDX,warp,14,524328,16778496,16778496
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LDG.E,mem_global,28,524325,16778400,16777216
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,STG.E,mem_global,56,524288,16777216,16777216
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,IMAD.X,int_alu,15,511688,16374016,16374016
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ISETP.GT.AND,int_alu,8,466662,14933184,14933184
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,BAR.SYNC.DEFER_BLOCKING,barrier,10,337068,10786176,10786176
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LDC.64,mem_const,35,299180,9477009,8276081
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,IMAD.WIDE,int_alu,8,295747,9463904,8265440
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ULDC,mem_const,34,224944,7198208,7198208
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ULDC.64,mem_const,26,224825,7194400,7194400
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,IMAD.SHL.U32,int_alu,5,187260,5644177,5644177
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,S2R,move,5,187260,5992320,5992320
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LDG.E.STRONG.SYS,mem_global,2,170907,5469024,5469024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,MEMBAR.SC.CTA,fence,2,170907,5469024,5469024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,WARPSYNC.EXCLUSIVE,barrier,2,170907,5469024,5469024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,YIELD,branch,2,170907,5469024,5469024
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LDC,mem_const,5,112368,3595776,3595776
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,WARPSYNC.ALL,barrier,4,112356,3595392,3595392
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,UMOV,move,4,81146,2499921,2499921
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,SHF.L.U32,int_alu,16,75020,2400640,2400640
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,CS2R,move,2,74904,2396928,2396928
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ISETP.GT.U32.AND,int_alu,3,74904,2396928,2396928
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,LEA.HI,int_alu,2,74904,2396928,2396928
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,STG.E.STRONG.SYS,mem_global,3,62420,1997440,1597952
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,S2UR,move,2,40573,1201585,1201585
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ULEA,uniform,2,40573,1201585,1201585
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,B2R.RESULT,other,1,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,BAR.RED.OR.DEFER_BLOCKING,barrier,1,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,EXIT,branch,5,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,IADD3.X,int_alu,3,37452,1198464,0
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,IMAD.WIDE.U32,int_alu,1,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ISETP.GE.U32.AND,int_alu,1,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ISETP.GT.OR,int_alu,2,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ISETP.LT.AND,int_alu,1,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ISETP.LT.OR,int_alu,2,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ISETP.NE.AND.EX,int_alu,2,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ISETP.NE.U32.AND,int_alu,2,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,MOV,move,1,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,P2R,move,1,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,UIADD3,uniform,1,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,USHF.L.U32,uniform,1,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,VIMNMX,int_alu,1,37452,1198464,1198464
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,SHFL.UP,warp,10,15605,499360,499360
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ATOMG.E.ADD.STRONG.GPU,atomic,1,3121,3121,3121
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,BRA.DIV,branch,1,3121,99872,99872
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,ENDCOLLECTIVE,convergence,5,0,0,0
+torch_sort,void at_cuda_detail::cub::DeviceRadixSortOnesweepKernel#1e21ba79,WARPSYNC.COLLECTIVE,barrier,5,0,0,0

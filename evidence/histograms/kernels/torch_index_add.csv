@@ -1,0 +1,5 @@
+workload,kernel,regs,local_bytes,shared_static_bytes,dynamic_shared_bytes,const_bytes,max_threads_per_block,ptx_version,grid,block,cluster,required_cluster,max_r,max_ur,max_p,max_up,static_instrs,setmaxnreg,n_BSSY,n_BSYNC,n_BMOV,n_BREAK,n_WARPSYNC,n_BPT,n_YIELD,n_USETMAXREG,n_REDUX,n_VOTEU,n_S2UR,n_R2UR,n_ELECT,n_QSPC,n_MEMBAR,n_CCTL,n_ERRBAR,n_FENCE,n_SYNCS,n_HGMMA,n_UTMALDG,n_UBLKCP,n_LDGSTS,n_CALL,n_RET
+torch_index_add,void at::native::#7f95e576,56,0,0,0,72,256,90,1056x1x1,256x1x1,0x0x0,0x0x0,53,15,4,0,552,,4,4,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,5,2
+torch_index_add,void at::native::vectorized_elementwise_kernel#3d5c1472,14,0,0,0,0,128,90,16384x1x1,128x1x1,0x0x0,0x0x0,11,5,0,-1,104,,2,2,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+torch_index_add,void at::native::indexFuncLargeIndex#a7ada401,24,0,0,0,0,1024,90,1056x1x1,128x1x1,0x0x0,0x0x0,20,53,2,-1,160,,2,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0
+torch_index_add,void at::native::reduce_kernel#a18218d1,32,0,16,2048,0,512,90,1x1x1,512x1x1,0x0x0,0x0x0,29,61,4,-1,3776,,24,24,0,0,0,0,0,0,0,1,7,0,0,0,4,2,2,0,0,0,0,0,0,4,0
