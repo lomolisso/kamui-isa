@@ -10,7 +10,7 @@ second.
 |---|---|
 | Jobs | `20261101T172729Z-q000033` (`jobs/nvbit-hist.sh`, the first five workloads) on GPU 3 of the lab's H100 server (H100 NVL, driver 580.126.20); the cross-check `20261101T172845Z-q000034` (`MODE=ncu`, Nsight Compute 2025.2.1); `20261105T023255Z-q000231` (every other workload, and `kernels/` for all of them; the first five rerun there agree with q33 within 0.06% (CUTLASS -0.052%, FlashInfer +0.007%, the others exactly)); `20261105T030813Z-q000234` (`flashinfer_paged_bf16`, rerun after a fix); `20261105T042659Z-q000237` (the `fa3*` workloads, after FlashAttention-3 was added to the job image) |
 | Tool | `kamui_sass_hist` (`tools/evidence/nvbit/`), NVBit 1.8.1; classes added by `python tools/evidence/classify.py` from `tools/evidence/opcode_classes.yaml` |
-| Versions | CUDA 12.9.1, CUTLASS 4.4.2, torch 2.11.0+cu129, Triton 3.6.0, flash-attn 2.8.3.post2, FlashInfer 0.7.2.post1 (also in the header of every CSV) |
+| Versions | CUDA 12.9.1, CUTLASS 4.4.2, torch 2.11.0+cu129, Triton 3.6.0, flash-attn 2.8.3.post2, FlashInfer 0.7.2.post1, and for `fa3*` FlashAttention-3 3.0.0b1 (`flash_attn_3`, built from flash-attention v2.8.3 `hopper/` into the job image on 2026-11-05) (also in the header of every CSV) |
 
 | File | Workload | Shape |
 |---|---|---|
