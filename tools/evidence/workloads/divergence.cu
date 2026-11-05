@@ -8,7 +8,7 @@
 //   bfs         level-synchronous breadth-first search on a random graph: per-lane loops of different lengths
 //               over neighbour lists, atomicCAS on the level array, atomicAdd on the next frontier
 //   mandelbrot  escape-time loop: trip counts that differ per lane, up to 1024
-//   hashlock    insertion into 64 buckets, each guarded by a spin lock taken with atomicCAS; lanes of one warp
+//   hashlock    insertion into 1024 buckets, each guarded by a spin lock taken with atomicCAS; lanes of one warp
 //               contend for the same lock, which needs independent forward progress of the lanes of a warp
 //   spmv        CSR sparse matrix-vector product, one row per lane, row lengths from 1 to 512
 //   bitonic     bitonic sort of 1024-element blocks: warp shuffles inside a warp, shared memory across warps
@@ -148,7 +148,7 @@ extern "C" __global__ void kamui_hashlock(const int *keys, int n, int *locks, in
 }
 
 static int run_hashlock() {
-    const int n = 1 << 18, nb = 64;
+    const int n = 1 << 16, nb = 1024;
     std::vector<int> keys(n);
     for (int &k : keys) k = (int)(lcg() >> 1);
     int *dk = to_dev(keys), *dl, *dh, *dn;

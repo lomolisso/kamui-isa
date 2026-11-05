@@ -49,7 +49,8 @@ def main() -> int:
             last = torch.full((batch,), page, device="cuda", dtype=torch.int32)
             ws = torch.empty(256 << 20, device="cuda", dtype=torch.uint8)
             w = flashinfer.BatchPrefillWithPagedKVCacheWrapper(ws, "NHD", backend="fa3")
-            w.plan(qo_indptr, kv_indptr, kv_indices, last, H, H, D, page, causal=True)
+            w.plan(qo_indptr, kv_indptr, kv_indices, last, H, H, D, page, causal=True,
+                   q_data_type=torch.bfloat16, kv_data_type=torch.bfloat16)
             o = w.run(qb, kv)
         else:
             print(__doc__)

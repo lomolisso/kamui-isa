@@ -144,7 +144,7 @@ elif [[ "$MODE" == occupancy ]]; then
     for wl in $SELECTED; do
         ${CMD[$wl]} > "$OUT/logs/$wl.warmup.log" 2>&1
         start=$(date +%s)
-        timeout "$WL_TIMEOUT" ncu --clock-control none --kernel-id "::regex:${KERNELS[$wl]}:1" --csv --page raw \
+        timeout -k 30 "$WL_TIMEOUT" ncu --clock-control none --kernel-id "::regex:${KERNELS[$wl]}:1" --csv --page raw \
             --print-units base --metrics launch__registers_per_thread,launch__occupancy_limit_registers,\
 launch__occupancy_limit_shared_mem,launch__occupancy_limit_warps,launch__occupancy_limit_blocks,\
 launch__occupancy_per_block_size,launch__block_size,launch__grid_size,launch__shared_mem_per_block_static,\
@@ -165,9 +165,9 @@ else
     build_all
     for wl in $SELECTED; do
         # Warm-up without the tool: JIT caches (Triton, FlashInfer) are filled outside the measured run.
-        timeout "$WL_TIMEOUT" ${CMD[$wl]} > "$OUT/logs/$wl.warmup.log" 2>&1
+        timeout -k 30 "$WL_TIMEOUT" ${CMD[$wl]} > "$OUT/logs/$wl.warmup.log" 2>&1
         start=$(date +%s)
-        timeout "$WL_TIMEOUT" env LD_PRELOAD="$TOOL" KAMUI_OUT="$OUT/raw/$wl.csv" KAMUI_WORKLOAD="$wl" \
+        timeout -k 30 "$WL_TIMEOUT" env LD_PRELOAD="$TOOL" KAMUI_OUT="$OUT/raw/$wl.csv" KAMUI_WORKLOAD="$wl" \
             KAMUI_KERNELS="${KERNELS[$wl]}" KAMUI_KERNELS_OUT="$OUT/kernels/$wl.csv" \
             ${CMD[$wl]} > "$OUT/logs/$wl.log" 2>&1
         rc=$?
