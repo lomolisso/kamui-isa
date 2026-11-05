@@ -1,0 +1,23 @@
+feature: reconv-points
+entry: tests/probes/reconv-points
+ptx_sha256: cec5f22aa5af69a2d668ee86f3c8bb6a271bfe02e58e12922fa83e61ed05b9bf
+inputs_sha256: 38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261105T030701Z-q000233
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 5
+runs_identical: false
+tolerance: property:probe
+outputs_sha256: cd4fe0f98de30f8e9ce354f9f88972868b7345c70bec25c7a9ca4f123c5b353a
+outputs:
+- {name: mask, dtype: u32, count: 288, offset: 0, bytes: 1152, sha256: ece05fe4d132f585531fa0c676300d9cdac95cc889119244ea01eff770041eb0}
+- {name: t, dtype: u32, count: 288, offset: 1152, bytes: 1152, sha256: d6fb7495e08377c96079b1490e495ee76c21fa5d6e583c959b1dddf1bcb16129}
+- {name: sink, dtype: u32, count: 32, offset: 2304, bytes: 128, sha256: 1aa639711eecb3c0afb544be450f7a126c9403a2e377371b74fb4c9cc9cb0edd}
+jit_registers: 22

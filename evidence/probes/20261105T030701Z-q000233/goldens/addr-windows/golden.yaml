@@ -1,0 +1,22 @@
+feature: addr-windows
+entry: tests/probes/addr-windows
+ptx_sha256: 3b430266193d8342d7f2ad6dc653f71d3f01d3e3ec6607253edb7f18c82d5003
+inputs_sha256: 38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261105T030701Z-q000233
+launch:
+  grid: [4, 1, 1]
+  block: [32, 1, 1]
+  cluster: [2, 1, 1]
+  dynamic_smem: 4096
+result: ok
+deterministic: false
+runs: 5
+runs_identical: false
+tolerance: property:probe
+outputs_sha256: 6e0e220a6a268924161ec7ebf1fdd788b9d8c08dff85e638fbc0c826e369dcb4
+outputs:
+- {name: info, dtype: u64, count: 256, offset: 0, bytes: 2048, sha256: a877b9379708cf63c11876e43ec7aa157b51290758c0487a345d2e676d42a399}
+- {name: local_addr, dtype: u64, count: 128, offset: 2048, bytes: 1024, sha256: 53cdb1101bbf4fc1f8b02b43cb7a65859a6a6e5caaa9fc907148e27f7ae16399}
+jit_registers: 32

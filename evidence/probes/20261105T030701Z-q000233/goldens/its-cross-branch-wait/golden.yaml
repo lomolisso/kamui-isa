@@ -1,0 +1,23 @@
+feature: its-cross-branch-wait
+entry: tests/probes/its-cross-branch-wait
+ptx_sha256: 823b83b1298c6dbca8e10e13143e9405a4f7d0c442ca6ddef15ecaedd78de43c
+inputs_sha256: af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261105T030701Z-q000233
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 5
+runs_identical: true
+tolerance: property:probe
+outputs_sha256: 72fc9761b5cfc8958634f4eaa9e8b2fb8459194c8523230e65a2fb6af7708057
+outputs:
+- {name: flags, dtype: u32, count: 2, offset: 0, bytes: 8, sha256: 64ed86b909d6d0502b64b28db0ea1272ffb358e20e9b1d88b63ccb07fa900cf5}
+- {name: res, dtype: u32, count: 32, offset: 8, bytes: 128, sha256: 0583bdb7861287029420aecfb6226174bfc69693792c1f4d3092f46526522d3a}
+- {name: t, dtype: u32, count: 32, offset: 136, bytes: 128, sha256: 3af836f7e365bf707056aecdcb6a8e73f6618b7c1854f8eb8add2f309bfce176}
+jit_registers: 10

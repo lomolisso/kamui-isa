@@ -1,0 +1,23 @@
+feature: lat-scopes-1
+entry: tests/probes/lat-scopes-1
+ptx_sha256: f86d224a45783c4d705681ed3acba22069861d6d232b2b0e6bc11fa58db7cfa3
+inputs_sha256: 0d71643bfaa0cd6f10b638daa12819f01a0f6a53a07835eb11532b45ed90a244
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261105T030701Z-q000233
+launch:
+  grid: [1, 1, 1]
+  block: [1, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 5
+runs_identical: false
+tolerance: property:probe
+outputs_sha256: b392449ef82d8d07fdc092c565cc2e663b81a1aa86650b8005b30f134f254583
+outputs:
+- {name: buf, dtype: u32, count: 1056, offset: 0, bytes: 4224, sha256: ec65d65bfe83c6ba76174be6546c0d8a751e1043c7037fb28cb8f679118e244b}
+- {name: cycles, dtype: u32, count: 43, offset: 4224, bytes: 172, sha256: c5738a875c302ace69ad86f0ab8b6b4158c0df96a0942186ca33af86b2b0b120}
+- {name: sink, dtype: u32, count: 1, offset: 4396, bytes: 4, sha256: 6cfbbadbce4b31386fada3e29134fd413def8647b756002e078a8690d1352f02}
+jit_registers: 32

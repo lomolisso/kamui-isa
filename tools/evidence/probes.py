@@ -80,15 +80,15 @@ def its_lock(p: Probe) -> str:
 
 
 def its_cross(p: Probe) -> str:
+    # ptxas reads the clock once before the branch (both sides show the same entry time), so only the waits count.
     rows = []
     for k, r in enumerate(p.runs):
-        res, t = p.buf(r, "res"), p.buf(r, "t")
-        ev = [t[i] for i in range(0, 32, 2)]
-        od = [t[i] for i in range(1, 32, 2)]
-        rows.append([k, f"{sum(x != FAIL for x in res[0::2])}/16", f"{sum(x != FAIL for x in res[1::2])}/16",
-                     f"{min(ev)}..{max(ev)}", f"{min(od)}..{max(od)}"])
-    return table(["run", "if side finished", "else side finished", "if side entered (cycles)",
-                  "else side entered (cycles)"], rows)
+        res = p.buf(r, "res")
+        ev = [x for x in res[0::2] if x != FAIL]
+        od = [x for x in res[1::2] if x != FAIL]
+        rows.append([k, f"{len(ev)}/16", f"{len(od)}/16", max(ev) if ev else "-", max(od) if od else "-"])
+    return table(["run", "if side (even lanes) finished", "else side (odd lanes) finished",
+                  "max reads waited, even", "max reads waited, odd"], rows)
 
 
 def its_pc(p: Probe) -> str:
@@ -152,8 +152,7 @@ def lat(p: Probe, ops: list[str], nt: int) -> str:
 
 
 def setmaxnreg(p: Probe) -> str:
-    gaps, waits_inc, waits_dec, after = [], [], [], 0
-    ctas = 0
+    inc_wait, dec_wait, dec_req, ctas = [], [], [], 0
     for r in p.runs:
         t, req = p.buf(r, "t"), p.buf(r, "req")
         for c in range(len(t) // 12):
@@ -161,16 +160,15 @@ def setmaxnreg(p: Probe) -> str:
             if not any(tc):
                 continue
             ctas += 1
-            dec_done = max(tc[:4])
-            inc_done = min(tc[4:])
-            gaps.append(inc_done - dec_done)
-            after += inc_done >= dec_done
-            waits_inc += [tc[w] - rq[w] for w in range(4, 12)]
-            waits_dec += [tc[w] - rq[w] for w in range(4)]
-    return table(["CTAs", "increase finished after the last decrease", "median (first inc done - last dec done)",
-                  "median inc wait", "max inc wait", "median dec wait"],
-                 [[ctas, f"{after}/{ctas}", med(gaps), med(waits_inc), max(waits_inc), med(waits_dec)]]) + \
-        "\n\nCycles (clock64, relative to the CTA's start)."
+            inc_wait += [tc[w] - rq[w] for w in range(4, 12)]
+            dec_wait += [tc[w] - rq[w] for w in range(4)]
+            dec_req += rq[:4]
+    return table(["CTA runs", "decrease issued at (median cycle)", "median decrease time", "median increase wait",
+                  "max increase wait"],
+                 [[ctas, med(dec_req), med(dec_wait), med(inc_wait), max(inc_wait)]]) + \
+        "\n\nCycles (clock64, relative to the CTA's start). Warpgroups 1 and 2 issue the increase at once; warpgroup 0 " \
+        "issues the decrease after the delay. An increase wait close to the cycle the decrease is issued at means the " \
+        "increase waited for the registers the decrease gave back."
 
 
 def bmov_break_expected(lane: int) -> tuple[int, int | None, int]:
