@@ -1,7 +1,7 @@
 // Divergence-heavy kernels for the instruction histograms, written for this project.
 //
-//     nvcc -O3 -arch=sm_90a -o divergence divergence.cu && ./divergence <kernel>
-//     kernel: bfs mandelbrot hashlock spmv bitonic tree
+//     nvcc -O3 -arch=sm_90a -o divergence divergence.cu && ./divergence <kernel> [log2 size]
+//     kernel: bfs mandelbrot hashlock spmv bitonic tree; the size applies to hashlock (default 16: 65536 keys)
 //
 // Each kernel is small, deterministic (fixed sizes, a fixed linear congruential generator) and checked against a
 // CPU result. They are chosen for their control flow, not their speed:
@@ -147,8 +147,10 @@ extern "C" __global__ void kamui_hashlock(const int *keys, int n, int *locks, in
     atomicExch(&locks[b], 0);
 }
 
+static int hashlock_log2 = 16;
+
 static int run_hashlock() {
-    const int n = 1 << 16, nb = 1024;
+    const int n = 1 << hashlock_log2, nb = n >= (1 << 14) ? 1024 : 64;
     std::vector<int> keys(n);
     for (int &k : keys) k = (int)(lcg() >> 1);
     int *dk = to_dev(keys), *dl, *dh, *dn;
@@ -157,7 +159,7 @@ static int run_hashlock() {
     CHECK(cudaMalloc(&dn, n * sizeof(int)));
     CHECK(cudaMemset(dl, 0, nb * sizeof(int)));
     CHECK(cudaMemset(dh, 0xff, nb * sizeof(int)));
-    kamui_hashlock<<<n / 256, 256>>>(dk, n, dl, dh, dn, nb);
+    kamui_hashlock<<<(n + 255) / 256, 256>>>(dk, n, dl, dh, dn, nb);
     CHECK(cudaGetLastError());
     std::vector<int> heads = to_host(dh, nb), next = to_host(dn, n);
     std::vector<int> seen(n, 0);
@@ -314,6 +316,7 @@ static int run_tree() {
 
 int main(int argc, char **argv) {
     const char *k = argc > 1 ? argv[1] : "";
+    if (argc > 2) hashlock_log2 = atoi(argv[2]);
     int rc;
     if (!strcmp(k, "bfs")) rc = run_bfs();
     else if (!strcmp(k, "mandelbrot")) rc = run_mandelbrot();

@@ -25,6 +25,11 @@
 #   torch_*                      PyTorch's own kernels: CUB scans and sorts, atomics, reductions (torch_ops.py)
 #   triton_{splitk,queue,attention}   our Triton kernels with atomics and a fused attention (triton_kernels.py)
 #   div_*                        our divergence-heavy CUDA kernels (divergence.cu)
+#   fa3*                         FlashAttention-3 (flash_attn_interface in the image): forward, backward, FP8,
+#                                KV-cache decode, head dimensions 64 and 256 (attention.py)
+#   vendor_*                     cuBLAS, cuBLASLt and cuDNN kernels through PyTorch (vendor_ops.py); counted with no
+#                                exclusion and written to vendor/raw and vendor/kernels, which stay out of the
+#                                repository (NVIDIA library kernels: aggregate counts only, kept apart)
 # Only the first launch of each kernel of interest is counted. Each workload has a time limit (WL_TIMEOUT).
 #
 # MODE=ncu (submit with `h100 submit --profile`) instead runs Nsight Compute on the CUTLASS GEMM kernel, for the
@@ -93,6 +98,12 @@ for t in splitk queue attention; do
     CMD[triton_$t]="python3 $W/triton_kernels.py $t"; KERNELS[triton_$t]="kamui_"; NEW+=" triton_$t"
 done
 for k in $DIV; do CMD[div_$k]="$WORK/divergence $k"; KERNELS[div_$k]="kamui_"; NEW+=" div_$k"; done
+CMD[div_hashlock]="$WORK/divergence hashlock 12"   # 4096 keys: the instrumented spin locks finish in time
+for a in fa3 fa3_bwd fa3_fp8 fa3_kvcache fa3_hdim64 fa3_hdim256; do
+    CMD[$a]="python3 $W/attention.py $a"; KERNELS[$a]="."; NEW+=" $a"
+done
+VENDOR="vendor_matmul_bf16 vendor_matmul_fp8 vendor_sdpa_cudnn vendor_conv_bf16"
+for v in $VENDOR; do CMD[$v]="python3 $W/vendor_ops.py ${v#vendor_}"; KERNELS[$v]="."; NEW+=" $v"; done
 SELECTED=${WORKLOADS:-$NEW $ORIGINAL}
 
 build_gemm() {
@@ -150,6 +161,7 @@ launch__occupancy_limit_shared_mem,launch__occupancy_limit_warps,launch__occupan
 launch__occupancy_per_block_size,launch__block_size,launch__grid_size,launch__shared_mem_per_block_static,\
 launch__shared_mem_per_block_dynamic,launch__cluster_size,sm__warps_active.avg.pct_of_peak_sustained_active \
             ${CMD[$wl]} > "$OUT/ncu/$wl.csv" 2> "$OUT/logs/$wl.ncu.log"
+        [[ $wl == vendor_* ]] && mkdir -p "$OUT/vendor/ncu" && mv "$OUT/ncu/$wl.csv" "$OUT/vendor/ncu/"
         echo "$wl: ncu exit $?, $(( $(date +%s) - start )) s"
     done
 else
@@ -161,17 +173,19 @@ else
         tail -20 "$OUT/logs/nvbit-build.log"
         exit 1
     fi
-    mkdir -p "$OUT/kernels"
+    mkdir -p "$OUT/kernels" "$OUT/vendor/raw" "$OUT/vendor/kernels"
     build_all
     for wl in $SELECTED; do
         # Warm-up without the tool: JIT caches (Triton, FlashInfer) are filled outside the measured run.
         timeout -k 30 "$WL_TIMEOUT" ${CMD[$wl]} > "$OUT/logs/$wl.warmup.log" 2>&1
+        dst=$OUT excl=$KAMUI_EXCLUDE
+        [[ $wl == vendor_* ]] && dst=$OUT/vendor excl=
         start=$(date +%s)
-        timeout -k 30 "$WL_TIMEOUT" env LD_PRELOAD="$TOOL" KAMUI_OUT="$OUT/raw/$wl.csv" KAMUI_WORKLOAD="$wl" \
-            KAMUI_KERNELS="${KERNELS[$wl]}" KAMUI_KERNELS_OUT="$OUT/kernels/$wl.csv" \
+        timeout -k 30 "$WL_TIMEOUT" env LD_PRELOAD="$TOOL" KAMUI_OUT="$dst/raw/$wl.csv" KAMUI_WORKLOAD="$wl" \
+            KAMUI_KERNELS="${KERNELS[$wl]}" KAMUI_KERNELS_OUT="$dst/kernels/$wl.csv" KAMUI_EXCLUDE="$excl" \
             ${CMD[$wl]} > "$OUT/logs/$wl.log" 2>&1
         rc=$?
-        echo "$wl: exit $rc, $(( $(date +%s) - start )) s, $(($(wc -l < "$OUT/raw/$wl.csv" 2>/dev/null || echo 1) - 1)) rows"
+        echo "$wl: exit $rc, $(( $(date +%s) - start )) s, $(($(wc -l < "$dst/raw/$wl.csv" 2>/dev/null || echo 1) - 1)) rows"
     done
 fi
 
