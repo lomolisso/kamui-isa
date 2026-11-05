@@ -161,8 +161,9 @@ launch__occupancy_limit_shared_mem,launch__occupancy_limit_warps,launch__occupan
 launch__occupancy_per_block_size,launch__block_size,launch__grid_size,launch__shared_mem_per_block_static,\
 launch__shared_mem_per_block_dynamic,launch__cluster_size,sm__warps_active.avg.pct_of_peak_sustained_active \
             ${CMD[$wl]} > "$OUT/ncu/$wl.csv" 2> "$OUT/logs/$wl.ncu.log"
-        [[ $wl == vendor_* ]] && mkdir -p "$OUT/vendor/ncu" && mv "$OUT/ncu/$wl.csv" "$OUT/vendor/ncu/"
-        echo "$wl: ncu exit $?, $(( $(date +%s) - start )) s"
+        rc=$?
+        if [[ $wl == vendor_* ]]; then mkdir -p "$OUT/vendor/ncu" && mv "$OUT/ncu/$wl.csv" "$OUT/vendor/ncu/"; fi
+        echo "$wl: ncu exit $rc, $(( $(date +%s) - start )) s"
     done
 else
     cmake -S tools/evidence/nvbit -B "$WORK/nvbit" -G Ninja -DCMAKE_BUILD_TYPE=Release > "$OUT/logs/nvbit-build.log" 2>&1 \

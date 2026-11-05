@@ -1,0 +1,12 @@
+workload,kernel,regs,local_bytes,shared_static_bytes,dynamic_shared_bytes,const_bytes,max_threads_per_block,ptx_version,grid,block,cluster,required_cluster,max_r,max_ur,max_p,max_up,static_instrs,setmaxnreg,n_BSSY,n_BSYNC,n_BMOV,n_BREAK,n_WARPSYNC,n_BPT,n_YIELD,n_USETMAXREG,n_REDUX,n_VOTEU,n_S2UR,n_R2UR,n_ELECT,n_QSPC,n_MEMBAR,n_CCTL,n_ERRBAR,n_FENCE,n_SYNCS,n_HGMMA,n_UTMALDG,n_UBLKCP,n_LDGSTS,n_CALL,n_RET
+fa3_bwd,void at::native::#5b34bd44,44,0,0,0,72,256,90,1056x1x1,256x1x1,0x0x0,0x0x0,41,11,4,0,504,,6,6,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,3,2
+fa3_bwd,void at::native::vectorized_elementwise_kernel#3d5c1472,14,0,0,0,0,128,90,1x1x1,128x1x1,0x0x0,0x0x0,11,5,0,-1,104,,2,2,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+fa3_bwd,void at::native::vectorized_elementwise_kernel#38fc7257,14,0,0,0,0,128,90,1x1x1,128x1x1,0x0x0,0x0x0,11,5,0,-1,104,,2,2,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+fa3_bwd,void cutlass::device_kernel#37f78331,168,0,0,166912,0,384,90,132x1x1,384x1x1,0x0x0,0x0x0,226,58,6,3,3256,24/240,13,13,0,0,2,0,1,2,0,6,12,38,10,0,1,0,0,7,106,48,18,0,0,0,0
+fa3_bwd,void at::native::unrolled_elementwise_kernel#78375d6c,30,0,0,0,0,128,90,8192x1x1,128x1x1,0x0x0,0x0x0,27,37,2,-1,1864,,33,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0
+fa3_bwd,void at::native::elementwise_kernel#8a1adc77,18,0,0,0,0,128,90,8192x1x1,128x1x1,0x0x0,0x0x0,15,9,0,-1,1280,,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+fa3_bwd,void at::native::reduce_kernel#a18218d1,32,0,16,2048,0,512,90,1x512x1,512x1x1,0x0x0,0x0x0,29,61,4,-1,3776,,24,24,0,0,0,0,0,0,0,1,7,0,0,0,4,2,2,0,0,0,0,0,0,4,0
+fa3_bwd,void at::native::vectorized_elementwise_kernel#4f12660b,32,0,0,0,0,128,90,4096x1x1,128x1x1,0x0x0,0x0x0,29,5,6,-1,168,,2,2,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+fa3_bwd,void cutlass::device_kernel#b86bc245,56,0,0,49280,0,256,90,32x16x1,256x1x1,0x0x0,0x0x0,53,10,8,-1,312,,4,4,0,0,0,0,0,0,0,0,1,2,1,0,0,0,0,1,4,0,0,1,0,0,0
+fa3_bwd,void cutlass::device_kernel#7bbe5fe7,64,0,0,0,0,256,90,32x16x1,256x1x1,0x0x0,0x0x0,61,13,6,-1,416,,2,2,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+fa3_bwd,void cutlass::device_kernel#2317a2e6,168,8,0,199680,0,384,90,256x1x1,384x1x1,0x0x0,0x0x0,222,51,8,5,2240,24/240,28,28,0,0,1,0,0,2,0,2,14,59,7,0,3,0,0,6,67,32,20,8,0,0,0

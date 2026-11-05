@@ -1,4 +1,4 @@
-# job 20261105T032452Z-q000235
+# job 20261105T032452Z-q000235, 20261105T044339Z-q000238 (FlashAttention-3, div_hashlock)
 # Nsight Compute, first launch of every kernel (jobs/nvbit-hist.sh MODE=occupancy)
 workload,kernel,registers_per_thread,block_size,cluster_size,blocks_limit_registers,blocks_limit_shared_mem,blocks_limit_warps,blocks_limit_blocks,binding,warps_active_percent
 cutlass_ex49,void device_kernel<gemm::GemmUniversal<cute::tuple<int_ int_ int_ int>_ collecti,168,384,2,1,1,5,32,registers+shared_mem,14.13
@@ -16,10 +16,42 @@ cutlass_ex88_bwd,void device_kernel<fmha::FmhaKernelBwdSumOdO<half_t_ float>>(Pa
 cutlass_gemm_tf32_2048,void device_kernel<GemmUniversal<tuple<int_ int_ int>_ CollectiveMma<MainloopSm9,168,384,8,1,1,5,32,registers+shared_mem,14.13
 div_bfs,kamui_bfs,21,256,0,10,32,8,32,warps,2.36
 div_bitonic,kamui_bitonic,19,1024,0,2,3,2,32,registers+warps,94.75
-div_hashlock,kamui_hashlock,16,256,0,16,32,8,32,warps,23.73
+div_hashlock,kamui_hashlock,16,256,0,16,32,8,32,warps,12.10
 div_mandelbrot,kamui_mandelbrot,17,256,0,10,32,8,32,warps,85.93
 div_spmv,kamui_spmv,32,256,0,8,32,8,32,registers+warps,76.50
 div_tree,kamui_tree,16,256,0,16,32,8,32,warps,94.32
+fa3,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void t,44,256,0,5,32,8,32,registers,50.57
+fa3,void at::vectorized_elementwise_kernel<4_ at::FillFunctor<int>_ std::array<char ,16,128,0,32,32,16,32,warps,5.91
+fa3,void cutlass::device_kernel<flash::enable_sm90_or_later<flash::FlashAttnFwdSm90<,168,384,0,1,1,5,32,registers+shared_mem,13.97
+fa3,void at::unrolled_elementwise_kernel<at::direct_copy_kernel_cuda(at::TensorItera,32,128,0,16,32,16,32,registers+warps,85.17
+fa3,void at::reduce_kernel<512_ 1_ at::ReduceOp<float_ at::func_wrapper_t<float_ at:,32,512,0,4,10,4,32,registers+warps,90.42
+fa3_bwd,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void t,44,256,0,5,32,8,32,registers,50.63
+fa3_bwd,void at::vectorized_elementwise_kernel<4_ at::FillFunctor<int>_ std::array<char ,16,128,0,32,32,16,32,warps,5.91
+fa3_bwd,void cutlass::device_kernel<flash::enable_sm90_or_later<flash::FlashAttnFwdSm90<,168,384,0,1,1,5,32,registers+shared_mem,13.98
+fa3_bwd,void at::unrolled_elementwise_kernel<at::direct_copy_kernel_cuda(at::TensorItera,32,128,0,16,32,16,32,registers+warps,85.21
+fa3_bwd,void at::reduce_kernel<512_ 1_ at::ReduceOp<float_ at::func_wrapper_t<float_ at:,32,512,0,4,10,4,32,registers+warps,91.17
+fa3_bwd,void at::elementwise_kernel<128_ 4_ void at::gpu_kernel_impl_nocast<at::bfloat16,18,128,0,21,32,16,32,warps,61.24
+fa3_fp8,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void t,44,256,0,5,32,8,32,registers,50.63
+fa3_fp8,void at::vectorized_elementwise_kernel<4_ at::float8_copy_kernel_cuda(at::Tensor,32,128,0,16,32,16,32,registers+warps,76.74
+fa3_fp8,void cutlass::device_kernel<flash::enable_sm90_or_later<flash::FlashAttnFwdSm90<,168,384,0,1,1,5,32,registers+shared_mem,18.39
+fa3_fp8,void at::unrolled_elementwise_kernel<at::direct_copy_kernel_cuda(at::TensorItera,32,128,0,16,32,16,32,registers+warps,84.87
+fa3_fp8,void at::reduce_kernel<512_ 1_ at::ReduceOp<float_ at::func_wrapper_t<float_ at:,32,512,0,4,10,4,32,registers+warps,90.75
+fa3_hdim256,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void t,44,256,0,5,32,8,32,registers,50.64
+fa3_hdim256,void at::vectorized_elementwise_kernel<4_ at::FillFunctor<int>_ std::array<char ,16,128,0,32,32,16,32,warps,5.93
+fa3_hdim256,void cutlass::device_kernel<flash::enable_sm90_or_later<flash::FlashAttnFwdSm90<,168,384,0,1,1,5,32,registers+shared_mem,13.89
+fa3_hdim256,void at::unrolled_elementwise_kernel<at::direct_copy_kernel_cuda(at::TensorItera,32,128,0,16,32,16,32,registers+warps,87.50
+fa3_hdim256,void at::reduce_kernel<512_ 1_ at::ReduceOp<float_ at::func_wrapper_t<float_ at:,32,512,0,4,10,4,32,registers+warps,96.38
+fa3_hdim64,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void t,44,256,0,5,32,8,32,registers,50.64
+fa3_hdim64,void at::vectorized_elementwise_kernel<4_ at::FillFunctor<int>_ std::array<char ,16,128,0,32,32,16,32,warps,5.92
+fa3_hdim64,void cutlass::device_kernel<flash::enable_sm90_or_later<flash::FlashAttnFwdSm90<,128,512,0,1,1,4,32,registers+shared_mem,20.10
+fa3_hdim64,void at::unrolled_elementwise_kernel<at::direct_copy_kernel_cuda(at::TensorItera,32,128,0,16,32,16,32,registers+warps,81.72
+fa3_hdim64,void at::reduce_kernel<512_ 1_ at::ReduceOp<float_ at::func_wrapper_t<float_ at:,32,512,0,4,10,4,32,registers+warps,47.95
+fa3_kvcache,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void t,44,256,0,5,32,8,32,registers,50.62
+fa3_kvcache,void at::vectorized_elementwise_kernel<4_ at::FillFunctor<int>_ std::array<char ,16,128,0,32,32,16,32,warps,5.90
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel(int_ int_ int_ const int *_ const int *_,16,1024,0,4,7,2,32,warps,43.42
+fa3_kvcache,void cutlass::device_kernel<flash::enable_sm90_or_later<flash::FlashAttnFwdSm90<,168,384,0,1,1,5,32,registers+shared_mem,18.68
+fa3_kvcache,void at::unrolled_elementwise_kernel<at::direct_copy_kernel_cuda(at::TensorItera,32,128,0,16,32,16,32,registers+warps,6.24
+fa3_kvcache,void at::reduce_kernel<512_ 1_ at::ReduceOp<float_ at::func_wrapper_t<float_ at:,32,512,0,4,10,4,32,registers+warps,23.43
 flash_attn2_bwd_bf16,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void t,44,256,0,5,32,8,32,registers,50.62
 flash_attn2_bwd_bf16,void flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128_ 128_ 64_ 4_ 0_ 0_ cutl,255,128,0,2,2,16,32,registers+shared_mem,10.87
 flash_attn2_bwd_bf16,void at::unrolled_elementwise_kernel<at::direct_copy_kernel_cuda(at::TensorItera,32,128,0,16,32,16,32,registers+warps,85.32

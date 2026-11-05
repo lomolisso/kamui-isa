@@ -8,7 +8,7 @@ second.
 
 | | |
 |---|---|
-| Jobs | `20261101T172729Z-q000033` (`jobs/nvbit-hist.sh`, the first five workloads) on GPU 3 of the lab's H100 server (H100 NVL, driver 580.126.20); the cross-check `20261101T172845Z-q000034` (`MODE=ncu`, Nsight Compute 2025.2.1); `20261105T023255Z-q000231` (every other workload, and `kernels/` for all of them; the first five rerun there agree with q33 within 0.06% (CUTLASS -0.052%, FlashInfer +0.007%, the others exactly)); `20261105T030813Z-q000234` (`flashinfer_paged_bf16`, rerun after a fix) |
+| Jobs | `20261101T172729Z-q000033` (`jobs/nvbit-hist.sh`, the first five workloads) on GPU 3 of the lab's H100 server (H100 NVL, driver 580.126.20); the cross-check `20261101T172845Z-q000034` (`MODE=ncu`, Nsight Compute 2025.2.1); `20261105T023255Z-q000231` (every other workload, and `kernels/` for all of them; the first five rerun there agree with q33 within 0.06% (CUTLASS -0.052%, FlashInfer +0.007%, the others exactly)); `20261105T030813Z-q000234` (`flashinfer_paged_bf16`, rerun after a fix); `20261105T042659Z-q000237` (the `fa3*` workloads, after FlashAttention-3 was added to the job image) |
 | Tool | `kamui_sass_hist` (`tools/evidence/nvbit/`), NVBit 1.8.1; classes added by `python tools/evidence/classify.py` from `tools/evidence/opcode_classes.yaml` |
 | Versions | CUDA 12.9.1, CUTLASS 4.4.2, torch 2.11.0+cu129, Triton 3.6.0, flash-attn 2.8.3.post2, FlashInfer 0.7.2.post1 (also in the header of every CSV) |
 
@@ -24,9 +24,10 @@ second.
 | `flash_attn2_bwd_bf16.csv`, `flashinfer_decode_bf16.csv`, `flashinfer_paged_bf16.csv` | flash-attn 2 forward and backward; FlashInfer single decode; FlashInfer batch prefill on a paged KV cache (backend fa3) | `tools/evidence/workloads/attention.py` |
 | `torch_*.csv` | PyTorch's own kernels: `cumsum`, `sort`, `topk`, `unique`, `nonzero` (CUB scans and sorts), `index_add`, `scatter_add`, `histc` (atomics), `embedding_bwd`, `layer_norm`, `softmax` | `tools/evidence/workloads/torch_ops.py` |
 | `triton_splitk.csv`, `triton_queue.csv`, `triton_attention.csv` | our Triton split-K GEMM with atomic adds, a persistent kernel taking work from an atomic counter, and a fused attention forward | `tools/evidence/workloads/triton_kernels.py` |
-| `div_*.csv` | our divergence-heavy CUDA kernels: BFS, Mandelbrot, CSR SpMV, bitonic sort, tree search (the lock-based hash insert, `hashlock`, ran correctly but timed out under the tool, so it has no histogram) | `tools/evidence/workloads/divergence.cu` |
+| `div_*.csv` | our divergence-heavy CUDA kernels: BFS, Mandelbrot, CSR SpMV, bitonic sort, tree search. The lock-based hash insert (`hashlock`) has no histogram: it completes correctly without the tool (262,144, 65,536 and 4,096 keys in jobs q231, q234, q237), but under instrumentation its spin locks never finish, even with 4,096 keys, so the instrumented run is stopped after 15 minutes | `tools/evidence/workloads/divergence.cu` |
+| `fa3*.csv` | FlashAttention-3 (`flash_attn_interface`, flash-attention v2.8.3 `hopper/`): forward, forward and backward, FP8 forward, KV-cache decode, head dimensions 64 and 256 | `tools/evidence/workloads/attention.py` |
 | `kernels/<workload>.csv` | one row per counted kernel (columns below) | |
-| `occupancy.csv` | Nsight Compute on the first launch of every kernel (job `20261105T032452Z-q000235`, `MODE=occupancy`): registers per thread, the blocks per SM that registers, shared memory, warps and the block limit allow, which of them bind, and the achieved warp occupancy; written by `classify.py --occupancy` | |
+| `occupancy.csv` | Nsight Compute on the first launch of every kernel (jobs `20261105T032452Z-q000235` and, for `fa3*` and `div_hashlock`, `20261105T044339Z-q000238`; `MODE=occupancy`): registers per thread, the blocks per SM that registers, shared memory, warps and the block limit allow, which of them bind, and the achieved warp occupancy; written by `classify.py --occupancy` | |
 
 Only the first launch of each kernel of interest is counted (the new workloads count every kernel they launch,
 except cuBLAS and cuDNN kernels, which `KAMUI_EXCLUDE` leaves out by name) (`KAMUI_KERNELS` in the job script selects them);
@@ -58,10 +59,14 @@ each workload first runs once without the tool so that compilation caches are wa
 `python tools/evidence/report_tables.py` summarises these files (tables "Registers per kernel", "Uniform
 registers and setmaxnreg per kernel", "Execution-model instructions per workload", "What limits occupancy").
 Nsight Compute's registers per thread agree with the NVBit tables (168 for the warp-specialized Hopper kernels,
-255 for flash-attn 2, 200 for `radixSortKVInPlace`); registers are a binding occupancy limit for 86 of the 117
-profiled kernels, and 11 fit only one block per SM because of registers: the 10 warp-specialized Hopper kernels
-(384 threads x 168 registers) and flash-attn 2's backward kernel (256 threads x 255), with achieved warp occupancy
-of 12 to 19%.
+255 for flash-attn 2, 200 for `radixSortKVInPlace`); registers are a binding occupancy limit for 111 of the 149
+profiled kernels, and 17 fit only one block per SM because of registers (the warp-specialized Hopper kernels,
+384 threads x 168 registers, and flash-attn 2's backward kernel, 256 threads x 255), with achieved warp occupancy
+of 12 to 20%.
+
+The job image runs NVIDIA library kernels (cuBLAS, cuBLASLt, cuDNN) too; the job counts them only on request
+(`vendor_*` workloads, `tools/evidence/workloads/vendor_ops.py`) into a separate folder, and those results are not
+part of this directory.
 
 ## Cross-check with Nsight Compute
 

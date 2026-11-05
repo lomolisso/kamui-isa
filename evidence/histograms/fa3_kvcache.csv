@@ -1,0 +1,548 @@
+# job 20261105T042659Z-q000237
+# gpu NVIDIA H100 NVL, driver 580.126.20
+# tool kamui_sass_hist (tools/evidence/nvbit), NVBit 1.8.1
+# cuda_toolkit Build cuda_12.9.r12.9/compiler.36037853_0, cutlass 4.4.2, torch 2.11.0+cu129, triton 3.6.0, flash_attn 2.8.3.post2, flashinfer 0.7.2.post1
+workload,kernel,sass_opcode,opcode_class,static_count,warp_inst_executed,thread_inst_executed,thread_inst_executed_pred_true
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,BRA,branch,16,257,8200,7120
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ULDC.64,mem_const,9,256,8192,8192
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,BSYNC,convergence,8,195,5120,5120
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,BSSY,convergence,8,160,5120,5120
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.NE.AND.EX,int_alu,6,160,5120,5120
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.NE.U32.AND,int_alu,6,160,5120,5120
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,SHFL.DOWN,warp,8,160,5120,5120
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,IMAD.MOV.U32,int_alu,10,130,4112,4112
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,IMAD.IADD,int_alu,8,129,4104,4096
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,IMAD.U32,int_alu,4,128,3104,3104
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.NE.AND,int_alu,6,99,3096,3096
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,S2R,move,3,96,2080,1057
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ULDC,mem_const,8,68,2080,2080
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,IMAD,int_alu,5,67,2072,2072
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,LDC.64,mem_const,9,67,2072,25
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,BAR.SYNC.DEFER_BLOCKING,barrier,2,64,2048,2048
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.EQ.U32.AND,int_alu,2,64,1056,1056
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,LDC,mem_const,5,36,1056,1056
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,IADD3,int_alu,4,35,1048,1048
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,IMAD.MOV,int_alu,4,35,1048,16
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,IMAD.WIDE,int_alu,7,34,1040,16
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,LOP3.LUT,int_alu,3,34,1040,1032
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,SHF.R.U32.HI,int_alu,3,34,1040,1040
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,EXIT,branch,2,33,1032,1024
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.GE.AND,int_alu,3,33,1032,1032
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,LDG.E,mem_global,6,33,1032,8
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,S2UR,move,2,33,40,40
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,STG.E,mem_global,2,33,1032,9
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ULEA,uniform,2,33,40,40
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,UMOV,move,2,33,40,40
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ATOMS.ADD,atomic,1,32,32,32
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.EQ.OR,int_alu,1,32,1024,1024
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.EQ.OR.EX,int_alu,1,32,1024,1024
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.NE.OR,int_alu,1,32,1024,1024
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,LEA,int_alu,1,32,1024,1
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,MOV,move,1,32,1024,1
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,PREEXIT,branch,1,32,1024,1024
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,REDUX.SUM,warp,1,32,32,32
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,STS,mem_shared,1,32,1024,1
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,UFLO.U32,uniform,1,32,32,32
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ULDC.U8,mem_const,1,32,1024,1024
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,UPRMT,uniform,1,32,1024,1024
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,VOTEU.ANY,warp,1,32,32,32
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,IMAD.HI.U32,int_alu,4,4,32,32
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,VIADD,int_alu,4,4,32,16
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,FMUL.FTZ,fp32,3,3,24,24
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,I2FP.F32.S32,convert,3,3,24,24
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,IABS,int_alu,3,3,24,24
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,MUFU.RCP,mufu,2,2,16,16
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,VIMNMX,int_alu,2,2,16,16
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,F2I.FTZ.CEIL.NTZ,convert,1,1,8,8
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,F2I.FTZ.U32.TRUNC.NTZ,convert,1,1,8,8
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,HFMA2.MMA,fp16x2,1,1,8,8
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,I2F.RP,convert,1,1,8,8
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.GE.U32.AND,int_alu,1,1,8,8
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.GT.U32.AND,int_alu,1,1,8,8
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,LDS,mem_shared,1,1,8,8
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,ISETP.GT.AND,int_alu,3,0,0,0
+fa3_kvcache,flash::prepare_varlen_num_blocks_kernel#b5487f4f,NOP,other,9,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,FFMA,fp32,39,1212416,38797312,36634624
+fa3_kvcache,void at::native::#5b34bd44,LOP3.LUT,int_alu,47,946176,30277632,30007296
+fa3_kvcache,void at::native::#5b34bd44,IMAD.WIDE.U32,int_alu,43,743424,23789568,23789568
+fa3_kvcache,void at::native::#5b34bd44,IADD3,int_alu,40,553472,17711104,16900096
+fa3_kvcache,void at::native::#5b34bd44,BRA,branch,19,380160,12165120,5537792
+fa3_kvcache,void at::native::#5b34bd44,IMAD,int_alu,23,359168,11493376,11493376
+fa3_kvcache,void at::native::#5b34bd44,VIADD,int_alu,21,354816,11354112,11083776
+fa3_kvcache,void at::native::#5b34bd44,FMUL,fp32,10,337920,10813440,8650752
+fa3_kvcache,void at::native::#5b34bd44,MOV,move,24,329472,10543104,9461760
+fa3_kvcache,void at::native::#5b34bd44,IMAD.MOV.U32,int_alu,21,321024,10272768,9191424
+fa3_kvcache,void at::native::#5b34bd44,ISETP.GE.U32.AND,int_alu,12,261888,8380416,8380416
+fa3_kvcache,void at::native::#5b34bd44,BSSY,convergence,6,202752,6488064,6488064
+fa3_kvcache,void at::native::#5b34bd44,BSYNC,convergence,6,202752,6488064,6488064
+fa3_kvcache,void at::native::#5b34bd44,ISETP.GE.AND.EX,int_alu,6,177408,5677056,5677056
+fa3_kvcache,void at::native::#5b34bd44,IMAD.HI.U32,int_alu,17,143616,4595712,4595712
+fa3_kvcache,void at::native::#5b34bd44,ISETP.NE.AND,int_alu,7,143616,4595712,4595712
+fa3_kvcache,void at::native::#5b34bd44,FMUL.FTZ,fp32,7,135168,4325376,4325376
+fa3_kvcache,void at::native::#5b34bd44,FMUL.RZ,fp32,4,135168,4325376,4325376
+fa3_kvcache,void at::native::#5b34bd44,FSEL,fp32,4,135168,4325376,4325376
+fa3_kvcache,void at::native::#5b34bd44,I2FP.F32.U32,convert,4,135168,4325376,4325376
+fa3_kvcache,void at::native::#5b34bd44,F2FP.BF16.F32.PACK_AB,convert,4,131072,4194304,4194304
+fa3_kvcache,void at::native::#5b34bd44,LEA.HI.X.SX32,int_alu,4,131072,4194304,4194304
+fa3_kvcache,void at::native::#5b34bd44,STG.E.U16,mem_global,4,131072,4194304,4194304
+fa3_kvcache,void at::native::#5b34bd44,IMAD.X,int_alu,9,84480,2703360,2433024
+fa3_kvcache,void at::native::#5b34bd44,LDC,mem_const,7,84480,2703360,2703360
+fa3_kvcache,void at::native::#5b34bd44,HFMA2.MMA,fp16x2,4,76032,2433024,2433024
+fa3_kvcache,void at::native::#5b34bd44,FADD,fp32,2,67584,2162688,2162688
+fa3_kvcache,void at::native::#5b34bd44,FSETP.GEU.AND,fp32,2,67584,2162688,2162688
+fa3_kvcache,void at::native::#5b34bd44,FSETP.NEU.AND,fp32,2,67584,2162688,2162688
+fa3_kvcache,void at::native::#5b34bd44,I2FP.F32.S32,convert,2,67584,2162688,2162688
+fa3_kvcache,void at::native::#5b34bd44,IADD3.X,int_alu,11,67584,2162688,2162688
+fa3_kvcache,void at::native::#5b34bd44,ISETP.GT.U32.AND,int_alu,2,67584,2162688,2162688
+fa3_kvcache,void at::native::#5b34bd44,LEA,int_alu,2,67584,2162688,2162688
+fa3_kvcache,void at::native::#5b34bd44,MUFU.COS,mufu,2,67584,2162688,2162688
+fa3_kvcache,void at::native::#5b34bd44,MUFU.RSQ,mufu,3,67584,2162688,2162688
+fa3_kvcache,void at::native::#5b34bd44,MUFU.SIN,mufu,2,67584,2162688,2162688
+fa3_kvcache,void at::native::#5b34bd44,IMAD.IADD,int_alu,2,42240,1351680,1351680
+fa3_kvcache,void at::native::#5b34bd44,ULDC,mem_const,3,42240,1351680,1351680
+fa3_kvcache,void at::native::#5b34bd44,ULDC.64,mem_const,5,42240,1351680,1351680
+fa3_kvcache,void at::native::#5b34bd44,BAR.SYNC.DEFER_BLOCKING,barrier,1,33792,1081344,1081344
+fa3_kvcache,void at::native::#5b34bd44,NOP,other,13,33792,1081344,1081344
+fa3_kvcache,void at::native::#5b34bd44,WARPSYNC.ALL,barrier,1,33792,1081344,1081344
+fa3_kvcache,void at::native::#5b34bd44,EXIT,branch,2,16896,540672,270336
+fa3_kvcache,void at::native::#5b34bd44,IMAD.MOV,int_alu,2,16896,540672,540672
+fa3_kvcache,void at::native::#5b34bd44,IMAD.U32,int_alu,2,16896,540672,540672
+fa3_kvcache,void at::native::#5b34bd44,ISETP.NE.U32.AND,int_alu,3,16896,540672,540672
+fa3_kvcache,void at::native::#5b34bd44,LDC.64,mem_const,2,16896,540672,270336
+fa3_kvcache,void at::native::#5b34bd44,LDG.E.64,mem_global,2,16896,540672,0
+fa3_kvcache,void at::native::#5b34bd44,SHF.R.U64,int_alu,2,16896,540672,540672
+fa3_kvcache,void at::native::#5b34bd44,F2I.FTZ.U32.TRUNC.NTZ,convert,1,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,I2F.U32.RP,convert,1,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,IMAD.SHL.U32,int_alu,1,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,MUFU.RCP,mufu,2,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,S2R,move,1,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,S2UR,move,1,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,SHF.L.U32,int_alu,2,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,SHF.L.U64.HI,int_alu,1,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,SHF.R.U32.HI,int_alu,1,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,UIADD3,uniform,1,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,UIADD3.X,uniform,1,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,ULDC.U8,mem_const,1,8448,270336,270336
+fa3_kvcache,void at::native::#5b34bd44,CALL.REL.NOINC,branch,3,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,F2I.U64.TRUNC,convert,1,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,FADD.FTZ,fp32,2,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,FSETP.GEU.FTZ.AND,fp32,1,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,FSETP.GTU.FTZ.AND,fp32,1,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,FSETP.NEU.FTZ.AND,fp32,1,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,I2F.U64.RP,convert,1,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,ISETP.GE.U32.AND.EX,int_alu,2,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,ISETP.LE.AND,int_alu,1,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,ISETP.NE.AND.EX,int_alu,1,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,RET.REL.NODEC,branch,2,0,0,0
+fa3_kvcache,void at::native::#5b34bd44,SEL,int_alu,12,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,BRA,branch,347,420,13316,7171
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,FADD,fp32,54,256,8192,6624
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.NE.AND,int_alu,313,229,7173,6661
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,MOV,move,203,176,5632,5120
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ULDC,mem_const,427,161,5121,5121
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,SHF.R.S32.HI,int_alu,8,160,5120,5120
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IADD3,int_alu,230,145,4609,4097
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.GE.U32.AND,int_alu,37,128,4096,4096
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IMAD,int_alu,587,112,3584,3584
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.GE.AND,int_alu,7,112,3584,3584
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LEA,int_alu,11,112,3584,2016
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LDC,mem_const,38,97,3073,3073
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ULDC.64,mem_const,280,97,3073,3073
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.GT.AND,int_alu,6,96,3072,3072
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,BAR.SYNC.DEFER_BLOCKING,barrier,9,80,2560,2560
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,BSSY,convergence,24,80,2560,2560
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,BSYNC,convergence,24,80,2560,2560
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IMAD.MOV.U32,int_alu,170,80,2560,2560
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.GE.U32.OR,int_alu,8,80,2560,2560
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,SHFL.DOWN,warp,2,80,2560,2560
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,STS,mem_shared,8,80,2560,992
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LDS,mem_shared,4,64,2048,480
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,PRMT,int_alu,9,48,1536,1024
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,S2R,move,7,48,1536,1536
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,EXIT,branch,13,34,1026,513
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IADD3.X,int_alu,12,33,1025,513
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,HFMA2.MMA,fp16x2,76,32,1024,1024
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IMAD.U32,int_alu,12,32,1024,1024
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LOP3.LUT,int_alu,12,32,1024,1024
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,S2UR,move,7,32,1024,1024
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ULDC.U8,mem_const,7,18,514,514
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.NE.AND.EX,int_alu,3,17,513,513
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.NE.U32.AND,int_alu,3,17,513,513
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,CS2R,move,1,16,512,512
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IMAD.WIDE.U32,int_alu,21,16,512,512
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IMAD.X,int_alu,6,16,512,512
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LDG.E.128,mem_global,1,16,512,512
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LEA.HI,int_alu,2,16,512,512
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,SEL,int_alu,4,16,512,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,SHF.R.U64,int_alu,1,16,512,512
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,UIADD3,uniform,4,16,512,512
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ULEA,uniform,5,16,512,512
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,UMOV,move,4,16,512,512
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,STG.E,mem_global,9,1,1,1
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ATOMG.E.ADD.STRONG.GPU,atomic,1,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,CALL.ABS.NOINC,branch,4,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,CCTL.IVALL,fence,2,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,CGAERRBAR,cluster,2,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ERRBAR,fence,2,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,FLO.U32,int_alu,1,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IMAD.HI.U32,int_alu,275,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IMAD.IADD,int_alu,11,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IMAD.MOV,int_alu,94,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,IMAD.WIDE,int_alu,1,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.EQ.AND,int_alu,1,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.EQ.U32.AND,int_alu,1,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.GE.OR,int_alu,1,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,ISETP.GT.U32.OR,int_alu,1,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LDC.64,mem_const,17,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LDG.E,mem_global,32,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LDS.U8,mem_shared,1,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LEA.HI.X,int_alu,2,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,LEPC,other,4,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,MEMBAR.ALL.CTA,fence,2,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,MEMBAR.SC.GPU,fence,2,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,NOP,other,12,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,POPC,int_alu,2,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,SHF.R.U32.HI,int_alu,276,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,SHFL.IDX,warp,1,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,STS.U8,mem_shared,1,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,USHF.R.U32.HI,uniform,2,0,0,0
+fa3_kvcache,void at::native::reduce_kernel#a18218d1,VOTEU.ANY,warp,1,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,BRA,branch,443,800,25600,11776
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,ISETP.GT.AND,int_alu,56,384,12288,12288
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,IMAD,int_alu,21,272,8704,8704
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,ISETP.NE.AND,int_alu,200,192,6144,6144
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,BSSY,convergence,33,144,4608,4608
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,BSYNC,convergence,33,144,4608,4608
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,IMAD.MOV.U32,int_alu,94,144,4608,4608
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,IADD3,int_alu,44,128,4096,4096
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,IMAD.X,int_alu,8,128,4096,4096
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,ISETP.GE.AND,int_alu,8,128,4096,4096
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LDC.64,mem_const,16,128,4096,4096
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,PRMT,int_alu,28,128,4096,4096
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,ULDC,mem_const,8,128,4096,4096
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,VIADD,int_alu,38,96,3072,3072
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,IMAD.U32,int_alu,60,64,2048,2048
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LDG.E.U16,mem_global,20,64,2048,2048
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,S2R,move,4,64,2048,2048
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,STG.E,mem_global,16,64,2048,2048
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,EXIT,branch,23,32,1024,512
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LDC,mem_const,2,32,1024,1024
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LDC.U8,mem_const,2,32,1024,1024
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,ULDC.64,mem_const,25,16,512,512
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,CALL.ABS.NOINC,branch,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,CS2R,move,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,F2F.F32.F64,convert,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,F2F.F64.F32,convert,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,F2FP.BF16.F32.PACK_AB,convert,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,F2FP.F16.F32.PACK_AB,convert,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,F2I.S64.TRUNC,convert,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,F2I.TRUNC.NTZ,convert,12,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,F2I.U32.TRUNC.NTZ,convert,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,F2I.U64.TRUNC,convert,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,FADD,fp32,20,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,FLO.U32,int_alu,12,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,FMUL,fp32,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,FSEL,fp32,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,FSETP.NEU.AND,fp32,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,HADD2.F32,fp16x2,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,I2F.S16,convert,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,I2F.S64,convert,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,I2F.U16,convert,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,I2F.U64,convert,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,I2FP.F32.S32,convert,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,I2FP.F32.U32,convert,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,IMAD.MOV,int_alu,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,IMAD.SHL.U32,int_alu,32,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,ISETP.EQ.U32.AND,int_alu,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,ISETP.GE.U32.AND,int_alu,20,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,ISETP.GT.U32.AND,int_alu,24,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LDG.E,mem_global,16,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LDG.E.64,mem_global,16,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LDG.E.S8,mem_global,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LDG.E.U8,mem_global,28,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LEA,int_alu,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LEA.HI,int_alu,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LEPC,other,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,LOP3.LUT,int_alu,157,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,MOV,move,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,NOP,other,13,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,PLOP3.LUT,int_alu,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,SEL,int_alu,12,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,SHF.L.U32,int_alu,12,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,SHF.R.S32.HI,int_alu,8,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,SHF.R.U32.HI,int_alu,72,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,STG.E.128,mem_global,4,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,STG.E.64,mem_global,16,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,STG.E.U16,mem_global,16,0,0,0
+fa3_kvcache,void at::native::unrolled_elementwise_kernel#78375d6c,STG.E.U8,mem_global,32,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,ISETP.GE.AND,int_alu,8,20,640,640
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,BRA,branch,7,16,512,512
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,IADD3,int_alu,10,12,384,144
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,BSSY,convergence,2,8,256,256
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,LDC,mem_const,10,8,256,136
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,S2R,move,3,8,256,256
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,BREAK,convergence,1,4,128,128
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,BSYNC,convergence,2,4,128,128
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,EXIT,branch,3,4,128,128
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,IMAD.MOV.U32,int_alu,5,4,128,128
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,IMAD.SHL.U32,int_alu,1,4,128,128
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,IMAD.WIDE.U32,int_alu,9,4,128,8
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,ISETP.GE.U32.AND,int_alu,1,4,128,128
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,LDC.64,mem_const,9,4,128,8
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,NOP,other,10,4,128,128
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,STG.E,mem_global,8,4,128,8
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,ULDC,mem_const,1,4,128,128
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,ULDC.64,mem_const,1,4,128,128
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,WARPSYNC.ALL,barrier,1,4,128,128
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,IMAD.IADD,int_alu,6,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,IMAD.WIDE,int_alu,1,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,MOV,move,3,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#38fc7257,STG.E.128,mem_global,2,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,FADD,fp32,16,64,2048,2048
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,IMAD.WIDE,int_alu,2,16,512,512
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,IMAD.WIDE.U32,int_alu,18,16,512,512
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,LDC.64,mem_const,18,16,512,512
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,LDG.E.128,mem_global,2,16,512,512
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,S2R,move,3,16,512,512
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,STG.E.128,mem_global,2,16,512,512
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,BRA,branch,7,8,256,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,EXIT,branch,3,8,256,256
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,IADD3,int_alu,22,8,256,256
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,ISETP.GE.U32.AND,int_alu,1,8,256,256
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,LDC,mem_const,1,8,256,256
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,SHF.L.U32,int_alu,1,8,256,256
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,ULDC,mem_const,1,8,256,256
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,ULDC.64,mem_const,1,8,256,256
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,BREAK,convergence,1,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,BSSY,convergence,2,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,BSYNC,convergence,2,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,CS2R,move,1,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,HFMA2.MMA,fp16x2,2,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,IMAD.IADD,int_alu,2,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,IMAD.MOV.U32,int_alu,2,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,ISETP.GE.AND,int_alu,15,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,LDG.E,mem_global,8,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,MOV,move,5,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,NOP,other,15,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,STG.E,mem_global,8,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,VIADD,int_alu,6,0,0,0
+fa3_kvcache,void at::native::vectorized_elementwise_kernel#4f12660b,WARPSYNC.ALL,barrier,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#12817f5e,FMNMX.FTZ,fp32,182,1128448,36110336,36110336
+fa3_kvcache,void cutlass::device_kernel#12817f5e,FFMA.FTZ,fp32,180,1105920,35389440,35389436
+fa3_kvcache,void cutlass::device_kernel#12817f5e,MUFU.EX2,mufu,178,1103872,35323904,35323904
+fa3_kvcache,void cutlass::device_kernel#12817f5e,FADD.FTZ,fp32,178,1083392,34668544,34668544
+fa3_kvcache,void cutlass::device_kernel#12817f5e,FMUL.FTZ,fp32,138,837632,26804224,26804216
+fa3_kvcache,void cutlass::device_kernel#12817f5e,F2FP.BF16.F32.PACK_AB,convert,120,573440,18350080,18350080
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UMOV,move,141,343836,10776448,10729984
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UIADD3,uniform,104,282540,8925960,8767496
+fa3_kvcache,void cutlass::device_kernel#12817f5e,BRA,branch,189,193795,5631205,4655373
+fa3_kvcache,void cutlass::device_kernel#12817f5e,HGMMA.64x128x16.F32.BF16,wgmma,22,135168,4325376,4325376
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD.MOV.U32,int_alu,267,131908,3629064,3621004
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SYNCS.PHASECHK.TRANS64.TRYWAIT,mbarrier,41,106422,3045253,3045253
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD.U32,int_alu,104,98944,3062792,3062792
+fa3_kvcache,void cutlass::device_kernel#12817f5e,HGMMA.64x176x16.F32.BF16,wgmma,16,98304,3145728,3145728
+fa3_kvcache,void cutlass::device_kernel#12817f5e,NOP,other,45,97977,3127204,3127204
+fa3_kvcache,void cutlass::device_kernel#12817f5e,VIADD,int_alu,105,95152,2676876,1864812
+fa3_kvcache,void cutlass::device_kernel#12817f5e,FSEL,fp32,90,92160,2949120,2949120
+fa3_kvcache,void cutlass::device_kernel#12817f5e,NANOSLEEP.SYNCS,branch,19,87578,2549753,2519412
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SYNCS.PHASECHK.TRANS64,mbarrier,19,87578,2549753,2519412
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LOP3.LUT,int_alu,112,76392,2339716,2274052
+fa3_kvcache,void cutlass::device_kernel#12817f5e,CS2R,move,65,66048,2113536,2113536
+fa3_kvcache,void cutlass::device_kernel#12817f5e,R2UR,move,119,57344,549376,483840
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.GT.AND,int_alu,62,53256,1683712,1683712
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SHFL.BFLY,warp,12,53248,1703936,1703936
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ULOP3.LUT,uniform,20,50192,1606144,1573376
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD,int_alu,136,42908,1051152,1051152
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.NE.AND,int_alu,52,42608,1262724,1262724
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ULEA,uniform,19,42480,1359360,1312896
+fa3_kvcache,void cutlass::device_kernel#12817f5e,PLOP3.LUT,int_alu,61,40865,756128,756128
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UIMAD,uniform,33,38016,1212544,1212544
+fa3_kvcache,void cutlass::device_kernel#12817f5e,S2R,move,38,37112,1127936,1119876
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SHF.R.S32.HI,int_alu,59,36872,1179904,1166528
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SHFL.IDX,warp,75,35428,1129728,1129728
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SHF.R.U32.HI,int_alu,24,32368,1035776,953856
+fa3_kvcache,void cutlass::device_kernel#12817f5e,USEL,uniform,15,31744,1015808,1015808
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LEA,int_alu,70,31252,993920,140548
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ULDC.64,mem_const,74,29624,937188,871652
+fa3_kvcache,void cutlass::device_kernel#12817f5e,PRMT,int_alu,9,28672,917504,137216
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IADD3,int_alu,21,28288,901248,901248
+fa3_kvcache,void cutlass::device_kernel#12817f5e,S2UR,move,15,28276,904832,858368
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SYNCS.ARRIVE.TRANS64.RED.A1T0,mbarrier,6,25600,819200,38912
+fa3_kvcache,void cutlass::device_kernel#12817f5e,WARPGROUP.ARRIVE,wgmma,4,24576,786432,786432
+fa3_kvcache,void cutlass::device_kernel#12817f5e,WARPGROUP.DEPBAR.LE,wgmma,4,24576,786432,786432
+fa3_kvcache,void cutlass::device_kernel#12817f5e,USHF.L.U32,uniform,29,24088,770816,584960
+fa3_kvcache,void cutlass::device_kernel#12817f5e,BSYNC,convergence,50,21968,525312,525312
+fa3_kvcache,void cutlass::device_kernel#12817f5e,BSSY,convergence,50,20804,525312,525312
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD.IADD,int_alu,85,19220,615040,614528
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SEL,int_alu,44,18460,500616,500616
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD.X,int_alu,22,18432,589824,459776
+fa3_kvcache,void cutlass::device_kernel#12817f5e,BAR.SYNC.DEFER_BLOCKING,barrier,10,18396,588672,588672
+fa3_kvcache,void cutlass::device_kernel#12817f5e,BAR.ARV,barrier,10,17520,560640,543744
+fa3_kvcache,void cutlass::device_kernel#12817f5e,USHF.R.U32.HI,uniform,7,17408,557056,557056
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SHF.R.U64,int_alu,16,16384,524288,524288
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UISETP.NE.AND,uniform,6,15360,491520,491520
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ULDC,mem_const,53,14904,473856,473856
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.GE.AND,int_alu,90,14772,466560,466560
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UISETP.GT.AND,uniform,5,13312,425984,425984
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LEA.HI,int_alu,17,13060,417920,411232
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LDL,mem_local,22,12548,305280,305280
+fa3_kvcache,void cutlass::device_kernel#12817f5e,STL,mem_local,27,12320,350592,350592
+fa3_kvcache,void cutlass::device_kernel#12817f5e,MOV,move,16,12052,385664,377604
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LDC,mem_const,29,9524,304768,124544
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ELECT,warp,24,8392,86016,86016
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LD.E.128,mem_global,8,8192,262144,262144
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LDGSTS.E.BYPASS.LTC128B.128,async_copy,16,8192,262144,2048
+fa3_kvcache,void cutlass::device_kernel#12817f5e,STSM.16.M88.4,mma,8,8192,262144,262144
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UIMAD.WIDE.U32,uniform,18,8192,262144,262144
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD.SHL.U32,int_alu,12,7680,245760,245760
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LDG.E,mem_global,38,7428,231008,50784
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.NE.U32.AND,int_alu,24,6660,166752,166752
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD.MOV,int_alu,31,6656,212992,188416
+fa3_kvcache,void cutlass::device_kernel#12817f5e,BRA.U.ANY,branch,15,6400,22272,0
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.NE.AND.EX,int_alu,23,6148,150368,150368
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UTMALDG.4D,tma,16,6144,6144,6144
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SYNCS.EXCH.64,mbarrier,22,5808,185856,92928
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD.WIDE.U32,int_alu,20,5764,181280,181280
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LDL.LU,mem_local,14,5520,136960,136960
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IABS,int_alu,18,5376,172032,172032
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD.WIDE,int_alu,19,5248,164416,115264
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UIMAD.WIDE,uniform,8,5120,163840,98304
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UISETP.NE.AND.EX,uniform,7,5120,163840,163840
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UISETP.NE.U32.AND,uniform,7,5120,163840,163840
+fa3_kvcache,void cutlass::device_kernel#12817f5e,VOTEU.ANY,warp,5,4880,152192,152192
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LDC.64,mem_const,28,4744,141152,92000
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UIADD3.X,uniform,12,4360,36104,36104
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ULEA.HI,uniform,5,4112,131584,131584
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD.HI.U32,int_alu,20,4096,131072,49152
+fa3_kvcache,void cutlass::device_kernel#12817f5e,P2R,move,4,4096,131072,131072
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UISETP.GE.AND,uniform,4,4096,131072,131072
+fa3_kvcache,void cutlass::device_kernel#12817f5e,MUFU.RCP,mufu,8,3840,122880,122876
+fa3_kvcache,void cutlass::device_kernel#12817f5e,YIELD,branch,2,3584,98304,98304
+fa3_kvcache,void cutlass::device_kernel#12817f5e,FENCE.VIEW.ASYNC.S,fence,7,3268,104576,104576
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SYNCS.ARRIVE.TRANS64,mbarrier,8,3072,3072,3072
+fa3_kvcache,void cutlass::device_kernel#12817f5e,USHF.R.S32.HI,uniform,6,3072,98304,98304
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LDS.128,mem_shared,4,2860,91520,91520
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LEA.HI.X,int_alu,56,2816,83968,83968
+fa3_kvcache,void cutlass::device_kernel#12817f5e,EXIT,branch,3,2608,83456,50688
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.GE.OR,int_alu,6,2308,73856,73856
+fa3_kvcache,void cutlass::device_kernel#12817f5e,FSETP.NE.FTZ.AND,fp32,2,2048,65536,65536
+fa3_kvcache,void cutlass::device_kernel#12817f5e,FSETP.NEU.FTZ.AND,fp32,2,2048,65536,65536
+fa3_kvcache,void cutlass::device_kernel#12817f5e,MUFU.LG2,mufu,2,2048,65536,65532
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ST.E,mem_global,2,2048,65536,128
+fa3_kvcache,void cutlass::device_kernel#12817f5e,VIADDMNMX,int_alu,3,2048,65536,65536
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.GE.U32.AND,int_alu,17,1808,57856,57856
+fa3_kvcache,void cutlass::device_kernel#12817f5e,F2I.FTZ.U32.TRUNC.NTZ,convert,6,1792,57344,57344
+fa3_kvcache,void cutlass::device_kernel#12817f5e,I2F.RP,convert,6,1792,57344,57344
+fa3_kvcache,void cutlass::device_kernel#12817f5e,BRA.DIV,branch,9,1684,49792,49792
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.EQ.AND,int_alu,1,1584,50688,50688
+fa3_kvcache,void cutlass::device_kernel#12817f5e,USETMAXREG.TRY_ALLOC.CTAPOOL,uniform,1,1569,50208,50208
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SHFL.UP,warp,30,1300,41600,41600
+fa3_kvcache,void cutlass::device_kernel#12817f5e,WARPSYNC.ALL,barrier,4,1152,32768,32768
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IADD3.X,int_alu,2,1024,32768,32768
+fa3_kvcache,void cutlass::device_kernel#12817f5e,MEMBAR.ALL.CTA,fence,1,1024,32768,32768
+fa3_kvcache,void cutlass::device_kernel#12817f5e,PREEXIT,branch,1,1024,32768,32768
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UISETP.GE.U32.AND,uniform,1,1024,32768,32768
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UISETP.GT.U32.AND,uniform,1,1024,32768,32768
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ULEA.HI.SX32,uniform,1,1024,32768,32768
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.GT.U32.AND,int_alu,5,768,24576,24576
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ACQBULK,branch,1,528,16896,16896
+fa3_kvcache,void cutlass::device_kernel#12817f5e,USETMAXREG.DEALLOC.CTAPOOL,uniform,1,528,16896,16896
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ARRIVES.LDGSTSBAR.64.TRANSCNT,mbarrier,1,512,16384,16384
+fa3_kvcache,void cutlass::device_kernel#12817f5e,IMAD.HI,int_alu,1,512,16384,16384
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LEA.HI.SX32,int_alu,1,512,16384,16384
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SYNCS.ARRIVE.TRANS64.A1T0,mbarrier,1,512,16384,16384
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SYNCS.ARRIVE.TRANS64.RED.A0T1,mbarrier,1,512,16384,16384
+fa3_kvcache,void cutlass::device_kernel#12817f5e,VIMNMX,int_alu,1,512,16384,16384
+fa3_kvcache,void cutlass::device_kernel#12817f5e,POPC,int_alu,6,384,4352,4352
+fa3_kvcache,void cutlass::device_kernel#12817f5e,WARPSYNC.COLLECTIVE,barrier,22,384,8192,8192
+fa3_kvcache,void cutlass::device_kernel#12817f5e,UTMACCTL.PF,tma,2,264,264,264
+fa3_kvcache,void cutlass::device_kernel#12817f5e,STS.128,mem_shared,2,260,8320,260
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ENDCOLLECTIVE,convergence,22,256,8192,8192
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ST.E.128,mem_global,16,256,2048,2048
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ATOMG.E.ADD.STRONG.GPU,atomic,2,128,128,128
+fa3_kvcache,void cutlass::device_kernel#12817f5e,FLO.U32,int_alu,2,128,128,128
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.EQ.U32.AND,int_alu,2,128,128,128
+fa3_kvcache,void cutlass::device_kernel#12817f5e,VOTE.ANY,warp,2,128,4096,4096
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ISETP.LE.AND,int_alu,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LDL.64,mem_local,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#12817f5e,LDL.LU.64,mem_local,3,0,0,0
+fa3_kvcache,void cutlass::device_kernel#12817f5e,SHFL.DOWN,warp,6,0,0,0
+fa3_kvcache,void cutlass::device_kernel#12817f5e,ST.E.64,mem_global,32,0,0,0
+fa3_kvcache,void cutlass::device_kernel#12817f5e,STG.E,mem_global,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#12817f5e,STL.64,mem_local,4,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ISETP.NE.OR,int_alu,4,512,16384,16384
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LDC,mem_const,11,384,12288,8192
+fa3_kvcache,void cutlass::device_kernel#c546c41c,S2R,move,8,384,12288,12288
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LDC.64,mem_const,20,257,8193,8193
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ISETP.NE.AND.EX,int_alu,2,256,8192,8192
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ISETP.NE.U32.AND,int_alu,2,256,8192,8192
+fa3_kvcache,void cutlass::device_kernel#c546c41c,UIADD3,uniform,5,256,8192,8192
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ULDC,mem_const,8,256,8192,8192
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ULDC.64,mem_const,14,256,8192,8192
+fa3_kvcache,void cutlass::device_kernel#c546c41c,BSYNC,convergence,5,129,4096,4096
+fa3_kvcache,void cutlass::device_kernel#c546c41c,BRA,branch,11,128,4096,4095
+fa3_kvcache,void cutlass::device_kernel#c546c41c,BSSY,convergence,5,128,4096,4096
+fa3_kvcache,void cutlass::device_kernel#c546c41c,EXIT,branch,3,128,4096,4096
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IMAD.WIDE,int_alu,1,128,4096,4096
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ISETP.GE.AND,int_alu,9,128,4096,4096
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LDG.E,mem_global,1,128,4096,4096
+fa3_kvcache,void cutlass::device_kernel#c546c41c,S2UR,move,4,128,4096,4096
+fa3_kvcache,void cutlass::device_kernel#c546c41c,VIADD,int_alu,15,128,4096,4096
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ACQBULK,branch,2,1,1,1
+fa3_kvcache,void cutlass::device_kernel#c546c41c,STG.E,mem_global,2,1,1,1
+fa3_kvcache,void cutlass::device_kernel#c546c41c,BAR.SYNC.DEFER_BLOCKING,barrier,2,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,CS2R,move,4,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,DEPBAR.LE,async_copy,6,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,F2FP.BF16.F32.PACK_AB,convert,2,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,FADD.FTZ,fp32,7,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,FFMA.FTZ,fp32,21,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,FMNMX.FTZ,fp32,5,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,FMUL.FTZ,fp32,2,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,FSEL,fp32,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,FSETP.GT.FTZ.AND,fp32,5,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,FSETP.NE.FTZ.AND,fp32,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,FSETP.NEU.FTZ.AND,fp32,2,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,HFMA2.MMA,fp16x2,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IADD3,int_alu,17,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IADD3.X,int_alu,3,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IMAD,int_alu,44,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IMAD.HI.U32,int_alu,3,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IMAD.IADD,int_alu,13,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IMAD.MOV,int_alu,3,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IMAD.MOV.U32,int_alu,10,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IMAD.SHL.U32,int_alu,5,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IMAD.WIDE.U32,int_alu,16,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,IMAD.X,int_alu,2,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ISETP.GE.OR,int_alu,6,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ISETP.GE.U32.AND,int_alu,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ISETP.GT.OR,int_alu,6,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ISETP.LT.OR,int_alu,7,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ISETP.NE.AND,int_alu,6,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LDGDEPBAR,async_copy,9,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LDGSTS.E.BYPASS.LTC128B.128,async_copy,8,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LDGSTS.E.LTC128B,async_copy,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LDS,mem_shared,7,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LDS.128,mem_shared,5,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LEA,int_alu,27,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LEA.HI,int_alu,4,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LEA.HI.X,int_alu,12,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LEA.HI.X.SX32,int_alu,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,LOP3.LUT,int_alu,32,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,MOV,move,3,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,MUFU.EX2,mufu,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,MUFU.LG2,mufu,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,MUFU.RCP,mufu,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,NOP,other,14,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,SEL,int_alu,5,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,SHF.L.U32,int_alu,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,SHF.R.S32.HI,int_alu,23,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,SHF.R.U32.HI,int_alu,10,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,SHFL.BFLY,warp,15,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,STG.E.64,mem_global,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,STS,mem_shared,3,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,UIMAD,uniform,2,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,ULEA,uniform,2,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,UMOV,move,2,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,USHF.L.U32,uniform,1,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,USHF.R.S32.HI,uniform,2,0,0,0
+fa3_kvcache,void cutlass::device_kernel#c546c41c,VIMNMX,int_alu,5,0,0,0
