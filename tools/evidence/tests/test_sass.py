@@ -116,6 +116,7 @@ def test_opcode_classes(tmp_path):
 
 def test_stats_prints_every_table(capsys):
     import report_tables
-    assert report_tables.main() == 0
+    assert report_tables.main([]) == 0
     out = capsys.readouterr().out
-    assert out.count("### ") == 11 and "| all |" in out and "Nsight Compute" in out
+    assert out.count("### ") == 14 and "| all |" in out and "Nsight Compute" in out
+    assert "### Registers per kernel" in out and "### Execution-model instructions per workload" in out
