@@ -9,6 +9,7 @@ makes from the outputs. All kernels are ours (clang 20 PTX, JIT-compiled by the 
 |---|---|
 | Job | `20261105T030701Z-q000233` (`jobs/isa-probes.sh`, 5 runs per probe) on GPU 3 of the lab's H100 server (H100 NVL, driver 580.126.20), commit `a78ab4b9` |
 | Result | all 14 probes ran (`summary: ok 14`) |
+| Job | `20261105T042645Z-q000236` (`PROBES=bmov-deep`, same settings), commit `29f1d5f4`: the deep-nesting probe added later |
 
 ## Findings
 
@@ -26,7 +27,10 @@ the `if` side first). After the divergent non-inlined call in `bmov-break` the w
 lanes: the hardware reconverges where the compiler put a convergence barrier (`BSSY`/`BSYNC`), not by itself.
 `bar.warp.sync -1` reached from two program points (`syncwarp-divergent`) synchronized the two halves (32 of 32
 lanes read the other half's values), and right after the barrier each half still ran with its own mask
-(`0000ffff`, `ffff0000`). The `bmov-break` kernels had 2 `BREAK` and no `BMOV`.
+(`0000ffff`, `ffff0000`). The `bmov-break` kernels had 2 `BREAK` and no `BMOV`. `BMOV` appears only when
+divergent regions nest deeper than the 16 convergence-barrier registers (`bmov-deep`, 24 levels and a recursive
+call: 17 `BMOV.32`, 51 `BMOV.32.CLEAR`); that kernel computed the right result in all 32 lanes in every run, and the
+warp was still split after the outermost level.
 
 **Address windows** (`addr-windows`, values from one run; the high bits of the base vary from run to run):
 
