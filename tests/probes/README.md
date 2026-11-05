@@ -31,3 +31,4 @@ comment says what it measures and how its outputs are laid out.
 | `lat-warp` | Cycles of `redux.sync`, a shuffle-tree sum, `vote`, `match`, `activemask`, `bar.warp.sync`, `elect.sync`, `%ctaid` |
 | `setmaxnreg-nodelay`, `setmaxnreg-delay` | Does `setmaxnreg.inc` wait until another warpgroup of the CTA gives registers back (one CTA of 384 threads per SM, 168 registers at launch, decrease to 40 after 0 or 200,000 cycles, increase to 232)? |
 | `bmov-break` | Control flow that makes ptxas emit `BREAK` (and was meant to provoke `BMOV`): a two-level loop exit, a divergent non-inlined call, a loop with `break` and `return` |
+| `bmov-deep` | Divergent regions nested 24 deep (more than the 16 convergence-barrier registers) plus a divergent recursive call: ptxas spills barrier state with `BMOV` (17 `BMOV.32`, 51 `BMOV.32.CLEAR`, 27 `BREAK`, 126 `BSSY`) |

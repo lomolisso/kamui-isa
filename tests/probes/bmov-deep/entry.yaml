@@ -1,0 +1,16 @@
+id: bmov-deep
+kernel: p_bmov_deep
+compile:
+  extra_flags: []
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+params:
+  - {name: res, kind: output, dtype: u32, count: 32}
+  - {name: mask, kind: output, dtype: u32, count: 768}
+  - {name: sink, kind: inout, dtype: u32, count: 32, generator: {kind: const, value: 0}}
+expect_ptx: [call]
+deterministic: false
+tolerance_class: property:probe

@@ -195,13 +195,39 @@ def bmov_break(p: Probe) -> str:
                   "after multi"], rows)
 
 
+def bmov_deep_expected(lane: int) -> int:
+    """The kernel's sum on the CPU: v[] stays 0, so only the recursive call (reached when all 24 bits test true)
+    contributes."""
+    m = 0xFFFFFFFF
+
+    def rec(x: int, d: int) -> int:
+        if d == 0:
+            return x
+        if (x >> (d & 7)) & 1:
+            return rec((x * 7 + 1) & m, d - 1)
+        return rec(x ^ d, d - 1)
+
+    x = (lane * 2654435761) & m
+    return rec(x, 6) if all((x >> d) & 1 for d in range(24)) else 0
+
+
+def bmov_deep(p: Probe) -> str:
+    rows = []
+    for k, r in enumerate(p.runs):
+        res, mask = p.buf(r, "res"), p.buf(r, "mask")
+        ok = sum(res[lane] == bmov_deep_expected(lane) for lane in range(32))
+        outer = sorted({f"{mask[0 * 32 + i]:08x}" for i in range(32)})
+        rows.append([k, f"{ok}/32", " ".join(outer)])
+    return table(["run", "lanes with the right sum", "active masks after the outermost level"], rows)
+
+
 DECODERS = {
     "its-lock-in-warp": its_lock, "its-lock-in-loop": its_lock, "its-cross-branch-wait": its_cross,
     "its-producer-consumer": its_pc, "reconv-points": reconv, "syncwarp-divergent": syncwarp,
     "addr-windows": addr, "lat-scopes-1": lambda p: lat(p, LAT_OPS, 1),
     "lat-scopes-warp-same": lambda p: lat(p, LAT_OPS, 32), "lat-scopes-warp-distinct": lambda p: lat(p, LAT_OPS, 32),
     "lat-warp": lambda p: lat(p, WARP_OPS, 32), "setmaxnreg-nodelay": setmaxnreg, "setmaxnreg-delay": setmaxnreg,
-    "bmov-break": bmov_break,
+    "bmov-break": bmov_break, "bmov-deep": bmov_deep,
 }
 
 
