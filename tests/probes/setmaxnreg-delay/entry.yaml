@@ -1,0 +1,17 @@
+id: setmaxnreg-delay
+kernel: p_setmaxnreg
+compile:
+  extra_flags: []
+launch:
+  grid: [132, 1, 1]
+  block: [384, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+params:
+  - {name: t, kind: output, dtype: u32, count: 1584}
+  - {name: req, kind: output, dtype: u32, count: 1584}
+  - {name: sink, kind: output, dtype: u32, count: 50688}
+  - {name: delay, kind: scalar, dtype: u32, value: 200000}
+expect_ptx: [setmaxnreg\.inc\.sync\.aligned\.u32 232]
+deterministic: false
+tolerance_class: property:probe

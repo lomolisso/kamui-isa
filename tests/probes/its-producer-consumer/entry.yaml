@@ -1,0 +1,15 @@
+id: its-producer-consumer
+kernel: p_its_pc
+compile:
+  extra_flags: []
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+params:
+  - {name: got, kind: output, dtype: u32, count: 32}
+  - {name: waits, kind: output, dtype: u32, count: 32}
+expect_ptx: [ld\.volatile\.shared\.u32]
+deterministic: false
+tolerance_class: property:probe
