@@ -2,6 +2,7 @@
 """Classify the raw NVBit histograms and write evidence/histograms/.
 
     python tools/evidence/classify.py RAW_DIR VERSIONS_YAML [--job-id ID] [--ncu NCU_CSV WORKLOAD]
+    python tools/evidence/classify.py --occupancy NCU_DIR --job-id ID
 
 RAW_DIR holds one CSV per workload from kamui_sass_hist (jobs/nvbit-hist.sh, raw/<workload>.csv). For each it
 writes evidence/histograms/<workload>.csv with the columns
@@ -16,6 +17,11 @@ here and not in the NVBit tool, so the class map can change without another GPU 
 With --ncu it also writes evidence/histograms/ncu-crosscheck.csv: for the first kernel in the Nsight Compute CSV
 (`--page raw`, jobs/nvbit-hist.sh MODE=ncu), the warp, thread and predicate-on instruction totals that ncu
 measured next to the totals of the same workload's NVBit histogram, and the difference in percent.
+
+With --occupancy it writes evidence/histograms/occupancy.csv from the Nsight Compute CSVs of jobs/nvbit-hist.sh
+MODE=occupancy (NCU_DIR/<workload>.csv, the first launch of every kernel): registers per thread, the occupancy
+limit (blocks per SM) from registers, shared memory, warps and blocks, which of them bind, and the achieved warp
+occupancy. CUTLASS verification kernels are left out.
 """
 
 from __future__ import annotations
@@ -84,7 +90,48 @@ def ncu_crosscheck(ncu_csv: Path, workload: str, job_ids: str, out_dir: Path = O
     return out
 
 
+OCC = {"registers": "launch__occupancy_limit_registers", "shared_mem": "launch__occupancy_limit_shared_mem",
+       "warps": "launch__occupancy_limit_warps", "blocks": "launch__occupancy_limit_blocks"}
+
+
+def occupancy(ncu_dir: Path, job_id: str, out_dir: Path = OUT) -> Path:
+    out = out_dir / "occupancy.csv"
+    rows = []
+    for f in sorted(ncu_dir.glob("*.csv")):
+        lines = [line for line in f.open() if line.startswith('"')]
+        if len(lines) < 3:
+            continue
+        table = list(csv.reader(lines))
+        head = table[0]
+        for vals in table[2:]:
+            d = dict(zip(head, vals))
+            name = d["Kernel Name"]
+            if "reference" in name or "BlockFill" in name or "BlockForEach" in name:
+                continue
+            lim = {k: float(d[m]) for k, m in OCC.items()}
+            low = min(lim.values())
+            rows.append({"workload": f.stem, "kernel": name[:80].replace(",", "_").replace('"', "_"),
+                         "registers_per_thread": d["launch__registers_per_thread"],
+                         "block_size": d["launch__block_size"], "cluster_size": d.get("launch__cluster_size", ""),
+                         **{f"blocks_limit_{k}": f"{v:g}" for k, v in lim.items()},
+                         "binding": "+".join(k for k, v in lim.items() if v == low),
+                         "warps_active_percent": d["sm__warps_active.avg.pct_of_peak_sustained_active"]})
+    with out.open("w", newline="") as fh:
+        fh.write(f"# job {job_id}\n# Nsight Compute, first launch of every kernel (jobs/nvbit-hist.sh MODE=occupancy)\n")
+        w = csv.DictWriter(fh, fieldnames=list(rows[0]), lineterminator="\n")
+        w.writeheader()
+        w.writerows(rows)
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
+    if argv is None:
+        argv = sys.argv[1:]
+    if argv[:1] == ["--occupancy"]:
+        job = argv[argv.index("--job-id") + 1] if "--job-id" in argv else ""
+        out = occupancy(Path(argv[1]), job)
+        print(f"{out.relative_to(ROOT)}: {sum(1 for line in out.open() if not line.startswith('#')) - 1} kernels")
+        return 0
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("raw_dir", type=Path)
     ap.add_argument("versions", type=Path)

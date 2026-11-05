@@ -29,6 +29,7 @@ EV = ROOT / "evidence"
 GOLD = ROOT / "tests" / "goldens"
 HIST = EV / "histograms"
 KERNELS = HIST / "kernels"
+NOT_HISTOGRAMS = ("ncu-crosscheck.csv", "occupancy.csv")
 ORIGINAL = ["cutlass_gemm_tf32_2048", "flash_attn2_fwd_bf16", "flashinfer_prefill_bf16", "triton_matmul_f16_2048",
             "triton_softmax_f32_4096"]
 FAMILIES = common.FAMILIES
@@ -154,7 +155,7 @@ def classes() -> list[dict]:
 def workloads(names: list[str] | None = ORIGINAL) -> dict[str, Counter]:
     out = {}
     for p in sorted(HIST.glob("*.csv")):
-        if p.name == "ncu-crosscheck.csv" or (names is not None and p.stem not in names):
+        if p.name in NOT_HISTOGRAMS or (names is not None and p.stem not in names):
             continue
         c = Counter()
         for r in read_csv(p):
@@ -258,7 +259,7 @@ EXEC_COLUMNS = [
 def exec_model() -> str:
     rows = []
     for p in sorted(HIST.glob("*.csv")):
-        if p.name == "ncu-crosscheck.csv":
+        if p.name in NOT_HISTOGRAMS:
             continue
         tot = thr = 0
         acc = [0] * len(EXEC_COLUMNS)
@@ -278,6 +279,16 @@ def exec_model() -> str:
     return table(["Workload", "Warp instructions", *[c[0] for c in EXEC_COLUMNS], "SIMT efficiency %"], rows) + \
         "\nCounts are executed warp instructions; percentages are of all executed warp instructions. SIMT " \
         "efficiency is predicate-true thread instructions over 32 times the warp instructions.\n"
+
+
+def occupancy_table() -> str:
+    rows = read_csv(HIST / "occupancy.csv")
+    by = Counter(r["binding"] for r in rows)
+    regs = [r for r in rows if "registers" in r["binding"]]
+    one = [r for r in rows if r["blocks_limit_registers"] == "1"]
+    return f"{len(rows)} kernels (Nsight Compute, first launch of each). Registers are a binding limit for " \
+        f"{len(regs)}; {len(one)} kernels fit only one block per SM because of registers.\n\n" + \
+        table(["Binding limit (blocks per SM)", "Kernels"], [[k, v] for k, v in by.most_common()])
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -304,6 +315,8 @@ def main(argv: list[str] | None = None) -> int:
         parts += [("Registers per kernel", kernel_registers(krows)),
                   ("Uniform registers and setmaxnreg per kernel", uniform_registers(krows))]
     parts.append(("Execution-model instructions per workload", exec_model()))
+    if (HIST / "occupancy.csv").exists():
+        parts.append(("What limits occupancy", occupancy_table()))
     for title, body in parts:
         print(f"### {title}\n\n{body}")
     return 0

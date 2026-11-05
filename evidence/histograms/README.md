@@ -26,6 +26,7 @@ second.
 | `triton_splitk.csv`, `triton_queue.csv`, `triton_attention.csv` | our Triton split-K GEMM with atomic adds, a persistent kernel taking work from an atomic counter, and a fused attention forward | `tools/evidence/workloads/triton_kernels.py` |
 | `div_*.csv` | our divergence-heavy CUDA kernels: BFS, Mandelbrot, CSR SpMV, bitonic sort, tree search (the lock-based hash insert, `hashlock`, ran correctly but timed out under the tool, so it has no histogram) | `tools/evidence/workloads/divergence.cu` |
 | `kernels/<workload>.csv` | one row per counted kernel (columns below) | |
+| `occupancy.csv` | Nsight Compute on the first launch of every kernel (job `20261105T032452Z-q000235`, `MODE=occupancy`): registers per thread, the blocks per SM that registers, shared memory, warps and the block limit allow, which of them bind, and the achieved warp occupancy; written by `classify.py --occupancy` | |
 
 Only the first launch of each kernel of interest is counted (the new workloads count every kernel they launch,
 except cuBLAS and cuDNN kernels, which `KAMUI_EXCLUDE` leaves out by name) (`KAMUI_KERNELS` in the job script selects them);
@@ -55,7 +56,12 @@ each workload first runs once without the tool so that compilation caches are wa
 | `n_<OPCODE>` | static count of instructions whose opcode starts with that word (`BSSY`, `BMOV`, `BREAK`, `WARPSYNC`, `YIELD`, `USETMAXREG`, `REDUX`, `S2UR`, `MEMBAR`, `CCTL`, `HGMMA`, `UTMALDG`, ...) |
 
 `python tools/evidence/report_tables.py` summarises these files (tables "Registers per kernel", "Uniform
-registers and setmaxnreg per kernel", "Execution-model instructions per workload").
+registers and setmaxnreg per kernel", "Execution-model instructions per workload", "What limits occupancy").
+Nsight Compute's registers per thread agree with the NVBit tables (168 for the warp-specialized Hopper kernels,
+255 for flash-attn 2, 200 for `radixSortKVInPlace`); registers are a binding occupancy limit for 86 of the 117
+profiled kernels, and 11 fit only one block per SM because of registers: the 10 warp-specialized Hopper kernels
+(384 threads x 168 registers) and flash-attn 2's backward kernel (256 threads x 255), with achieved warp occupancy
+of 12 to 19%.
 
 ## Cross-check with Nsight Compute
 

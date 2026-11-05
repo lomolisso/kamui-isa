@@ -1,0 +1,120 @@
+# job 20261105T032452Z-q000235
+# Nsight Compute, first launch of every kernel (jobs/nvbit-hist.sh MODE=occupancy)
+workload,kernel,registers_per_thread,block_size,cluster_size,blocks_limit_registers,blocks_limit_shared_mem,blocks_limit_warps,blocks_limit_blocks,binding,warps_active_percent
+cutlass_ex49,void device_kernel<gemm::GemmUniversal<cute::tuple<int_ int_ int_ int>_ collecti,168,384,2,1,1,5,32,registers+shared_mem,14.13
+cutlass_ex54,void device_kernel<GemmUniversal<tuple<int_ int_ int_ int>_ CollectiveMma<Mainlo,168,384,2,1,1,5,32,registers+shared_mem,14.27
+cutlass_ex55,void dequantize_kernel<float_e4m3_t_ half_t_ cute::Layout<cute::tuple<int_ int_ ,32,128,0,16,32,16,32,registers+warps,74.29
+cutlass_ex55,void device_kernel<gemm::GemmUniversal<cute::tuple<int_ int_ int_ int>_ gemm::Co,168,384,0,1,1,5,32,registers+shared_mem,14.26
+cutlass_ex56,void device_kernel<gemm::GemmUniversal<gemm::ArrayProblemShape<cute::tuple<int_ ,168,384,2,1,1,5,32,registers+shared_mem,15.63
+cutlass_ex57,void device_kernel<gemm::GemmUniversal<gemm::GroupProblemShape<cute::tuple<int_ ,168,384,2,1,1,5,32,registers+shared_mem,17.18
+cutlass_ex61,void device_kernel<GemmUniversal<tuple<int_ int_ int_ int>_ CollectiveMma<Mainlo,63,256,0,4,1,8,32,shared_mem,8.08
+cutlass_ex62,void device_kernel<transform::SM90StructuredSparseCompressor<cute::tuple<int_ in,72,64,1,14,5,32,32,shared_mem,11.91
+cutlass_ex63,void device_kernel<GemmUniversal<tuple<int_ int_ int_ int>_ CollectiveMma<Mainlo,72,256,0,3,1,8,32,shared_mem,10.41
+cutlass_ex67,void device_kernel<GemmUniversal<tuple<int_ int_ int_ int>_ CollectiveMma<Mainlo,168,384,2,1,1,5,32,registers+shared_mem,15.01
+cutlass_ex88,void device_kernel<fmha::FmhaKernelTmaWarpSpecialized<fmha::FmhaMainloopTmaWarpS,168,384,1,1,1,5,32,registers+shared_mem,13.75
+cutlass_ex88_bwd,void device_kernel<fmha::FmhaKernelBwdSumOdO<half_t_ float>>(Params),72,128,1,7,32,16,32,registers,17.75
+cutlass_gemm_tf32_2048,void device_kernel<GemmUniversal<tuple<int_ int_ int>_ CollectiveMma<MainloopSm9,168,384,8,1,1,5,32,registers+shared_mem,14.13
+div_bfs,kamui_bfs,21,256,0,10,32,8,32,warps,2.36
+div_bitonic,kamui_bitonic,19,1024,0,2,3,2,32,registers+warps,94.75
+div_hashlock,kamui_hashlock,16,256,0,16,32,8,32,warps,23.73
+div_mandelbrot,kamui_mandelbrot,17,256,0,10,32,8,32,warps,85.93
+div_spmv,kamui_spmv,32,256,0,8,32,8,32,registers+warps,76.50
+div_tree,kamui_tree,16,256,0,16,32,8,32,warps,94.32
+flash_attn2_bwd_bf16,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void t,44,256,0,5,32,8,32,registers,50.62
+flash_attn2_bwd_bf16,void flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128_ 128_ 64_ 4_ 0_ 0_ cutl,255,128,0,2,2,16,32,registers+shared_mem,10.87
+flash_attn2_bwd_bf16,void at::unrolled_elementwise_kernel<at::direct_copy_kernel_cuda(at::TensorItera,32,128,0,16,32,16,32,registers+warps,85.32
+flash_attn2_bwd_bf16,void at::reduce_kernel<512_ 1_ at::ReduceOp<float_ at::func_wrapper_t<float_ at:,32,512,0,4,10,4,32,registers+warps,90.94
+flash_attn2_bwd_bf16,void at::vectorized_elementwise_kernel<4_ at::FillFunctor<float>_ std::array<cha,16,128,0,32,32,16,32,warps,5.81
+flash_attn2_bwd_bf16,void at::elementwise_kernel<128_ 4_ void at::gpu_kernel_impl_nocast<at::bfloat16,18,128,0,21,32,16,32,warps,61.87
+flash_attn2_bwd_bf16,void flash::flash_bwd_dot_do_o_kernel<1_ Flash_bwd_kernel_traits<128_ 64_ 128_ 8,48,256,0,5,32,8,32,registers,37.14
+flash_attn2_bwd_bf16,void flash::flash_bwd_dq_dk_dv_loop_seqk_parallel_kernel<Flash_bwd_kernel_traits,255,256,0,1,1,8,32,registers+shared_mem,12.48
+flash_attn2_bwd_bf16,void flash::flash_bwd_convert_dq_kernel<Flash_bwd_kernel_traits<128_ 64_ 128_ 8_,72,256,0,3,7,8,32,registers,29.55
+flash_attn2_fwd_bf16,void flash_fwd_kernel<Flash_fwd_kernel_traits<128_ 128_ 64_ 4_ 0_ 0_ bfloat16_t_,255,128,0,2,2,16,32,registers+shared_mem,10.54
+flashinfer_decode_bf16,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void t,44,256,0,5,32,8,32,registers,50.64
+flashinfer_decode_bf16,void flashinfer::SingleDecodeWithKVCacheKernel<0_ 2_ 8_ 8_ 16_ 1_ 8_ flashinfer:,89,128,0,5,3,16,32,shared_mem,6.25
+flashinfer_decode_bf16,void flashinfer::MergeStatesLargeNumIndexSetsKernel<8_ 16_ 8_ 4_ __nv_bfloat16_ ,32,128,0,16,17,16,32,registers+warps,6.23
+flashinfer_decode_bf16,void at::unrolled_elementwise_kernel<at::direct_copy_kernel_cuda(at::TensorItera,32,128,0,16,32,16,32,registers+warps,6.24
+flashinfer_decode_bf16,void at::vectorized_elementwise_kernel<4_ at::AbsFunctor<float>_ std::array<char,32,128,0,16,32,16,32,registers+warps,6.17
+flashinfer_decode_bf16,void at::reduce_kernel<512_ 1_ at::ReduceOp<float_ at::func_wrapper_t<float_ at:,32,512,0,4,10,4,32,registers+warps,23.35
+flashinfer_paged_bf16,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void t,44,256,0,5,32,8,32,registers,50.59
+flashinfer_paged_bf16,void <unnamed>::elementwise_kernel_with_index<int_ at::arange_cuda_out(const c10,16,64,0,64,32,32,32,shared_mem+warps+blocks,2.86
+flashinfer_paged_bf16,void at::vectorized_elementwise_kernel<4_ at::AUnaryFunctor<int_ int_ int_ binar,32,128,0,16,32,16,32,registers+warps,3.86
+flashinfer_paged_bf16,void at::elementwise_kernel<128_ 4_ void at::gpu_kernel_impl<at::<unnamed>::pow_,32,128,0,16,32,16,32,registers+warps,4.27
+flashinfer_paged_bf16,void flashinfer::PrefillWithKVCacheKernel<flashinfer::SparseCollectiveMainloop<P,168,384,0,1,1,5,32,registers+shared_mem,18.58
+flashinfer_paged_bf16,void at::unrolled_elementwise_kernel<at::direct_copy_kernel_cuda(at::TensorItera,32,128,0,16,32,16,32,registers+warps,80.49
+flashinfer_paged_bf16,void at::reduce_kernel<512_ 1_ at::ReduceOp<float_ at::func_wrapper_t<float_ at:,32,512,0,4,10,4,32,registers+warps,47.79
+flashinfer_prefill_bf16,void PrefillWithKVCacheKernel<CollectiveMainloop<AdditionalParams_ AttentionKern,168,384,0,1,1,5,32,registers+shared_mem,14.21
+torch_cumsum,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<unsigned int_ 4_,56,256,0,4,32,8,32,registers,43.70
+torch_cumsum,void at_cuda_detail::DeviceScanInitKernel<at_cuda_detail::ScanTileState<long_ 1>,16,128,0,32,32,16,32,warps,6.82
+torch_cumsum,void at_cuda_detail::DeviceScanKernel<detail::policy_hub<long_ long_ long_ unsig,48,128,0,10,16,16,32,registers,59.99
+torch_cumsum,void at::reduce_kernel<512_ 1_ at::ReduceOp<long_ at::func_wrapper_t<long_ at::s,32,512,0,4,12,4,32,registers+warps,98.45
+torch_embedding_bwd,void native::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ vo,44,256,0,5,32,8,32,registers,50.51
+torch_embedding_bwd,void native::vectorized_gather_kernel<16_ long>(char *_ char *_ T2 *_ int_ long_,32,64,0,32,32,32,32,registers+shared_mem+warps+blocks,47.50
+torch_embedding_bwd,void native::reduce_kernel<512_ 1_ native::ReduceOp<float_ native::func_wrapper_,32,512,0,4,10,4,32,registers+warps,98.83
+torch_embedding_bwd,void native::vectorized_elementwise_kernel<4_ native::FillFunctor<float>_ std::a,16,128,0,32,32,16,32,warps,5.88
+torch_embedding_bwd,void native::elementwise_kernel<128_ 2_ void native::gpu_kernel_impl_nocast<nati,18,128,0,21,32,16,32,warps,18.52
+torch_embedding_bwd,void <unnamed>::elementwise_kernel_with_index<int_ native::arange_cuda_out(const,16,64,0,64,32,32,32,shared_mem+warps+blocks,43.22
+torch_embedding_bwd,void at_cuda_detail::DeviceRadixSortHistogramKernel<radix::policy_hub<long_ deta,70,128,0,7,14,16,32,registers,25.98
+torch_embedding_bwd,void at_cuda_detail::DeviceRadixSortExclusiveSumKernel<radix::policy_hub<long_ d,32,256,0,8,18,8,32,registers+warps,12.35
+torch_embedding_bwd,void at_cuda_detail::DeviceRadixSortOnesweepKernel<radix::policy_hub<long_ detai,80,384,0,2,3,5,32,registers,18.67
+torch_embedding_bwd,void at_cuda_detail::DeviceCompactInitKernel<at_cuda_detail::ScanTileState<unsig,16,128,0,32,32,16,32,warps,5.48
+torch_embedding_bwd,void at_cuda_detail::DeviceUniqueByKeySweepKernel<unique_by_key::policy_hub<long,48,640,0,2,3,3,32,registers,31.14
+torch_embedding_bwd,void native::<unnamed>::krn_partials_per_segment<long>(T1 *_ const T1 *_ const l,16,32,0,128,32,64,32,shared_mem+blocks,15.19
+torch_embedding_bwd,void at_cuda_detail::DeviceScanInitKernel<at_cuda_detail::ScanTileState<long_ 1>,16,128,0,32,32,16,32,warps,5.44
+torch_embedding_bwd,void at_cuda_detail::DeviceScanKernel<scan::policy_hub<long_ long_ long_ unsigne,47,128,0,10,16,16,32,registers,6.23
+torch_embedding_bwd,void native::<unnamed>::compute_num_of_partial_segments<long>(const T1 *_ const ,16,1,0,128,32,64,32,shared_mem+blocks,1.56
+torch_embedding_bwd,void native::<unnamed>::krn_partial_segment_offset<long>(T1 *_ const T1 *_ const,26,32,0,64,32,64,32,shared_mem+blocks,15.76
+torch_embedding_bwd,void native::<unnamed>::compute_grad_weight<float_ long>(const T2 *_ const T1 *_,32,256,0,8,32,8,32,registers+warps,85.89
+torch_embedding_bwd,void native::<unnamed>::sum_and_scatter<float_ long>(const T2 *_ T1 *_ long_ con,24,256,0,10,32,8,32,warps,92.28
+torch_histc,void native::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ vo,52,256,0,4,32,8,32,registers,43.32
+torch_histc,void native::vectorized_elementwise_kernel<4_ native::FillFunctor<float>_ std::a,16,128,0,32,32,16,32,warps,6.21
+torch_histc,void cuda::kernelHistogram1D<float_ float_ long_ 1_ 2_ (int)-1_ 0_ bool cuda::CU,40,512,0,3,7,4,32,registers,71.29
+torch_histc,void native::reduce_kernel<512_ 1_ native::ReduceOp<float_ native::func_wrapper_,32,64,0,32,46,32,32,registers+warps+blocks,3.02
+torch_index_add,void unnamed>::distribution_elementwise_grid_stride_kernel<unsigned int_ 4_ void,56,256,0,4,32,8,32,registers,43.62
+torch_index_add,void vectorized_elementwise_kernel<4_ FillFunctor<float>_ std::array<char *_ 1>>,16,128,0,32,32,16,32,warps,84.02
+torch_index_add,void indexFuncLargeIndex<float_ long_ unsigned int_ 2_ 2_ (int)-2_ 1_ unnamed>::,32,128,0,16,32,16,32,registers+warps,48.23
+torch_index_add,void reduce_kernel<512_ 1_ ReduceOp<float_ func_wrapper_t<float_ sum_functor<flo,32,512,0,4,10,4,32,registers+warps,24.30
+torch_layer_norm,void unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void templa,44,256,0,5,32,8,32,registers,50.52
+torch_layer_norm,void unnamed>::vectorized_layer_norm_kernel<float_ float_ 0>(int_ T2_ const T1 *,39,128,0,12,28,16,32,registers,66.79
+torch_layer_norm,void reduce_kernel<512_ 1_ ReduceOp<float_ MeanOps<float_ float_ float_ float>_ ,32,512,0,4,10,4,32,registers+warps,98.35
+torch_nonzero,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<unsigned int_ 4_,56,256,0,4,32,8,32,registers,43.72
+torch_nonzero,void at::vectorized_elementwise_kernel<4_ at::AUnaryFunctor<long_ long_ bool_ at,32,128,0,16,32,16,32,registers+warps,84.43
+torch_nonzero,void at_cuda_detail::DeviceReduceKernel<reduce::policy_hub<int_ unsigned long lo,30,256,0,8,28,8,32,registers+warps,78.20
+torch_nonzero,void at_cuda_detail::DeviceReduceSingleTileKernel<reduce::policy_hub<int_ unsign,32,256,0,8,28,8,32,registers+warps,12.00
+torch_nonzero,void at_cuda_detail::DeviceCompactInitKernel<at_cuda_detail::ScanTileState<int_ ,16,128,0,32,32,16,32,warps,6.17
+torch_nonzero,void at_cuda_detail::DeviceSelectSweepKernel<select::policy_hub<long_ bool_ int_,40,384,0,4,4,5,32,registers+shared_mem,69.83
+torch_scatter_add,void unnamed>::distribution_elementwise_grid_stride_kernel<unsigned int_ 4_ void,56,256,0,4,32,8,32,registers,43.75
+torch_scatter_add,void vectorized_elementwise_kernel<4_ FillFunctor<float>_ std::array<char *_ 1>>,16,128,0,32,32,16,32,warps,6.14
+torch_scatter_add,void _scatter_gather_elementwise_kernel<128_ 8_ void _cuda_scatter_gather_intern,32,128,0,16,32,16,32,registers+warps,96.14
+torch_scatter_add,void reduce_kernel<512_ 1_ ReduceOp<float_ func_wrapper_t<float_ sum_functor<flo,32,512,0,4,10,4,32,registers+warps,23.59
+torch_softmax,void unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void templa,44,256,0,5,32,8,32,registers,50.51
+torch_softmax,void unnamed>::cunn_SoftMaxForwardReg<float_ float_ float_ unnamed>::SoftMaxForw,30,1024,0,2,7,2,32,registers+warps,94.19
+torch_softmax,void reduce_kernel<512_ 1_ ReduceOp<float_ func_wrapper_t<float_ sum_functor<flo,32,512,0,4,10,4,32,registers+warps,23.85
+torch_sort,void native::<unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ vo,44,256,0,5,32,8,32,registers,50.54
+torch_sort,native::<unnamed>::fill_reverse_indices_kernel(long *_ int_ detail::IntDivider<u,26,1024,0,2,8,2,32,registers+warps,72.37
+torch_sort,void at_cuda_detail::DeviceRadixSortHistogramKernel<at_cuda_detail::policy_hub<f,32,128,0,16,26,16,32,registers+warps,70.87
+torch_sort,void at_cuda_detail::DeviceRadixSortExclusiveSumKernel<at_cuda_detail::policy_hu,32,256,0,8,18,8,32,registers+warps,12.38
+torch_sort,void at_cuda_detail::DeviceRadixSortOnesweepKernel<at_cuda_detail::policy_hub<fl,80,384,0,2,2,5,32,registers+shared_mem,36.42
+torch_sort,void native::unrolled_elementwise_kernel<native::<unnamed>::CompareFunctor<float,30,128,0,16,32,16,32,registers+warps,77.41
+torch_sort,void native::reduce_kernel<512_ 1_ native::ReduceOp<bool_ native::func_wrapper_t,32,512,0,4,9,4,32,registers+warps,91.63
+torch_topk,void unnamed>::distribution_elementwise_grid_stride_kernel<float_ 4_ void templa,44,256,0,5,32,8,32,registers,50.56
+torch_topk,void mbtopk::fill<unsigned int_ unsigned int>(T1 *_ T1_ T2),16,512,0,8,16,4,32,warps,20.29
+torch_topk,void mbtopk::computeBlockDigitCounts<float_ unsigned int_ unsigned int_ 2>(detai,20,256,0,10,16,8,32,warps,69.89
+torch_topk,mbtopk::computeDigitCumSum(short *_ unsigned int *_ unsigned int),32,256,0,8,28,8,32,registers+warps,12.47
+torch_topk,void mbtopk::computeBlockwiseWithinKCounts<unsigned int_ float>(T1 *_ short *_ u,18,256,0,10,28,8,32,warps,61.59
+torch_topk,void mbtopk::computeBlockwiseKthCounts<unsigned int>(T1 *_ short *_ unsigned int,18,256,0,10,32,8,32,warps,11.47
+torch_topk,void at_cuda_detail::DeviceScanByKeyInitKernel<at_cuda_detail::ReduceByKeyScanTi,16,128,0,32,32,16,32,warps,5.52
+torch_topk,void at_cuda_detail::DeviceScanByKeyKernel<scan_by_key::policy_hub<thrust::trans,55,288,0,4,7,7,32,registers,13.89
+torch_topk,void mbtopk::gatherTopK<float_ unsigned int_ 2>(detail::TensorInfo<const T1_ T2>,32,256,0,8,28,8,32,registers+warps,64.51
+torch_topk,void radixSortKVInPlace<2_ (int)-1_ 32_ 32_ float_ long_ unsigned int>(detail::T,200,32,0,8,14,64,32,registers,1.56
+torch_unique,void at::<unnamed>::distribution_elementwise_grid_stride_kernel<unsigned int_ 4_,56,256,0,4,32,8,32,registers,43.72
+torch_unique,void at_cuda_detail::DeviceRadixSortHistogramKernel<radix::policy_hub<long_ at_c,70,128,0,7,14,16,32,registers,36.29
+torch_unique,void at_cuda_detail::DeviceRadixSortExclusiveSumKernel<radix::policy_hub<long_ a,32,256,0,8,18,8,32,registers+warps,12.34
+torch_unique,void at_cuda_detail::DeviceRadixSortOnesweepKernel<radix::policy_hub<long_ at_cu,80,384,0,2,2,5,32,registers+shared_mem,36.40
+torch_unique,void at_cuda_detail::DeviceCompactInitKernel<at_cuda_detail::ScanTileState<int_ ,16,128,0,32,32,16,32,warps,6.19
+torch_unique,void at_cuda_detail::DeviceSelectSweepKernel<select::policy_hub<long_ at_cuda_de,53,384,0,3,3,5,32,registers+shared_mem,53.41
+triton_attention,kamui_attention,115,256,0,2,2,8,32,registers+shared_mem,19.67
+triton_matmul_f16_2048,kamui_matmul,112,256,0,2,2,8,32,registers+shared_mem,23.72
+triton_queue,kamui_queue,32,128,0,16,28,16,32,registers+warps,24.73
+triton_softmax_f32_4096,kamui_softmax,26,512,0,4,14,4,32,registers+warps,90.52
+triton_splitk,kamui_splitk,128,256,0,2,2,8,32,registers+shared_mem,23.87
