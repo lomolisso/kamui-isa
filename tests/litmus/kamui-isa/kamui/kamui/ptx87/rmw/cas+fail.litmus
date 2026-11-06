@@ -1,0 +1,10 @@
+KAMUI cas+fail
+"Lowered from tests/litmus/ptx/kamui/ptx87/rmw/cas+fail.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0                    ;
+ katom.relaxed.gpu.cas r0, x, 1, 2 ;
+exists
+(x != 0)

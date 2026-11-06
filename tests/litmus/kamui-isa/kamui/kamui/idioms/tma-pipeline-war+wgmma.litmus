@@ -1,0 +1,24 @@
+KAMUI tma-pipeline-war+wgmma
+"Lowered from tests/litmus/ptx/kamui/idioms/tma-pipeline-war+wgmma.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+g=7;
+d=5 @cta 0;
+c=0 @cta 0;
+e=mbarrier(1) @cta 0;
+f=mbarrier(1) @cta 0;
+P0:r0=0;
+P1:r1=0;
+g in global;
+d in shared cta 0;
+c in shared cta 0;
+e in shared cta 0;
+f in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0              | P1@cta 0,cluster 0,gpu 0 ;
+ kmbar.try.parity.acquire.cta r0, e, 0 | kwarpgroup.arrive        ;
+ kmbar.arv.expect_tx.release.cta f, 1  | kgmma r1, d, c           ;
+ kblkcp.s.g d, g, f                    | kwarpgroup.commit        ;
+                                       | kwarpgroup.depbar 0      ;
+                                       | kmbar.arv.release.cta e  ;
+exists
+(P0:r0 == 1 /\ P1:r1 == 7)

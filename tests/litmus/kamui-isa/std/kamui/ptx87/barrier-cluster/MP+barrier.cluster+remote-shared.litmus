@@ -1,0 +1,13 @@
+KAMUI MP+barrier.cluster+remote-shared
+"Lowered from tests/litmus/ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+remote-shared.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+s=0 @cta 1;
+P1:r0=0;
+s in shared cta 1;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ sw s, 1                  | kcgabar.arv.release      ;
+ kcgabar.arv.release      | kcgabar.wait.acquire     ;
+ kcgabar.wait.acquire     | lw r0, s                 ;
+exists
+(P1:r0 == 0)

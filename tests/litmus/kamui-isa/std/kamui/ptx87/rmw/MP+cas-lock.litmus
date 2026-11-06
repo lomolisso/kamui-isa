@@ -1,0 +1,13 @@
+KAMUI MP+cas-lock
+"Lowered from tests/litmus/ptx/kamui/ptx87/rmw/MP+cas-lock.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+l=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 1,gpu 0          ;
+ sw x, 1        | amocas.w.aq r0, l, 1, 2 ;
+ sw.rl l, 1     | lw r1, x                ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

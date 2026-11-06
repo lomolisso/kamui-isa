@@ -1,0 +1,13 @@
+KAMUI MP+xor.acquire-reader
+"Lowered from tests/litmus/ptx/kamui/features/rmw/MP+xor.acquire-reader.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+f=0;
+x=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0       ;
+ kst.weak x, 1            | katom.acquire.gpu.xor r0, f, 1 ;
+ kst.release.gpu f, 1     | kld.weak r1, x                 ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

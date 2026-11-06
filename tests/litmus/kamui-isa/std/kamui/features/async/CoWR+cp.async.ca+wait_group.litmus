@@ -1,0 +1,17 @@
+KAMUI CoWR+cp.async.ca+wait_group
+"Lowered from tests/litmus/ptx/kamui/features/async/CoWR+cp.async.ca+wait_group.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+d=0 @cta 0;
+g=0;
+P0:r0=0;
+d in shared cta 0;
+g in global;
+}
+ P0@cta 0,cluster 0,gpu 0 ;
+ sw g, 1                  ;
+ kldgsts d, g             ;
+ kldgdepbar               ;
+ kdepbar.ldgsts 0         ;
+ lw r0, d                 ;
+exists
+(P0:r0 == 0)

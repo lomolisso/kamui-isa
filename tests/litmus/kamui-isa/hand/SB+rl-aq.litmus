@@ -1,0 +1,11 @@
+KAMUI SB+rl-aq
+"Store buffering with sw.rl and lw.aq. On Kamui these are PTX release and acquire at system scope (K2), which do not order a store before a later load (RISC-V's RCsc annotations would): allowed."
+{
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 1,gpu 0 ;
+ sw.rl x, 1     | sw.rl y, 1     ;
+ lw.aq r0, y    | lw.aq r1, x    ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

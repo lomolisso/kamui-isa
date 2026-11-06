@@ -1,0 +1,13 @@
+KAMUI mbarrier-init+no-fence+cluster-barrier
+"Lowered from tests/litmus/ptx/kamui/ptx87/mbarrier-init/mbarrier-init+no-fence+cluster-barrier.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+b=mbarrier() @cta 0;
+P1:r0=0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0               ;
+ kmbar.init b, 2          | kcgabar.arv.relaxed                    ;
+ kcgabar.arv.relaxed      | kcgabar.wait.acquire                   ;
+ kcgabar.wait.acquire     | kmbar.arv.release.cluster.remote r0, b ;
+exists
+(P1:r0 == 7)

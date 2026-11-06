@@ -1,0 +1,13 @@
+KAMUI counter-plain-store-atomic-load
+"Lowered from tests/litmus/ptx/imported/dat3m/Manual/counter-plain-store-atomic-load.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+P0:r0 = 0;
+P1:r0 = 0;
+x=0;
+}
+ P0@cta 0,gpu 0        | P1@cta 0,gpu 0        ;
+ sw x, 1               | kbar.sync 0           ;
+ kbar.sync 0           | kld.relaxed.gpu r0, x ;
+ kld.relaxed.gpu r0, x |                       ;
+exists
+(~((P0:r0 == 1 /\ P1:r0 == 1)))

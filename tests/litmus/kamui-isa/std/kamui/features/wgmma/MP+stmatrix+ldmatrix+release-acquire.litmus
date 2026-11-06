@@ -1,0 +1,15 @@
+KAMUI MP+stmatrix+ldmatrix+release-acquire
+"Lowered from tests/litmus/ptx/kamui/features/wgmma/MP+stmatrix+ldmatrix+release-acquire.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+s=0 @cta 0;
+f=0 @cta 0;
+P1:r1=0;
+P1:r0=0;
+s in shared cta 0;
+f in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ kstsm.m8n8.x1 s, 1       | lw.aq r1, f              ;
+ sw.rl f, 1               | kldsm.m8n8.x1 r0, s      ;
+exists
+(P1:r1 == 1 /\ P1:r0 == 0)

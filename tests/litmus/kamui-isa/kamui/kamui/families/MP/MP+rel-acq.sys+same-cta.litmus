@@ -1,0 +1,13 @@
+KAMUI MP+rel-acq.sys+same-cta
+"Lowered from tests/litmus/ptx/kamui/families/MP/MP+rel-acq.sys+same-cta.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ kst.weak x, 1            | kld.acquire.sys r0, y    ;
+ kst.release.sys y, 1     | kld.weak r1, x           ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

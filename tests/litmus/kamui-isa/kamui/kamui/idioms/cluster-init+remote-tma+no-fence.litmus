@@ -1,0 +1,21 @@
+KAMUI cluster-init+remote-tma+no-fence
+"Lowered from tests/litmus/ptx/kamui/idioms/cluster-init+remote-tma+no-fence.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+g=5;
+d0=0 @cta 0;
+f0=mbarrier() @cta 0;
+P0:r0=0;
+P0:r1=0;
+g in global;
+d0 in shared cta 0;
+f0 in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0               | P1@cta 1,cluster 0,gpu 0 ;
+ kmbar.init f0, 1                       | kcgabar.arv.relaxed      ;
+ kcgabar.arv.relaxed                    | kcgabar.wait.acquire     ;
+ kcgabar.wait.acquire                   | kblkcp.s.g d0, g, f0     ;
+ kmbar.arv.expect_tx.release.cta f0, 1  |                          ;
+ kmbar.try.parity.acquire.cta r0, f0, 0 |                          ;
+ klds.weak r1, d0                       |                          ;
+exists
+(P0:r0 == 1 /\ P0:r1 != 5)

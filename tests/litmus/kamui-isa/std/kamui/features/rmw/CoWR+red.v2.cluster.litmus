@@ -1,0 +1,16 @@
+KAMUI CoWR+red.v2.cluster
+"Lowered from tests/litmus/ptx/kamui/features/rmw/CoWR+red.v2.cluster.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y=0;
+P0:r0=0;
+P0:r1=0;
+x in global;
+y in global;
+}
+ P0@cta 0,cluster 0,gpu 0                    ;
+ kredg.relaxed.cluster.v2.f32.add x, y, 1, 1 ;
+ kldg.relaxed.cluster r0, x                  ;
+ kldg.relaxed.cluster r1, y                  ;
+exists
+(P0:r0 == 0 \/ P0:r1 == 0)

@@ -1,0 +1,13 @@
+KAMUI MP+barrier.sync.aligned.3+shared
+"Lowered from tests/litmus/ptx/kamui/features/bar/MP+barrier.sync.aligned.3+shared.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0 @cta 0;
+y=0 @cta 0;
+P1:r0=0;
+x in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ sw x, 1                  | kbar.sync 3              ;
+ kbar.sync 3              | lw r0, x                 ;
+exists
+(P1:r0 == 0)

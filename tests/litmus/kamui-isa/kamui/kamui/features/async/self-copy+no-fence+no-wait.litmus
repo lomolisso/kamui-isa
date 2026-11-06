@@ -1,0 +1,18 @@
+KAMUI self-copy+no-fence+no-wait
+"Lowered from tests/litmus/ptx/kamui/features/async/self-copy+no-fence+no-wait.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+s=0 @cta 0;
+d=0 @cta 0;
+b=mbarrier(1) @cta 0;
+P0:r1=0;
+s in shared cta 0;
+d in shared cta 0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0             ;
+ ksts.weak s, 5                       ;
+ kmbar.arv.expect_tx.release.cta b, 1 ;
+ kblkcp.s.s d, s, b                   ;
+ klds.weak r1, d                      ;
+exists
+(P0:r1 != 5)

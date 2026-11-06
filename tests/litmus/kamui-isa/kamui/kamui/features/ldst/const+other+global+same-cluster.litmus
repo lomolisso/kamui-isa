@@ -1,0 +1,12 @@
+KAMUI const+other+global+same-cluster
+"Lowered from tests/litmus/ptx/kamui/features/ldst/const+other+global+same-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+c=3;
+P0:r0=0;
+P1:r1=0;
+c in const;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ kldc.const r0, c         | kldc.const r1, c         ;
+exists
+(P0:r0 == 0 \/ P1:r1 == 0)

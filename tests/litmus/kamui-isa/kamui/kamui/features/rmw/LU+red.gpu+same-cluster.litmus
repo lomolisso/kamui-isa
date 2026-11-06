@@ -1,0 +1,10 @@
+KAMUI LU+red.gpu+same-cluster
+"Lowered from tests/litmus/ptx/kamui/features/rmw/LU+red.gpu+same-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+x in global;
+}
+ P0@cta 0,cluster 0,gpu 0   | P1@cta 1,cluster 0,gpu 0  ;
+ kredg.relaxed.gpu.add x, 1 | kred.relaxed.gpu.add x, 1 ;
+exists
+(x == 1)

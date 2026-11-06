@@ -1,0 +1,13 @@
+KAMUI Proxy-SingleThread-rf-genW-genR
+"Lowered from tests/litmus/ptx/imported/dat3m/Nvidia/proxy/Proxy-SingleThread-rf-genW-genR.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x = 0;
+t @ texture aliases x;
+s @ surface aliases x;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0 ;
+ kst.weak x, 1  ;
+ kld.weak r0, x ;
+exists
+(~((P0:r0 == 1)))

@@ -1,0 +1,17 @@
+KAMUI MP+barrier.cluster+async-copy
+"Lowered from tests/litmus/ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster+async-copy.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+g=5;
+d=0 @cta 1;
+b=mbarrier(1) @cta 1;
+P1:r0=0;
+g in global;
+d in shared cta 1;
+b in shared cta 1;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ kblkcp.s.g d, g, b       | kcgabar.arv.release      ;
+ kcgabar.arv.release      | kcgabar.wait.acquire     ;
+ kcgabar.wait.acquire     | klds.weak r0, d          ;
+exists
+(P1:r0 == 0)

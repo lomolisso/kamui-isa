@@ -1,0 +1,12 @@
+KAMUI MP+fence-plain
+"Message passing with the standard RISC-V mapping of C++ release and acquire (fence rw,w; sw and lw; fence r,rw), which stock RISC-V compilers produce. On GPU memory lw and sw are weak accesses (K2); a release or acquire fence synchronizes only through a strong access after or before it, so the flag does not carry the data: allowed."
+{
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 1,gpu 0 ;
+ sw x, 1        | lw r0, y       ;
+ fence rw, w    | fence r, rw    ;
+ sw y, 1        | lw r1, x       ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

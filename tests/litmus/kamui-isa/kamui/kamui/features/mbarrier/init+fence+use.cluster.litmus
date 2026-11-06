@@ -1,0 +1,17 @@
+KAMUI init+fence+use.cluster
+"Lowered from tests/litmus/ptx/kamui/features/mbarrier/init+fence+use.cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+b=mbarrier() @cta 0;
+P0:r0=0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0                      | P1@cta 1,cluster 0,gpu 0           ;
+ kmbar.init b, 1                               | kcgabar.arv.relaxed                ;
+ kfence.restrict.mbarrier_init.release.cluster | kcgabar.wait.acquire               ;
+ kcgabar.arv.relaxed                           | kmbar.arv.release.cluster.remote b ;
+ kcgabar.wait.acquire                          | kcgabar.arv.release                ;
+ kcgabar.arv.release                           | kcgabar.wait.acquire               ;
+ kcgabar.wait.acquire                          |                                    ;
+ kmbar.test.parity.acquire.cta r0, b, 0        |                                    ;
+exists
+(P0:r0 == 0)

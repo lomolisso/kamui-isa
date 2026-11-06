@@ -1,0 +1,19 @@
+KAMUI TMA-store+fence+no-wait
+"Lowered from tests/litmus/ptx/kamui/features/async/TMA-store+fence+no-wait.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+s=0 @cta 0;
+g=0;
+f=0;
+P1:r0=0;
+P1:r1=0;
+s in shared cta 0;
+g in global;
+}
+ P0@cta 0,cluster 0,gpu 0      | P1@cta 1,cluster 0,gpu 0 ;
+ ksts.weak s, 1                | kld.acquire.gpu r0, f    ;
+ kfence.proxy.async.shared_cta | kldg.weak r1, g          ;
+ kblkcp.g.s g, s               |                          ;
+ ktmacmdflush                  |                          ;
+ kst.release.gpu f, 1          |                          ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

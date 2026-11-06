@@ -1,0 +1,12 @@
+KAMUI LU+add.sys+dsmem-local
+"Lowered from tests/litmus/ptx/kamui/features/rmw/LU+add.sys+dsmem-local.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0 @cta 0;
+P0:r0=0;
+P1:r1=0;
+x in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0       | P1@cta 0,cluster 0,gpu 0       ;
+ katom.relaxed.sys.add r0, x, 1 | katom.relaxed.sys.add r1, x, 1 ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

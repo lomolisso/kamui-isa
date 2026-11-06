@@ -1,0 +1,15 @@
+KAMUI MP+relaxed.cta+global+same-cta
+"Lowered from tests/litmus/ptx/kamui/features/ldst/MP+relaxed.cta+global+same-cta.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+f=0;
+P1:r0=0;
+P1:r1=0;
+x in global;
+f in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ sw x, 1                  | kldg.relaxed.cta r0, f   ;
+ kstg.relaxed.cta f, 1    | lw r1, x                 ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

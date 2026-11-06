@@ -1,0 +1,12 @@
+KAMUI CoWR+local+relaxed-gpu
+"Lowered from tests/litmus/ptx/kamui/features/ldst/CoWR+local+relaxed-gpu.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+l=0;
+P0:r0=0;
+l in local P0;
+}
+ P0@cta 0,cluster 0,gpu 0 ;
+ kstl.relaxed.gpu l, 1    ;
+ kldl.relaxed.gpu r0, l   ;
+exists
+(P0:r0 == 0)

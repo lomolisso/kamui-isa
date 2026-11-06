@@ -1,0 +1,17 @@
+KAMUI RAW-bar+no-fence
+"Lowered from tests/litmus/ptx/kamui/features/wgmma/RAW-bar+no-fence.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+a=0 @cta 0;
+c=0 @cta 0;
+P1:r0=0;
+a in shared cta 0;
+c in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ ksts.weak a, 1           | kbar.sync 0              ;
+ kbar.sync 0              | kwarpgroup.arrive        ;
+                          | kgmma r0, a, c           ;
+                          | kwarpgroup.commit        ;
+                          | kwarpgroup.depbar 0      ;
+exists
+(P1:r0 == 0)

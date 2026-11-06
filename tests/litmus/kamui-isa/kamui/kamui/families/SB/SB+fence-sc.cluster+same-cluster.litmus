@@ -1,0 +1,14 @@
+KAMUI SB+fence-sc.cluster+same-cluster
+"Lowered from tests/litmus/ptx/kamui/families/SB/SB+fence-sc.cluster+same-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+P0:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0  | P1@cta 1,cluster 0,gpu 0  ;
+ kst.relaxed.cluster x, 1  | kst.relaxed.cluster y, 1  ;
+ kfence.sc.cluster         | kfence.sc.cluster         ;
+ kld.relaxed.cluster r0, y | kld.relaxed.cluster r1, x ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

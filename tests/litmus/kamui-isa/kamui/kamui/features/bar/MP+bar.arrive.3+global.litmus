@@ -1,0 +1,11 @@
+KAMUI MP+bar.arrive.3+global
+"Lowered from tests/litmus/ptx/kamui/features/bar/MP+bar.arrive.3+global.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+P1:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ kst.weak x, 1            | kbar.sync 3, 2           ;
+ kbar.arv 3, 2            | kld.weak r0, x           ;
+exists
+(P1:r0 == 0)

@@ -1,0 +1,18 @@
+KAMUI MP+multimem.st.release
+"Lowered from tests/litmus/ptx/kamui/ptx87/multimem/MP+multimem.st.release.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y=0;
+m=multimem(x, y);
+d=0;
+P1:r0=0;
+P1:r1=0;
+x in global;
+y in global;
+d in global;
+}
+ P0@cta 0,gpu 0              | P1@cta 0,gpu 1 ;
+ sw d, 1                     | lw.aq r0, y    ;
+ kstgmc.release.sys.u32 m, 1 | lw r1, d       ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

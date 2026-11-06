@@ -1,0 +1,18 @@
+KAMUI tensor-reduce+atomic+no-fence
+"Lowered from tests/litmus/ptx/kamui/features/async/tensor-reduce+atomic+no-fence.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+s=0 @cta 0;
+tm=1;
+g=0;
+P0:r2=0;
+s in shared cta 0;
+tm in global;
+g in global;
+}
+ P0@cta 0,cluster 0,gpu 0          | P1@cta 1,cluster 0,gpu 0   ;
+ ksts.weak s, 1                    | kredg.relaxed.gpu.add g, 1 ;
+ ktmaredg.1d.add.tile g, s, tm, r2 |                            ;
+ ktmacmdflush                      |                            ;
+ kdepbar.bulk 0                    |                            ;
+exists
+(g == 1)

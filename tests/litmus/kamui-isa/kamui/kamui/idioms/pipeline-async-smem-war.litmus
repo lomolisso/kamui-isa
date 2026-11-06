@@ -1,0 +1,16 @@
+KAMUI pipeline-async-smem-war
+"Lowered from tests/litmus/ptx/kamui/idioms/pipeline-async-smem-war.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+s=5 @cta 0;
+e=mbarrier(1) @cta 0;
+P0:r0=0;
+P1:r1=0;
+s in shared cta 0;
+e in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0              | P1@cta 0,cluster 0,gpu 0      ;
+ kmbar.try.parity.acquire.cta r0, e, 0 | klds.weak r1, s               ;
+ ksts.weak s, 7                        | kfence.proxy.async.shared_cta ;
+                                       | kmbar.arv.release.cta e       ;
+exists
+(P0:r0 == 1 /\ P1:r1 == 7)

@@ -1,0 +1,12 @@
+KAMUI CoWR+stmatrix+ldmatrix
+"Lowered from tests/litmus/ptx/kamui/features/wgmma/CoWR+stmatrix+ldmatrix.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+s=0 @cta 0;
+P0:r0=0;
+s in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 ;
+ kstsm.m8n8.x1 s, 1       ;
+ kldsm.m8n8.x1 r0, s      ;
+exists
+(P0:r0 == 0)

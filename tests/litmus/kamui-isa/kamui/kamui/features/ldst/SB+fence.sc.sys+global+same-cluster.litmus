@@ -1,0 +1,16 @@
+KAMUI SB+fence.sc.sys+global+same-cluster
+"Lowered from tests/litmus/ptx/kamui/features/ldst/SB+fence.sc.sys+global+same-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+P0:r0=0;
+P1:r1=0;
+x in global;
+y in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ kstg.relaxed.sys x, 1    | kstg.relaxed.sys y, 1    ;
+ kfence.sc.sys            | kfence.sc.sys            ;
+ kldg.relaxed.sys r0, y   | kldg.relaxed.sys r1, x   ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

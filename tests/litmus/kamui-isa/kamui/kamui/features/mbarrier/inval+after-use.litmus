@@ -1,0 +1,12 @@
+KAMUI inval+after-use
+"Lowered from tests/litmus/ptx/kamui/features/mbarrier/inval+after-use.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+b=mbarrier(1) @cta 0;
+P0:r0=0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0    ;
+ kmbar.arv.release.cta r0, b ;
+ kmbar.inval b               ;
+exists
+(P0:r0 != 0)

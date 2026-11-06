@@ -1,0 +1,17 @@
+KAMUI discard+other-location+same-cta
+"Lowered from tests/litmus/ptx/kamui/features/misc/discard+other-location+same-cta.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+y=0;
+x=0;
+z=0;
+P0:r0=0;
+y in global;
+x in global;
+z in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ sw y, 1                  | sw z, 1                  ;
+ cbo.inval x              |                          ;
+ lw r0, y                 |                          ;
+exists
+(P0:r0 != 1)

@@ -1,0 +1,15 @@
+KAMUI barrier-instance-id-forall
+"Lowered from tests/litmus/ptx/imported/dat3m/Manual/barrier-instance-id-forall.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x0=0;
+x1=0;
+y0=0;
+y1=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 0,gpu 0 | P2@cta 0,gpu 0 | P3@cta 0,gpu 0 ;
+ sw x0, 1       | sw y0, 1       | sw x1, 1       | sw y1, 1       ;
+ kbar.sync 1    | kbar.sync 1    | kbar.sync 2    | kbar.sync 2    ;
+ lw r0, y0      | lw r0, x0      | lw r0, y0      | lw r0, x0      ;
+ lw r1, y1      | lw r1, x1      | lw r1, y1      | lw r1, x1      ;
+exists
+(~(((P0:r0 == 1 \/ P1:r0 == 1) /\ (P2:r1 == 1 \/ P3:r1 == 1))))

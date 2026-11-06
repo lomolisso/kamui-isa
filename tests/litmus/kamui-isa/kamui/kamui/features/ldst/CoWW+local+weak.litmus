@@ -1,0 +1,13 @@
+KAMUI CoWW+local+weak
+"Lowered from tests/litmus/ptx/kamui/features/ldst/CoWW+local+weak.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+l=0;
+P0:r0=0;
+l in local P0;
+}
+ P0@cta 0,cluster 0,gpu 0 ;
+ kstl.weak l, 1           ;
+ kstl.weak l, 2           ;
+ kldl.weak r0, l          ;
+exists
+(P0:r0 == 1)

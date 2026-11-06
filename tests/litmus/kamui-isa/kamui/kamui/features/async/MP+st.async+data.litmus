@@ -1,0 +1,18 @@
+KAMUI MP+st.async+data
+"Lowered from tests/litmus/ptx/kamui/features/async/MP+st.async+data.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+d=0 @cta 1;
+e=0 @cta 1;
+b=mbarrier(1) @cta 1;
+P1:r0=0;
+P1:r1=0;
+d in shared cta 1;
+e in shared cta 1;
+b in shared cta 1;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0                  ;
+ kst.weak e, 1            | kmbar.arv.expect_tx.release.cta b, 1      ;
+ kstas.b32 d, 1, b        | kmbar.try.parity.acquire.cluster r0, b, 0 ;
+                          | klds.weak r1, e                           ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

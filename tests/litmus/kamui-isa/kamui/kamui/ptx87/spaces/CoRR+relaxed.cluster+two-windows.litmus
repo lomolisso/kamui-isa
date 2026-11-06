@@ -1,0 +1,13 @@
+KAMUI CoRR+relaxed.cluster+two-windows
+"Lowered from tests/litmus/ptx/kamui/ptx87/spaces/CoRR+relaxed.cluster+two-windows.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+s=0 @cta 1;
+P1:r0=0;
+P1:r1=0;
+s in shared cta 1;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0   ;
+ kst.relaxed.cluster s, 1 | klds.relaxed.cluster r0, s ;
+                          | kld.relaxed.cluster r1, s  ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

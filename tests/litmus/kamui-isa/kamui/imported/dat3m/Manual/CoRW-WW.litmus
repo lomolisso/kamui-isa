@@ -1,0 +1,12 @@
+KAMUI CoRW-WW
+"Lowered from tests/litmus/ptx/imported/dat3m/Manual/CoRW-WW.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+P0:r1=0;
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0        | P1@cta 1,gpu 0       ;
+ kld.acquire.sys r1, x | kst.release.sys y, 4 ;
+ kst.release.sys y, 3  | kst.relaxed.sys x, 5 ;
+exists
+(P0:r1 == 5 /\ y == 4)

@@ -1,0 +1,17 @@
+KAMUI MP+cp.async.ca.mbarrier.arrive.noinc
+"Lowered from tests/litmus/ptx/kamui/features/async/MP+cp.async.ca.mbarrier.arrive.noinc.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+g=5;
+d=0 @cta 0;
+b=mbarrier(1) @cta 0;
+P1:r0=0;
+P1:r1=0;
+g in global;
+d in shared cta 0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0               ;
+ kldgsts d, g             | kmbar.test.parity.acquire.cta r0, b, 0 ;
+ kmbar.arv.ldgsts.noinc b | klds.weak r1, d                        ;
+exists
+(P1:r0 == 1 /\ P1:r1 != 5)

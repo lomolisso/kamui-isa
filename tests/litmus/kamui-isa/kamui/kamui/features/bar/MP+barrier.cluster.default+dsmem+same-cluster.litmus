@@ -1,0 +1,13 @@
+KAMUI MP+barrier.cluster.default+dsmem+same-cluster
+"Lowered from tests/litmus/ptx/kamui/features/bar/MP+barrier.cluster.default+dsmem+same-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0 @cta 1;
+P1:r0=0;
+x in shared cta 1;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ kst.weak x, 1            | kcgabar.arv.release      ;
+ kcgabar.arv.release      | kcgabar.wait.acquire     ;
+ kcgabar.wait.acquire     | klds.weak r0, x          ;
+exists
+(P1:r0 == 0)

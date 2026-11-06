@@ -1,0 +1,13 @@
+KAMUI WRC+bar.sync+reader-side
+"Lowered from tests/litmus/ptx/kamui/features/bar/WRC+bar.sync+reader-side.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+f=0;
+P1:r0=0;
+P2:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 | P2@cta 0,cluster 0,gpu 0 ;
+ kst.weak x, 1            | kld.relaxed.cta r0, f    | kbar.sync 0, 2           ;
+ kst.release.cta f, 1     | kbar.sync 0, 2           | kld.weak r1, x           ;
+exists
+(P1:r0 == 1 /\ P2:r1 == 0)

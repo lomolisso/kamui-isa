@@ -1,0 +1,15 @@
+KAMUI MP+relaxed.gpu+global+same-cluster
+"Lowered from tests/litmus/ptx/kamui/features/ldst/MP+relaxed.gpu+global+same-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+f=0;
+P1:r0=0;
+P1:r1=0;
+x in global;
+f in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ kstg.weak x, 1           | kldg.relaxed.gpu r0, f   ;
+ kstg.relaxed.gpu f, 1    | kldg.weak r1, x          ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

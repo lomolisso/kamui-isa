@@ -1,0 +1,14 @@
+KAMUI CoRR-weak-acquire-weak
+"Lowered from tests/litmus/ptx/imported/dat3m/Manual/CoRR-weak-acquire-weak.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x = 0;
+P1:r1=0;
+P1:r2=0;
+P1:r3=0;
+}
+ P0@cta 0,gpu 0       | P1@cta 1,gpu 1        ;
+ kst.release.gpu x, 1 | kld.weak r1, x        ;
+ kst.weak x, 2        | kld.acquire.gpu r2, x ;
+                      | kld.weak r3, x        ;
+exists
+(P1:r1 == 2 /\ P1:r3 == 1)

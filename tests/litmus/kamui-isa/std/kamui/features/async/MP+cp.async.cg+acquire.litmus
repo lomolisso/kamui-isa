@@ -1,0 +1,19 @@
+KAMUI MP+cp.async.cg+acquire
+"Lowered from tests/litmus/ptx/kamui/features/async/MP+cp.async.cg+acquire.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+d=0 @cta 1;
+g=0;
+f=0;
+P1:r0=0;
+P1:r1=0;
+d in shared cta 1;
+g in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ sw g, 1                  | lw.aq r0, f              ;
+ sw.rl f, 1               | kldgsts d, g             ;
+                          | kldgdepbar               ;
+                          | kdepbar.ldgsts 0         ;
+                          | lw r1, d                 ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

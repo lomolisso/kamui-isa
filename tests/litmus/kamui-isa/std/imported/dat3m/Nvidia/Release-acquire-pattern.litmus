@@ -1,0 +1,14 @@
+KAMUI Release-acquire-pattern
+"Lowered from tests/litmus/ptx/imported/dat3m/Nvidia/Release-acquire-pattern.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x = 0;
+y = 0;
+P1:r1 = 0;
+P1:r2 = 0;
+}
+ P0@cta 0,gpu 0       | P1@cta 1,gpu 0        ;
+ sw y, 1              | kld.relaxed.sys r1, x ;
+ sw.rl x, 1           | fence.tso             ;
+ kst.relaxed.sys x, 2 | lw r2, y              ;
+exists
+(P1:r1 == 2 /\ P1:r2 == 0)

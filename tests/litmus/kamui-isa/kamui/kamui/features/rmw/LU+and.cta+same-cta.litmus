@@ -1,0 +1,12 @@
+KAMUI LU+and.cta+same-cta
+"Lowered from tests/litmus/ptx/kamui/features/rmw/LU+and.cta+same-cta.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=3;
+P0:r0=0;
+P1:r1=0;
+x in global;
+}
+ P0@cta 0,cluster 0,gpu 0        | P1@cta 0,cluster 0,gpu 0        ;
+ katomg.relaxed.cta.and r0, x, 1 | katomg.relaxed.cta.and r1, x, 1 ;
+exists
+(P0:r0 == 3 /\ P1:r1 == 3)

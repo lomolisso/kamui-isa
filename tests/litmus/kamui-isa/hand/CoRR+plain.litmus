@@ -1,0 +1,10 @@
+KAMUI CoRR+plain
+"Two plain loads of one location may see a newer and then an older value: weak accesses are not morally strong, so SC per location does not order them (K2): allowed."
+{
+x=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 1,gpu 0 ;
+ sw x, 1        | lw r0, x       ;
+                | lw r1, x       ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

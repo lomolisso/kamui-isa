@@ -1,0 +1,12 @@
+KAMUI pdl-early-trigger+raw
+"Lowered from tests/litmus/ptx/kamui/idioms/pdl-early-trigger+raw.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+P1:r0=0;
+x in global;
+}
+ P0@cta 0,gpu 0,grid 0 | P1@cta 0,gpu 0,grid 1 ;
+ kpreexit              | kacqbulk              ;
+ kstg.weak x, 1        | kldg.weak r0, x       ;
+exists
+(P1:r0 == 0)

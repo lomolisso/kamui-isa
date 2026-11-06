@@ -1,0 +1,10 @@
+KAMUI LU+red.cluster+shared-cta
+"Lowered from tests/litmus/ptx/kamui/features/rmw/LU+red.cluster+shared-cta.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0 @cta 0;
+x in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0            | P1@cta 0,cluster 0,gpu 0            ;
+ katoms.relaxed.cluster.add RZ, x, 1 | katoms.relaxed.cluster.add RZ, x, 1 ;
+exists
+(x == 1)

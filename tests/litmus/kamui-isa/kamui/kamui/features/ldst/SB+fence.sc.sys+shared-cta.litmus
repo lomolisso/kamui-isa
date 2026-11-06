@@ -1,0 +1,16 @@
+KAMUI SB+fence.sc.sys+shared-cta
+"Lowered from tests/litmus/ptx/kamui/features/ldst/SB+fence.sc.sys+shared-cta.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0 @cta 0;
+y=0 @cta 0;
+P0:r0=0;
+P1:r1=0;
+x in shared cta 0;
+y in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ ksts.relaxed.sys x, 1    | ksts.relaxed.sys y, 1    ;
+ kfence.sc.sys            | kfence.sc.sys            ;
+ klds.relaxed.sys r0, y   | klds.relaxed.sys r1, x   ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

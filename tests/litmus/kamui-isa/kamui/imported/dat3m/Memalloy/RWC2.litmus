@@ -1,0 +1,18 @@
+KAMUI RWC1
+"Lowered from tests/litmus/ptx/imported/dat3m/Memalloy/RWC2.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+P0:r0=0;
+P1:r0=0;
+P1:r2=0;
+P2:r0=0;
+P2:r2=0;
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 1,gpu 0 | P2@cta 1,gpu 0 ;
+ li r0, 1       | kld.weak r0, x | li r0, 1       ;
+ kst.weak x, r0 | kfence.sc.gpu  | kst.weak x, r0 ;
+                | kld.weak r2, y | kfence.sc.cta  ;
+                |                | kld.weak r2, y ;
+exists
+(P1:r0 == 1 /\ P1:r2 == 0 /\ P2:r2 == 0)

@@ -1,0 +1,19 @@
+KAMUI WAR+ld+bulk-copy.remote
+"Lowered from tests/litmus/ptx/kamui/features/async/WAR+ld+bulk-copy.remote.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+g=7;
+d=5 @cta 1;
+e=mbarrier(1) @cta 0;
+b=mbarrier(1) @cta 1;
+P0:r0=0;
+P1:r1=0;
+g in global;
+d in shared cta 1;
+e in shared cta 0;
+b in shared cta 1;
+}
+ P0@cta 0,cluster 0,gpu 0                  | P1@cta 1,cluster 0,gpu 0           ;
+ kmbar.try.parity.acquire.cluster r0, e, 0 | klds.weak r1, d                    ;
+ kblkcp.s.g d, g, b                        | kmbar.arv.release.cluster.remote e ;
+exists
+(P0:r0 == 1 /\ P1:r1 == 7)

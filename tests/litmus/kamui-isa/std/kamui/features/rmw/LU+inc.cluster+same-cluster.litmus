@@ -1,0 +1,12 @@
+KAMUI LU+inc.cluster+same-cluster
+"Lowered from tests/litmus/ptx/kamui/features/rmw/LU+inc.cluster+same-cluster.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+P0:r0=0;
+P1:r1=0;
+x in global;
+}
+ P0@cta 0,cluster 0,gpu 0            | P1@cta 1,cluster 0,gpu 0            ;
+ katomg.relaxed.cluster.inc r0, x, 5 | katomg.relaxed.cluster.inc r1, x, 5 ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

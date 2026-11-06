@@ -1,0 +1,16 @@
+KAMUI MP+fence-restrict-cta+mbarrier-relaxed-remote
+"Lowered from tests/litmus/ptx/kamui/ptx87/mbarrier/MP+fence-restrict-cta+mbarrier-relaxed-remote.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+b=mbarrier(1) @cta 1;
+s=0 @cta 0;
+P1:r0=0;
+P1:r1=0;
+b in shared cta 1;
+s in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0                   | P1@cta 1,cluster 0,gpu 0                   ;
+ ksts.weak s, 1                             | kmbar.test.parity.acquire.cluster r0, b, 0 ;
+ kfence.restrict.shared_cta.release.cluster | kld.weak r1, s                             ;
+ kmbar.arv.relaxed.cluster.remote b         |                                            ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

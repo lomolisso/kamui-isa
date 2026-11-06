@@ -21,7 +21,13 @@ Checks:
 6. Hardware: no outcome observed on the H100 (evidence/litmus-h100/summary.csv) is forbidden by any PTX model,
    unless the allow-list explains it (kind `h100`, model = the run configuration).
 7. Coverage: every feature of tests/corpus/catalog.yaml in the memory-related sections has a row in
-   models/ptx87/coverage.yaml, and every row names a known feature.
+   models/ptx87/coverage.yaml, and every row names a known feature; every modelled feature has a `kamui` field
+   with the lowering rules that models/kamui/lowering.yaml gives it.
+8. Kamui: models/kamui/kamui.als is models/ptx87/ptx87.als below the `module` line (the Kamui model is the PTX 8.7
+   model); every lowered test (tests/litmus/alloy-kamui/) has its `kamui-alloy` / `kamui-std-alloy` row; no
+   lowered test allows an outcome that the PTX models forbid (kind `kamui`); every hand-written Kamui test
+   (tests/litmus/kamui-isa/hand/) gets the verdict its description ends with. `--stronger` lists the tests where
+   the lowered program forbids an outcome PTX allows (Kamui may be stronger than PTX).
 Every exception to check 4 must be listed in tests/litmus/allowlist.yaml with a reason. An allow-list entry that
 no longer matches anything is also an error, so the list stays current.
 """
@@ -39,6 +45,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import litmus  # noqa: E402
 import to_alloy87  # noqa: E402
+import to_kamui  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 SUITE = ROOT / "tests" / "litmus"
@@ -48,7 +55,8 @@ ALLOWLIST = SUITE / "allowlist.yaml"
 FIELDS = ["test", "source", "condition", "model", "model_version", "tool", "tool_version", "flags", "result",
           "runtime_s"]
 RESULTS = {"allowed", "forbidden", "unknown", "error"}
-BASELINES = {"rvwmo"}  # models of a lowered program, not of the PTX test itself
+KAMUI_MODELS = {"kamui-alloy", "kamui-std-alloy"}
+BASELINES = {"rvwmo"} | KAMUI_MODELS  # models of a lowered program, not of the PTX test itself
 UPSTREAM_COLUMN = {"ptx-v7.5": "upstream_ptx_v7_5", "ptx-v6.0": "upstream_ptx_v6_0"}
 
 
@@ -75,6 +83,13 @@ def findings(suite: Path = SUITE) -> tuple[list[str], list[tuple[str, str, str, 
         if t.quantifier != "exists":
             errors.append(f"{tid}: condition is '{t.quantifier}', not 'exists'")
         tests[tid] = t
+    hand: dict[str, litmus.Litmus] = {}
+    for p in sorted((suite / "kamui-isa" / "hand").rglob("*.litmus")):
+        tid = p.relative_to(suite).with_suffix("").as_posix()
+        try:
+            hand[tid] = litmus.load(p)
+        except litmus.LitmusError as e:
+            errors.append(f"parse: {e}")
 
     origin = {r["test"]: r for r in read_csv(suite / "ptx" / "imported" / "origin.csv")}
     imported = {tid for tid in tests if tid.startswith("ptx/imported/")}
@@ -96,7 +111,7 @@ def findings(suite: Path = SUITE) -> tuple[list[str], list[tuple[str, str, str, 
         if key in seen:
             errors.append(f"expected.csv: duplicate row {key}")
         seen.add(key)
-        if r["test"] not in tests:
+        if r["test"] not in tests and r["test"] not in hand:
             errors.append(f"expected.csv: row for missing test {r['test']}")
         if r["result"] not in RESULTS:
             errors.append(f"expected.csv: bad result {r['result']!r} for {key}")
@@ -144,7 +159,46 @@ def findings(suite: Path = SUITE) -> tuple[list[str], list[tuple[str, str, str, 
                 dis.append(("h100", r["test"], r["config"],
                             f"{r['weak']} of {r['instances']} instances, forbidden by {', '.join(against)}"))
     errors += coverage_errors(suite.parents[1])
+    errors += kamui_errors(suite, tests, hand, by_test)
+    for tid, res in sorted(by_test.items()):
+        ptx = {v for m, v in res.items() if v in ("allowed", "forbidden") and m not in BASELINES}
+        for m in sorted(KAMUI_MODELS & set(res)):
+            if ptx == {"forbidden"} and res[m] == "allowed":
+                dis.append(("kamui", tid, m, "PTX forbids the outcome, the Kamui lowering allows it"))
     return errors, dis
+
+
+def kamui_errors(suite: Path, tests: dict, hand: dict, by_test: dict) -> list[str]:
+    root = suite.parents[1]
+    errors = []
+    k, p = (root / "models" / "kamui" / "kamui.als").read_text(), (root / "models" / "ptx87" / "ptx87.als").read_text()
+    if k.split("\nmodule kamui\n", 1)[-1] != p.split("\nmodule ptx87\n", 1)[-1]:
+        errors.append("kamui: models/kamui/kamui.als differs from models/ptx87/ptx87.als below the module line")
+    for tid in tests:
+        for m in sorted(KAMUI_MODELS):
+            if to_kamui.kamui_query_for(tid, m) and m not in by_test.get(tid, {}):
+                errors.append(f"{tid}: no {m} row in expected.csv")
+    for tid, t in hand.items():
+        want = t.comments.strip().strip('"').rstrip(".").split(":")[-1].strip()
+        if want not in ("allowed", "forbidden"):
+            errors.append(f"{tid}: the description must end with ': allowed.' or ': forbidden.'")
+        elif by_test.get(tid, {}).get("kamui-alloy") != want:
+            errors.append(f"{tid}: kamui-alloy says {by_test.get(tid, {}).get('kamui-alloy')}, the test says {want}")
+    return errors
+
+
+def stronger(suite: Path = SUITE) -> list[tuple[str, str]]:
+    """Tests where a Kamui lowering forbids an outcome that the PTX models allow."""
+    by_test: dict[str, dict[str, str]] = defaultdict(dict)
+    for r in read_csv(suite / "expected.csv"):
+        by_test[r["test"]][r["model"]] = r["result"]
+    out = []
+    for tid, res in sorted(by_test.items()):
+        ptx = {v for m, v in res.items() if v in ("allowed", "forbidden") and m not in BASELINES}
+        for m in sorted(KAMUI_MODELS & set(res)):
+            if ptx == {"allowed"} and res[m] == "forbidden":
+                out.append((tid, m))
+    return out
 
 
 MEMORY_SECTIONS = ("5.1.", "9.7.9.", "9.7.13.", "9.7.14.5.15", "9.7.14.5.16", "9.7.15.")
@@ -176,6 +230,11 @@ def coverage_errors(root: Path) -> list[str]:
         seen.add(fid)
     for fid in sorted(wanted - seen):
         errors.append(f"coverage: catalog feature {fid} (section {ids[fid][:-1]}) has no row in coverage.yaml")
+    lowering = yaml.safe_load((root / "models" / "kamui" / "lowering.yaml").read_text())["features"]
+    for r in rows:
+        if r.get("kind") == "modelled" and r.get("kamui") != lowering.get(r.get("feature")):
+            errors.append(f"coverage: {r.get('feature')}: kamui field {r.get('kamui')} is not the lowering of "
+                          f"models/kamui/lowering.yaml ({lowering.get(r.get('feature'))})")
     return errors
 
 
@@ -188,7 +247,12 @@ def load_allowlist(path: Path = ALLOWLIST) -> list[dict]:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--list", action="store_true", help="print every disagreement")
+    ap.add_argument("--stronger", action="store_true", help="list where a Kamui lowering is stronger than PTX")
     a = ap.parse_args()
+    if a.stronger:
+        for tid, m in stronger():
+            print(f"{m:16} {tid}")
+        return 0
     errors, dis = findings()
     allow = load_allowlist()
     keys = {(e["kind"], e["test"], e.get("model", "*")): e for e in allow}

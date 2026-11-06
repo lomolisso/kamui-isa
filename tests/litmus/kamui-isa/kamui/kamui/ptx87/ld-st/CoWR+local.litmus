@@ -1,0 +1,12 @@
+KAMUI CoWR+local
+"Lowered from tests/litmus/ptx/kamui/ptx87/ld-st/CoWR+local.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+l=0;
+P0:r0=0;
+l in local P0;
+}
+ P0@cta 0,gpu 0  ;
+ kstl.weak l, 1  ;
+ kldl.weak r0, l ;
+exists
+(P0:r0 == 0)

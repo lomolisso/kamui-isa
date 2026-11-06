@@ -1,0 +1,16 @@
+KAMUI pipeline-async-smem-handoff
+"Lowered from tests/litmus/ptx/kamui/idioms/pipeline-async-smem-handoff.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+s=0 @cta 0;
+f=mbarrier(1) @cta 0;
+P1:r0=0;
+P1:r1=0;
+s in shared cta 0;
+f in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0      | P1@cta 0,cluster 0,gpu 0              ;
+ ksts.weak s, 1                | kmbar.try.parity.acquire.cta r0, f, 0 ;
+ kfence.proxy.async.shared_cta | klds.weak r1, s                       ;
+ kmbar.arv.release.cta f       |                                       ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

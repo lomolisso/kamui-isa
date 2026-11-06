@@ -1,0 +1,26 @@
+KAMUI cp.async.two-groups+wait_group1
+"Lowered from tests/litmus/ptx/kamui/features/async/cp.async.two-groups+wait_group1.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+d=0 @cta 0;
+e=0 @cta 0;
+g=0;
+h=0;
+P0:r0=0;
+P0:r1=0;
+d in shared cta 0;
+e in shared cta 0;
+g in global;
+h in global;
+}
+ P0@cta 0,cluster 0,gpu 0 ;
+ sw g, 1                  ;
+ sw h, 1                  ;
+ kldgsts d, g             ;
+ kldgdepbar               ;
+ kldgsts e, h             ;
+ kldgdepbar               ;
+ kdepbar.ldgsts 1         ;
+ lw r0, d                 ;
+ lw r1, e                 ;
+exists
+(P0:r0 == 0 \/ P0:r1 == 0)

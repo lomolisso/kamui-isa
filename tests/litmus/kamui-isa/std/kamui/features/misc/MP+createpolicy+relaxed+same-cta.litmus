@@ -1,0 +1,15 @@
+KAMUI MP+createpolicy+relaxed+same-cta
+"Lowered from tests/litmus/ptx/kamui/features/misc/MP+createpolicy+relaxed+same-cta.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+f=0;
+P1:r9=0;
+P1:r0=0;
+P1:r1=0;
+x in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ sw x, 1                  | kld.relaxed.gpu r0, f    ;
+ kst.relaxed.gpu f, 1     | lw r1, x                 ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

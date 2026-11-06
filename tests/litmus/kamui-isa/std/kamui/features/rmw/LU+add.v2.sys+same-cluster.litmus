@@ -1,0 +1,16 @@
+KAMUI LU+add.v2.sys+same-cluster
+"Lowered from tests/litmus/ptx/kamui/features/rmw/LU+add.v2.sys+same-cluster.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y=0;
+P0:r0=0;
+P0:r1=0;
+P1:r2=0;
+P1:r3=0;
+x in global;
+y in global;
+}
+ P0@cta 0,cluster 0,gpu 0                         | P1@cta 1,cluster 0,gpu 0                         ;
+ katomg.relaxed.sys.v2.f32.add r0, r1, x, y, 1, 1 | katomg.relaxed.sys.v2.f32.add r2, r3, x, y, 1, 1 ;
+exists
+(P0:r0 == 0 /\ P1:r2 == 0)

@@ -1,0 +1,11 @@
+KAMUI SB+aqrl
+"Store buffering with sw.aqrl and lw.aqrl: each is fence.sc.sys followed by the release store or acquire load (K2), the scoped C++ mapping of seq_cst: forbidden."
+{
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 1,gpu 0 ;
+ sw.aqrl x, 1   | sw.aqrl y, 1   ;
+ lw.aqrl r0, y  | lw.aqrl r1, x  ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

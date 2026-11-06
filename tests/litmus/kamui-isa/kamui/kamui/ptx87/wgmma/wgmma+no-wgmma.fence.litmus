@@ -1,0 +1,17 @@
+KAMUI wgmma+no-wgmma.fence
+"Lowered from tests/litmus/ptx/kamui/ptx87/wgmma/wgmma+no-wgmma.fence.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+a=0 @cta 0;
+c=0 @cta 0;
+P0:r0=0;
+a in shared cta 0;
+c in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0      ;
+ ksts.weak a, 1                ;
+ kfence.proxy.async.shared_cta ;
+ kgmma r0, a, c                ;
+ kwarpgroup.commit             ;
+ kwarpgroup.depbar 0           ;
+exists
+(P0:r0 == 0)

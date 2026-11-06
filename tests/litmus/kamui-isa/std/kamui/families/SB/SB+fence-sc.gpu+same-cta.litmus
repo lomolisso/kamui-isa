@@ -1,0 +1,14 @@
+KAMUI SB+fence-sc.gpu+same-cta
+"Lowered from tests/litmus/ptx/kamui/families/SB/SB+fence-sc.gpu+same-cta.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y=0;
+P0:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ kst.relaxed.gpu x, 1     | kst.relaxed.gpu y, 1     ;
+ fence rw, rw             | fence rw, rw             ;
+ kld.relaxed.gpu r0, y    | kld.relaxed.gpu r1, x    ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

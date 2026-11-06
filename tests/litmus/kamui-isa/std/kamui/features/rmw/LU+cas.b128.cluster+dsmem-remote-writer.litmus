@@ -1,0 +1,12 @@
+KAMUI LU+cas.b128.cluster+dsmem-remote-writer
+"Lowered from tests/litmus/ptx/kamui/features/rmw/LU+cas.b128.cluster+dsmem-remote-writer.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0 @cta 1;
+P0:r0=0;
+P1:r1=0;
+x in shared cta 1;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ amocas.q r0, x, 0, 1     | amocas.q r1, x, 0, 2     ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

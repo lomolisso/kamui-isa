@@ -1,0 +1,17 @@
+KAMUI rmw-ops+values
+"Lowered from tests/litmus/ptx/kamui/ptx87/rmw/rmw-ops+values.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=5;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0                 ;
+ katom.relaxed.gpu.inc r0, x, 5 ;
+ katom.relaxed.gpu.dec r0, x, 3 ;
+ amomax.w r0, x, 6              ;
+ amoand.w r0, x, 5              ;
+ amoor.w r0, x, 2               ;
+ amoxor.w r0, x, 1              ;
+ amomin.w r0, x, 9              ;
+ amoswap.w r0, x, 7             ;
+exists
+(P0:r0 != 7 \/ x != 7)

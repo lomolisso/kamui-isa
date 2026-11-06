@@ -1,0 +1,11 @@
+KAMUI MP+bar.arrive+bar.sync
+"Lowered from tests/litmus/ptx/kamui/ptx87/bar/MP+bar.arrive+bar.sync.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+P1:r0=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 0,gpu 0 ;
+ kst.weak x, 1  | kbar.sync 1, 2 ;
+ kbar.arv 1, 2  | kld.weak r0, x ;
+exists
+(P1:r0 == 0)

@@ -1,0 +1,18 @@
+KAMUI cccl-bulk-copy-then-expect-tx
+"Lowered from tests/litmus/ptx/kamui/idioms/cccl-bulk-copy-then-expect-tx.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+g=5;
+d=0 @cta 0;
+b=mbarrier(2) @cta 0;
+P1:r0=0;
+P1:r1=0;
+g in global;
+d in shared cta 0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0         | P1@cta 0,cluster 0,gpu 0               ;
+ kblkcp.s.g d, g, b               | kmbar.arv.release.cta b                ;
+ kmbar.expect_tx.relaxed.cta b, 1 | kmbar.test.parity.acquire.cta r0, b, 0 ;
+ kmbar.arv.release.cta b          | lw r1, d                               ;
+exists
+(P1:r0 == 1 /\ P1:r1 != 5)

@@ -1,0 +1,16 @@
+KAMUI MP+cp.async.ca+bar.sync
+"Lowered from tests/litmus/ptx/kamui/features/async/MP+cp.async.ca+bar.sync.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+g=5;
+d=0 @cta 0;
+P1:r0=0;
+g in global;
+d in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ kldgsts d, g             | kbar.sync 0              ;
+ kldgdepbar               | klds.weak r0, d          ;
+ kdepbar.ldgsts 0         |                          ;
+ kbar.sync 0              |                          ;
+exists
+(P1:r0 != 5)

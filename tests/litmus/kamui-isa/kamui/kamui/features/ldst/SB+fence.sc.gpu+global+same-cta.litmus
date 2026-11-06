@@ -1,0 +1,16 @@
+KAMUI SB+fence.sc.gpu+global+same-cta
+"Lowered from tests/litmus/ptx/kamui/features/ldst/SB+fence.sc.gpu+global+same-cta.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+P0:r0=0;
+P1:r1=0;
+x in global;
+y in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ kstg.relaxed.gpu x, 1    | kstg.relaxed.gpu y, 1    ;
+ kfence.sc.gpu            | kfence.sc.gpu            ;
+ kldg.relaxed.gpu r0, y   | kldg.relaxed.gpu r1, x   ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

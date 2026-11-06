@@ -1,0 +1,12 @@
+KAMUI mbarrier-init+inval+use
+"Lowered from tests/litmus/ptx/kamui/ptx87/mbarrier-init/mbarrier-init+inval+use.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+b=mbarrier(1) @cta 0;
+P0:r0=0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0    ;
+ kmbar.inval b               ;
+ kmbar.arv.release.cta r0, b ;
+exists
+(P0:r0 == 7)

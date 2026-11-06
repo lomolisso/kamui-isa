@@ -1,0 +1,13 @@
+KAMUI multimem.red+final
+"Lowered from tests/litmus/ptx/kamui/features/misc/multimem.red+final.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+m=multimem(x, y);
+x in global;
+y in global;
+}
+ P0@cta 0,gpu 0                   | P1@cta 0,gpu 1                   ;
+ kredgmc.relaxed.sys.add.u32 m, 1 | kredgmc.relaxed.sys.add.u32 m, 1 ;
+exists
+(x == 1)

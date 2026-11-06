@@ -1,0 +1,16 @@
+KAMUI WAR-other-thread+no-wait
+"Lowered from tests/litmus/ptx/kamui/features/wgmma/WAR-other-thread+no-wait.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+a=1 @cta 0;
+c=0 @cta 0;
+P0:r0=0;
+a in shared cta 0;
+c in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ kwarpgroup.arrive        | kbar.sync 0              ;
+ kgmma r0, a, c           | sw a, 2                  ;
+ kwarpgroup.commit        |                          ;
+ kbar.sync 0              |                          ;
+exists
+(P0:r0 == 2)

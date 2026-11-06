@@ -1,0 +1,12 @@
+KAMUI WAR+griddep.launch.wait
+"Lowered from tests/litmus/ptx/kamui/features/misc/WAR+griddep.launch.wait.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+P0:r0=0;
+x in global;
+}
+ P0@cta 0,gpu 0,grid 0 | P1@cta 0,gpu 0,grid 1 ;
+ kpreexit              | kacqbulk              ;
+ lw r0, x              | sw x, 1               ;
+exists
+(P0:r0 == 1)
