@@ -445,9 +445,10 @@ fun cause : MemoryEvent->MemoryEvent { ppbco + obs.ppbco }
 // 8.10.1 Coherence: a write that precedes an overlapping write in causality order precedes it in coherence.
 pred coherence { same_location[Write <: cause :> Write] in ^co }
 
-// 8.10.2 Fence-SC: fence.sc operations related by base causality are related the same way in Fence-SC order.
-// (D3: causality order relates memory operations; for fences the model uses base causality order.)
-pred fence_sc { FenceSC <: cause_base :> FenceSC in sc }
+// 8.10.2 Fence-SC: morally strong fence.sc operations related by base causality are related the same way in
+// Fence-SC order. (D3: causality order relates memory operations; for fences the model uses base causality order.
+// D41: only morally strong pairs, as the manual says.)
+pred fence_sc { (FenceSC <: cause_base :> FenceSC) & ms_r in sc }
 
 // 8.10.3 Atomicity. Single-copy atomicity: a read does not take some granules from a morally strong write and
 // others from a write before it in coherence order (D6). RMW atomicity, also for atomic operations that overlap
