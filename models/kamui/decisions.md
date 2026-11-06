@@ -68,7 +68,7 @@ Choice: count `i` as `r` and `o` as `w` (device input and output are reads and w
 | the predecessor set has `w` and the successor set has `r` (for example `fence rw,rw`, `fence w,r`) | `fence.sc.sys` |
 | the predecessor set is `r` only (`fence r,rw`, `fence r,r`, `fence r,w`) | `fence.acquire.sys` |
 | the successor set is `w` only (`fence rw,w`, `fence w,w`) | `fence.release.sys` |
-| any other set, and `fence.tso` | `fence.acq_rel.sys` |
+| `fence.tso` (every other non-empty pair of sets is covered by the rows above) | `fence.acq_rel.sys` |
 | `fence.i` | none (instruction fetch) |
 
 Why: store-to-load order needs `fence.sc` in PTX (SB is allowed with `fence.acq_rel`); a fence after reads only is
@@ -145,12 +145,20 @@ Why: 1-to-1 with the H100; the model is unaffected (D17: the windows are views o
 Choice: `red.shared` lowers to `katoms ... RZ` and `red.shared::cluster` to `katom ... RZ` (the H100 has no
 shared-memory `RED`). The events are the same (D34).
 
-## K9. ldu is a weak generic read
+## K9. ldu reads through the non-coherent path
 
-Choice: `ldu.global` lowers to `kldg.weak`, as the H100 compiles it to a plain `LDG`. The PTX model reads `ldu`
-through the non-coherent (texture) path (D29), which may return older values; a weak generic read returns a
-subset of them. Kamui is stronger here. Tests: `ptx/kamui/ptx87/ld-st/MP+ldu` (allowed in PTX, forbidden for the
-lowered program).
+Choice: `ldu.global` lowers to `kldg.nc`, the same events as the PTX model's reading (D29: a read through the
+non-coherent path, like `ld.global.nc`). Neither `ldu` nor `ld.global.nc` has a standard alternative.
+
+Why: the H100 compiles `ldu` to a plain `LDG` and `ld.global.nc` to `LDG.E.CONSTANT`, and an earlier version of
+this lowering copied that (`ldu` as a weak generic read), on the idea that a generic read is stronger. The bounded
+check (`proxies` group, `check_lowering.sh`) found that it is not: in the PTX model, two reads of one location by
+one thread through the same path are morally strong, so they are coherent with each other (SC per location); when
+only one of them becomes a generic read, the pair is no longer morally strong, and the later read may return an
+older value. A program that reads one location with `ldu` and then with `ld.global.nc` keeps PTX's guarantee only
+if both use the same path. The H100's choice is an implementation that may break that guarantee for such
+programs; whether PTX means to give it (6521 says the memory model does not apply to these reads at all) is an open
+question, recorded in the report.
 
 ## K10. .volatile
 

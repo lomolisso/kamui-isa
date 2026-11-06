@@ -27,7 +27,7 @@ kamui:
     h100: LDG
     syntax: 'kldg{.weak|.relaxed.<scope>|.acquire.<scope>}{.nc}{.mmio}{.v2|.v4}{.<type>} rd, [a]'
     events: ld.global
-    note: '.nc reads through the non-coherent path (PTX ld.global.nc, D29). .mmio is relaxed at sys scope (K5).'
+    note: '.nc reads through the non-coherent path (PTX ld.global.nc and ldu, D29, K9). .mmio is relaxed at sys scope (K5).'
   - name: klds
     family: Xkmscope
     h100: LDS
@@ -429,7 +429,7 @@ standard:
   - match: 'fence (succ is w only)'
     ext: I
     events: [fence.release.sys]
-  - match: 'fence (any other set), fence.tso'
+  - match: 'fence.tso (every other FENCE is covered above)'
     ext: I
     events: [fence.acq_rel.sys]
   - match: 'fence.i'

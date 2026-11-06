@@ -171,9 +171,11 @@ def findings(suite: Path = SUITE) -> tuple[list[str], list[tuple[str, str, str, 
 def kamui_errors(suite: Path, tests: dict, hand: dict, by_test: dict) -> list[str]:
     root = suite.parents[1]
     errors = []
-    k, p = (root / "models" / "kamui" / "kamui.als").read_text(), (root / "models" / "ptx87" / "ptx87.als").read_text()
-    if k.split("\nmodule kamui\n", 1)[-1] != p.split("\nmodule ptx87\n", 1)[-1]:
-        errors.append("kamui: models/kamui/kamui.als differs from models/ptx87/ptx87.als below the module line")
+    kp, pp = root / "models" / "kamui" / "kamui.als", root / "models" / "ptx87" / "ptx87.als"
+    if kp.exists() and pp.exists():
+        k, p = kp.read_text(), pp.read_text()
+        if "\nmodule kamui\n" not in k or k.split("\nmodule kamui\n", 1)[1] != p.split("\nmodule ptx87\n", 1)[1]:
+            errors.append("kamui: models/kamui/kamui.als differs from models/ptx87/ptx87.als below the module line")
     for tid in tests:
         for m in sorted(KAMUI_MODELS):
             if to_kamui.kamui_query_for(tid, m) and m not in by_test.get(tid, {}):

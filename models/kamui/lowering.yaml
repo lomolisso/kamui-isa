@@ -56,12 +56,12 @@ rules:
     ptx: 'ld.global.nc rd, [a]'
     kamui: ['kldg.nc rd, [a]']
     kind: same
+    why: 'no standard alternative: a plain lw is not stronger than a non-coherent read when the thread also reads the location through the non-coherent path (K9)'
   - id: ldu
     ptx: 'ldu.global rd, [a]'
-    kamui: ['kldg.weak rd, [a]']
-    kind: stronger
-    why: a weak generic read instead of a read through the non-coherent path; the H100 uses a plain LDG (K9)
-    std: 'lw/ld (stronger)'
+    kamui: ['kldg.nc rd, [a]']
+    kind: same
+    why: the PTX model reads ldu through the non-coherent path (D29); a generic read in its place is not stronger (K9)
   - id: ld.volatile
     ptx: 'ld.volatile{.space} rd, [a]'
     kamui: ['k<ld form of the space>.relaxed.sys rd, [a]']

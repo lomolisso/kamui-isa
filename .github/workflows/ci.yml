@@ -120,6 +120,7 @@ jobs:
           python tools/litmus/gen_features.py --check
           python tools/litmus/to_alloy.py --check
           python tools/litmus/to_alloy87.py --check
+          python tools/litmus/to_kamui.py --check
           python tools/litmus/to_riscv.py --check
           python tools/litmus/to_cuda.py --check
 

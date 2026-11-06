@@ -27,6 +27,7 @@ tests (tests/litmus/kamui-isa/hand/) skip step 1.
 from __future__ import annotations
 
 import argparse
+import functools
 import re
 import shutil
 import subprocess
@@ -66,6 +67,7 @@ def load_rules() -> dict:
     return {r["id"]: r for r in yaml.safe_load((MODEL / "lowering.yaml").read_text())["rules"]}
 
 
+@functools.cache
 def load_meanings() -> dict[str, str]:
     """Kamui mnemonic (with its fixed qualifiers) -> the PTX operation it produces (instructions.yaml)."""
     rows = yaml.safe_load((MODEL / "instructions.yaml").read_text())["kamui"]
@@ -227,7 +229,7 @@ class Lowerer:
         sp = self.space(q)
         if ins.op == "ldu":
             self.rule("ldu")
-            return [self.k("lw", [], a)] if self.std() else [self.k("kldg.weak", [x for x in q if TYPE.match(x)], a)]
+            return [self.k("kldg.nc", [x for x in q if TYPE.match(x)], a)]
         rest = self.strip(q)
         if "volatile" in rest:
             self.rule("ld.volatile")
@@ -244,7 +246,7 @@ class Lowerer:
             rest = ["relaxed" if x == "acquire" else x for x in rest]
         order = next((x for x in rest if x in ORDERS), "weak")
         vec = any(re.fullmatch(r"v\d", x) for x in rest)
-        if self.std() and not vec and "mmio" not in rest and sp not in ("const", "param"):
+        if self.std() and not vec and "mmio" not in rest and "nc" not in rest and sp not in ("const", "param"):
             if order == "weak":
                 return [self.k("ld" if any(x in rest for x in ("b64", "u64", "s64")) else "lw", [], a)]
             if order == "acquire":

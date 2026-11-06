@@ -374,10 +374,9 @@ class KamuiAlloy(Alloy6):
 
     @property
     def model_version(self) -> str:
-        files = [to_kamui.MODEL / "kamui.als", to_alloy87.MODEL / "util.als", to_kamui.MODEL / "instructions.yaml",
-                 to_kamui.MODEL / "lowering.yaml"]
-        h = hashlib.sha256(b"".join(f.read_bytes() for f in files)).hexdigest()[:12]
-        return f"kamui.als+util.als+instructions.yaml+lowering.yaml sha256:{h}"
+        # the lowering itself is in the queries, which tools/litmus/to_kamui.py --check keeps current
+        h = hashlib.sha256(b"".join(f.read_bytes() for f in self.model_files())).hexdigest()[:12]
+        return f"kamui.als+util.als sha256:{h}"
 
     def query(self, tid: str) -> Path:
         return to_kamui.kamui_query_for(tid, self.model)

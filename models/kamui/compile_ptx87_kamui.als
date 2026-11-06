@@ -6,8 +6,9 @@
 // same place in program order. Everything else is either the same or one of the three ways a Kamui program may
 // be stronger:
 //   - a wider scope for a strong operation (the standard instructions are at .sys, K2);
-//   - a fence.sc.sys inserted before an acquire-release read-modify-write (`.aqrl`, K2);
-//   - a weak read of the generic proxy in place of a weak read of the non-coherent path (`ldu`, K9).
+//   - a fence.sc.sys inserted before an acquire-release read-modify-write (`.aqrl`, K2).
+// (`relax` below, a weak generic read in place of a weak non-coherent read, is not used by the lowering: the
+// `proxies` group showed it is not stronger, K9; `broken_relax_nc` keeps that counterexample.)
 // Rules that are one-to-one at the level of events (membar = fence.sc, .volatile, cp.async.wait_all, the
 // tensormap.cp_fenceproxy sequence, red on shared memory as an atomic with no result, the elect loop of K6, ...)
 // are covered by the identity. The execution (reads-from, coherence, Fence-SC order, barrier generations, values
@@ -172,7 +173,7 @@ pred ptx_ok { p/ptx_mm or p/undefined }
 
 pred core      { g_core and ident and k/ptx_mm }
 pred core_std  { g_core and std and k/ptx_mm }
-pred proxies_  { g_proxies and nc and k/ptx_mm }
+pred proxies_  { g_proxies and ident and k/ptx_mm }
 pred barriers  { g_barriers and ident and k/ptx_mm }
 pred mbarrier  { g_mbarrier and ident and k/ptx_mm }
 pred async     { g_async and ident and k/ptx_mm }
@@ -339,7 +340,7 @@ rest_causality_5: check rest_causality for 5 but 7 p/Scope, 7 k/Scope, 6 k/Event
 run sanity_core { core and some p/sync_pattern } for 4 but 5 k/Event
 run sanity_core_std { core_std and some p/sync_pattern and some Map.pre and some e: Map.widen | e.m.((k/Event <: scope)) != e.((p/Event <: scope)).ms } for 4 but 6 k/Event
 run sanity_cluster { core and some p/sync_pattern and some (p/Event.((p/Event <: scope)) & p/ClusterScope) } for 4 but 6 p/Scope, 6 k/Scope, 5 k/Event
-run sanity_proxies { proxies_ and some Map.relax and some p/sync_pattern } for 4 but 5 k/Event
+run sanity_proxies { proxies_ and some (p/MemoryEvent <: proxy).(p/Proxy - p/Generic) and some p/sync_pattern } for 4 but 5 k/Event
 run sanity_barriers { barriers and some (p/BarrierArrive <: synchronizes) } for 4 but 5 k/Event
 run sanity_mbarrier { mbarrier and some p/MbarWait and some p/sync_pattern } for 4 but 5 k/Event
 run sanity_async { async and some (p/Event <: issue) and some (p/Event <: done) } for 5 but 6 k/Event
@@ -405,3 +406,9 @@ run broken_drop_proxy_fence {
     f.m in k/Marker and f.m.((k/Event <: scope)) = f.(p/thd).ms
   }
 } for 5 but 6 k/Event
+
+// a weak non-coherent read lowered as a generic one (the first version of K9): not stronger, because another
+// non-coherent read of the same location by the same thread is no longer morally strong with it (proxies)
+run broken_relax_nc {
+  g_proxies and nc and k/ptx_mm and not ptx_ok
+} for 4 but 5 k/Event
