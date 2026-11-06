@@ -142,6 +142,9 @@ Input files:
 All outputs go to `build/examples/riscv/`. Start a shell with `tools/dev.sh` at the repository root
 and set:
 
+The examples were run with the base ISA below; Kamui's current one uses Zfinx, Zdinx and Zhinx instead of F, D
+and Zfh ([../overview.md](../overview.md)).
+
 ```bash
 ISA=rv64imafd_zicsr_zifencei_zfh_zba_zbb_zbs_zicond
 E=docs/examples/riscv

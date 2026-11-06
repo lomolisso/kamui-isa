@@ -8,6 +8,8 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- Execution-model design decisions in `docs/design/`: H100 register model, 64-bit instructions, convergence, scopes,
+  addressing and the uniform datapath.
 - PTX 8.7 feature catalog with coverage checks against the manual, clang 20 and the release notes, and the
   generated PTX side of `spec/ptx-table.md`.
 - PTX corpus build tools and the tier 1 micro-kernels, one per feature, compiled by clang 20.
@@ -35,6 +37,8 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- Base ISA: floating point in the integer registers (Zfinx, Zdinx, Zhinx) instead of F, D and Zfh, and more
+  standard extensions (atomics, cache and hint extensions, counters).
 - PTX 8.7 Alloy model: tensormap proxy fences act only as a release/acquire pair, and a mixed-size data race
   frees a program from the axioms but not from written values (decisions D37, D38).
 - PTX 8.7 Alloy model: a bulk copy from `.shared::cta` into the issuing CTA is undefined behaviour, and a generic
