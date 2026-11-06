@@ -103,19 +103,26 @@ Strong system-scope operations are ordered by fences as RISC-V I/O accesses are.
 
 Question: Kamui copies the H100's uniform datapath (`docs/design/uniform-datapath.md`): bulk and tensor copies
 (`kblkcp`, `kblkred`, `ktma*`) and the cluster barrier (`kcgabar`) take uniform operands and run once for the warp.
-PTX's `cp.async.bulk` is a per-thread instruction, ordered after the earlier instructions of the thread that
-issues it (6884). Who performs a uniform instruction, and what is it ordered after?
+PTX's `cp.async.bulk` is a per-thread instruction: its operations "are ordered after prior instructions in the same
+thread" (8.9.1.1). When several threads of a warp each ask for a copy, which thread is a uniform copy performed for,
+and what is it ordered after?
 
-Choice: a uniform instruction executed by a set A of active threads is performed by one thread of A (the one
-`kelect` picks) and is ordered after the earlier instructions of every thread of A, as if a `kwarpsync` over A
-preceded it. A per-thread PTX copy issued by several active threads is lowered to an elect loop: each iteration
-picks one thread, moves its operands into uniform registers and issues one uniform copy. With one active thread
-(every litmus test) A is that thread and the rule adds nothing. The cluster barrier counts the arrival of every
-thread of A.
+Choice: the compiler issues the copies through an elect loop, as the H100 does: each iteration picks one of the
+remaining threads (`kelect`), moves that thread's operands into uniform registers and issues one uniform copy. That
+copy is the copy of the picked thread: it is ordered after that thread's earlier instructions, as PTX says, and
+after nothing else. A uniform instruction does not synchronize the active threads with each other; ordering between
+threads needs explicit synchronization, and a copy that reads data written through the generic proxy needs
+`kfence.proxy.async` in the writing thread, both as in PTX. Issuing a copy is not completing it: its results and
+the reuse of its buffers wait for its mbarrier or its bulk group. The cluster barrier counts the arrival of every
+active thread, each with its own release or acquire, as PTX does per thread.
 
-Why: this is the H100's lowering (`ELECT`, `UBLKCP`, `evidence/sass-observations.csv`), and the ordering rule is
-what makes the copy a thread asked for come after that thread's earlier writes, even when another thread issues
-it. Check: the `uniform` group of `check_lowering.sh` and its broken lowering (`broken/elect-no-order`).
+Why: the H100's loop (`evidence/sass/cp.async.bulk.global_to_shared.sass`: `ELECT`, `UBLKCP`, `BRA.U.ANY` back while
+a thread is left) issues each thread's own copy, so the thread that asks for a copy is the thread it is performed
+for and PTX's rule applies unchanged. `elect.sync` only waits for the threads of its mask and has no memory effect
+(PTX 9.7.13.14). An earlier draft ordered every uniform instruction after the earlier instructions of all active
+threads, as if a `kwarpsync` came first; that is more than PTX asks and was dropped (project lead, 2026-11-06).
+Check: the `async` group of `check_lowering.sh` and the broken lowering that performs a copy for another thread
+than the one that asked for it.
 
 ## K7. Shared memory of other CTAs is reached with generic instructions
 
@@ -125,8 +132,11 @@ generic `LD.E`, `ST.E`, `ATOM.E` with an address in the cluster window, and `LDS
 executing CTA's window.
 
 Choice: as the H100. `klds`, `ksts`, `katoms` take an offset in the executing CTA's shared window; the shared
-memory of other CTAs of the cluster is reached through the generic forms with the cluster-window address. The
-addressing design document is corrected.
+memory of other CTAs of the cluster is reached through the generic forms `kld`, `kst`, `katom` with a full generic
+address, which the compiler builds from the window base, the target CTA's rank (bits 24 and up) and the offset, as
+`evidence/sass/ld.shared.cluster.sass` does (`SR_SWINHI`, `LEA ... 0x18`, `PRMT`, then `ST.E`). Global accesses
+keep their own form (`ld.global` is `kldg`, the H100's `LDG`). The addressing design document is corrected
+(project lead, 2026-11-06).
 
 Why: 1-to-1 with the H100; the model is unaffected (D17: the windows are views of one location).
 
@@ -161,13 +171,20 @@ Choice: `tensormap.replace` is a weak generic write of the field (the H100's `ST
 is a weak shared-memory read and a weak global write per 16-byte chunk, followed by
 `kfence.proxy.tensormap.release.<s>` (9.7.9.26). This is the same as the PTX model's reading.
 
-## K13. wgmma.commit_group is a bit of the last kgmma
+## K13. wgmma.commit_group is its own instruction
 
-Choice: the H100 has no instruction for `wgmma.commit_group`; the commit point is part of the matrix instruction.
-Kamui's `kgmma` has a `.commit` bit; the lowering sets it on the last `kgmma` before the commit point. A commit
-with no `kgmma` since the previous one closes an empty group, which is complete at once: the lowering drops it and
-lowers a later `wgmma.wait_group n` to `kwarpgroup.depbar n'`, where `n'` counts only the non-empty groups among
-the newest `n`. Waiting for all but `n'` non-empty groups waits for at least what PTX asks.
+Question: the H100 has no instruction for `wgmma.commit_group`: the group is an operand of the matrix instruction
+(`HGMMA ... gsb0`, waited for with `WARPGROUP.DEPBAR.LE gsb0, N`, `evidence/sass/wgmma.mma_async*.sass`). Should
+Kamui copy that, with a commit bit on the last `kgmma`?
+
+Choice: no. `wgmma.commit_group` lowers to `kwarpgroup.commit` and `wgmma.wait_group N` to `kwarpgroup.depbar N`.
+A commit with no `kgmma` since the previous one makes an empty group, as in PTX (9.7.15.7.2), and waits count it.
+
+Why: with a commit bit, a commit that closes an empty group has no `kgmma` to carry it, and a compiler would have to
+drop it and lower the later wait counts on every control-flow path, which is real work for little gain. A separate
+instruction lowers PTX one to one. Our H100 evidence has one group per kernel, so how the H100 handles an empty
+group is not shown. Fusing the commit into the last `kgmma` remains a possible optimization for a compiler that
+proves it equivalent. One of the few places where the ISA does not copy the H100 (project lead, 2026-11-06).
 
 ## K14. st.param
 

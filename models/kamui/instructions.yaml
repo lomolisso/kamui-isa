@@ -179,14 +179,13 @@ kamui:
     h100: WARPSYNC
     syntax: 'kwarpsync mask'
     events: bar.warp.sync
-    note: also the first half of every warp-uniform instruction's ordering (K6).
   # --------------------------------------------------------------------------------------------- Xkmcluster
   - name: kcgabar.arv
     family: Xkmcluster
     h100: MEMBAR.ALL.GPU; UCGABAR_ARV (release) / WARPSYNC.ALL; UCGABAR_ARV (relaxed)
     syntax: 'kcgabar.arv{.release|.relaxed}'
     events: barrier.cluster.arrive
-    note: warp-uniform (K6); the default is release.
+    note: warp-uniform; counts the arrival of every active thread, each with its own release (K6). The default is release.
   - name: kcgabar.wait
     family: Xkmcluster
     h100: UCGABAR_WAIT; CCTL.IVALL
@@ -267,19 +266,19 @@ kamui:
     h100: UBLKCP
     syntax: 'kblkcp.{s.g|s.s|g.s}{.mc} [d], [s], {[b] | bulk_group}, size{, ctamask}'
     events: cp.async.bulk
-    note: warp-uniform (K6). s.g = global to shared (completes on the mbarrier b), s.s = shared of this CTA to shared of a CTA of the cluster, g.s = shared to global (completes in a bulk group).
+    note: warp-uniform; performed for the thread an elect loop picked, ordered after that thread's earlier instructions only (K6). s.g = global to shared (completes on the mbarrier b), s.s = shared of this CTA to shared of a CTA of the cluster, g.s = shared to global (completes in a bulk group).
   - name: kblkred
     family: Xkmasync
     h100: UBLKRED
     syntax: 'kblkred.g.s.<op> [g], [s], size'
     events: cp.reduce.async.bulk.global.shared::cta.bulk_group
-    note: warp-uniform (K6).
+    note: warp-uniform, performed for the thread an elect loop picked (K6).
   - name: ktmaldg
     family: Xkmasync
     h100: UTMALDG
     syntax: 'ktmaldg.<dim>{.tile|.im2col}{.mc} [d], [tm, coords], [b]{, ctamask}'
     events: cp.async.bulk.tensor
-    note: warp-uniform (K6).
+    note: warp-uniform, performed for the thread an elect loop picked (K6).
   - name: ktmastg
     family: Xkmasync
     h100: UTMASTG
@@ -345,9 +344,13 @@ kamui:
   - name: kgmma
     family: Xkmmma
     h100: HGMMA, QGMMA, IGMMA, BGMMA
-    syntax: 'kgmma.<shape>.<types>{.commit} rd, [a], [b]'
+    syntax: 'kgmma.<shape>.<types> rd, [a], [b]'
     events: wgmma.mma_async
-    note: '.commit closes the warpgroup''s current wgmma group (PTX wgmma.commit_group; K13).'
+  - name: kwarpgroup.commit
+    family: Xkmmma
+    h100: (none; the H100 names the group in an operand of HGMMA, K13)
+    syntax: 'kwarpgroup.commit'
+    events: wgmma.commit_group
   - name: kwarpgroup.depbar
     family: Xkmmma
     h100: WARPGROUP.DEPBAR.LE

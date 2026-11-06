@@ -222,7 +222,7 @@ rules:
     ptx: 'cp.async.bulk.{shared::cluster.global.mbarrier|shared::cluster.shared::cta.mbarrier|global.shared::cta.bulk_group}{.multicast::cluster} [d], [s], {[b],} size{, mask}'
     kamui: ['kblkcp.{s.g|s.s|g.s}{.mc} [d], [s], {[b],} size{, mask}']
     kind: same
-    why: 'warp-uniform (K6): with several active threads the compiler issues one copy per thread through an elect loop (kelect; uniform moves; kblkcp), each ordered after the earlier instructions of every active thread; with one active thread it is the instruction alone'
+    why: 'warp-uniform (K6): with several active threads the compiler issues one copy per thread through an elect loop (kelect; uniform moves of the picked thread''s operands; kblkcp), each performed for the picked thread and ordered after its earlier instructions only; with one active thread it is the instruction alone'
   - id: cp.reduce.async.bulk
     ptx: 'cp.reduce.async.bulk.global.shared::cta.bulk_group.<op> [g], [s], size'
     kamui: ['kblkred.g.s.<op> [g], [s], size']
@@ -271,7 +271,7 @@ rules:
     why: the copy is weak generic accesses followed by the release proxy fence (9.7.9.26; K12); 128 bytes are 16 such pairs, counted as one in the litmus form
   - id: wgmma
     ptx: 'wgmma.fence | wgmma.mma_async ... | wgmma.commit_group | wgmma.wait_group n'
-    kamui: ['kwarpgroup.arrive', 'kgmma ...', '.commit on the last kgmma before the commit point (K13)', 'kwarpgroup.depbar n']
+    kamui: ['kwarpgroup.arrive', 'kgmma ...', 'kwarpgroup.commit (K13)', 'kwarpgroup.depbar n']
     kind: same
   - id: ldmatrix
     ptx: 'ldmatrix.sync.aligned.<shape>.shared.b16 rd, [s] | stmatrix.sync.aligned.<shape>.shared.b16 [s], rs'
