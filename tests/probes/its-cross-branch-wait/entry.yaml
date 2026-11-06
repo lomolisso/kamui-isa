@@ -1,0 +1,16 @@
+id: its-cross-branch-wait
+kernel: p_its_cross
+compile:
+  extra_flags: []
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+params:
+  - {name: flags, kind: inout, dtype: u32, count: 2, generator: {kind: const, value: 0}}
+  - {name: res, kind: output, dtype: u32, count: 32}
+  - {name: t, kind: output, dtype: u32, count: 32}
+expect_ptx: [ld\.volatile\.global\.u32]
+deterministic: false
+tolerance_class: property:probe

@@ -1,0 +1,28 @@
+# job 20261105T023255Z-q000231
+# gpu NVIDIA H100 NVL, driver 580.126.20
+# tool kamui_sass_hist (tools/evidence/nvbit), NVBit 1.8.1
+# cuda_toolkit Build cuda_12.9.r12.9/compiler.36037853_0, cutlass 4.4.2, torch 2.11.0+cu129, triton 3.6.0, flash_attn 2.8.3.post2, flashinfer 0.7.2.post1
+workload,kernel,sass_opcode,opcode_class,static_count,warp_inst_executed,thread_inst_executed,thread_inst_executed_pred_true
+div_bitonic,kamui_bitonic#4c00b6eb,VIMNMX,int_alu,110,14417920,461373440,346030080
+div_bitonic,kamui_bitonic#4c00b6eb,PLOP3.LUT,int_alu,45,5898240,188743680,188743680
+div_bitonic,kamui_bitonic#4c00b6eb,SHFL.BFLY,warp,40,5242880,167772160,167772160
+div_bitonic,kamui_bitonic#4c00b6eb,BAR.SYNC.DEFER_BLOCKING,barrier,30,3932160,125829120,125829120
+div_bitonic,kamui_bitonic#4c00b6eb,LOP3.LUT,int_alu,25,3276800,104857600,104857600
+div_bitonic,kamui_bitonic#4c00b6eb,LDS,mem_shared,15,1966080,62914560,62914560
+div_bitonic,kamui_bitonic#4c00b6eb,STS,mem_shared,15,1966080,62914560,62914560
+div_bitonic,kamui_bitonic#4c00b6eb,ISETP.NE.U32.XOR,int_alu,10,1310720,41943040,41943040
+div_bitonic,kamui_bitonic#4c00b6eb,S2R,move,2,262144,8388608,8388608
+div_bitonic,kamui_bitonic#4c00b6eb,EXIT,branch,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,IMAD,int_alu,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,IMAD.SHL.U32,int_alu,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,IMAD.WIDE.U32,int_alu,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,LDC,mem_const,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,LDC.64,mem_const,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,LDG.E,mem_global,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,S2UR,move,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,STG.E,mem_global,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,ULDC.64,mem_const,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,ULEA,uniform,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,UMOV,move,1,131072,4194304,4194304
+div_bitonic,kamui_bitonic#4c00b6eb,BRA,branch,1,0,0,0
+div_bitonic,kamui_bitonic#4c00b6eb,NOP,other,15,0,0,0

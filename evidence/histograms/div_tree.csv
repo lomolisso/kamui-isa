@@ -1,0 +1,26 @@
+# job 20261105T023255Z-q000231
+# gpu NVIDIA H100 NVL, driver 580.126.20
+# tool kamui_sass_hist (tools/evidence/nvbit), NVBit 1.8.1
+# cuda_toolkit Build cuda_12.9.r12.9/compiler.36037853_0, cutlass 4.4.2, torch 2.11.0+cu129, triton 3.6.0, flash_attn 2.8.3.post2, flashinfer 0.7.2.post1
+workload,kernel,sass_opcode,opcode_class,static_count,warp_inst_executed,thread_inst_executed,thread_inst_executed_pred_true
+div_tree,kamui_tree#37c1967f,BRA,branch,6,2228223,60401859,19391837
+div_tree,kamui_tree#37c1967f,ISETP.GE.AND,int_alu,5,1540094,41383869,41383869
+div_tree,kamui_tree#37c1967f,ISETP.NE.AND,int_alu,2,1441792,39216477,39216477
+div_tree,kamui_tree#37c1967f,VIADD,int_alu,2,1441791,38632907,29447209
+div_tree,kamui_tree#37c1967f,IMAD.WIDE,int_alu,3,786432,21830633,21830633
+div_tree,kamui_tree#37c1967f,LDG.E,mem_global,2,753664,20782057,20782057
+div_tree,kamui_tree#37c1967f,IMAD.SHL.U32,int_alu,1,720895,19149911,19149911
+div_tree,kamui_tree#37c1967f,LEA,int_alu,1,720895,19149911,19149911
+div_tree,kamui_tree#37c1967f,EXIT,branch,4,312026,2097152,1048576
+div_tree,kamui_tree#37c1967f,STG.E,mem_global,3,279258,1048576,1048576
+div_tree,kamui_tree#37c1967f,BSYNC,convergence,1,193448,653810,653810
+div_tree,kamui_tree#37c1967f,LDC.64,mem_const,3,98304,3084047,3084047
+div_tree,kamui_tree#37c1967f,ULDC,mem_const,3,98304,3145728,3145728
+div_tree,kamui_tree#37c1967f,IMAD.MOV.U32,int_alu,2,65536,715491,715491
+div_tree,kamui_tree#37c1967f,LDC,mem_const,2,65536,2035471,2035471
+div_tree,kamui_tree#37c1967f,S2R,move,2,65536,2097152,2097152
+div_tree,kamui_tree#37c1967f,BSSY,convergence,1,32768,986895,986895
+div_tree,kamui_tree#37c1967f,CS2R,move,1,32768,986895,986895
+div_tree,kamui_tree#37c1967f,IMAD,int_alu,1,32768,1048576,1048576
+div_tree,kamui_tree#37c1967f,ULDC.64,mem_const,1,32768,1048576,1048576
+div_tree,kamui_tree#37c1967f,NOP,other,10,0,0,0

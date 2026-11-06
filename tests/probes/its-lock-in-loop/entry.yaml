@@ -1,0 +1,18 @@
+id: its-lock-in-loop
+kernel: p_its_lock
+compile:
+  extra_flags: []
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+params:
+  - {name: lock, kind: inout, dtype: u32, count: 2, generator: {kind: const, value: 0}}
+  - {name: order, kind: output, dtype: u32, count: 32}
+  - {name: tries, kind: output, dtype: u32, count: 32}
+  - {name: cycles, kind: output, dtype: u64, count: 32}
+  - {name: mode, kind: scalar, dtype: s32, value: 1}
+expect_ptx: [atom\.global\.cas\.b32]
+deterministic: false
+tolerance_class: property:probe

@@ -29,6 +29,9 @@ In the dev container (see [devcontainer.md](devcontainer.md)). Tools on `PATH`:
 
 ## Commands we use
 
+The `-march` strings below are the base ISA these examples were run with. Kamui's current base ISA uses Zfinx,
+Zdinx and Zhinx instead of F, D and Zfh ([../overview.md](../overview.md)); the commands work the same way.
+
 ```bash
 # GNU, via the gcc driver (runs the C preprocessor on .S files)
 riscv64-unknown-elf-gcc -march=rv64imafd_zicsr_zifencei_zfh_zba_zbb_zbs_zicond -mabi=lp64d -c file.S -o file.o

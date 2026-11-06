@@ -1,0 +1,23 @@
+feature: lat-scopes-warp-distinct
+entry: tests/probes/lat-scopes-warp-distinct
+ptx_sha256: f86d224a45783c4d705681ed3acba22069861d6d232b2b0e6bc11fa58db7cfa3
+inputs_sha256: 0d71643bfaa0cd6f10b638daa12819f01a0f6a53a07835eb11532b45ed90a244
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261105T030701Z-q000233
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 5
+runs_identical: false
+tolerance: property:probe
+outputs_sha256: 3bf50f77e5cebb96ec880cbcbef817f78644363591bce32592dc1b96a003f9dc
+outputs:
+- {name: buf, dtype: u32, count: 1056, offset: 0, bytes: 4224, sha256: 545fba9f9d5a43645f2e06e9ab166a65da3cf1eaa1051ed80595f9ad5fd7c088}
+- {name: cycles, dtype: u32, count: 1376, offset: 4224, bytes: 5504, sha256: 650ef4d848ec5c0aece2d359b98e542e0e0d634086abe5e0bb305cd1152f38a5}
+- {name: sink, dtype: u32, count: 32, offset: 9728, bytes: 128, sha256: 1732d1c807138f3e39f4a8807c3cbdf208b4ac40782a7737deeacb0e5a163468}
+jit_registers: 32

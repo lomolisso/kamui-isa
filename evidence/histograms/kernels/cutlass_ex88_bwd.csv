@@ -1,0 +1,6 @@
+workload,kernel,regs,local_bytes,shared_static_bytes,dynamic_shared_bytes,const_bytes,max_threads_per_block,ptx_version,grid,block,cluster,required_cluster,max_r,max_ur,max_p,max_up,static_instrs,setmaxnreg,n_BSSY,n_BSYNC,n_BMOV,n_BREAK,n_WARPSYNC,n_BPT,n_YIELD,n_USETMAXREG,n_REDUX,n_VOTEU,n_S2UR,n_R2UR,n_ELECT,n_QSPC,n_MEMBAR,n_CCTL,n_ERRBAR,n_FENCE,n_SYNCS,n_HGMMA,n_UTMALDG,n_UBLKCP,n_LDGSTS,n_CALL,n_RET
+cutlass_ex88_bwd,void cutlass::reference::device::kernel::BlockForEach#0f781dad,31,80,0,0,72,1024,90,264x1x1,128x1x1,0x0x0,0x0x0,28,15,2,-1,440,,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+cutlass_ex88_bwd,void cutlass::device_kernel#66547123,168,176,0,214528,72,384,90,16x1x16,384x1x1,1x1x1,0x0x0,237,60,6,5,2640,24/240,26,26,0,0,0,0,0,2,0,5,41,75,8,0,10,0,0,15,118,36,20,0,0,0,0
+cutlass_ex88_bwd,void cutlass::device_kernel#e64913a3,32,0,0,0,72,128,90,1x16x256,16x8x1,1x1x1,0x0x0,29,15,3,1,496,,8,8,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+cutlass_ex88_bwd,void cutlass::device_kernel#b2664fe9,72,0,0,0,72,128,90,128x16x1,8x16x1,1x1x1,0x0x0,69,19,5,2,424,,7,7,0,0,3,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+cutlass_ex88_bwd,void fmha_reference_kernel#54cbca85,32,0,0,4096,72,1024,90,2048x16x1,256x1x1,0x0x0,0x0x0,29,19,4,-1,968,,10,10,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,3,2

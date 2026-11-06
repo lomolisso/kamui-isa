@@ -10,7 +10,8 @@ the dev container. The full workflow, the job image and how results come back ar
 | `env-probe.sh` | Records the driver, toolkit and library versions; checks that the driver JIT accepts our PTX 8.7, and that NVBit, `compute-sanitizer` and `ncu` work in the job container | `evidence/env/` |
 | `goldens.sh` | Runs every corpus entry on the GPU (3 runs plus a poisoned run, compute-sanitizer, the JIT cubin dump) and writes the golden outputs | `tests/goldens/`, `evidence/jit-comparison.tsv` |
 | `litmus-h100.sh` | Runs the litmus kernels of `tests/litmus/h100/` (`TESTS`, `CONFIGS`, `INSTANCES`, `SHARD` select the work) and records outcome histograms | `evidence/litmus-h100/` |
-| `nvbit-hist.sh` | SASS opcode histograms of five workloads with `kamui_sass_hist`; `MODE=ncu` (with `--profile`) cross-checks one kernel with Nsight Compute | `evidence/histograms/` |
+| `nvbit-hist.sh` | SASS opcode histograms and per-kernel register use of 39 workloads (CUTLASS Hopper examples, FlashInfer, flash-attn 2, PyTorch, Triton, our divergence kernels) with `kamui_sass_hist`; `MODE=ncu` (with `--profile`) cross-checks one kernel with Nsight Compute, `MODE=occupancy` (with `--profile`) records registers and occupancy limits of every kernel | `evidence/histograms/` |
+| `isa-probes.sh` | Runs the probe kernels of `tests/probes/` (forward progress, reconvergence, address windows, scope and fence costs, setmaxnreg) with the corpus runner | `evidence/probes/` |
 
 ## Rules for a job script
 

@@ -1,0 +1,23 @@
+feature: bmov-deep
+entry: tests/probes/bmov-deep
+ptx_sha256: af1832ae2536fdb89ae3ed518a5a8ecf39a4523009a60563e98ff42b3ba04b60
+inputs_sha256: 38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261105T042645Z-q000236
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 5
+runs_identical: true
+tolerance: property:probe
+outputs_sha256: 3aa9cf9a287914a0ec13a2e43d744ea3f2236e4908cb77c32c6bb9938de0e321
+outputs:
+- {name: res, dtype: u32, count: 32, offset: 0, bytes: 128, sha256: 38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca}
+- {name: mask, dtype: u32, count: 768, offset: 128, bytes: 3072, sha256: 977020ec273d73346685b2c485a75a558c625e9a651b389fd917adef32b943a7}
+- {name: sink, dtype: u32, count: 32, offset: 3200, bytes: 128, sha256: 38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca}
+jit_registers: 44

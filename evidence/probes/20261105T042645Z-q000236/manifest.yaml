@@ -1,0 +1,14 @@
+job: isa-probes
+job_id: 20261105T042645Z-q000236
+started: '2026-11-05T04:26:45+00:00'
+finished: '2026-11-05T04:26:51+00:00'
+git_commit: 29f1d5f460d4b5b85ff24a0db94ec6818aa21996
+git_dirty: false
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126
+  pci_bus_id: 00000000:DA:00.0
+  driver: 580.126.20
+runs: 5
+run_all_exit: 0
+summary: ok 1

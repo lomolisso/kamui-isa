@@ -1,0 +1,18 @@
+id: lat-scopes-warp-distinct
+kernel: p_lat_scopes
+compile:
+  extra_flags: []
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+params:
+  - {name: buf, kind: inout, dtype: u32, count: 1056, generator: {kind: const, value: 0}}
+  - {name: cycles, kind: output, dtype: u32, count: 1376}
+  - {name: sink, kind: output, dtype: u32, count: 32}
+  - {name: zero, kind: scalar, dtype: u32, value: 0}
+  - {name: stride, kind: scalar, dtype: u32, value: 32}
+expect_ptx: [fence\.sc\.sys]
+deterministic: false
+tolerance_class: property:probe

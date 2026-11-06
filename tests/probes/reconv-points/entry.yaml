@@ -1,0 +1,16 @@
+id: reconv-points
+kernel: p_reconv
+compile:
+  extra_flags: []
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+params:
+  - {name: mask, kind: output, dtype: u32, count: 288}
+  - {name: t, kind: output, dtype: u32, count: 288}
+  - {name: sink, kind: inout, dtype: u32, count: 32, generator: {kind: const, value: 0}}
+expect_ptx: [activemask\.b32]
+deterministic: false
+tolerance_class: property:probe

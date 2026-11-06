@@ -22,6 +22,10 @@ Short definitions of the terms used across kamui-isa.
 | **IPDOM** | Immediate post-dominator: the reconvergence point used by stack-based divergence (Vortex `split`/`join`). |
 | **Independent thread scheduling (ITS)** | Volta-style model where each thread has its own PC and reconvergence is not guaranteed; SASS shows `BSSY`/`BSYNC`. |
 | **Uniform datapath** | H100 registers and ALU (`UR*`, `S2UR`, `ULDC`) for values identical across the warp. |
+| **Convergence barrier** | A per-warp register (`B0` to `B15` on the H100) recording which lanes must meet again; set by `BSSY`, waited on by `BSYNC`. |
+| **Guard predicate** | A predicate register in an instruction (`@P0`, `@!P0`) that decides, per lane, whether the instruction runs. |
+| **Zfinx, Zdinx, Zhinx** | Standard RISC-V extensions that do floating point in the integer registers instead of a separate `f` register file. |
+| **Zl (long instructions)** | Draft RISC-V extensions for 48-bit and 64-bit instructions; Kamui's 64-bit instructions use its custom space ([design/long-instructions.md](design/long-instructions.md)). |
 | **Warp aggregation** | `ptxas` turning many lanes' atomics to one address into one atomic plus shuffles. |
 | **Scope** | How far a memory operation's ordering must be visible: `.cta`, `.cluster`, `.gpu`, `.sys`. |
 | **Memory model, RVWMO** | The rules for which values loads may return under concurrency. RVWMO is RISC-V's (weak) memory ordering. |

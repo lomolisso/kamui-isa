@@ -1,0 +1,23 @@
+feature: setmaxnreg-delay
+entry: tests/probes/setmaxnreg-delay
+ptx_sha256: 5d05d4b45404018442ffaf86e4b74cd20098da6bb87461d41c0f5a704b52c4c1
+inputs_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261105T030701Z-q000233
+launch:
+  grid: [132, 1, 1]
+  block: [384, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 5
+runs_identical: false
+tolerance: property:probe
+outputs_sha256: d1806ec5ef700f86341a23033f4ed60f11077a9fa43524907f785845e5f51c8e
+outputs:
+- {name: t, dtype: u32, count: 1584, offset: 0, bytes: 6336, sha256: ec13fddbe95b0e69d0498ea5441088f3f9c527877d9b75b2bbfa0652863d0d81}
+- {name: req, dtype: u32, count: 1584, offset: 6336, bytes: 6336, sha256: 6dd6ef4a04034f7201ac58867e7bd0d1a85fc11875272136361089cfafecde38}
+- {name: sink, dtype: u32, count: 50688, offset: 12672, bytes: 202752, sha256: b7ea2b18ef8a2a9665f503df7a2aa39cd118d1946daad104e5cf6e2448eabfdf}
+jit_registers: 168

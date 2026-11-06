@@ -1,0 +1,35 @@
+# job 20261105T023255Z-q000231
+# gpu NVIDIA H100 NVL, driver 580.126.20
+# tool kamui_sass_hist (tools/evidence/nvbit), NVBit 1.8.1
+# cuda_toolkit Build cuda_12.9.r12.9/compiler.36037853_0, cutlass 4.4.2, torch 2.11.0+cu129, triton 3.6.0, flash_attn 2.8.3.post2, flashinfer 0.7.2.post1
+workload,kernel,sass_opcode,opcode_class,static_count,warp_inst_executed,thread_inst_executed,thread_inst_executed_pred_true
+div_spmv,kamui_spmv#59e9b913,LDG.E,mem_global,89,12664786,78116438,78116438
+div_spmv,kamui_spmv#59e9b913,IMAD.WIDE,int_alu,33,4248884,26440401,26440401
+div_spmv,kamui_spmv#59e9b913,FFMA,fp32,29,4216134,25864050,25864050
+div_spmv,kamui_spmv#59e9b913,IADD3,int_alu,17,914706,6671579,6671579
+div_spmv,kamui_spmv#59e9b913,IADD3.X,int_alu,8,577272,3802988,3802988
+div_spmv,kamui_spmv#59e9b913,MOV,move,15,402208,2963922,2963922
+div_spmv,kamui_spmv#59e9b913,BRA,branch,9,321750,3084740,2140834
+div_spmv,kamui_spmv#59e9b913,LDC.64,mem_const,7,305217,2063751,2063751
+div_spmv,kamui_spmv#59e9b913,ISETP.GE.AND,int_alu,3,272952,2117099,2117099
+div_spmv,kamui_spmv#59e9b913,BSYNC,convergence,4,119967,944450,944450
+div_spmv,kamui_spmv#59e9b913,BSSY,convergence,4,32768,944450,944450
+div_spmv,kamui_spmv#59e9b913,ULDC.64,mem_const,4,32768,944450,944450
+div_spmv,kamui_spmv#59e9b913,HFMA2.MMA,fp16x2,3,24567,524288,524288
+div_spmv,kamui_spmv#59e9b913,PLOP3.LUT,int_alu,3,24230,390903,390903
+div_spmv,kamui_spmv#59e9b913,EXIT,branch,2,16384,524288,262144
+div_spmv,kamui_spmv#59e9b913,ISETP.GT.AND,int_alu,2,16384,420162,420162
+div_spmv,kamui_spmv#59e9b913,LOP3.LUT,int_alu,2,16384,524288,524288
+div_spmv,kamui_spmv#59e9b913,S2R,move,2,16384,524288,524288
+div_spmv,kamui_spmv#59e9b913,ULDC,mem_const,2,16384,524288,524288
+div_spmv,kamui_spmv#59e9b913,ISETP.NE.AND,int_alu,1,16030,75254,75254
+div_spmv,kamui_spmv#59e9b913,IMAD,int_alu,1,8192,262144,262144
+div_spmv,kamui_spmv#59e9b913,ISETP.GE.U32.AND,int_alu,1,8192,262144,262144
+div_spmv,kamui_spmv#59e9b913,ISETP.LT.OR,int_alu,1,8192,210081,210081
+div_spmv,kamui_spmv#59e9b913,LDC,mem_const,1,8192,262144,262144
+div_spmv,kamui_spmv#59e9b913,LEA,int_alu,1,8192,262144,262144
+div_spmv,kamui_spmv#59e9b913,LEA.HI.X,int_alu,1,8192,262144,262144
+div_spmv,kamui_spmv#59e9b913,SHF.R.S32.HI,int_alu,1,8192,262144,262144
+div_spmv,kamui_spmv#59e9b913,STG.E,mem_global,1,8192,262144,262144
+div_spmv,kamui_spmv#59e9b913,VIADDMNMX,int_alu,1,8192,262144,262144
+div_spmv,kamui_spmv#59e9b913,NOP,other,8,0,0,0

@@ -41,11 +41,19 @@ not provide, the fix is a change to this repository.
 
 ## Base ISA and register model
 
-- **RV64** with I, M, A, F, D, Zfh, Zba, Zbb, Zbs and Zicond. No C. No V. No RV32.
-- **Scalar registers per thread** (SIMT in the style of Vortex), not RVV-wide warps.
+- **RV64** with I, M, A, Zicsr, Zfinx, Zdinx, Zhinx, Zba, Zbb, Zbs, Zicond, Zacas, Zalasr, Zabha, Zawrs, Zicntr,
+  Zihpm, Zicbop, Zicbom, Zihintntl, Zihintpause, Zbkb and Zbkx. No C. No V. No F or D (floating point lives in the
+  integer registers). No RV32.
+- **The H100's registers per thread:** `R0` to `R254` (32 bits each) and a zero register, 64-bit values in register
+  pairs, predicates `P0` to `P6`. The standard registers `x1` to `x31` are the pairs `R0:R1` to `R60:R61`
+  ([design/register-model.md](design/register-model.md)).
+- **Kamui instructions are 64 bits long**, in the custom space of the RISC-V long-instruction draft, with 8-bit
+  register fields ([design/long-instructions.md](design/long-instructions.md)). Standard RISC-V instructions stay
+  32 bits long.
+- **Scalar registers per thread** (SIMT), not RVV-wide warps, plus a uniform register file per warp.
 - **Warp width is fixed at 32.**
-- Shared and local memory are **address windows in a flat address space**, so generic addressing, `cvta` and
-  `isspacep` become range checks (still an open design question, see below).
+- Shared and local memory are **address windows in a flat address space**, laid out as on the H100, with
+  space-specific loads and stores as well as generic ones ([design/addressing.md](design/addressing.md)).
 
 ## Extension families and tiers
 
@@ -53,10 +61,11 @@ Custom extensions use the RISC-V vendor prefix `Xkm`. Each family has one specif
 
 | Extension | PTX features |
 |---|---|
-| `Xkmsimt` | warp spawn, thread mask, convergence, predication, special-register CSRs (`%tid`, `%ntid`, `%ctaid`, `%laneid`, `%warpid`, `%smid`, `%clock64`, `%globaltimer`, cluster ids) |
+| `Xkmsimt` | warp spawn, convergence barriers and independent thread scheduling, predicate registers and guards, special-register CSRs (`%tid`, `%ntid`, `%ctaid`, `%laneid`, `%warpid`, `%smid`, `%clock64`, `%globaltimer`, cluster ids) |
 | `Xkmwarp` | `shfl.sync`, `vote.sync`, `match.sync`, `redux.sync`, `activemask`, `elect.sync` |
 | `Xkmbar` | named barriers with counts, `bar.arrive`, `bar.red`, `barrier.cluster` |
-| `Xkmscope` | scoped and ordered `ld`, `st`, `atom`, `red`, `fence`, `fence.proxy` |
+| `Xkmscope` | scoped and ordered `ld`, `st`, `atom`, `red`, `fence`, `fence.proxy`, in global, shared, local and generic forms |
+| `Xkmuni` | uniform registers and predicates, uniform integer instructions, moves between the files, uniform branches |
 | `Xkmmbar` | `mbarrier` init, arrive, `arrive.expect_tx`, `try_wait`, `test_wait` with phase parity |
 | `Xkmasync` | `cp.async`, `cp.async.bulk`, tensor TMA, commit and wait groups |
 | `Xkmmma` | `mma.sync`, `ldmatrix`, `stmatrix`, `wgmma` with descriptors and async completion |
@@ -66,8 +75,8 @@ Custom extensions use the RISC-V vendor prefix `Xkm`. Each family has one specif
 
 | Tier | Class | Contents |
 |---|---|---|
-| 1 | sm_50 | scalar SIMT, divergence, `bar.sync`, shared memory, atomics, `shfl`, `vote`; `Xkmsimt`, `Xkmwarp`, `Xkmbar`, minimal `Xkmscope`, `Xkmmufu`, parts of `Xkmmisc` |
-| 2 | Volta | independent thread scheduling, the full scoped memory model, `mma.sync`, `ldmatrix` |
+| 1 | sm_50 | scalar SIMT, independent thread scheduling, `bar.sync`, shared memory, atomics, `shfl`, `vote`, the uniform datapath; `Xkmsimt`, `Xkmwarp`, `Xkmbar`, `Xkmuni`, minimal `Xkmscope`, `Xkmmufu`, parts of `Xkmmisc` |
+| 2 | Volta | the full scoped memory model, `mma.sync`, `ldmatrix` |
 | 3 | Ampere | `cp.async`, BF16, TF32, L2 cache hints |
 | 4 | Hopper | `wgmma` with the async proxy, `cp.async.bulk` and TMA, `mbarrier`, clusters with distributed shared memory, `setmaxnreg`, FP8 |
 
@@ -91,18 +100,19 @@ behind it, so the compiler in `kamui-llvm` can target it directly.
   framework) runs the full SIMT model at CUTLASS-GEMM scale. It is checked against Sail lane by lane on the
   conformance suite.
 
-## Open design questions
+## Design decisions
 
-These are decided before the tier 1 specification is written, each in its own design document:
+The execution model was decided on 2026-11-05, one document per question, in [design/](design/README.md). The
+guiding rule is that Kamui works like the H100 while staying a RISC-V ISA.
 
-1. **Register model and tensor accumulators.** PTX virtual registers are unlimited, `ptxas` allocates up to 255
-   hardware registers per thread, a `wgmma` tile can hold 128 accumulators per thread, and RISC-V register fields
-   are 5 bits wide.
-2. **Convergence.** IPDOM split and join (as in Vortex), or per-thread PCs with convergence barriers (as in Volta).
-   This is decided before tier 1, even if the mechanism is only implemented in tier 2.
-3. **Memory-model scope encoding** and its mapping onto RVWMO. The AMO encoding has no spare bits; `fence` has the
-   `fm` field.
-4. **Shared and local memory addressing** with generic pointers, and cluster addressing for distributed shared
-   memory.
-5. **Uniform datapath.** Expose warp-uniform registers and operations (like the H100 `UR` registers), or leave
-   them to the hardware.
+1. **Register model** ([register-model.md](design/register-model.md)): the H100's 255 32-bit registers per thread,
+   predicates and guards, 64-bit instructions with 8-bit register fields
+   ([long-instructions.md](design/long-instructions.md)).
+2. **Convergence** ([convergence.md](design/convergence.md)): independent thread scheduling with convergence
+   barriers, required from tier 1.
+3. **Memory scopes** ([scope-encoding.md](design/scope-encoding.md)): scope and ordering fields in every memory
+   instruction; all GPU memory follows the PTX 8.7 memory model; plain RISC-V loads and stores are `.weak`.
+4. **Addressing** ([addressing.md](design/addressing.md)): the H100's windows and its global, shared, local and
+   generic instructions.
+5. **Uniform datapath** ([uniform-datapath.md](design/uniform-datapath.md)): the H100's uniform registers,
+   predicates and instructions.

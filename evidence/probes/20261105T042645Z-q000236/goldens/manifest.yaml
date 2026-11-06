@@ -1,0 +1,10 @@
+job_id: 20261105T042645Z-q000236
+gpu:
+  name: NVIDIA H100 NVL
+  uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126
+  driver: 580.126.20
+entries:
+- id: bmov-deep
+  result: ok
+  golden_yaml_sha256: dda7139151a202e3b50747e9f9e7f4bebeed582bfb4f48893f058af323e05916
+  outputs_bin_sha256: 3aa9cf9a287914a0ec13a2e43d744ea3f2236e4908cb77c32c6bb9938de0e321

@@ -1,0 +1,11 @@
+workload,kernel,regs,local_bytes,shared_static_bytes,dynamic_shared_bytes,const_bytes,max_threads_per_block,ptx_version,grid,block,cluster,required_cluster,max_r,max_ur,max_p,max_up,static_instrs,setmaxnreg,n_BSSY,n_BSYNC,n_BMOV,n_BREAK,n_WARPSYNC,n_BPT,n_YIELD,n_USETMAXREG,n_REDUX,n_VOTEU,n_S2UR,n_R2UR,n_ELECT,n_QSPC,n_MEMBAR,n_CCTL,n_ERRBAR,n_FENCE,n_SYNCS,n_HGMMA,n_UTMALDG,n_UBLKCP,n_LDGSTS,n_CALL,n_RET
+torch_topk,void at::native::#2e60dc56,44,0,0,0,72,256,90,1056x1x1,256x1x1,0x0x0,0x0x0,41,11,4,0,496,,6,6,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,3,2
+torch_topk,void at_cuda_detail::cub::DeviceScanByKeyKernel#ac9a6bbf,55,0,16144,0,0,288,90,1x1x1,288x1x1,0x0x0,0x0x0,52,16,8,1,2840,,26,26,0,0,54,0,4,0,0,0,8,1,0,0,6,0,0,0,0,0,0,0,0,0,0
+torch_topk,void at_cuda_detail::cub::DeviceScanByKeyInitKernel#2d1d83de,16,0,0,0,0,1024,90,1x1x1,128x1x1,0x0x0,0x0x0,13,6,2,-1,64,,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+torch_topk,void at::native::mbtopk::gatherTopK#8484d684,32,0,1184,0,0,256,90,832x1x1,256x1x1,0x0x0,0x0x0,29,19,6,-1,448,,3,3,0,0,14,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+torch_topk,void at::native::mbtopk::computeBlockDigitCounts#855a8e69,20,0,1024,0,0,256,90,832x1x1,256x1x1,0x0x0,0x0x0,17,11,5,-1,264,,5,5,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+torch_topk,void at::native::mbtopk::computeBlockwiseWithinKCounts#1e6b1427,18,0,36,0,0,256,90,832x1x1,256x1x1,0x0x0,0x0x0,15,8,2,-1,224,,2,2,0,0,6,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+torch_topk,void at::native::mbtopk::computeBlockwiseKthCounts#05dd895c,18,0,0,0,0,1024,90,1x1x1,256x1x1,0x0x0,0x0x0,15,13,2,-1,72,,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+torch_topk,void at::native::mbtopk::fill#201ecdd6,10,0,0,0,0,1024,90,1x1x1,512x1x1,0x0x0,0x0x0,7,8,0,-1,32,,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+torch_topk,at::native::mbtopk::computeDigitCumSum#d0088f84,32,0,1184,0,0,1024,90,64x1x1,256x1x1,0x0x0,0x0x0,29,6,3,-1,384,,1,1,0,0,6,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+torch_topk,void at::native::radixSortKVInPlace#c1afd11d,200,0,8464,0,0,32,90,64x1x1,32x1x1,0x0x0,0x0x0,197,11,8,-1,5800,,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0

@@ -77,7 +77,11 @@ LD_PRELOAD=$PWD/build/nvbit/kamui_sass_hist/kamui_sass_hist.so \
   python3 tools/evidence/workloads/triton_kernels.py matmul
 ```
 
-`jobs/nvbit-hist.sh` runs the five workloads this way on the H100 server.
+`jobs/nvbit-hist.sh` runs its workloads this way on the H100 server. Two more variables: `KAMUI_EXCLUDE` (a
+regex of kernel names never to count; the job uses it to leave out cuBLAS and cuDNN kernels) and
+`KAMUI_KERNELS_OUT` (a second CSV with one row per counted kernel: registers from `cuFuncGetAttribute`, local,
+shared and constant bytes, the launch shape, the highest R, UR, P and UP register its instructions name, and
+static counts of convergence, uniform, fence and setmaxnreg instructions).
 
 Common NVBit environment variables (read by the example tools through
 `GET_VAR_INT`; our tools use only `NOBANNER` and their own `KAMUI_*` variables):

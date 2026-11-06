@@ -6,7 +6,9 @@
 Tables: SASS instructions per PTX instruction, per family; hidden mechanisms and the features that show them;
 scope, ordering and cache-operator encodings; special registers by source; registers per thread; goldens; the
 JIT against offline SASS comparison; instruction classes and Kamui families per workload; uniform, convergence and
-asynchronous traffic per workload; the Nsight Compute cross-check.
+asynchronous traffic per workload; the Nsight Compute cross-check (these three for the original five workloads);
+registers, uniform registers and setmaxnreg per kernel, and execution-model instructions per workload (every
+workload, from evidence/histograms/kernels/ and the histograms); with --probes JOB_DIR, the probe results.
 """
 
 from __future__ import annotations
@@ -26,6 +28,10 @@ import common  # noqa: E402
 EV = ROOT / "evidence"
 GOLD = ROOT / "tests" / "goldens"
 HIST = EV / "histograms"
+KERNELS = HIST / "kernels"
+NOT_HISTOGRAMS = ("ncu-crosscheck.csv", "occupancy.csv")
+ORIGINAL = ["cutlass_gemm_tf32_2048", "flash_attn2_fwd_bf16", "flashinfer_prefill_bf16", "triton_matmul_f16_2048",
+            "triton_softmax_f32_4096"]
 FAMILIES = common.FAMILIES
 BUCKETS = [("0 (removed or folded)", lambda x: x == 0), ("up to 1", lambda x: 0 < x <= 1),
            ("1 to 2", lambda x: 1 < x <= 2), ("2 to 4", lambda x: 2 < x <= 4), ("over 4", lambda x: x > 4)]
@@ -146,10 +152,10 @@ def classes() -> list[dict]:
     return yaml.safe_load((ROOT / "tools" / "evidence" / "opcode_classes.yaml").read_text())["classes"]
 
 
-def workloads() -> dict[str, Counter]:
+def workloads(names: list[str] | None = ORIGINAL) -> dict[str, Counter]:
     out = {}
     for p in sorted(HIST.glob("*.csv")):
-        if p.name == "ncu-crosscheck.csv":
+        if p.name in NOT_HISTOGRAMS or (names is not None and p.stem not in names):
             continue
         c = Counter()
         for r in read_csv(p):
@@ -196,7 +202,101 @@ def ncu() -> str:
                  [[r["count"], f"`{r['ncu_metric']}`", r["ncu"], r["nvbit"], r["difference_percent"]] for r in rows])
 
 
-def main() -> int:
+def is_verification(kernel: str) -> bool:
+    """CUTLASS examples check their result with reference kernels; they are not the workload."""
+    return "reference" in kernel or "BlockFill" in kernel
+
+
+def kernel_rows() -> list[dict]:
+    rows = []
+    for p in sorted(KERNELS.glob("*.csv")):
+        rows += [r for r in read_csv(p) if not is_verification(r["kernel"])]
+    return rows
+
+
+def kernel_registers(rows: list[dict]) -> str:
+    bands = [(0, 32), (33, 64), (65, 96), (97, 128), (129, 168), (169, 232), (233, 255)]
+    out = [[f"{lo} to {hi}", sum(lo <= int(r["regs"]) <= hi for r in rows)] for lo, hi in bands]
+    spill = [r for r in rows if int(r["local_bytes"]) > 0]
+    top = sorted(rows, key=lambda r: (-int(r["regs"]), -int(r["max_r"]), r["workload"]))[:20]
+    return f"{len(rows)} kernels in {len({r['workload'] for r in rows})} workloads (CUTLASS verification kernels left " \
+        f"out); {len(spill)} use local memory.\n\n" + table(["Registers per thread at launch", "Kernels"], out) + \
+        "\n\n" + table(["Workload", "Kernel", "Registers", "Highest R used", "Local bytes", "Highest UR used",
+                         "Block", "Cluster", "setmaxnreg"],
+                        [[r["workload"], f"`{r['kernel'][:48]}`", r["regs"], r["max_r"], r["local_bytes"], r["max_ur"],
+                          r["block"], r["cluster"], r["setmaxnreg"] or "-"] for r in top])
+
+
+def uniform_registers(rows: list[dict]) -> str:
+    bands = [(-1, -1), (0, 7), (8, 15), (16, 31), (32, 47), (48, 55), (56, 62)]
+    out = [["none" if lo < 0 else f"UR{lo} to UR{hi}", sum(lo <= int(r["max_ur"]) <= hi for r in rows)]
+           for lo, hi in bands]
+    smn = Counter((r["setmaxnreg"], r["regs"]) for r in rows if r["setmaxnreg"])
+    return table(["Highest uniform register used", "Kernels"], out) + "\n\n" + \
+        table(["setmaxnreg values (decrease/increase)", "Registers at launch", "Kernels"],
+              [[k[0], k[1], v] for k, v in sorted(smn.items())])
+
+
+EXEC_COLUMNS = [
+    ("uniform %", lambda h, op: h.startswith("U") or h in ("S2UR", "R2UR", "VOTEU"), True),
+    ("BSSY+BSYNC %", lambda h, op: h in ("BSSY", "BSYNC"), True),
+    ("WARPSYNC", lambda h, op: h == "WARPSYNC", False),
+    ("BREAK", lambda h, op: h == "BREAK", False),
+    ("BMOV", lambda h, op: h == "BMOV", False),
+    ("YIELD", lambda h, op: h == "YIELD", False),
+    ("STRONG.SM", lambda h, op: ".STRONG.SM" in op, False),
+    ("STRONG.GPU", lambda h, op: ".STRONG.GPU" in op, False),
+    ("STRONG.SYS", lambda h, op: ".STRONG.SYS" in op, False),
+    ("MEMBAR", lambda h, op: h == "MEMBAR", False),
+    ("CCTL", lambda h, op: h == "CCTL", False),
+    ("REDUX", lambda h, op: h == "REDUX", False),
+    ("generic LD/ST/ATOM %", lambda h, op: h in ("LD", "ST", "ATOM", "RED"), True),
+    ("shared LDS/STS/LDSM/ATOMS %", lambda h, op: h in ("LDS", "STS", "LDSM", "STSM", "ATOMS"), True),
+    ("global LDG/STG/ATOMG/REDG %", lambda h, op: h in ("LDG", "STG", "ATOMG", "REDG"), True),
+]
+
+
+def exec_model() -> str:
+    rows = []
+    for p in sorted(HIST.glob("*.csv")):
+        if p.name in NOT_HISTOGRAMS:
+            continue
+        tot = thr = 0
+        acc = [0] * len(EXEC_COLUMNS)
+        for r in read_csv(p):
+            if is_verification(r["kernel"]):
+                continue
+            op, w = r["sass_opcode"], int(r["warp_inst_executed"])
+            h = op.split(".")[0]
+            tot += w
+            thr += int(r["thread_inst_executed_pred_true"])
+            for i, (_, f, _) in enumerate(EXEC_COLUMNS):
+                acc[i] += w if f(h, op) else 0
+        if not tot:
+            continue
+        cells = [f"{100 * a / tot:.1f}" if pct else f"{a:,}" for a, (_, _, pct) in zip(acc, EXEC_COLUMNS)]
+        rows.append([f"`{p.stem}`", f"{tot:,}", *cells, f"{100 * thr / (32 * tot):.0f}"])
+    return table(["Workload", "Warp instructions", *[c[0] for c in EXEC_COLUMNS], "SIMT efficiency %"], rows) + \
+        "\nCounts are executed warp instructions; percentages are of all executed warp instructions. SIMT " \
+        "efficiency is predicate-true thread instructions over 32 times the warp instructions.\n"
+
+
+def occupancy_table() -> str:
+    rows = read_csv(HIST / "occupancy.csv")
+    by = Counter(r["binding"] for r in rows)
+    regs = [r for r in rows if "registers" in r["binding"]]
+    one = [r for r in rows if r["blocks_limit_registers"] == "1"]
+    return f"{len(rows)} kernels (Nsight Compute, first launch of each). Registers are a binding limit for " \
+        f"{len(regs)}; {len(one)} kernels fit only one block per SM because of registers.\n\n" + \
+        table(["Binding limit (blocks per SM)", "Kernels"], [[k, v] for k, v in by.most_common()])
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = sys.argv[1:] if argv is None else argv
+    if args[:1] == ["--probes"]:
+        sys.path.insert(0, str(ROOT / "tools" / "evidence"))
+        import probes  # noqa: E402
+        return probes.main(args[1:])
     obs = observations()
     w = workloads()
     parts = [("SASS instructions per PTX instruction, per family", sass_per_ptx(obs)),
@@ -210,6 +310,13 @@ def main() -> int:
              ("Kamui families per workload", family_shares(w)),
              ("Uniform, convergence and asynchronous traffic per workload", traffic(w)),
              ("Nsight Compute cross-check", ncu())]
+    krows = kernel_rows()
+    if krows:
+        parts += [("Registers per kernel", kernel_registers(krows)),
+                  ("Uniform registers and setmaxnreg per kernel", uniform_registers(krows))]
+    parts.append(("Execution-model instructions per workload", exec_model()))
+    if (HIST / "occupancy.csv").exists():
+        parts.append(("What limits occupancy", occupancy_table()))
     for title, body in parts:
         print(f"### {title}\n\n{body}")
     return 0

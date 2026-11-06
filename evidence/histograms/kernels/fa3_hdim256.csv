@@ -1,0 +1,7 @@
+workload,kernel,regs,local_bytes,shared_static_bytes,dynamic_shared_bytes,const_bytes,max_threads_per_block,ptx_version,grid,block,cluster,required_cluster,max_r,max_ur,max_p,max_up,static_instrs,setmaxnreg,n_BSSY,n_BSYNC,n_BMOV,n_BREAK,n_WARPSYNC,n_BPT,n_YIELD,n_USETMAXREG,n_REDUX,n_VOTEU,n_S2UR,n_R2UR,n_ELECT,n_QSPC,n_MEMBAR,n_CCTL,n_ERRBAR,n_FENCE,n_SYNCS,n_HGMMA,n_UTMALDG,n_UBLKCP,n_LDGSTS,n_CALL,n_RET
+fa3_hdim256,void at::native::#5b34bd44,44,0,0,0,72,256,90,1056x1x1,256x1x1,0x0x0,0x0x0,41,11,4,0,504,,6,6,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,3,2
+fa3_hdim256,void cutlass::device_kernel#40e1d2f4,168,0,0,232448,0,384,90,132x1x1,384x1x1,0x0x0,0x0x0,226,61,6,3,3672,24/240,13,13,0,0,2,0,1,2,0,6,12,64,10,0,1,0,0,7,106,63,36,0,0,0,0
+fa3_hdim256,void at::native::vectorized_elementwise_kernel#38fc7257,14,0,0,0,0,128,90,1x1x1,128x1x1,0x0x0,0x0x0,11,5,0,-1,104,,2,2,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+fa3_hdim256,void at::native::unrolled_elementwise_kernel#78375d6c,30,0,0,0,0,128,90,16384x1x1,128x1x1,0x0x0,0x0x0,27,37,2,-1,1864,,33,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0
+fa3_hdim256,void at::native::vectorized_elementwise_kernel#4f12660b,32,0,0,0,0,128,90,8192x1x1,128x1x1,0x0x0,0x0x0,29,5,6,-1,168,,2,2,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+fa3_hdim256,void at::native::reduce_kernel#a18218d1,32,0,16,2048,0,512,90,1x528x1,512x1x1,0x0x0,0x0x0,29,61,4,-1,3776,,24,24,0,0,0,0,0,0,0,1,7,0,0,0,4,2,2,0,0,0,0,0,0,4,0

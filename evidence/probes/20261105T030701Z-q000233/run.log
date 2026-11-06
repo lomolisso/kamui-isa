@@ -1,0 +1,15 @@
+addr-windows                             ok
+bmov-break                               ok
+its-cross-branch-wait                    ok
+its-lock-in-loop                         ok
+its-lock-in-warp                         ok
+its-producer-consumer                    ok
+lat-scopes-1                             ok
+lat-scopes-warp-distinct                 ok
+lat-scopes-warp-same                     ok
+lat-warp                                 ok
+reconv-points                            ok
+setmaxnreg-delay                         ok
+setmaxnreg-nodelay                       ok
+syncwarp-divergent                       ok
+summary: ok 14

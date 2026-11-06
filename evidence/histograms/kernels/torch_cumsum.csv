@@ -1,0 +1,5 @@
+workload,kernel,regs,local_bytes,shared_static_bytes,dynamic_shared_bytes,const_bytes,max_threads_per_block,ptx_version,grid,block,cluster,required_cluster,max_r,max_ur,max_p,max_up,static_instrs,setmaxnreg,n_BSSY,n_BSYNC,n_BMOV,n_BREAK,n_WARPSYNC,n_BPT,n_YIELD,n_USETMAXREG,n_REDUX,n_VOTEU,n_S2UR,n_R2UR,n_ELECT,n_QSPC,n_MEMBAR,n_CCTL,n_ERRBAR,n_FENCE,n_SYNCS,n_HGMMA,n_UTMALDG,n_UBLKCP,n_LDGSTS,n_CALL,n_RET
+torch_cumsum,void at::native::#7f95e576,56,0,0,0,72,256,90,1056x1x1,256x1x1,0x0x0,0x0x0,53,15,4,0,552,,4,4,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,5,2
+torch_cumsum,void at_cuda_detail::cub::DeviceScanInitKernel#d615c769,12,0,0,0,0,1024,90,147x1x1,128x1x1,0x0x0,0x0x0,9,5,1,-1,32,,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+torch_cumsum,void at_cuda_detail::cub::DeviceScanKernel#0225c56f,48,0,7184,0,0,128,90,18725x1x1,128x1x1,0x0x0,0x0x0,45,9,6,-1,1432,,14,14,0,0,58,0,6,0,0,0,10,0,0,0,6,0,0,0,0,0,0,0,0,0,0
+torch_cumsum,void at::native::reduce_kernel#ab661d3d,32,0,16,4096,0,512,90,1x528x1,512x1x1,0x0x0,0x0x0,29,61,6,-1,3840,,24,24,0,0,0,0,0,0,0,1,7,0,0,0,4,2,2,0,0,0,0,0,0,4,0

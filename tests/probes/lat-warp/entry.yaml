@@ -1,0 +1,16 @@
+id: lat-warp
+kernel: p_lat_warp
+compile:
+  extra_flags: []
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+params:
+  - {name: cycles, kind: output, dtype: u32, count: 256}
+  - {name: sink, kind: output, dtype: u32, count: 32}
+  - {name: seed, kind: scalar, dtype: u32, value: 7}
+expect_ptx: [redux\.sync\.add\.u32, elect\.sync]
+deterministic: false
+tolerance_class: property:probe

@@ -1,0 +1,17 @@
+id: addr-windows
+kernel: p_addr
+compile:
+  extra_flags: []
+launch:
+  grid: [4, 1, 1]
+  block: [32, 1, 1]
+  cluster: [2, 1, 1]
+  dynamic_smem: 4096
+params:
+  - {name: info, kind: output, dtype: u64, count: 256}
+  - {name: local_addr, kind: output, dtype: u64, count: 128}
+  - {name: in, kind: input, dtype: u32, count: 32, generator: {kind: const, value: 0}}
+  - {name: idx, kind: scalar, dtype: u32, value: 5}
+expect_ptx: ['isspacep\.shared::cluster', mapa\.u64]
+deterministic: false
+tolerance_class: property:probe

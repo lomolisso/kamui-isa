@@ -1,0 +1,2 @@
+workload,kernel,regs,local_bytes,shared_static_bytes,dynamic_shared_bytes,const_bytes,max_threads_per_block,ptx_version,grid,block,cluster,required_cluster,max_r,max_ur,max_p,max_up,static_instrs,setmaxnreg,n_BSSY,n_BSYNC,n_BMOV,n_BREAK,n_WARPSYNC,n_BPT,n_YIELD,n_USETMAXREG,n_REDUX,n_VOTEU,n_S2UR,n_R2UR,n_ELECT,n_QSPC,n_MEMBAR,n_CCTL,n_ERRBAR,n_FENCE,n_SYNCS,n_HGMMA,n_UTMALDG,n_UBLKCP,n_LDGSTS,n_CALL,n_RET
+triton_queue,kamui_queue#c3a482a2,32,0,0,16,0,1024,90,528x1x1,128x1x1,0x0x0,0x0x0,29,13,8,-1,440,,3,3,0,0,0,0,0,0,0,3,2,0,0,0,3,2,3,0,0,0,0,0,0,0,0

@@ -207,11 +207,19 @@ def lint_one(d: Path) -> tuple[str, str | None]:
         return str(d), str(x)
 
 
+def rel_path(d: Path) -> Path:
+    """An entry's path under tests/corpus, or under the repository for entries elsewhere (tests/probes)."""
+    try:
+        return d.relative_to(CORPUS)
+    except ValueError:
+        return d.relative_to(ROOT)
+
+
 def build_one(d: Path, check: bool) -> tuple[str, str | None]:
     """Returns (entry directory, error message or None)."""
     try:
         e = load_entry(d)
-        rel = d.relative_to(CORPUS)
+        rel = rel_path(d)
         tmp = BUILD / rel / "kernel.ptx"
         compile_entry(d, tmp, e)
         ptx = tmp.read_text(encoding="utf-8")
@@ -233,7 +241,7 @@ def build_one(d: Path, check: bool) -> tuple[str, str | None]:
 
 def nvcc_one(d: Path) -> tuple[str, str | None]:
     """Evidence only: nvcc's PTX for the same kernel.cu, written to build/corpus-nvcc/, never committed."""
-    rel = d.relative_to(CORPUS)
+    rel = rel_path(d)
     if not (d / "kernel.cu").is_file():
         return str(rel), None
     out = BUILD_NVCC / rel / "kernel.ptx"

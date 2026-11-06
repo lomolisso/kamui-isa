@@ -1,0 +1,23 @@
+feature: syncwarp-divergent
+entry: tests/probes/syncwarp-divergent
+ptx_sha256: 7fcbe487bc1bcc3311aeec623cc9d8efafe9437401dfcf3c90535d83cb91d630
+inputs_sha256: 38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261105T030701Z-q000233
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 5
+runs_identical: true
+tolerance: property:probe
+outputs_sha256: 4af90b4d6afca89ddaa7665b431b9dd4d50da3e1f5f447e47a5bf2ecb7e1cb84
+outputs:
+- {name: got, dtype: u32, count: 32, offset: 0, bytes: 128, sha256: 4fb0a2a1972ec59c104dc46e64ff27f994f181670a17781fbf2328d5bfd44e35}
+- {name: mask, dtype: u32, count: 32, offset: 128, bytes: 128, sha256: 266f4e27eef0a78016c5549db0e42398590bde1f35f62adaeb344d1e3cbd60fe}
+- {name: sink, dtype: u32, count: 32, offset: 256, bytes: 128, sha256: f62ffd6d10e3b273dd97beaa8830279ad488faa5257db4c407589176cd85ce1a}
+jit_registers: 20

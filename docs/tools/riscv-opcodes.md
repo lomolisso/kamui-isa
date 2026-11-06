@@ -50,8 +50,9 @@ PYTHONPATH=src python3 -m riscv_opcodes -c -sverilog -rust -go -chisel $BASE 'un
 PYTHONPATH=src python3 -m riscv_opcodes -c 'rv*' 'unratified/rv*'
 ```
 
-The base list is Kamui's base ISA (RV64 I, M, A, F, D, Zfh, Zba, Zbb, Zbs, Zicond, plus Zicsr,
-Zifencei and the privileged instructions).
+The base list is the base ISA these examples were run with (RV64 I, M, A, F, D, Zfh, Zba, Zbb, Zbs, Zicond, plus
+Zicsr, Zifencei and the privileged instructions). Kamui's current base ISA replaces F, D and Zfh with Zfinx, Zdinx
+and Zhinx and adds more extensions ([../overview.md](../overview.md)); the commands work the same way.
 
 Flags (from
 [`deps/riscv-opcodes/src/riscv_opcodes/parse.py`](../../deps/riscv-opcodes/src/riscv_opcodes/parse.py),

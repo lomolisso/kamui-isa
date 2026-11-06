@@ -1,0 +1,22 @@
+feature: lat-warp
+entry: tests/probes/lat-warp
+ptx_sha256: 89aa94b27d0c3a55fb51ed33ac2e3047a4ce9e36c29e2729184e4925a228f0b0
+inputs_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+load_path: jit
+gpu: {name: NVIDIA H100 NVL, uuid: GPU-1241dcbc-33ea-80bf-5f87-37f7868c3126, driver: 580.126.20}
+job_id: 20261105T030701Z-q000233
+launch:
+  grid: [1, 1, 1]
+  block: [32, 1, 1]
+  cluster: null
+  dynamic_smem: 0
+result: ok
+deterministic: false
+runs: 5
+runs_identical: true
+tolerance: property:probe
+outputs_sha256: d705c119d146659d6cd07499f73e2f4c2d17bba3389733cf2516b0b951f85912
+outputs:
+- {name: cycles, dtype: u32, count: 256, offset: 0, bytes: 1024, sha256: e604e59169cf3975d9e4699a711ab20097f9ba3ee59cdaed2065a2e44dbb0ce4}
+- {name: sink, dtype: u32, count: 32, offset: 1024, bytes: 128, sha256: 9e409cd393f49ff38087cfecdb0d79a982d925433ef03bb230884dbde8ac2c19}
+jit_registers: 14
