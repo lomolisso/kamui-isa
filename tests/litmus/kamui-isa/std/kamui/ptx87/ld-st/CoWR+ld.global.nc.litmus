@@ -7,6 +7,6 @@ x in global;
 }
  P0@cta 0,gpu 0 ;
  sw x, 1        ;
- lw r0, x       ;
+ kldg.nc r0, x  ;
 exists
 (P0:r0 == 0)

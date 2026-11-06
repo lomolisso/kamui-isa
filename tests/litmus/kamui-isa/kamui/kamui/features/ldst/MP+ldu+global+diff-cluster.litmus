@@ -10,6 +10,6 @@ f in global;
 }
  P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 1,gpu 0 ;
  kstg.weak x, 1           | kldg.acquire.gpu r0, f   ;
- kstg.release.gpu f, 1    | kldg.weak r1, x          ;
+ kstg.release.gpu f, 1    | kldg.nc r1, x            ;
 exists
 (P1:r0 == 1 /\ P1:r1 == 0)

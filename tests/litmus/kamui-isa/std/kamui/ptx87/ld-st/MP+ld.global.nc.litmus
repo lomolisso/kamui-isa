@@ -9,6 +9,6 @@ x in global;
 }
  P0@cta 0,gpu 0 | P1@cta 1,gpu 0 ;
  sw x, 1        | lw.aq r0, f    ;
- sw.rl f, 1     | lw r1, x       ;
+ sw.rl f, 1     | kldg.nc r1, x  ;
 exists
 (P1:r0 == 1 /\ P1:r1 == 0)

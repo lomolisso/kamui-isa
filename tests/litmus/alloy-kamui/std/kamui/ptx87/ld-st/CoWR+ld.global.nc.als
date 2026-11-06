@@ -8,9 +8,9 @@ open kamui
 // x=0;
 // P0:r0=0;
 // }
-//  P0@cta 0,gpu 0 ;
-//  st.weak x, 1   ;
-//  ld.weak r0, x  ;
+//  P0@cta 0,gpu 0     ;
+//  st.weak x, 1       ;
+//  ld.global.nc r0, x ;
 // exists
 // (P0:r0 == 0)
 
@@ -31,7 +31,7 @@ fact shape {
   start = T0->E0
   po = E0->E1
   address = E0->L_x + E1->L_x
-  proxy = E0->Generic + E1->Generic
+  proxy = E0->Generic + E1->Texture
   scope = E0->T0 + E1->T0
   rmw = none->none
   dep = none->none
