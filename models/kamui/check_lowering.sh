@@ -2,9 +2,11 @@
 # Run the bounded check of the PTX 8.7 to Kamui lowering (compile_ptx87_kamui.als) with Alloy 6.2.0, one Alloy
 # process per command, in parallel, in the build area. Run in the dev container:
 #
-#   tools/dev.sh 'models/kamui/check_lowering.sh all'      # every check at bound 4 (UNSAT) and the sanity runs (SAT)
-#   tools/dev.sh 'models/kamui/check_lowering.sh broken'   # the broken lowerings (each must be SAT)
-#   tools/dev.sh 'models/kamui/check_lowering.sh bound5'   # every check at bound 5 (long; see README.md)
+#   tools/dev.sh 'models/kamui/check_lowering.sh all'       # the core_std checks at bound 4 (UNSAT), sanity runs (SAT)
+#   tools/dev.sh 'models/kamui/check_lowering.sh broken'    # the broken lowerings (each must be SAT)
+#   tools/dev.sh 'models/kamui/check_lowering.sh identity'  # the identity groups at bound 3 (true at every size; a test
+#                                                           # of the correspondence, see README.md)
+#   tools/dev.sh 'models/kamui/check_lowering.sh bound5'    # the core_std checks at bound 5 (long; see README.md)
 #   tools/dev.sh 'CORES=0-47 PER=4 models/kamui/check_lowering.sh core_std_causality_4 sanity_core'
 #
 # Resources (pick them per host, leaving room for other users; see README.md):
@@ -38,6 +40,7 @@ for a in "${@:-all}"; do
   case "$a" in
     all)    mapfile -t c < <(grep -oE '^[a-z_]+_4:' "$src" | tr -d :); cmds+=("${c[@]}")
             mapfile -t c < <(grep -oE '^run sanity_[a-z_]+' "$src" | cut -d' ' -f2); cmds+=("${c[@]}") ;;
+    identity) mapfile -t c < <(grep -oE '^[a-z_]+_3:' "$src" | grep -v '^core_std_' | tr -d :); cmds+=("${c[@]}") ;;
     broken) mapfile -t c < <(grep -oE '^run broken_[a-z_]+' "$src" | cut -d' ' -f2); cmds+=("${c[@]}") ;;
     bound5) mapfile -t c < <(grep -oE '^[a-z_]+_5:' "$src" | tr -d :); cmds+=("${c[@]}") ;;
     *)      cmds+=("$a") ;;

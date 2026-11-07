@@ -95,3 +95,15 @@ def test_committed_hand_tests_parse():
         t = litmus.load(p)
         assert t.arch == "KAMUI"
         to_kamui.translate_kamui(t, "x", "x")
+
+
+def test_correspondence_names_every_field():
+    import check_suite
+    root = SUITE.parents[1]
+    model = (root / "models" / "ptx87" / "ptx87.als").read_text()
+    check = (root / "models" / "kamui" / "compile_ptx87_kamui.als").read_text()
+    assert check_suite.correspondence_errors(model, check) == []
+    grown = model.replace("  wtok: lone Int\n", "  wtok: lone Int,\n  wnew: lone Int\n").replace(
+        "sig ClusterWait extends Event {}", "sig ClusterWait extends Event {}\nsig NewEvent extends Event {}")
+    errors = check_suite.correspondence_errors(grown, check)
+    assert any("field wnew" in e for e in errors) and any("signature NewEvent" in e for e in errors)

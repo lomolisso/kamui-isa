@@ -26,7 +26,9 @@ Checks:
 8. Kamui: models/kamui/kamui.als is models/ptx87/ptx87.als below the `module` line (the Kamui model is the PTX 8.7
    model); every lowered test (tests/litmus/alloy-kamui/) has its `kamui-alloy` / `kamui-std-alloy` row; no
    lowered test allows an outcome that the PTX models forbid (kind `kamui`); every hand-written Kamui test
-   (tests/litmus/kamui-isa/hand/) gets the verdict its description ends with. `--stronger` lists the tests where
+   (tests/litmus/kamui-isa/hand/) gets the verdict its description ends with; the bounded lowering check
+   (models/kamui/compile_ptx87_kamui.als) carries over every signature and field of the PTX model, so that its
+   identity lowering is a copy and the identity checks hold at every size. `--stronger` lists the tests where
    the lowered program forbids an outcome PTX allows (Kamui may be stronger than PTX).
 Every exception to check 4 must be listed in tests/litmus/allowlist.yaml with a reason. An allow-list entry that
 no longer matches anything is also an error, so the list stays current.
@@ -36,6 +38,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -176,6 +179,9 @@ def kamui_errors(suite: Path, tests: dict, hand: dict, by_test: dict) -> list[st
         k, p = kp.read_text(), pp.read_text()
         if "\nmodule kamui\n" not in k or k.split("\nmodule kamui\n", 1)[1] != p.split("\nmodule ptx87\n", 1)[1]:
             errors.append("kamui: models/kamui/kamui.als differs from models/ptx87/ptx87.als below the module line")
+    cp = root / "models" / "kamui" / "compile_ptx87_kamui.als"
+    if pp.exists() and cp.exists():
+        errors += correspondence_errors(pp.read_text(), cp.read_text())
     for tid in tests:
         for m in sorted(KAMUI_MODELS):
             if to_kamui.kamui_query_for(tid, m) and m not in by_test.get(tid, {}):
@@ -186,6 +192,38 @@ def kamui_errors(suite: Path, tests: dict, hand: dict, by_test: dict) -> list[st
             errors.append(f"{tid}: the description must end with ': allowed.' or ': forbidden.'")
         elif by_test.get(tid, {}).get("kamui-alloy") != want:
             errors.append(f"{tid}: kamui-alloy says {by_test.get(tid, {}).get('kamui-alloy')}, the test says {want}")
+    return errors
+
+
+# Parts of the PTX model that the lowering check need not carry over, and why. Abstract signatures are skipped
+# too: their atoms are those of their subsignatures.
+NOT_CARRIED = {
+    "acc": "no mixed-size accesses in the bounded check (`no p/Access`)",
+    "synchronizes": "defined by a fact of the model, `synchronizes = bgen.bwait`",
+}
+
+
+def correspondence_errors(model: str, check: str) -> list[str]:
+    """The lowering check's correspondence (everything before its feature groups) names every signature and every
+    field of the PTX model. With the identity lowering the Kamui program and execution are then a copy of the PTX
+    ones, so, the two models being the same text, every axiom has the same truth value on both sides at every
+    size: the identity checks hold without a solver."""
+    model = re.sub(r"//.*", "", model)
+    corr = check.split("// Feature groups", 1)[0]
+    errors = []
+    for kw, names in re.findall(r"\b(abstract\s+|one\s+|lone\s+|some\s+)?sig\s+([A-Z]\w*(?:\s*,\s*[A-Z]\w*)*)", model):
+        for s in (n.strip() for n in names.split(",")):
+            if kw.strip() != "abstract" and not re.search(rf"\bp/{s}\b", corr):
+                errors.append(f"kamui: the lowering check does not carry over signature {s}")
+    for body in re.findall(r"\bsig\s+[^{]*\{([^}]*)\}", model):
+        for names in re.findall(r"\b([a-z]\w*(?:\s*,\s*[a-z]\w*)*)\s*:", body):
+            for f in (n.strip() for n in names.split(",")):
+                if f not in NOT_CARRIED and not re.search(rf"<:\s*{f}\)", corr):
+                    errors.append(f"kamui: the lowering check does not carry over field {f}")
+    if "synchronizes = bgen.bwait" not in model:
+        errors.append("kamui: `synchronizes` is no longer defined as bgen.bwait; carry it over in the lowering check")
+    if "no p/Access" not in corr:
+        errors.append("kamui: the lowering check must exclude mixed-size accesses or carry over `acc`")
     return errors
 
 
