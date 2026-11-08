@@ -50,6 +50,8 @@ All notable changes to this project are listed here. The format follows
 
 - PTX 8.7 Alloy model: the Fence-SC axiom applies only to morally strong pairs of `fence.sc`, as the manual says
   (decision D41).
+- PTX 8.7 and Kamui Alloy models: read-modify-write atomicity uses the transitive coherence order, so a weak
+  write in between no longer hides a violation (decision D42).
 
 ## [0.1.0] - 2026-10-31
 

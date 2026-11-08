@@ -53,7 +53,7 @@ translates this table one row at a time. `kamui.als` is the PTX 8.7 model (K1), 
 | `cause` | fun | 4.12 causality order | 8.9.6 | |
 | `coherence` | pred | 4.13 axiom: coherence | 8.10.1 | |
 | `fence_sc` | pred | 4.13 axiom: Fence-SC | 8.10.2 | D3 |
-| `acc_lift`, `AtomicR`, `Atomics`, `atomic_pair_r`, `atomicity` | funs, pred | 4.13 axiom: atomicity | 8.10.3 | D6, D25, K4 |
+| `acc_lift`, `AtomicR`, `Atomics`, `atomic_pair_r`, `atomicity` | funs, pred | 4.13 axiom: atomicity | 8.10.3 | D6, D25, D42, K4 |
 | `no_thin_air` | pred | 4.13 axiom: no thin air | 8.10.4 | |
 | `sc_per_location` | pred | 4.13 axiom: SC per location | 8.10.5 | |
 | `causality` | pred | 4.13 axiom: causality | 8.10.6 | D4 |
