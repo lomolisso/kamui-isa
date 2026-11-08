@@ -13,3 +13,4 @@ proof/Embedding.v
 proof/Derived.v
 proof/Main.v
 check/CheckLowering.v
+proof/Instances.v
