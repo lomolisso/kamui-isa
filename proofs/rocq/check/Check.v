@@ -178,6 +178,144 @@ Definition d_overlap_ok_r : mat :=
 Definition d_ms_r : mat :=
   mk n n (fun i j => get d_scope_incl_r i j && get d_same_proxy_of i j && get d_overlap_ok_r i j && negb (Nat.eqb i j)).
 
+(** 8.15 mbarrier objects *)
+Definition b_wait_true (e : nat) : bool :=
+  match oat (f_wpar F) e with Some p => negb (Z.eqb (Z.rem (zat (f_ph F) e) 2) p) | None => false end
+  || match oat (f_wtok F) e with Some t => Z.gtb (zat (f_ph F) e) t | None => false end.
+Definition d_FalseWaits : vec := vmk n (fun e => vget d_MbarWait e && negb (b_wait_true e)).
+Definition b_mb_undefined : bool :=
+  existsb (fun r => vget d_Read r && (vget d_MbarEv r && Z.ltb (zat (f_ph F) r) 0)) (List.seq 0 n)
+  || (existsb (fun w => vget d_Write w && (vget d_MbarEv w && (negb (vget d_MbarInit w) && Z.ltb (zat (f_pend F) w) 0)))
+        (List.seq 0 n)
+      || existsb (fun r => vget d_MbarWait r
+                           && match oat (f_wtok F) r with Some t => Z.gtb (zat (f_ph F) r) (t + 1) | None => false end)
+           (List.seq 0 n)).
+
+(** 8.8 Release and acquire patterns, 8.9.3 observation, 8.9.4 synchronizes-with *)
+Definition d_RelFences : vec := vunion n (vunion n d_FenceRel d_FenceAcqRel) d_BarrierWait.
+Definition d_AcqFences : vec := vunion n (vunion n d_FenceAcq d_FenceAcqRel) d_BarrierWait.
+Definition d_AcqReads : vec := vminus n d_Acquire d_FalseWaits.
+Definition d_strong (r : mat) : mat := minter n n r d_ms_r.
+Definition d_rel_pattern : mat :=
+  munion n n (mseq n n n (mdiag n d_Release) (mseq n n n (mopt n d_po_loc) (mdiag n d_StrongW)))
+             (mseq n n n (mdiag n d_RelFences) (mseq n n n (mplus n d_po) (mdiag n d_StrongW))).
+Definition d_acq_pattern : mat :=
+  munion n n (mseq n n n (mdiag n d_StrongR) (mseq n n n (mopt n d_po_loc) (mdiag n d_AcqReads)))
+             (mseq n n n (mdiag n d_StrongR) (mseq n n n (mplus n d_po) (mdiag n d_AcqFences))).
+Definition d_obs : mat := mseq n n n (d_strong d_rf) (mstar n (mseq n n n d_rmw (d_strong d_rf))).
+Definition d_sync_pattern : mat := d_strong (mseq n n n d_rel_pattern (mseq n n n d_obs d_acq_pattern)).
+Definition d_cluster_sync : mat :=
+  munion n n (mseq n n n (mdiag n (vminus n d_ClusterArrive d_ClusterArriveRelaxed)) (mseq n n n d_cgen d_cwait))
+    (d_strong (mseq n n n (mdiag n d_RelFences) (mseq n n n (mplus n d_po)
+                 (mseq n n n (mdiag n d_ClusterArriveRelaxed) (mseq n n n d_cgen d_cwait))))).
+Definition d_sw : mat := munion n n (munion n n (munion n n d_sc d_synchronizes) d_cluster_sync) d_sync_pattern.
+
+(** Restricted release and acquire *)
+Definition d_RRel : vec := vunion n (vunion n d_SyncRestrictCta d_OpRestrictInit) d_TxAnchor.
+Definition d_RAcq : vec := d_SyncRestrictCluster.
+Definition b_only_shared (x : nat) : bool :=
+  forallb (fun s => Bool.eqb (existsb (fun a => get d_address x a && space_eqb (space_at a) s) (List.seq 0 nA))
+                             (space_eqb s SShared)) all_spaces.
+Definition d_rleft0 : mat :=
+  mk n n (fun x f => vget d_MemoryEvent x && (vget d_SyncRestrictCta f && (b_only_shared x
+            && forallb (fun o => Bool.eqb (existsb (fun a => get d_address x a && get d_owner a o) (List.seq 0 nA))
+                                          (get d_cta_of f o)) (List.seq 0 nS)))).
+Definition d_rleft : mat :=
+  munion n n (munion n n (minter n n d_rleft0 (mplus n d_po))
+                         (mseq n n n (mdiag n d_MbarInit) (mseq n n n (mplus n d_po) (mdiag n d_OpRestrictInit))))
+             (minv n n (mseq n n n (mdiag n d_TxAnchor) d_txops)).
+Definition d_rright0 : mat :=
+  mk n n (fun f y => vget d_SyncRestrictCluster f && (vget d_MemoryEvent y && (b_only_shared y
+            && forallb (fun o => implb (existsb (fun a => get d_address y a && get d_owner a o) (List.seq 0 nA))
+                                       (existsb (fun c => get d_cluster_of f c && get d_subscope_star c o) (List.seq 0 nS)))
+                 (List.seq 0 nS)))).
+Definition d_rright : mat := minter n n d_rright0 (mplus n d_po).
+
+(** 8.9.5 Base causality order *)
+Definition d_bco_plain : mat :=
+  mplus n (munion n n (munion n n (munion n n (munion n n d_po d_issue) d_done) d_gdep)
+                      (mminus n n (mminus n n d_sw (mseq n n n (mdiag n d_RRel) d_sw)) (mseq n n n d_sw (mdiag n d_RAcq)))).
+Definition d_sw_restricted : mat := munion n n (mseq n n n (mdiag n d_RRel) d_sw) (mseq n n n d_sw (mdiag n d_RAcq)).
+Definition d_cause_base : mat :=
+  let left := munion n n (mseq n n n d_rleft (mdiag n d_RRel)) (mseq n n n (mstar n d_bco_plain) (mdiag n (vcompl n d_RRel))) in
+  let right := munion n n (mseq n n n (mdiag n d_RAcq) d_rright) (mseq n n n (mdiag n (vcompl n d_RAcq)) (mstar n d_bco_plain)) in
+  munion n n d_bco_plain (mseq n n n left (mseq n n n d_sw_restricted right)).
+
+(** 8.9.5 Proxy-preserved base causality order *)
+Definition d_GenericM : vec := vmk n (fun e => memp (f_proxy F) e Generic).
+Definition d_AsyncW : vec := vmk n (fun e => memp (f_proxy F) e Async && vget d_Write e).
+Definition d_pf_space_ok : mat :=
+  mk n n (fun f m => vget d_ProxyFence f && (vget d_MemoryEvent m
+            && ((forallb (fun s => negb (mems (f_pspace F) f s)) all_spaces
+                 || forallb (fun a => implb (get d_address m a) (mems (f_pspace F) f (space_at a))) (List.seq 0 nA))
+                && (forallb (fun a => negb (get d_paddr f a)) (List.seq 0 nA)
+                    || forallb (fun a => implb (get d_address m a) (get d_paddr f a)) (List.seq 0 nA))))).
+Definition d_pf_src0 : mat :=
+  mk n n (fun m f => vget d_MemoryEvent m && (vget d_ProxyFence f
+            && forallb (fun p => implb (memp (f_proxy F) m p) (memd (f_dirs F) f p Generic)) all_proxies)).
+Definition d_pf_src : mat := minter n n (minter n n d_pf_src0 d_same_cta_r) (minv n n d_pf_space_ok).
+Definition d_pf_dst0 : mat :=
+  mk n n (fun f m => vget d_ProxyFence f && (vget d_MemoryEvent m
+            && forallb (fun p => implb (memp (f_proxy F) m p) (memd (f_dirs F) f Generic p)) all_proxies)).
+Definition d_pf_dst : mat := minter n n (minter n n d_pf_dst0 d_same_cta_r) d_pf_space_ok.
+Definition d_TmFence : vec := vmk n (fun f => vget d_ProxyFence f && memd (f_dirs F) f Generic TensorMap).
+Definition d_pf_dst_with (cb : mat) : mat :=
+  munion n n (minter n n cb (mminus n n d_pf_dst (mseq n n n (mdiag n d_TmFence) d_pf_dst)))
+    (mseq n n n (mdiag n (vinter n d_TmFence d_FenceRel))
+       (mseq n n n cb (minter n n cb (mseq n n n (mdiag n (vinter n d_TmFence d_FenceAcq)) d_pf_dst)))).
+Definition d_same_alias (r : mat) : mat := minter n n r d_same_alias_r.
+Definition d_same_location (r : mat) : mat := minter n n r d_same_location_r.
+Definition d_ppbco_with (cb : mat) : mat :=
+  let pdw := d_pf_dst_with cb in
+  let src := minter n n cb d_pf_src in
+  let G := mdiag n d_GenericM in
+  let AF := mdiag n d_AliasFence in
+  munion n n (munion n n (munion n n (munion n n (munion n n (munion n n (munion n n (munion n n (munion n n
+    (d_same_alias (mseq n n n G (mseq n n n cb G)))
+    (d_same_alias (minter n n (minter n n (mseq n n n (mdiag n d_MemoryEvent) (mseq n n n cb (mdiag n d_MemoryEvent)))
+                                         d_same_cta_r) d_same_proxy)))
+    (d_same_alias (mseq n n n (mdiag n (vinter n d_GenericM d_Read)) (mseq n n n cb (mdiag n d_AsyncW)))))
+    (d_same_alias (mseq n n n src (mseq n n n cb G))))
+    (d_same_alias (mseq n n n G (mseq n n n cb pdw))))
+    (d_same_alias (mseq n n n src (mseq n n n cb pdw))))
+    (d_same_location (mseq n n n G (mseq n n n cb (mseq n n n (mseq n n n AF cb) G)))))
+    (d_same_location (mseq n n n src (mseq n n n (mseq n n n cb AF) (mseq n n n cb G)))))
+    (d_same_location (mseq n n n G (mseq n n n cb (mseq n n n (mseq n n n AF cb) pdw)))))
+    (d_same_location (mseq n n n src (mseq n n n (mseq n n n cb AF) (mseq n n n cb pdw)))).
+Definition d_ppbco : mat := d_ppbco_with d_cause_base.
+Definition d_cause : mat := munion n n d_ppbco (mseq n n n d_obs d_ppbco).
+
+(** 8.10 Axioms *)
+Definition b_coherence : bool :=
+  bsubset n n (d_same_location (mseq n n n (mdiag n d_Write) (mseq n n n d_cause (mdiag n d_Write)))) (mplus n d_co).
+Definition b_fence_sc : bool :=
+  bsubset n n (minter n n (mseq n n n (mdiag n d_FenceSC) (mseq n n n d_cause_base (mdiag n d_FenceSC))) d_ms_r) d_sc.
+Definition d_acc_lift (r : mat) : mat := mseq n n n (mopt n d_same_acc) (mseq n n n r (mopt n d_same_acc)).
+Definition d_AtomicR : vec := vmk n (fun e => existsb (fun w => get d_rmw e w && vget d_Write w) (List.seq 0 n)).
+Definition d_Atomics : vec :=
+  vmk n (fun e => vget d_AtomicR e || existsb (fun r => vget d_AtomicR r && get d_rmw r e) (List.seq 0 n)).
+Definition d_atomic_pair_r : mat :=
+  munion n n d_ms_r (mseq n n n (mdiag n d_Atomics)
+                       (mseq n n n (minter n n (minter n n d_scope_incl_r d_same_proxy) d_same_location_r) (mdiag n d_Atomics))).
+Definition b_atomicity : bool :=
+  bnone n n (minter n n (mseq n n n (mdiag n d_Read) (mseq n n n d_ms_r (mdiag n d_Write)))
+                        (minter n n (d_acc_lift (minv n n d_rf)) (d_acc_lift d_fr)))
+  && bnone n n (minter n n (mseq n n n (minter n n d_fr d_atomic_pair_r) (minter n n (mplus n d_co) d_atomic_pair_r)) d_rmw).
+Definition b_no_thin_air : bool := bacyclic n (munion n n d_rf d_dep).
+Definition b_sc_per_location : bool := bacyclic n (munion n n (d_strong d_com) d_po_loc).
+Definition b_causality : bool := birrefl n (mseq n n n (munion n n d_rf d_fr) d_cause).
+Definition b_consistent : bool :=
+  b_coherence && (b_fence_sc && (b_atomicity && (b_no_thin_air && (b_sc_per_location && b_causality)))).
+
+Definition d_fpal : mat := mseq n nA nA d_footprint d_aliases.
+Definition d_unordered : mat := munion n n (munion n n d_ms_r d_cause) (minv n n d_cause).
+Definition b_mixed_size_race : bool :=
+  existsb (fun e1 => existsb (fun e2 =>
+    negb (Nat.eqb e1 e2) && (vget d_MemoryEvent e1 && (vget d_MemoryEvent e2 && (get d_same_location_r e1 e2
+    && (negb (forallb (fun b => Bool.eqb (get d_fpal e1 b) (get d_fpal e2 b)) (List.seq 0 nA))
+    && ((vget d_Write e1 || vget d_Write e2) && negb (get d_unordered e1 e2))))))) (List.seq 0 n)) (List.seq 0 n).
+Definition b_undefined : bool := b_mb_undefined.
+
 End Compute.
 
 (** ** The specifications *)
@@ -463,5 +601,241 @@ Qed.
 
 #[local] Hint Resolve d_StrongW_spec d_StrongR_spec d_same_proxy_spec d_scope_incl_r_spec d_same_acc_spec
   d_footprint_spec d_ms_r_spec : chk.
+
+Lemma b_wait_true_spec e : b_wait_true F (fin_val e) = true <-> wait_true X e.
+Proof.
+  unfold b_wait_true, wait_true; rewrite orb_true_iff; simpl.
+  destruct (oat (f_wpar F) (fin_val e)) as [p |], (oat (f_wtok F) (fin_val e)) as [t |].
+  all: rewrite ?negb_true_iff, <- ?not_true_iff_false, ?Z.eqb_eq, ?Z.gtb_ltb, ?Z.ltb_lt.
+  all: split; [intros [H | H] | intros [[q [Hq H]] | [u [Hu H]]]]; try discriminate.
+  all: try (left; eexists; split; [reflexivity | exact H]); try (right; eexists; split; [reflexivity | lia]).
+  all: try (injection Hq as <-; left; exact H); try (injection Hu as <-; right; lia).
+Qed.
+
+Lemma d_FalseWaits_spec : sspec (d_FalseWaits F) (FalseWaits X).
+Proof.
+  apply sspec_vmk; intros e; unfold FalseWaits.
+  rewrite andb_true_iff, negb_true_iff, <- not_true_iff_false, (d_MbarWait_spec e), b_wait_true_spec; reflexivity.
+Qed.
+#[local] Hint Resolve d_FalseWaits_spec : chk.
+
+Lemma b_mb_undefined_spec : bspec (b_mb_undefined F) (mb_undefined X).
+Proof.
+  unfold b_mb_undefined, mb_undefined; apply bspec_or; [| apply bspec_or].
+  - apply bspec_existsb; intros r; apply bspec_and; [apply d_Read_spec | apply bspec_and; [apply d_MbarEv_spec |]].
+    apply bspec_Zlt.
+  - apply bspec_existsb; intros w; apply bspec_and; [apply d_Write_spec | apply bspec_and; [apply d_MbarEv_spec |]].
+    apply bspec_and; [apply bspec_not, d_MbarInit_spec | apply bspec_Zlt].
+  - apply bspec_equiv with (exists r, MbarWait X r /\ exists t, wtok X r = Some t /\ (ph X r > t + 1)%Z).
+    + apply bspec_existsb; intros r; apply bspec_and; [apply d_MbarWait_spec |]; simpl.
+      destruct (oat (f_wtok F) (fin_val r)) as [t |]; unfold bspec.
+      * rewrite Z.gtb_ltb, Z.ltb_lt; split; [intros H; exists t; split; [reflexivity | lia] | intros [u [Hu H]]].
+        injection Hu as <-; lia.
+      * split; [discriminate | intros [u [Hu _]]; discriminate].
+    + split; [intros [r [H1 [t H2]]]; exists r, t; tauto | intros [r [t H]]; exists r; split; [tauto | exists t; tauto]].
+Qed.
+
+Lemma d_RelFences_spec : sspec (d_RelFences F) (RelFences X). Proof. unfold d_RelFences, RelFences; spec. Qed.
+Lemma d_AcqFences_spec : sspec (d_AcqFences F) (AcqFences X). Proof. unfold d_AcqFences, AcqFences; spec. Qed.
+Lemma d_AcqReads_spec : sspec (d_AcqReads F) (AcqReads X). Proof. unfold d_AcqReads, AcqReads; spec. Qed.
+#[local] Hint Resolve d_RelFences_spec d_AcqFences_spec d_AcqReads_spec : chk.
+
+Lemma d_strong_spec r R : rspec r R -> rspec (d_strong F r) (strong X R).
+Proof. intros H; unfold d_strong, strong; spec. Qed.
+
+Ltac spec2 := repeat (spec_step || (match goal with |- rspec (d_strong _ _) _ => apply d_strong_spec end)
+                      || solve [auto with chk]).
+
+Lemma d_rel_pattern_spec : rspec (d_rel_pattern F) (rel_pattern X). Proof. unfold d_rel_pattern, rel_pattern; spec2. Qed.
+Lemma d_acq_pattern_spec : rspec (d_acq_pattern F) (acq_pattern X). Proof. unfold d_acq_pattern, acq_pattern; spec2. Qed.
+Lemma d_obs_spec : rspec (d_obs F) (obs X). Proof. unfold d_obs, obs; spec2. Qed.
+#[local] Hint Resolve d_rel_pattern_spec d_acq_pattern_spec d_obs_spec : chk.
+Lemma d_sync_pattern_spec : rspec (d_sync_pattern F) (sync_pattern X). Proof. unfold d_sync_pattern, sync_pattern; spec2. Qed.
+Lemma d_cluster_sync_spec : rspec (d_cluster_sync F) (cluster_sync X). Proof. unfold d_cluster_sync, cluster_sync; spec2. Qed.
+#[local] Hint Resolve d_sync_pattern_spec d_cluster_sync_spec : chk.
+Lemma d_sw_spec : rspec (d_sw F) (sw X). Proof. unfold d_sw, sw; spec2. Qed.
+Lemma d_RRel_spec : sspec (d_RRel F) (RRel X). Proof. unfold d_RRel, RRel; spec2. Qed.
+Lemma d_RAcq_spec : sspec (d_RAcq F) (RAcq X). Proof. apply d_SyncRestrictCluster_spec. Qed.
+#[local] Hint Resolve d_sw_spec d_RRel_spec d_RAcq_spec d_owner_spec d_address_spec d_subscope_star_spec : chk.
+
+Lemma b_only_shared_spec x :
+  b_only_shared F (fin_val x) = true <-> (forall s, (exists a, address X x a /\ space X a = s) <-> s = SShared).
+Proof.
+  apply bspec_foralll; [apply all_spaces_in |]; intros s; apply bspec_iff; [| apply space_eqb_eq].
+  apply bspec_existsb; intros a; apply bspec_and; [apply d_address_spec | apply space_eqb_eq].
+Qed.
+
+Lemma d_rleft0_spec : rspec (d_rleft0 F) (fun x f => MemoryEvent X x /\ SyncRestrictCta X f
+  /\ (forall s, (exists a, address X x a /\ space X a = s) <-> s = SShared)
+  /\ (forall o, (exists a, address X x a /\ owner X a o) <-> cta_of X f o)).
+Proof.
+  apply rspec_mk; intros x f.
+  rewrite !andb_true_iff, (d_MemoryEvent_spec x), (d_SyncRestrictCta_spec f), b_only_shared_spec.
+  rewrite (forallb_fin _ (fun o => (exists a, address X x a /\ owner X a o) <-> cta_of X f o)); [reflexivity |].
+  intros o; apply bspec_iff; [| apply d_cta_of_spec].
+  apply bspec_existsb; intros a; apply bspec_and; [apply d_address_spec | apply d_owner_spec].
+Qed.
+#[local] Hint Resolve d_rleft0_spec : chk.
+
+Lemma d_rleft_spec : rspec (d_rleft F) (rleft X). Proof. unfold d_rleft, rleft; spec2. Qed.
+
+Lemma d_rright0_spec : rspec (d_rright0 F) (fun f y => SyncRestrictCluster X f /\ MemoryEvent X y
+  /\ (forall s, (exists a, address X y a /\ space X a = s) <-> s = SShared)
+  /\ (forall o, (exists a, address X y a /\ owner X a o) -> exists c, cluster_of X f c /\ (subscope X)＊ c o)).
+Proof.
+  apply rspec_mk; intros f y.
+  rewrite !andb_true_iff, (d_SyncRestrictCluster_spec f), (d_MemoryEvent_spec y), b_only_shared_spec.
+  rewrite (forallb_fin _ (fun o => (exists a, address X y a /\ owner X a o) -> exists c, cluster_of X f c
+                                    /\ (subscope X)＊ c o)); [reflexivity |].
+  intros o; apply bspec_imp.
+  - apply bspec_existsb; intros a; apply bspec_and; [apply d_address_spec | apply d_owner_spec].
+  - apply bspec_existsb; intros c; apply bspec_and; [apply d_cluster_of_spec | apply d_subscope_star_spec].
+Qed.
+#[local] Hint Resolve d_rleft_spec d_rright0_spec : chk.
+
+Lemma d_rright_spec : rspec (d_rright F) (rright X). Proof. unfold d_rright, rright; spec2. Qed.
+#[local] Hint Resolve d_rright_spec : chk.
+
+Lemma d_bco_plain_spec : rspec (d_bco_plain F) (bco_plain X). Proof. unfold d_bco_plain, bco_plain; spec2. Qed.
+Lemma d_sw_restricted_spec : rspec (d_sw_restricted F) (sw_restricted X).
+Proof. unfold d_sw_restricted, sw_restricted; spec2. Qed.
+#[local] Hint Resolve d_bco_plain_spec d_sw_restricted_spec : chk.
+
+Lemma d_cause_base_spec : rspec (d_cause_base F) (cause_base X).
+Proof. unfold d_cause_base, cause_base; cbv zeta; spec2. Qed.
+#[local] Hint Resolve d_cause_base_spec : chk.
+
+Lemma d_GenericM_spec : sspec (d_GenericM F) (GenericM X).
+Proof. apply sspec_vmk; intros e; apply memp_spec. Qed.
+
+Lemma d_AsyncW_spec : sspec (d_AsyncW F) (fun e => proxy X e Async /\ Write X e).
+Proof. apply sspec_vmk; intros e; rewrite andb_true_iff, memp_spec, (d_Write_spec e); reflexivity. Qed.
+
+Lemma mems_spec e s : mems (f_pspace F) (fin_val e) s = true <-> pspace X e s.
+Proof. reflexivity. Qed.
+
+Lemma memd_spec e p q : memd (f_dirs F) (fin_val e) p q = true <-> dirs X e p q.
+Proof. reflexivity. Qed.
+
+Lemma d_pf_space_ok_spec : rspec (d_pf_space_ok F) (pf_space_ok X).
+Proof.
+  apply rspec_mk; intros f m; unfold pf_space_ok.
+  apply bspec_and; [apply d_ProxyFence_spec | apply bspec_and; [apply d_MemoryEvent_spec | apply bspec_and]].
+  - apply bspec_or.
+    + apply bspec_foralll; [apply all_spaces_in |]; intros s; apply bspec_not, mems_spec.
+    + apply bspec_forallb; intros a; apply bspec_imp; [apply d_address_spec | apply mems_spec].
+  - apply bspec_or.
+    + apply bspec_forallb; intros a; apply bspec_not, d_paddr_spec.
+    + apply bspec_forallb; intros a; apply bspec_imp; [apply d_address_spec | apply d_paddr_spec].
+Qed.
+
+Lemma d_pf_src0_spec : rspec (d_pf_src0 F)
+  (fun m f => MemoryEvent X m /\ ProxyFence X f /\ (forall p, proxy X m p -> dirs X f p Generic)).
+Proof.
+  apply rspec_mk; intros m f.
+  apply bspec_and; [apply d_MemoryEvent_spec | apply bspec_and; [apply d_ProxyFence_spec |]].
+  apply bspec_foralll; [apply all_proxies_in |]; intros p; apply bspec_imp; [apply memp_spec | apply memd_spec].
+Qed.
+
+Lemma d_pf_dst0_spec : rspec (d_pf_dst0 F)
+  (fun f m => ProxyFence X f /\ MemoryEvent X m /\ (forall p, proxy X m p -> dirs X f Generic p)).
+Proof.
+  apply rspec_mk; intros f m.
+  apply bspec_and; [apply d_ProxyFence_spec | apply bspec_and; [apply d_MemoryEvent_spec |]].
+  apply bspec_foralll; [apply all_proxies_in |]; intros p; apply bspec_imp; [apply memp_spec | apply memd_spec].
+Qed.
+
+Lemma d_TmFence_spec : sspec (d_TmFence F) (TmFence X).
+Proof. apply sspec_vmk; intros f; unfold TmFence; rewrite andb_true_iff, (d_ProxyFence_spec f), memd_spec; reflexivity. Qed.
+#[local] Hint Resolve d_GenericM_spec d_AsyncW_spec d_pf_space_ok_spec d_pf_src0_spec d_pf_dst0_spec d_TmFence_spec : chk.
+
+Lemma d_pf_src_spec : rspec (d_pf_src F) (pf_src X). Proof. unfold d_pf_src, pf_src; spec2. Qed.
+Lemma d_pf_dst_spec : rspec (d_pf_dst F) (pf_dst X). Proof. unfold d_pf_dst, pf_dst; spec2. Qed.
+#[local] Hint Resolve d_pf_src_spec d_pf_dst_spec : chk.
+
+Lemma d_pf_dst_with_spec cb R : rspec cb R -> rspec (d_pf_dst_with F cb) (pf_dst_with X R).
+Proof. intros H; unfold d_pf_dst_with, pf_dst_with; spec2. Qed.
+
+Lemma d_ppbco_with_spec cb R : rspec cb R -> rspec (d_ppbco_with F cb) (ppbco_with X R).
+Proof.
+  intros H; pose proof (d_pf_dst_with_spec H) as Hp.
+  unfold d_ppbco_with, ppbco_with, d_same_alias, d_same_location, same_alias, same_location; cbv zeta.
+  spec2.
+Qed.
+
+Lemma d_ppbco_spec : rspec (d_ppbco F) (ppbco X).
+Proof. apply d_ppbco_with_spec, d_cause_base_spec. Qed.
+#[local] Hint Resolve d_ppbco_spec : chk.
+
+Lemma d_cause_spec : rspec (d_cause F) (cause X). Proof. unfold d_cause, cause; spec2. Qed.
+#[local] Hint Resolve d_cause_spec : chk.
+
+Lemma b_coherence_spec : bspec (b_coherence F) (coherence X).
+Proof. unfold b_coherence, coherence, d_same_location, same_location; spec2. Qed.
+
+Lemma b_fence_sc_spec : bspec (b_fence_sc F) (fence_sc X).
+Proof. unfold b_fence_sc, fence_sc; spec2. Qed.
+
+Lemma d_acc_lift_spec r R : rspec r R -> rspec (d_acc_lift F r) (acc_lift X R).
+Proof. intros H; unfold d_acc_lift, acc_lift; spec2. Qed.
+
+Lemma d_AtomicR_spec : sspec (d_AtomicR F) (AtomicR X).
+Proof.
+  apply sspec_vmk; intros e; unfold AtomicR; apply existsb_fin; intros w.
+  rewrite andb_true_iff, (d_rmw_spec e w), (d_Write_spec w); reflexivity.
+Qed.
+
+Lemma d_Atomics_spec : sspec (d_Atomics F) (Atomics X).
+Proof.
+  apply sspec_vmk; intros e; unfold Atomics; apply bspec_or; [apply d_AtomicR_spec |].
+  apply bspec_existsb; intros r; apply bspec_and; [apply d_AtomicR_spec | apply d_rmw_spec].
+Qed.
+#[local] Hint Resolve d_Atomics_spec : chk.
+
+Lemma d_atomic_pair_r_spec : rspec (d_atomic_pair_r F) (atomic_pair_r X).
+Proof. unfold d_atomic_pair_r, atomic_pair_r; spec2. Qed.
+#[local] Hint Resolve d_atomic_pair_r_spec : chk.
+
+Lemma b_atomicity_spec : bspec (b_atomicity F) (atomicity X).
+Proof.
+  unfold b_atomicity, atomicity; apply bspec_and; apply bspec_none.
+  - apply rspec_inter; [spec2 | apply rspec_inter; apply d_acc_lift_spec; spec2].
+  - spec2.
+Qed.
+
+Lemma b_no_thin_air_spec : bspec (b_no_thin_air F) (no_thin_air X).
+Proof. unfold b_no_thin_air, no_thin_air; spec2. Qed.
+Lemma b_sc_per_location_spec : bspec (b_sc_per_location F) (sc_per_location X).
+Proof. unfold b_sc_per_location, sc_per_location; spec2. Qed.
+Lemma b_causality_spec : bspec (b_causality F) (causality X).
+Proof. unfold b_causality, causality; spec2. Qed.
+
+Theorem b_consistent_spec : bspec (b_consistent F) (consistent X).
+Proof.
+  unfold b_consistent, consistent.
+  apply bspec_and; [apply b_coherence_spec |]; apply bspec_and; [apply b_fence_sc_spec |].
+  apply bspec_and; [apply b_atomicity_spec |]; apply bspec_and; [apply b_no_thin_air_spec |].
+  apply bspec_and; [apply b_sc_per_location_spec | apply b_causality_spec].
+Qed.
+
+Lemma d_fpal_spec : rspec (d_fpal F) (fun e b => exists a, footprint X e a /\ aliases X a b).
+Proof. exact (rspec_seq_het d_footprint_spec d_aliases_spec). Qed.
+
+Lemma d_unordered_spec : rspec (d_unordered F) (ms_r X ∪ cause X ∪ (cause X)⁻¹).
+Proof. unfold d_unordered; spec2. Qed.
+
+Theorem b_mixed_size_race_spec : bspec (b_mixed_size_race F) (mixed_size_race X).
+Proof.
+  unfold b_mixed_size_race, mixed_size_race.
+  apply bspec_existsb; intros e1; apply bspec_existsb; intros e2.
+  apply bspec_and; [apply bspec_not, bspec_fin_eq |].
+  apply bspec_and; [apply d_MemoryEvent_spec |]; apply bspec_and; [apply d_MemoryEvent_spec |].
+  apply bspec_and; [apply d_same_location_r_spec |].
+  apply bspec_and; [apply bspec_not, bspec_forallb; intros b; apply bspec_iff; apply d_fpal_spec |].
+  apply bspec_and; [apply bspec_or; apply d_Write_spec | apply bspec_not, d_unordered_spec].
+Qed.
+
+Theorem b_undefined_spec : bspec (b_undefined F) (undefined X).
+Proof. apply b_mb_undefined_spec. Qed.
 
 End Spec.
