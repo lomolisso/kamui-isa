@@ -12,3 +12,4 @@ extract/Extract.v
 proof/Embedding.v
 proof/Derived.v
 proof/Main.v
+check/CheckLowering.v
