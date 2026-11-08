@@ -20,6 +20,9 @@
 #   ALLOY6_SOLVER  the SAT solver of the checks (default lingeling.parallel, plingeling, multi-threaded; glucose is
 #           single-threaded and was about 6 times slower on the PTX 8.7 mapping checks). Sanity runs and broken
 #           lowerings, which must find an instance, always use glucose: plingeling cannot return one to Alloy.
+#           `kissat`: Alloy writes the formula (DIMACS CNF) and the program named by KISSAT (Kissat 4.0.1, built
+#           from https://github.com/arminbiere/kissat, tag rel-4.0.1; not in the dev image) solves it on one CPU.
+#           It was 2 to 4 times faster than plingeling on the slow checks (README.md).
 #   LIMIT   time limit per command in seconds (default 43200, 12 hours: a command still running is stopped and
 #           reported as "no result")
 #
@@ -104,7 +107,17 @@ run_one() {
       java -Djava.io.tmpdir="$w" -Djava.library.path="$alloy_home/lib/runtime/lib" \
       -jar "$jar" exec -n -s "$1" -f -c "$c" -o "$w/out" compile_ptx87_kamui.als 2>&1 || true)
   }
-  log="$(solve "$s")"
+  if [ "$s" = kissat ]; then   # Alloy writes the CNF, kissat solves it; a counterexample is found again with glucose
+    solve CNF > /dev/null
+    cnf="$(find "$w/out" -name '*.cnf' | head -1)"
+    case "$(timeout "$limit" "${pin[@]}" "${KISSAT:?set KISSAT to the kissat program}" -q "$cnf" | grep '^s ' || true)" in
+      "s UNSATISFIABLE") log=UNSAT ;;
+      "s SATISFIABLE") s=glucose; log="$(solve glucose)" ;;
+      *) log="" ;;
+    esac
+  else
+    log="$(solve "$s")"
+  fi
   if [ "$s" != glucose ] && grep -q "could not be solved" <<< "$log"; then s=glucose; log="$(solve glucose)"; fi
   r=$(grep -oE '\b(UNSAT|SAT)\b' <<< "$log" | head -1 || true)
   t=$(( $(date +%s) - start ))
