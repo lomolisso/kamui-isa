@@ -10,6 +10,7 @@ From hahn Require Import Hahn.
 From KamuiProof Require Import Ptx87 Kamui Lowering.
 From KamuiProof.lib Require Import Mat.
 From KamuiProof.check Require Import FExec Check CheckLowering.
+Require Import KamuiProof.Theorem.
 Import ListNotations.
 
 Set Implicit Arguments.
@@ -142,3 +143,40 @@ Proof. by_computation. Qed.
 
 Example lowering_inserted_fence : example aqrl aqrl_kamui map_aqrl eq_refl eq_refl eq_refl.
 Proof. by_computation. Qed.
+
+(** ** Counterexamples: what a broken lowering must give *)
+
+(** A broken lowering fails the statement if it relates a well-formed PTX program to a well-formed Kamui
+    execution that satisfies the Kamui model while the PTX execution read back does not satisfy the PTX model. *)
+Lemma broken_by_computation (Lw : LoweringRel) FP FK0 FM VP VK VM :
+  b_wf_prog FP = true -> b_wf_prog (align FK0 FP) && b_wf_exec (align FK0 FP) = true ->
+  b_consistent (align FK0 FP) = true -> b_consistent FP = false ->
+  Lw _ _ _ _ _ (denote FP VP) (denote (align FK0 FP) VK) (@dmap (ne FP) (ne FK0) FM VM) ->
+  ~ correct_for Lw.
+Proof.
+  intros WP WK CK CP HL H.
+  destruct (H _ _ _ _ _ _ _ _ (@wf_prog_by_computation FP VP WP) HL (@wf_by_computation _ VK WK)) as [_ [Hc _]].
+  exact (@inconsistent_by_computation FP VP CP (Hc (@consistent_by_computation _ VK CK))).
+Qed.
+
+(** One-way checks of the conditions a broken lowering puts on the PTX program (its feature group). *)
+Lemma h_no_set {n} v (Q : Fin n -> Prop) :
+  sspec v Q -> forallb (fun i => negb (vget v i)) (List.seq 0 n) = true -> forall x, ~ Q x.
+Proof.
+  intros H B x Hx; rewrite forallb_forall in B.
+  specialize (B (fin_val x) (proj2 (in_seq _ _ _) (conj (Nat.le_0_l _) (fin_lt x)))).
+  apply H in Hx; rewrite Hx in B; discriminate.
+Qed.
+
+Lemma h_no_rel {n} m (R : relation (Fin n)) : rspec m R -> bnone n n m = true -> R ≡ ∅₂.
+Proof. intros H B; split; [| basic_solver]; intros x y Hr; exact (proj1 (bspec_none H) B x y Hr). Qed.
+
+Lemma h_proxies_in F V (ps : Proxy -> Prop) (psb : Proxy -> bool) : (forall p, psb p = true -> ps p) ->
+  forallb (fun e => forallb (fun p => implb (memp (f_proxy F) e p) (psb p)) all_proxies) (List.seq 0 (ne F)) = true ->
+  proxies_in (denote F V) ps.
+Proof.
+  intros Hp B e p Hpr; apply Hp; rewrite forallb_forall in B.
+  specialize (B (fin_val e) (proj2 (in_seq _ _ _) (conj (Nat.le_0_l _) (fin_lt e)))).
+  rewrite forallb_forall in B; specialize (B p (all_proxies_in p)).
+  simpl in Hpr; rewrite Hpr in B; exact B.
+Qed.
