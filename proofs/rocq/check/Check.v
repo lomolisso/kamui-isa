@@ -53,6 +53,9 @@ Lemma bspec_foralll {T} (l : list T) p (P : T -> Prop) :
   (forall x, In x l) -> (forall x, bspec (p x) (P x)) -> bspec (forallb p l) (forall x, P x).
 Proof. intros Hl H; apply forallb_list; [exact Hl | exact H]. Qed.
 
+Definition is_some (o : option Z) : bool := match o with Some _ => true | None => false end.
+Definition is_none (o : option Z) : bool := match o with Some _ => false | None => true end.
+
 (** ** The computations *)
 
 Section Compute.
@@ -134,18 +137,22 @@ Definition d_acc := d_rel (f_acc F) n nC.
 Definition d_paddr := d_rel (f_paddr F) n nA.
 
 (** 8.5 Scopes, threads and locations *)
-Definition d_System : vec := vmk nS (fun s => negb (existsb (fun p => get d_subscope p s) (List.seq 0 nS))).
+Definition d_System : vec := let sub := d_subscope in vmk nS (fun s => negb (existsb (fun p => get sub p s) (List.seq 0 nS))).
 Definition d_aliases : mat := mstar nA (munion nA nA d_alias (minv nA nA d_alias)).
 Definition d_po_star : mat := mstar n d_po.
-Definition d_thd : mat := mk n nS (fun e t => existsb (fun e0 => get d_start t e0 && get d_po_star e0 e) (List.seq 0 n)).
+Definition d_thd : mat :=
+  let st := d_start in let ps := d_po_star in
+  mk n nS (fun e t => existsb (fun e0 => get st t e0 && get ps e0 e) (List.seq 0 n)).
 Definition d_same_alias_r : mat := mseq n nA n d_address (minv n nA d_address).
 Definition d_same_location_r : mat := mseq n nA n (mseq n nA nA d_address d_aliases) (minv n nA d_address).
 Definition d_subscope_star : mat := mstar nS d_subscope.
 Definition d_cta_of : mat :=
-  mk n nS (fun e c => existsb (fun t => get d_thd e t && get d_subscope_star c t) (List.seq 0 nS) && vget d_CtaScope c).
+  let th := d_thd in let ss := d_subscope_star in let cs := d_CtaScope in
+  mk n nS (fun e c => existsb (fun t => get th e t && get ss c t) (List.seq 0 nS) && vget cs c).
 Definition d_same_cta_r : mat := mseq n nS n d_cta_of (minv n nS d_cta_of).
 Definition d_cluster_of : mat :=
-  mk n nS (fun e c => existsb (fun t => get d_thd e t && get d_subscope_star c t) (List.seq 0 nS) && vget d_ClusterScope c).
+  let th := d_thd in let ss := d_subscope_star in let cs := d_ClusterScope in
+  mk n nS (fun e c => existsb (fun t => get th e t && get ss c t) (List.seq 0 nS) && vget cs c).
 Definition d_po_loc : mat := minter n n (mplus n d_po) d_same_alias_r.
 
 Definition d_fr : mat :=
@@ -155,39 +162,43 @@ Definition d_fr : mat :=
 Definition d_com : mat := munion n n (munion n n d_rf (mplus n d_co)) d_fr.
 
 (** 8.7 Morally strong *)
-Definition d_Weak : vec := vmk n (fun e => vget d_Thread (scope_at e)).
+Definition d_Weak : vec := let th := d_Thread in vmk n (fun e => vget th (scope_at e)).
 Definition d_StrongW : vec := vinter n d_Write (vcompl n d_Weak).
 Definition d_StrongR : vec := vinter n d_Read (vcompl n d_Weak).
-Definition b_proxy_of (e : nat) (p : Proxy) : bool :=
-  (vget d_MemoryEvent e && memp (f_proxy F) e p) || (negb (vget d_MemoryEvent e) && proxy_eqb p Generic).
+Definition b_proxy_of (mem : vec) (e : nat) (p : Proxy) : bool :=
+  (vget mem e && memp (f_proxy F) e p) || (negb (vget mem e) && proxy_eqb p Generic).
 Definition d_same_proxy_of : mat :=
-  mk n n (fun i j => existsb (fun p => b_proxy_of i p && b_proxy_of j p) all_proxies).
+  let mem := d_MemoryEvent in mk n n (fun i j => existsb (fun p => b_proxy_of mem i p && b_proxy_of mem j p) all_proxies).
 Definition d_same_proxy : mat :=
   mk n n (fun i j => existsb (fun p => memp (f_proxy F) i p && memp (f_proxy F) j p) all_proxies).
 Definition d_scope_incl0 : mat :=
-  mk n n (fun i j => existsb (fun t => get d_subscope_star (scope_at i) t && get d_thd j t) (List.seq 0 nS)).
+  let ss := d_subscope_star in let th := d_thd in
+  mk n n (fun i j => existsb (fun t => get ss (scope_at i) t && get th j t) (List.seq 0 nS)).
 Definition d_scope_incl_r : mat := minter n n d_scope_incl0 (minv n n d_scope_incl0).
 Definition d_same_acc : mat := mseq n nC n d_acc (minv n nC d_acc).
 Definition d_footprint : mat := mseq n n nA (mopt n d_same_acc) d_address.
 Definition d_full_overlap_r : mat :=
-  mk n n (fun i j => vget d_MemoryEvent i && vget d_MemoryEvent j
-                     && forallb (fun a => Bool.eqb (get d_footprint i a) (get d_footprint j a)) (List.seq 0 nA)).
+  let mem := d_MemoryEvent in let fp := d_footprint in
+  mk n n (fun i j => vget mem i && vget mem j
+                     && forallb (fun a => Bool.eqb (get fp i a) (get fp j a)) (List.seq 0 nA)).
 Definition d_overlap_ok_r : mat :=
-  mk n n (fun i j => (vget d_MemoryEvent i && vget d_MemoryEvent j && get d_same_alias_r i j && get d_full_overlap_r i j)
-                     || negb (vget d_MemoryEvent i && vget d_MemoryEvent j)).
+  let mem := d_MemoryEvent in let sa := d_same_alias_r in let fo := d_full_overlap_r in
+  mk n n (fun i j => (vget mem i && vget mem j && get sa i j && get fo i j) || negb (vget mem i && vget mem j)).
 Definition d_ms_r : mat :=
-  mk n n (fun i j => get d_scope_incl_r i j && get d_same_proxy_of i j && get d_overlap_ok_r i j && negb (Nat.eqb i j)).
+  let si := d_scope_incl_r in let sp := d_same_proxy_of in let oo := d_overlap_ok_r in
+  mk n n (fun i j => get si i j && get sp i j && get oo i j && negb (Nat.eqb i j)).
 
 (** 8.15 mbarrier objects *)
 Definition b_wait_true (e : nat) : bool :=
   match oat (f_wpar F) e with Some p => negb (Z.eqb (Z.rem (zat (f_ph F) e) 2) p) | None => false end
   || match oat (f_wtok F) e with Some t => Z.gtb (zat (f_ph F) e) t | None => false end.
-Definition d_FalseWaits : vec := vmk n (fun e => vget d_MbarWait e && negb (b_wait_true e)).
+Definition d_FalseWaits : vec := let mw := d_MbarWait in vmk n (fun e => vget mw e && negb (b_wait_true e)).
 Definition b_mb_undefined : bool :=
-  existsb (fun r => vget d_Read r && (vget d_MbarEv r && Z.ltb (zat (f_ph F) r) 0)) (List.seq 0 n)
-  || (existsb (fun w => vget d_Write w && (vget d_MbarEv w && (negb (vget d_MbarInit w) && Z.ltb (zat (f_pend F) w) 0)))
+  let rd := d_Read in let me := d_MbarEv in let wr := d_Write in let mi := d_MbarInit in let mw := d_MbarWait in
+  existsb (fun r => vget rd r && (vget me r && Z.ltb (zat (f_ph F) r) 0)) (List.seq 0 n)
+  || (existsb (fun w => vget wr w && (vget me w && (negb (vget mi w) && Z.ltb (zat (f_pend F) w) 0)))
         (List.seq 0 n)
-      || existsb (fun r => vget d_MbarWait r
+      || existsb (fun r => vget mw r
                            && match oat (f_wtok F) r with Some t => Z.gtb (zat (f_ph F) r) (t + 1) | None => false end)
            (List.seq 0 n)).
 
@@ -213,21 +224,25 @@ Definition d_sw : mat := munion n n (munion n n (munion n n d_sc d_synchronizes)
 (** Restricted release and acquire *)
 Definition d_RRel : vec := vunion n (vunion n d_SyncRestrictCta d_OpRestrictInit) d_TxAnchor.
 Definition d_RAcq : vec := d_SyncRestrictCluster.
-Definition b_only_shared (x : nat) : bool :=
-  forallb (fun s => Bool.eqb (existsb (fun a => get d_address x a && space_eqb (space_at a) s) (List.seq 0 nA))
+Definition b_only_shared (ad : mat) (x : nat) : bool :=
+  forallb (fun s => Bool.eqb (existsb (fun a => get ad x a && space_eqb (space_at a) s) (List.seq 0 nA))
                              (space_eqb s SShared)) all_spaces.
 Definition d_rleft0 : mat :=
-  mk n n (fun x f => vget d_MemoryEvent x && (vget d_SyncRestrictCta f && (b_only_shared x
-            && forallb (fun o => Bool.eqb (existsb (fun a => get d_address x a && get d_owner a o) (List.seq 0 nA))
-                                          (get d_cta_of f o)) (List.seq 0 nS)))).
+  let mem := d_MemoryEvent in let src := d_SyncRestrictCta in let ad := d_address in let ow := d_owner in
+  let co := d_cta_of in
+  mk n n (fun x f => vget mem x && (vget src f && (b_only_shared ad x
+            && forallb (fun o => Bool.eqb (existsb (fun a => get ad x a && get ow a o) (List.seq 0 nA))
+                                          (get co f o)) (List.seq 0 nS)))).
 Definition d_rleft : mat :=
   munion n n (munion n n (minter n n d_rleft0 (mplus n d_po))
                          (mseq n n n (mdiag n d_MbarInit) (mseq n n n (mplus n d_po) (mdiag n d_OpRestrictInit))))
              (minv n n (mseq n n n (mdiag n d_TxAnchor) d_txops)).
 Definition d_rright0 : mat :=
-  mk n n (fun f y => vget d_SyncRestrictCluster f && (vget d_MemoryEvent y && (b_only_shared y
-            && forallb (fun o => implb (existsb (fun a => get d_address y a && get d_owner a o) (List.seq 0 nA))
-                                       (existsb (fun c => get d_cluster_of f c && get d_subscope_star c o) (List.seq 0 nS)))
+  let srl := d_SyncRestrictCluster in let mem := d_MemoryEvent in let ad := d_address in let ow := d_owner in
+  let cl := d_cluster_of in let ss := d_subscope_star in
+  mk n n (fun f y => vget srl f && (vget mem y && (b_only_shared ad y
+            && forallb (fun o => implb (existsb (fun a => get ad y a && get ow a o) (List.seq 0 nA))
+                                       (existsb (fun c => get cl f c && get ss c o) (List.seq 0 nS)))
                  (List.seq 0 nS)))).
 Definition d_rright : mat := minter n n d_rright0 (mplus n d_po).
 
@@ -243,22 +258,25 @@ Definition d_cause_base : mat :=
 
 (** 8.9.5 Proxy-preserved base causality order *)
 Definition d_GenericM : vec := vmk n (fun e => memp (f_proxy F) e Generic).
-Definition d_AsyncW : vec := vmk n (fun e => memp (f_proxy F) e Async && vget d_Write e).
+Definition d_AsyncW : vec := let wr := d_Write in vmk n (fun e => memp (f_proxy F) e Async && vget wr e).
 Definition d_pf_space_ok : mat :=
-  mk n n (fun f m => vget d_ProxyFence f && (vget d_MemoryEvent m
+  let pf := d_ProxyFence in let mem := d_MemoryEvent in let ad := d_address in let pa := d_paddr in
+  mk n n (fun f m => vget pf f && (vget mem m
             && ((forallb (fun s => negb (mems (f_pspace F) f s)) all_spaces
-                 || forallb (fun a => implb (get d_address m a) (mems (f_pspace F) f (space_at a))) (List.seq 0 nA))
-                && (forallb (fun a => negb (get d_paddr f a)) (List.seq 0 nA)
-                    || forallb (fun a => implb (get d_address m a) (get d_paddr f a)) (List.seq 0 nA))))).
+                 || forallb (fun a => implb (get ad m a) (mems (f_pspace F) f (space_at a))) (List.seq 0 nA))
+                && (forallb (fun a => negb (get pa f a)) (List.seq 0 nA)
+                    || forallb (fun a => implb (get ad m a) (get pa f a)) (List.seq 0 nA))))).
 Definition d_pf_src0 : mat :=
-  mk n n (fun m f => vget d_MemoryEvent m && (vget d_ProxyFence f
+  let mem := d_MemoryEvent in let pf := d_ProxyFence in
+  mk n n (fun m f => vget mem m && (vget pf f
             && forallb (fun p => implb (memp (f_proxy F) m p) (memd (f_dirs F) f p Generic)) all_proxies)).
 Definition d_pf_src : mat := minter n n (minter n n d_pf_src0 d_same_cta_r) (minv n n d_pf_space_ok).
 Definition d_pf_dst0 : mat :=
-  mk n n (fun f m => vget d_ProxyFence f && (vget d_MemoryEvent m
+  let mem := d_MemoryEvent in let pf := d_ProxyFence in
+  mk n n (fun f m => vget pf f && (vget mem m
             && forallb (fun p => implb (memp (f_proxy F) m p) (memd (f_dirs F) f Generic p)) all_proxies)).
 Definition d_pf_dst : mat := minter n n (minter n n d_pf_dst0 d_same_cta_r) d_pf_space_ok.
-Definition d_TmFence : vec := vmk n (fun f => vget d_ProxyFence f && memd (f_dirs F) f Generic TensorMap).
+Definition d_TmFence : vec := let pf := d_ProxyFence in vmk n (fun f => vget pf f && memd (f_dirs F) f Generic TensorMap).
 Definition d_pf_dst_with (cb : mat) : mat :=
   munion n n (minter n n cb (mminus n n d_pf_dst (mseq n n n (mdiag n d_TmFence) d_pf_dst)))
     (mseq n n n (mdiag n (vinter n d_TmFence d_FenceRel))
@@ -291,9 +309,11 @@ Definition b_coherence : bool :=
 Definition b_fence_sc : bool :=
   bsubset n n (minter n n (mseq n n n (mdiag n d_FenceSC) (mseq n n n d_cause_base (mdiag n d_FenceSC))) d_ms_r) d_sc.
 Definition d_acc_lift (r : mat) : mat := mseq n n n (mopt n d_same_acc) (mseq n n n r (mopt n d_same_acc)).
-Definition d_AtomicR : vec := vmk n (fun e => existsb (fun w => get d_rmw e w && vget d_Write w) (List.seq 0 n)).
+Definition d_AtomicR : vec :=
+  let rm := d_rmw in let wr := d_Write in vmk n (fun e => existsb (fun w => get rm e w && vget wr w) (List.seq 0 n)).
 Definition d_Atomics : vec :=
-  vmk n (fun e => vget d_AtomicR e || existsb (fun r => vget d_AtomicR r && get d_rmw r e) (List.seq 0 n)).
+  let ar := d_AtomicR in let rm := d_rmw in
+  vmk n (fun e => vget ar e || existsb (fun r => vget ar r && get rm r e) (List.seq 0 n)).
 Definition d_atomic_pair_r : mat :=
   munion n n d_ms_r (mseq n n n (mdiag n d_Atomics)
                        (mseq n n n (minter n n (minter n n d_scope_incl_r d_same_proxy) d_same_location_r) (mdiag n d_Atomics))).
@@ -310,11 +330,258 @@ Definition b_consistent : bool :=
 Definition d_fpal : mat := mseq n nA nA d_footprint d_aliases.
 Definition d_unordered : mat := munion n n (munion n n d_ms_r d_cause) (minv n n d_cause).
 Definition b_mixed_size_race : bool :=
+  let mem := d_MemoryEvent in let sl := d_same_location_r in let fa := d_fpal in let wr := d_Write in
+  let un := d_unordered in
   existsb (fun e1 => existsb (fun e2 =>
-    negb (Nat.eqb e1 e2) && (vget d_MemoryEvent e1 && (vget d_MemoryEvent e2 && (get d_same_location_r e1 e2
-    && (negb (forallb (fun b => Bool.eqb (get d_fpal e1 b) (get d_fpal e2 b)) (List.seq 0 nA))
-    && ((vget d_Write e1 || vget d_Write e2) && negb (get d_unordered e1 e2))))))) (List.seq 0 n)) (List.seq 0 n).
+    negb (Nat.eqb e1 e2) && (vget mem e1 && (vget mem e2 && (get sl e1 e2
+    && (negb (forallb (fun b => Bool.eqb (get fa e1 b) (get fa e2 b)) (List.seq 0 nA))
+    && ((vget wr e1 || vget wr e2) && negb (get un e1 e2))))))) (List.seq 0 n)) (List.seq 0 n).
 Definition b_undefined : bool := b_mb_undefined.
+
+(** Well-formedness: the facts of the model, one boolean per fact, in the order of [wf_prog] and [wf_exec] *)
+Definition d_co_plus : mat := mplus n d_co.
+Definition d_po_plus : mat := mplus n d_po.
+Definition d_same_scope : mat := mk n n (fun i j => Nat.eqb (scope_at i) (scope_at j)).
+Definition d_same_bid : mat :=
+  let ba := d_BarrierArrive in mk n n (fun a b => vget ba a && (vget ba b && Z.eqb (zat (f_bid F) a) (zat (f_bid F) b))).
+Definition d_same_cluster : mat := mseq n nS n d_cluster_of (minv n nS d_cluster_of).
+Definition b_barriers_9 : bool :=
+  let ba := d_BarrierArrive in let bg := d_bgen in
+  forallb (fun a => implb (vget ba a) (match oat (f_bcount F) a with
+     | Some k => Z.eqb (Z.of_nat (length (filter (fun b => get bg a b) (List.seq 0 n)))) k
+     | None => true end)) (List.seq 0 n).
+Definition b_decl_start : bool :=
+  let d_Thread := d_Thread in let d_start := d_start in 
+  forallb (fun t => forallb (fun e => implb (get d_start t e) (vget d_Thread t)) (List.seq 0 n)) (List.seq 0 nS).
+Definition b_decl_start_one : bool :=
+  let d_Thread := d_Thread in let d_start := d_start in 
+  forallb (fun t => implb (vget d_Thread t) (existsb (fun e => get d_start t e && forallb (fun e' => implb (get d_start t e') (Nat.eqb e' e)) (List.seq 0 n)) (List.seq 0 n))) (List.seq 0 nS).
+Definition b_decl_owner_lone : bool :=
+  let d_owner := d_owner in 
+  forallb (fun a => forallb (fun s1 => forallb (fun s2 => implb (get d_owner a s1) (implb (get d_owner a s2) (Nat.eqb s1 s2))) (List.seq 0 nS)) (List.seq 0 nS)) (List.seq 0 nA).
+Definition b_decl_po_lone : bool :=
+  let d_po := d_po in 
+  forallb (fun e => forallb (fun e1 => forallb (fun e2 => implb (get d_po e e1) (implb (get d_po e e2) (Nat.eqb e1 e2))) (List.seq 0 n)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_address : bool :=
+  let d_MemoryEvent := d_MemoryEvent in let d_address := d_address in 
+  forallb (fun e => forallb (fun a => implb (get d_address e a) (vget d_MemoryEvent e)) (List.seq 0 nA)) (List.seq 0 n).
+Definition b_decl_address_one : bool :=
+  let d_MemoryEvent := d_MemoryEvent in let d_address := d_address in 
+  forallb (fun e => implb (vget d_MemoryEvent e) (existsb (fun a => get d_address e a && forallb (fun a' => implb (get d_address e a') (Nat.eqb a' a)) (List.seq 0 nA)) (List.seq 0 nA))) (List.seq 0 n).
+Definition b_decl_proxy : bool :=
+  let d_MemoryEvent := d_MemoryEvent in 
+  forallb (fun e => forallb (fun p => implb (memp (f_proxy F) e p) (vget d_MemoryEvent e)) all_proxies) (List.seq 0 n).
+Definition b_decl_proxy_one : bool :=
+  let d_MemoryEvent := d_MemoryEvent in 
+  forallb (fun e => implb (vget d_MemoryEvent e) (existsb (fun p => memp (f_proxy F) e p && forallb (fun p' => implb (memp (f_proxy F) e p') (proxy_eqb p' p)) all_proxies) all_proxies)) (List.seq 0 n).
+Definition b_decl_acc : bool :=
+  let d_MemoryEvent := d_MemoryEvent in let d_acc := d_acc in 
+  forallb (fun e => forallb (fun c => implb (get d_acc e c) (vget d_MemoryEvent e)) (List.seq 0 nC)) (List.seq 0 n).
+Definition b_decl_acc_lone : bool :=
+  let d_acc := d_acc in 
+  forallb (fun e => forallb (fun c1 => forallb (fun c2 => implb (get d_acc e c1) (implb (get d_acc e c2) (Nat.eqb c1 c2))) (List.seq 0 nC)) (List.seq 0 nC)) (List.seq 0 n).
+Definition b_decl_rmw : bool :=
+  let d_Read := d_Read in let d_Write := d_Write in let d_rmw := d_rmw in 
+  forallb (fun r => forallb (fun w => implb (get d_rmw r w) (vget d_Read r && vget d_Write w)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_rmw_lone : bool :=
+  let d_rmw := d_rmw in 
+  forallb (fun r => forallb (fun w1 => forallb (fun w2 => implb (get d_rmw r w1) (implb (get d_rmw r w2) (Nat.eqb w1 w2))) (List.seq 0 n)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_dep : bool :=
+  let d_Read := d_Read in let d_dep := d_dep in 
+  forallb (fun r => forallb (fun e => implb (get d_dep r e) (vget d_Read r)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_SyncRestrictCta : bool :=
+  let d_FenceRel := d_FenceRel in let d_SyncRestrictCta := d_SyncRestrictCta in 
+  forallb (fun e => implb (vget d_SyncRestrictCta e) (vget d_FenceRel e)) (List.seq 0 n).
+Definition b_decl_SyncRestrictCluster : bool :=
+  let d_FenceAcq := d_FenceAcq in let d_SyncRestrictCluster := d_SyncRestrictCluster in 
+  forallb (fun e => implb (vget d_SyncRestrictCluster e) (vget d_FenceAcq e)) (List.seq 0 n).
+Definition b_decl_OpRestrictInit : bool :=
+  let d_FenceRel := d_FenceRel in let d_OpRestrictInit := d_OpRestrictInit in 
+  forallb (fun e => implb (vget d_OpRestrictInit e) (vget d_FenceRel e)) (List.seq 0 n).
+Definition b_decl_dirs : bool :=
+  let d_ProxyFence := d_ProxyFence in 
+  forallb (fun f => forallb (fun p => forallb (fun q => implb (memd (f_dirs F) f p q) (vget d_ProxyFence f)) all_proxies) all_proxies) (List.seq 0 n).
+Definition b_decl_pspace : bool :=
+  let d_ProxyFence := d_ProxyFence in 
+  forallb (fun f => forallb (fun s => implb (mems (f_pspace F) f s) (vget d_ProxyFence f)) all_spaces) (List.seq 0 n).
+Definition b_decl_paddr : bool :=
+  let d_ProxyFence := d_ProxyFence in let d_paddr := d_paddr in 
+  forallb (fun f => forallb (fun a => implb (get d_paddr f a) (vget d_ProxyFence f)) (List.seq 0 nA)) (List.seq 0 n).
+Definition b_decl_bcount : bool :=
+  let d_BarrierArrive := d_BarrierArrive in 
+  forallb (fun e => implb (is_some (oat (f_bcount F) e)) (vget d_BarrierArrive e)) (List.seq 0 n).
+Definition b_decl_bwait : bool :=
+  let d_BarrierArrive := d_BarrierArrive in let d_BarrierWait := d_BarrierWait in let d_bwait := d_bwait in 
+  forallb (fun a => forallb (fun w => implb (get d_bwait a w) (vget d_BarrierArrive a && vget d_BarrierWait w)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_bwait_lone : bool :=
+  let d_bwait := d_bwait in 
+  forallb (fun a => forallb (fun w1 => forallb (fun w2 => implb (get d_bwait a w1) (implb (get d_bwait a w2) (Nat.eqb w1 w2))) (List.seq 0 n)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_cwait : bool :=
+  let d_ClusterArrive := d_ClusterArrive in let d_ClusterWait := d_ClusterWait in let d_cwait := d_cwait in 
+  forallb (fun a => forallb (fun w => implb (get d_cwait a w) (vget d_ClusterArrive a && vget d_ClusterWait w)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_cwait_lone : bool :=
+  let d_cwait := d_cwait in 
+  forallb (fun a => forallb (fun w1 => forallb (fun w2 => implb (get d_cwait a w1) (implb (get d_cwait a w2) (Nat.eqb w1 w2))) (List.seq 0 n)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_ClusterArriveRelaxed : bool :=
+  let d_ClusterArrive := d_ClusterArrive in let d_ClusterArriveRelaxed := d_ClusterArriveRelaxed in 
+  forallb (fun e => implb (vget d_ClusterArriveRelaxed e) (vget d_ClusterArrive e)) (List.seq 0 n).
+Definition b_decl_MbarEv : bool :=
+  let d_MbarEv := d_MbarEv in let d_MemoryEvent := d_MemoryEvent in 
+  forallb (fun e => implb (vget d_MbarEv e) (vget d_MemoryEvent e)) (List.seq 0 n).
+Definition b_decl_MbarInit : bool :=
+  let d_MbarInit := d_MbarInit in let d_Write := d_Write in 
+  forallb (fun e => implb (vget d_MbarInit e) (vget d_Write e)) (List.seq 0 n).
+Definition b_decl_MbarWait : bool :=
+  let d_MbarWait := d_MbarWait in let d_Read := d_Read in 
+  forallb (fun e => implb (vget d_MbarWait e) (vget d_Read e)) (List.seq 0 n).
+Definition b_decl_wpar : bool :=
+  let d_MbarWait := d_MbarWait in 
+  forallb (fun e => implb (is_some (oat (f_wpar F) e)) (vget d_MbarWait e)) (List.seq 0 n).
+Definition b_decl_wtok : bool :=
+  let d_MbarWait := d_MbarWait in 
+  forallb (fun e => implb (is_some (oat (f_wtok F) e)) (vget d_MbarWait e)) (List.seq 0 n).
+Definition b_decl_TxAnchor : bool :=
+  let d_TxAnchor := d_TxAnchor in let d_Write := d_Write in 
+  forallb (fun e => implb (vget d_TxAnchor e) (vget d_Write e)) (List.seq 0 n).
+Definition b_decl_txops : bool :=
+  let d_TxAnchor := d_TxAnchor in let d_txops := d_txops in 
+  forallb (fun e => forallb (fun e' => implb (get d_txops e e') (vget d_TxAnchor e)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_sig_Acquire : bool :=
+  let d_Acquire := d_Acquire in let d_Thread := d_Thread in 
+  forallb (fun e => implb (vget d_Acquire e) (negb (vget d_Thread (scope_at e)))) (List.seq 0 n).
+Definition b_sig_Release : bool :=
+  let d_Release := d_Release in let d_Thread := d_Thread in 
+  forallb (fun e => implb (vget d_Release e) (negb (vget d_Thread (scope_at e)))) (List.seq 0 n).
+Definition b_sig_Fence : bool :=
+  let d_Fence := d_Fence in let d_Thread := d_Thread in 
+  forallb (fun e => implb (vget d_Fence e) (negb (vget d_Thread (scope_at e)))) (List.seq 0 n).
+Definition b_scope_tree_1 : bool :=
+  let d_System := d_System in 
+  existsb (fun s => vget d_System s && forallb (fun s' => implb (vget d_System s') (Nat.eqb s' s)) (List.seq 0 nS)) (List.seq 0 nS).
+Definition b_scope_tree_2 : bool :=
+  let d_subscope := d_subscope in 
+  forallb (fun p1 => forallb (fun p2 => forallb (fun s => implb (get d_subscope p1 s) (implb (get d_subscope p2 s) (Nat.eqb p1 p2))) (List.seq 0 nS)) (List.seq 0 nS)) (List.seq 0 nS).
+Definition b_scope_tree_3 : bool :=
+  let d_Thread := d_Thread in let d_subscope := d_subscope in 
+  forallb (fun t => forallb (fun s => implb (vget d_Thread t) (negb (get d_subscope t s))) (List.seq 0 nS)) (List.seq 0 nS).
+Definition b_scope_tree_4 : bool := bacyclic nS d_subscope.
+Definition b_scope_tree_5 : bool :=
+  let d_start := d_start in 
+  forallb (fun t1 => forallb (fun t2 => forallb (fun e => implb (get d_start t1 e) (implb (get d_start t2 e) (Nat.eqb t1 t2))) (List.seq 0 n)) (List.seq 0 nS)) (List.seq 0 nS).
+Definition b_address_facts_1 : bool :=
+  let d_aliases := d_aliases in 
+  forallb (fun a => forallb (fun b => implb (get d_aliases a b) (Z.eqb (zat (f_init F) b) (zat (f_init F) a))) (List.seq 0 nA)) (List.seq 0 nA).
+Definition b_address_facts_2 : bool :=
+  let d_owner := d_owner in 
+  forallb (fun a => Bool.eqb (space_eqb (space_at a) SShared || space_eqb (space_at a) SLocal) (existsb (fun s => get d_owner a s) (List.seq 0 nS))) (List.seq 0 nA).
+Definition b_address_facts_3 : bool :=
+  let d_CtaScope := d_CtaScope in let d_Thread := d_Thread in let d_owner := d_owner in 
+  forallb (fun a => forallb (fun s => implb (get d_owner a s) ((space_eqb (space_at a) SShared && vget d_CtaScope s) || (space_eqb (space_at a) SLocal && vget d_Thread s))) (List.seq 0 nS)) (List.seq 0 nA).
+Definition b_threads_1 : bool := bacyclic n d_po.
+Definition b_threads_2 : bool :=
+  let d_thd := d_thd in 
+  forallb (fun e => existsb (fun t => get d_thd e t && forallb (fun t' => implb (get d_thd e t') (Nat.eqb t' t)) (List.seq 0 nS)) (List.seq 0 nS)) (List.seq 0 n).
+Definition b_threads_3 : bool :=
+  let d_subscope_star := d_subscope_star in let d_thd := d_thd in 
+  forallb (fun e => existsb (fun t => get d_thd e t && get d_subscope_star (scope_at e) t) (List.seq 0 nS)) (List.seq 0 n).
+Definition b_communication_5 : bool :=
+  let d_Write := d_Write in let d_address := d_address in 
+  forallb (fun w => forallb (fun a => implb (vget d_Write w) (implb (get d_address w a) (negb (space_eqb (space_at a) SConst) && negb (space_eqb (space_at a) SParam)))) (List.seq 0 nA)) (List.seq 0 n).
+Definition b_dependencies_1 : bool := bsubset n n d_dep (mplus n d_po).
+Definition b_dependencies_2 : bool := bsubset n n d_rmw (minter n n (minter n n (minter n n (minter n n d_po d_dep) d_same_alias_r) d_same_scope) d_same_proxy).
+Definition b_mbarrier_state_1 : bool :=
+  let d_Mbar := d_Mbar in let d_MbarEv := d_MbarEv in let d_address := d_address in 
+  forallb (fun e => Bool.eqb (vget d_MbarEv e) (existsb (fun a => get d_address e a && vget d_Mbar a) (List.seq 0 nA))) (List.seq 0 n).
+Definition b_mbarrier_state_2 : bool :=
+  let d_Mbar := d_Mbar in let d_alias := d_alias in 
+  forallb (fun a => forallb (fun b => implb (vget d_Mbar a) (negb (get d_alias b a) && negb (get d_alias a b))) (List.seq 0 nA)) (List.seq 0 nA).
+Definition b_mbarrier_state_4 : bool :=
+  let d_MbarEv := d_MbarEv in let d_MbarInit := d_MbarInit in let d_MbarWait := d_MbarWait in 
+  forallb (fun e => implb (vget d_MbarInit e || vget d_MbarWait e) (vget d_MbarEv e)) (List.seq 0 n).
+Definition b_barriers_1 : bool := bsubset n n d_bwait d_po.
+Definition b_barriers_2 : bool :=
+  let d_BarrierArrive := d_BarrierArrive in let d_BarrierWait := d_BarrierWait in let d_bwait := d_bwait in 
+  forallb (fun w => implb (vget d_BarrierWait w) (existsb (fun a => vget d_BarrierArrive a && get d_bwait a w) (List.seq 0 n))) (List.seq 0 n).
+Definition b_cluster_barriers_1 : bool := bsubset n n d_cwait (mplus n d_po).
+Definition b_cluster_barriers_2 : bool :=
+  let d_cwait := d_cwait in 
+  forallb (fun a1 => forallb (fun a2 => forallb (fun w => implb (get d_cwait a1 w) (implb (get d_cwait a2 w) (Nat.eqb a1 a2))) (List.seq 0 n)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_cluster_barriers_3 : bool :=
+  let d_ClusterArrive := d_ClusterArrive in let d_ClusterWait := d_ClusterWait in let d_cwait := d_cwait in 
+  forallb (fun w => implb (vget d_ClusterWait w) (existsb (fun a => vget d_ClusterArrive a && get d_cwait a w) (List.seq 0 n))) (List.seq 0 n).
+Definition b_async_units_2 : bool :=
+  let d_AsyncUnit := d_AsyncUnit in let d_issue := d_issue in let d_thd := d_thd in 
+  forallb (fun e => forallb (fun u => forallb (fun e' => implb (get d_thd e u) (implb (vget d_AsyncUnit u) (negb (get d_issue e e')))) (List.seq 0 n)) (List.seq 0 nS)) (List.seq 0 n).
+Definition b_decl_rf : bool :=
+  let d_Read := d_Read in let d_Write := d_Write in let d_rf := d_rf in 
+  forallb (fun w => forallb (fun r => implb (get d_rf w r) (vget d_Write w && vget d_Read r)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_co : bool :=
+  let d_Write := d_Write in let d_co := d_co in 
+  forallb (fun w => forallb (fun w' => implb (get d_co w w') (vget d_Write w && vget d_Write w')) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_sc : bool :=
+  let d_FenceSC := d_FenceSC in let d_sc := d_sc in 
+  forallb (fun f => forallb (fun f' => implb (get d_sc f f') (vget d_FenceSC f && vget d_FenceSC f')) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_bgen : bool :=
+  let d_BarrierArrive := d_BarrierArrive in let d_bgen := d_bgen in 
+  forallb (fun a => forallb (fun b => implb (get d_bgen a b) (vget d_BarrierArrive a && vget d_BarrierArrive b)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_synchronizes : bool :=
+  let d_BarrierArrive := d_BarrierArrive in let d_BarrierWait := d_BarrierWait in let d_synchronizes := d_synchronizes in 
+  forallb (fun a => forallb (fun w => implb (get d_synchronizes a w) (vget d_BarrierArrive a && vget d_BarrierWait w)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_decl_cgen : bool :=
+  let d_ClusterArrive := d_ClusterArrive in let d_cgen := d_cgen in 
+  forallb (fun a => forallb (fun b => implb (get d_cgen a b) (vget d_ClusterArrive a && vget d_ClusterArrive b)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_mbarrier_state_3 : bool :=
+  let d_MbarEv := d_MbarEv in let d_Read := d_Read in let d_address := d_address in let d_rf := d_rf in 
+  forallb (fun r => implb (vget d_Read r) (implb (vget d_MbarEv r) ((implb (existsb (fun w => get d_rf w r) (List.seq 0 n)) (forallb (fun w => implb (get d_rf w r) (Z.eqb (zat (f_ph F) r) (zat (f_ph F) w) && (Z.eqb (zat (f_pend F) r) (zat (f_pend F) w) && (Z.eqb (zat (f_expc F) r) (zat (f_expc F) w) && (Z.eqb (zat (f_tx F) r) (zat (f_tx F) w)))))) (List.seq 0 n))) && (implb (negb (existsb (fun w => get d_rf w r) (List.seq 0 n))) (forallb (fun a => implb (get d_address r a) (Z.eqb (zat (f_ph F) r) (zat (f_iph F) a) && (Z.eqb (zat (f_pend F) r) (zat (f_ipend F) a) && (Z.eqb (zat (f_expc F) r) (zat (f_iexp F) a) && (Z.eqb (zat (f_tx F) r) (zat (f_itx F) a)))))) (List.seq 0 nA)))))) (List.seq 0 n).
+Definition b_mbarrier_state_5 : bool :=
+  let d_MbarInit := d_MbarInit in 
+  forallb (fun w => implb (vget d_MbarInit w) (Z.eqb (zat (f_ph F) w) 0 && (Z.eqb (zat (f_tx F) w) 0 && Z.eqb (zat (f_pend F) w) (zat (f_expc F) w)))) (List.seq 0 n).
+Definition b_communication_1 : bool := bsubset n n (munion n n d_rf d_co) d_same_location_r.
+Definition b_communication_2 : bool :=
+  let d_rf := d_rf in 
+  forallb (fun w1 => forallb (fun w2 => forallb (fun r => implb (get d_rf w1 r) (implb (get d_rf w2 r) (Nat.eqb w1 w2))) (List.seq 0 n)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_communication_3 : bool :=
+  let d_Read := d_Read in let d_address := d_address in let d_rf := d_rf in 
+  forallb (fun r => implb (vget d_Read r) ((implb (existsb (fun w => get d_rf w r) (List.seq 0 n)) (forallb (fun w => implb (get d_rf w r) (Z.eqb (zat (f_val F) r) (zat (f_val F) w))) (List.seq 0 n))) && (implb (negb (existsb (fun w => get d_rf w r) (List.seq 0 n))) (forallb (fun a => implb (get d_address r a) (Z.eqb (zat (f_val F) r) (zat (f_init F) a))) (List.seq 0 nA))))) (List.seq 0 n).
+Definition b_communication_4 : bool := bacyclic n d_co.
+Definition b_co_strong_1 : bool := bsubset n n (mseq n n n (mdiag n d_Write) (mseq n n n d_ms_r (mdiag n d_Write))) (munion n n (mplus n d_co) (mplus n (minv n n d_co))).
+Definition b_co_strong_2 : bool :=
+  let d_acc := d_acc in let d_co_plus := d_co_plus in 
+  forallb (fun c1 => forallb (fun c2 => negb ((existsb (fun w1 => existsb (fun w2 => get d_acc w1 c1 && (get d_co_plus w1 w2 && get d_acc w2 c2)) (List.seq 0 n)) (List.seq 0 n)) && (existsb (fun w1 => existsb (fun w2 => get d_acc w1 c2 && (get d_co_plus w1 w2 && get d_acc w2 c1)) (List.seq 0 n)) (List.seq 0 n)))) (List.seq 0 nC)) (List.seq 0 nC).
+Definition b_fence_sc_order_1 : bool :=
+  let d_FenceSC := d_FenceSC in let d_ms_r := d_ms_r in let d_sc := d_sc in 
+  forallb (fun f1 => forallb (fun f2 => implb (vget d_FenceSC f1) (implb (vget d_FenceSC f2) (implb (negb (Nat.eqb f1 f2)) (implb (get d_ms_r f1 f2) (get d_sc f1 f2 || get d_sc f2 f1))))) (List.seq 0 n)) (List.seq 0 n).
+Definition b_fence_sc_order_2 : bool := bsubset n n d_sc d_ms_r.
+Definition b_fence_sc_order_3 : bool := bacyclic n d_sc.
+Definition b_barriers_3 : bool := bsubset n n d_bgen (minv n n d_bgen) && bsubset n n (minv n n d_bgen) d_bgen.
+Definition b_barriers_4 : bool :=
+  let d_BarrierArrive := d_BarrierArrive in let d_bgen := d_bgen in 
+  forallb (fun a => implb (vget d_BarrierArrive a) (get d_bgen a a)) (List.seq 0 n).
+Definition b_barriers_5 : bool := bsubset n n (mseq n n n d_bgen d_bgen) d_bgen.
+Definition b_barriers_6 : bool := bsubset n n d_bgen (minter n n d_same_cta_r d_same_bid).
+Definition b_barriers_7 : bool :=
+  let d_bgen := d_bgen in let d_po_plus := d_po_plus in 
+  forallb (fun a => forallb (fun b => negb (get d_po_plus a b && get d_bgen a b)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_barriers_8 : bool := bacyclic n (mseq n n n d_bgen (minter n n (mplus n d_po) d_same_bid)).
+Definition b_barriers_10 : bool :=
+  let d_BarrierArrive := d_BarrierArrive in let d_Thread := d_Thread in let d_bgen := d_bgen in let d_same_cta_r := d_same_cta_r in let d_thd := d_thd in 
+  forallb (fun a => implb (vget d_BarrierArrive a) (implb (is_none (oat (f_bcount F) a)) (forallb (fun t => Bool.eqb (existsb (fun b => get d_bgen a b && get d_thd b t) (List.seq 0 n)) (vget d_Thread t && existsb (fun b => vget d_BarrierArrive b && (get d_thd b t && (Z.eqb (zat (f_bid F) b) (zat (f_bid F) a) && get d_same_cta_r b a))) (List.seq 0 n))) (List.seq 0 nS)))) (List.seq 0 n).
+Definition b_barriers_11 : bool := bsubset n n d_synchronizes (mseq n n n d_bgen d_bwait) && bsubset n n (mseq n n n d_bgen d_bwait) d_synchronizes.
+Definition b_cluster_barriers_4 : bool := bsubset n n d_cgen (minv n n d_cgen) && bsubset n n (minv n n d_cgen) d_cgen.
+Definition b_cluster_barriers_5 : bool :=
+  let d_ClusterArrive := d_ClusterArrive in let d_cgen := d_cgen in 
+  forallb (fun a => implb (vget d_ClusterArrive a) (get d_cgen a a)) (List.seq 0 n).
+Definition b_cluster_barriers_6 : bool := bsubset n n (mseq n n n d_cgen d_cgen) d_cgen.
+Definition b_cluster_barriers_7 : bool := bsubset n n d_cgen d_same_cluster.
+Definition b_cluster_barriers_8 : bool :=
+  let d_cgen := d_cgen in let d_po_plus := d_po_plus in 
+  forallb (fun a => forallb (fun b => negb (get d_po_plus a b && get d_cgen a b)) (List.seq 0 n)) (List.seq 0 n).
+Definition b_cluster_barriers_9 : bool := bacyclic n (mseq n n n d_cgen (mplus n d_po)).
+Definition b_cluster_barriers_10 : bool :=
+  let d_AsyncUnit := d_AsyncUnit in let d_ClusterArrive := d_ClusterArrive in let d_Thread := d_Thread in let d_cgen := d_cgen in let d_cluster_of := d_cluster_of in let d_subscope_star := d_subscope_star in let d_thd := d_thd in 
+  forallb (fun a => implb (vget d_ClusterArrive a) (forallb (fun t => Bool.eqb (existsb (fun b => get d_cgen a b && get d_thd b t) (List.seq 0 n)) ((existsb (fun c => get d_cluster_of a c && get d_subscope_star c t) (List.seq 0 nS)) && (vget d_Thread t && negb (vget d_AsyncUnit t)))) (List.seq 0 nS))) (List.seq 0 n).
+Definition b_wf_prog : bool := b_decl_start && (b_decl_start_one && (b_decl_owner_lone && (b_decl_po_lone && (b_decl_address && (b_decl_address_one && (b_decl_proxy && (b_decl_proxy_one && (b_decl_acc && (b_decl_acc_lone && (b_decl_rmw && (b_decl_rmw_lone && (b_decl_dep && (b_decl_SyncRestrictCta && (b_decl_SyncRestrictCluster && (b_decl_OpRestrictInit && (b_decl_dirs && (b_decl_pspace && (b_decl_paddr && (b_decl_bcount && (b_decl_bwait && (b_decl_bwait_lone && (b_decl_cwait && (b_decl_cwait_lone && (b_decl_ClusterArriveRelaxed && (b_decl_MbarEv && (b_decl_MbarInit && (b_decl_MbarWait && (b_decl_wpar && (b_decl_wtok && (b_decl_TxAnchor && (b_decl_txops && (b_sig_Acquire && (b_sig_Release && (b_sig_Fence && (b_scope_tree_1 && (b_scope_tree_2 && (b_scope_tree_3 && (b_scope_tree_4 && (b_scope_tree_5 && (b_address_facts_1 && (b_address_facts_2 && (b_address_facts_3 && (b_threads_1 && (b_threads_2 && (b_threads_3 && (b_communication_5 && (b_dependencies_1 && (b_dependencies_2 && (b_mbarrier_state_1 && (b_mbarrier_state_2 && (b_mbarrier_state_4 && (b_barriers_1 && (b_barriers_2 && (b_cluster_barriers_1 && (b_cluster_barriers_2 && (b_cluster_barriers_3 && (b_async_units_2))))))))))))))))))))))))))))))))))))))))))))))))))))))))).
+Definition b_wf_exec : bool := b_decl_rf && (b_decl_co && (b_decl_sc && (b_decl_bgen && (b_decl_synchronizes && (b_decl_cgen && (b_mbarrier_state_3 && (b_mbarrier_state_5 && (b_communication_1 && (b_communication_2 && (b_communication_3 && (b_communication_4 && (b_co_strong_1 && (b_co_strong_2 && (b_fence_sc_order_1 && (b_fence_sc_order_2 && (b_fence_sc_order_3 && (b_barriers_3 && (b_barriers_4 && (b_barriers_5 && (b_barriers_6 && (b_barriers_7 && (b_barriers_8 && (b_barriers_9 && (b_barriers_10 && (b_barriers_11 && (b_cluster_barriers_4 && (b_cluster_barriers_5 && (b_cluster_barriers_6 && (b_cluster_barriers_7 && (b_cluster_barriers_8 && (b_cluster_barriers_9 && (b_cluster_barriers_10)))))))))))))))))))))))))))))))).
 
 End Compute.
 
@@ -541,7 +808,7 @@ Proof. unfold d_StrongR; spec. Qed.
 Lemma memp_spec e p : memp (f_proxy F) (fin_val e) p = true <-> proxy X e p.
 Proof. reflexivity. Qed.
 
-Lemma b_proxy_of_spec e p : b_proxy_of F (fin_val e) p = true <-> proxy_of X e p.
+Lemma b_proxy_of_spec e p : b_proxy_of F (d_MemoryEvent F) (fin_val e) p = true <-> proxy_of X e p.
 Proof.
   unfold b_proxy_of, proxy_of; rewrite orb_true_iff, !andb_true_iff, negb_true_iff, <- not_true_iff_false.
   rewrite (d_MemoryEvent_spec e), proxy_eqb_eq, memp_spec; reflexivity.
@@ -659,7 +926,7 @@ Lemma d_RAcq_spec : sspec (d_RAcq F) (RAcq X). Proof. apply d_SyncRestrictCluste
 #[local] Hint Resolve d_sw_spec d_RRel_spec d_RAcq_spec d_owner_spec d_address_spec d_subscope_star_spec : chk.
 
 Lemma b_only_shared_spec x :
-  b_only_shared F (fin_val x) = true <-> (forall s, (exists a, address X x a /\ space X a = s) <-> s = SShared).
+  b_only_shared F (d_address F) (fin_val x) = true <-> (forall s, (exists a, address X x a /\ space X a = s) <-> s = SShared).
 Proof.
   apply bspec_foralll; [apply all_spaces_in |]; intros s; apply bspec_iff; [| apply space_eqb_eq].
   apply bspec_existsb; intros a; apply bspec_and; [apply d_address_spec | apply space_eqb_eq].
@@ -837,5 +1104,394 @@ Qed.
 
 Theorem b_undefined_spec : bspec (b_undefined F) (undefined X).
 Proof. apply b_mb_undefined_spec. Qed.
+
+(** ** Well-formedness *)
+
+Lemma bspec_opt_forall (o : option Z) q Q : bspec q Q -> bspec (implb (is_some o) q) (forall k, o = Some k -> Q).
+Proof.
+  unfold bspec; destruct o as [k |]; simpl; intros H; split.
+  - intros Hq k' _; apply H, Hq.
+  - intros Hall; apply H, (Hall k eq_refl).
+  - intros _ k' E; discriminate.
+  - reflexivity.
+Qed.
+
+Lemma bspec_is_none (o : option Z) : bspec (is_none o) (o = None).
+Proof. unfold bspec; destruct o; simpl; split; congruence. Qed.
+
+Lemma bspec_get_scope {m} M (R : Fin nS -> Fin m -> Prop) e y :
+  rspec M R -> bspec (get M (scope_at F (fin_val e)) (fin_val y)) (R (scope X e) y).
+Proof. intros H; exact (H (scope X e) y). Qed.
+
+Lemma bspec_vget_scope v (P : Fin nS -> Prop) e : sspec v P -> bspec (vget v (scope_at F (fin_val e))) (P (scope X e)).
+Proof. intros H; exact (H (scope X e)). Qed.
+
+Lemma d_co_plus_spec : rspec (d_co_plus F) (co X)⁺. Proof. apply rspec_plus, d_co_spec. Qed.
+Lemma d_po_plus_spec : rspec (d_po_plus F) (po X)⁺. Proof. apply rspec_plus, d_po_spec. Qed.
+Lemma d_same_scope_spec : rspec (d_same_scope F) (fun e1 e2 => scope X e1 = scope X e2).
+Proof. apply rspec_mk; intros x y; rewrite Nat.eqb_eq, fin_eq_iff; reflexivity. Qed.
+Lemma d_same_bid_spec : rspec (d_same_bid F) (same_bid X).
+Proof.
+  apply rspec_mk; intros a b; unfold same_bid.
+  rewrite !andb_true_iff, (d_BarrierArrive_spec a), (d_BarrierArrive_spec b), Z.eqb_eq; reflexivity.
+Qed.
+Lemma d_same_cluster_spec : rspec (d_same_cluster F) (fun a b => exists c, cluster_of X a c /\ cluster_of X b c).
+Proof. exact (rspec_seq_het d_cluster_of_spec (rspec_inv_het d_cluster_of_spec)). Qed.
+#[local] Hint Resolve d_co_plus_spec d_po_plus_spec d_same_scope_spec d_same_bid_spec d_same_cluster_spec
+  d_start_spec d_alias_spec d_acc_spec d_paddr_spec d_ms_r_spec : chk.
+
+Lemma count_fin (p : nat -> bool) :
+  length (filter (fun x : Fin n => p (fin_val x)) (fin_all n)) = length (filter p (List.seq 0 n)).
+Proof.
+  rewrite <- (fin_all_vals n); induction (fin_all n) as [| x l IH]; simpl; [reflexivity |].
+  destruct (p (fin_val x)); simpl; rewrite IH; reflexivity.
+Qed.
+
+Lemma b_barriers_9_spec : bspec (b_barriers_9 F)
+  (forall a n0, BarrierArrive X a -> bcount X a = Some n0 -> card_is (bgen X a) n0).
+Proof.
+  unfold b_barriers_9; cbv zeta.
+  apply bspec_forallb; intros a; cbv beta; unfold bspec.
+  rewrite implb_true_iff, (d_BarrierArrive_spec a).
+  change (oat (f_bcount F) (fin_val a)) with (bcount X a).
+  destruct (bcount X a) as [k |] eqn:E; split.
+  - intros H k' Hba Hk; injection Hk as <-; specialize (H Hba); apply Z.eqb_eq in H.
+    apply (card_is_count (fun b => get (d_bgen F) (fin_val a) b)); [intros b; apply d_bgen_spec |].
+    rewrite count_fin; exact H.
+  - intros H Hba; apply Z.eqb_eq; specialize (H k Hba eq_refl).
+    rewrite <- count_fin.
+    exact (proj1 (@card_is_count n (fun b => get (d_bgen F) (fin_val a) b) (bgen X a) k (fun b => d_bgen_spec a b)) H).
+  - intros _ k' _ Hk; discriminate.
+  - intros _ _; reflexivity.
+Qed.
+
+Ltac bstep :=
+  match goal with
+  | |- bspec (implb (is_some _) _) _ => apply bspec_opt_forall
+  | |- bspec (is_none _) _ => apply bspec_is_none
+  | |- bspec (_ && _) _ => apply bspec_and
+  | |- bspec (_ || _) _ => apply bspec_or
+  | |- bspec (negb _) _ => apply bspec_not
+  | |- bspec (implb _ _) _ => apply bspec_imp
+  | |- bspec (Bool.eqb _ _) _ => apply bspec_iff
+  | |- bspec (forallb _ (List.seq 0 _)) _ => apply bspec_forallb; intro; cbv beta
+  | |- bspec (existsb _ (List.seq 0 _)) _ => apply bspec_existsb; intro; cbv beta
+  | |- bspec (forallb _ all_proxies) _ => apply bspec_foralll; [apply all_proxies_in | intro; cbv beta]
+  | |- bspec (existsb _ all_proxies) _ => apply bspec_existsl; [apply all_proxies_in | intro; cbv beta]
+  | |- bspec (forallb _ all_spaces) _ => apply bspec_foralll; [apply all_spaces_in | intro; cbv beta]
+  | |- bspec (Z.eqb _ _) _ => apply bspec_Zeq
+  | |- bspec (Nat.eqb _ _) _ => apply bspec_fin_eq
+  | |- bspec (proxy_eqb _ _) _ => apply proxy_eqb_eq
+  | |- bspec (space_eqb _ _) _ => apply space_eqb_eq
+  | |- bspec (memp _ _ _) _ => apply memp_spec
+  | |- bspec (mems _ _ _) _ => apply mems_spec
+  | |- bspec (memd _ _ _ _) _ => apply memd_spec
+  | |- bspec (get _ (scope_at _ _) _) _ => apply bspec_get_scope; solve [auto with chk spec]
+  | |- bspec (vget _ (scope_at _ _)) _ => apply bspec_vget_scope; solve [auto with chk spec]
+  | |- bspec (get _ _ _) _ => apply bspec_get; solve [auto with chk spec]
+  | |- bspec (vget _ _) _ => apply bspec_vget; solve [auto with chk spec]
+  | |- bspec (bsubset _ _ _ _) _ => apply bspec_subset; spec2
+  | |- bspec (bacyclic _ _) _ => apply bspec_acyclic; spec2
+  end.
+Ltac bsolve := repeat bstep.
+
+Lemma bspec_use b P : bspec b P -> b = true -> P.
+Proof. intros H; apply H. Qed.
+Lemma bspec_back b P : bspec b P -> P -> b = true.
+Proof. intros H; apply H. Qed.
+
+Ltac use b H := eapply (@bspec_use (b F)); [unfold b; cbv zeta; bsolve | exact H].
+Ltac back b p := let T := type of p in refine (@bspec_back (b F) T _ p); unfold b; cbv zeta; bsolve.
+Ltac use9 H := eapply bspec_use; [apply b_barriers_9_spec | exact H].
+Ltac back9 p := refine (bspec_back b_barriers_9_spec p).
+
+Theorem b_wf_prog_spec : bspec (b_wf_prog F) (wf_prog X).
+Proof.
+  split.
+  - intros Hb; unfold b_wf_prog in Hb.
+    apply andb_prop in Hb; destruct Hb as [H0 Hb].
+    apply andb_prop in Hb; destruct Hb as [H1 Hb].
+    apply andb_prop in Hb; destruct Hb as [H2 Hb].
+    apply andb_prop in Hb; destruct Hb as [H3 Hb].
+    apply andb_prop in Hb; destruct Hb as [H4 Hb].
+    apply andb_prop in Hb; destruct Hb as [H5 Hb].
+    apply andb_prop in Hb; destruct Hb as [H6 Hb].
+    apply andb_prop in Hb; destruct Hb as [H7 Hb].
+    apply andb_prop in Hb; destruct Hb as [H8 Hb].
+    apply andb_prop in Hb; destruct Hb as [H9 Hb].
+    apply andb_prop in Hb; destruct Hb as [H10 Hb].
+    apply andb_prop in Hb; destruct Hb as [H11 Hb].
+    apply andb_prop in Hb; destruct Hb as [H12 Hb].
+    apply andb_prop in Hb; destruct Hb as [H13 Hb].
+    apply andb_prop in Hb; destruct Hb as [H14 Hb].
+    apply andb_prop in Hb; destruct Hb as [H15 Hb].
+    apply andb_prop in Hb; destruct Hb as [H16 Hb].
+    apply andb_prop in Hb; destruct Hb as [H17 Hb].
+    apply andb_prop in Hb; destruct Hb as [H18 Hb].
+    apply andb_prop in Hb; destruct Hb as [H19 Hb].
+    apply andb_prop in Hb; destruct Hb as [H20 Hb].
+    apply andb_prop in Hb; destruct Hb as [H21 Hb].
+    apply andb_prop in Hb; destruct Hb as [H22 Hb].
+    apply andb_prop in Hb; destruct Hb as [H23 Hb].
+    apply andb_prop in Hb; destruct Hb as [H24 Hb].
+    apply andb_prop in Hb; destruct Hb as [H25 Hb].
+    apply andb_prop in Hb; destruct Hb as [H26 Hb].
+    apply andb_prop in Hb; destruct Hb as [H27 Hb].
+    apply andb_prop in Hb; destruct Hb as [H28 Hb].
+    apply andb_prop in Hb; destruct Hb as [H29 Hb].
+    apply andb_prop in Hb; destruct Hb as [H30 Hb].
+    apply andb_prop in Hb; destruct Hb as [H31 Hb].
+    apply andb_prop in Hb; destruct Hb as [H32 Hb].
+    apply andb_prop in Hb; destruct Hb as [H33 Hb].
+    apply andb_prop in Hb; destruct Hb as [H34 Hb].
+    apply andb_prop in Hb; destruct Hb as [H35 Hb].
+    apply andb_prop in Hb; destruct Hb as [H36 Hb].
+    apply andb_prop in Hb; destruct Hb as [H37 Hb].
+    apply andb_prop in Hb; destruct Hb as [H38 Hb].
+    apply andb_prop in Hb; destruct Hb as [H39 Hb].
+    apply andb_prop in Hb; destruct Hb as [H40 Hb].
+    apply andb_prop in Hb; destruct Hb as [H41 Hb].
+    apply andb_prop in Hb; destruct Hb as [H42 Hb].
+    apply andb_prop in Hb; destruct Hb as [H43 Hb].
+    apply andb_prop in Hb; destruct Hb as [H44 Hb].
+    apply andb_prop in Hb; destruct Hb as [H45 Hb].
+    apply andb_prop in Hb; destruct Hb as [H46 Hb].
+    apply andb_prop in Hb; destruct Hb as [H47 Hb].
+    apply andb_prop in Hb; destruct Hb as [H48 Hb].
+    apply andb_prop in Hb; destruct Hb as [H49 Hb].
+    apply andb_prop in Hb; destruct Hb as [H50 Hb].
+    apply andb_prop in Hb; destruct Hb as [H51 Hb].
+    apply andb_prop in Hb; destruct Hb as [H52 Hb].
+    apply andb_prop in Hb; destruct Hb as [H53 Hb].
+    apply andb_prop in Hb; destruct Hb as [H54 Hb].
+    apply andb_prop in Hb; destruct Hb as [H55 Hb].
+    apply andb_prop in Hb; destruct Hb as [H56 Hb].
+    rename Hb into H57.
+    constructor.
+    + use b_decl_start H0.
+    + use b_decl_start_one H1.
+    + use b_decl_owner_lone H2.
+    + use b_decl_po_lone H3.
+    + use b_decl_address H4.
+    + use b_decl_address_one H5.
+    + use b_decl_proxy H6.
+    + use b_decl_proxy_one H7.
+    + use b_decl_acc H8.
+    + use b_decl_acc_lone H9.
+    + use b_decl_rmw H10.
+    + use b_decl_rmw_lone H11.
+    + use b_decl_dep H12.
+    + use b_decl_SyncRestrictCta H13.
+    + use b_decl_SyncRestrictCluster H14.
+    + use b_decl_OpRestrictInit H15.
+    + use b_decl_dirs H16.
+    + use b_decl_pspace H17.
+    + use b_decl_paddr H18.
+    + use b_decl_bcount H19.
+    + use b_decl_bwait H20.
+    + use b_decl_bwait_lone H21.
+    + use b_decl_cwait H22.
+    + use b_decl_cwait_lone H23.
+    + use b_decl_ClusterArriveRelaxed H24.
+    + use b_decl_MbarEv H25.
+    + use b_decl_MbarInit H26.
+    + use b_decl_MbarWait H27.
+    + use b_decl_wpar H28.
+    + use b_decl_wtok H29.
+    + use b_decl_TxAnchor H30.
+    + use b_decl_txops H31.
+    + use b_sig_Acquire H32.
+    + use b_sig_Release H33.
+    + use b_sig_Fence H34.
+    + use b_scope_tree_1 H35.
+    + use b_scope_tree_2 H36.
+    + use b_scope_tree_3 H37.
+    + use b_scope_tree_4 H38.
+    + use b_scope_tree_5 H39.
+    + use b_address_facts_1 H40.
+    + use b_address_facts_2 H41.
+    + use b_address_facts_3 H42.
+    + use b_threads_1 H43.
+    + use b_threads_2 H44.
+    + use b_threads_3 H45.
+    + use b_communication_5 H46.
+    + use b_dependencies_1 H47.
+    + use b_dependencies_2 H48.
+    + use b_mbarrier_state_1 H49.
+    + use b_mbarrier_state_2 H50.
+    + use b_mbarrier_state_4 H51.
+    + use b_barriers_1 H52.
+    + use b_barriers_2 H53.
+    + use b_cluster_barriers_1 H54.
+    + use b_cluster_barriers_2 H55.
+    + use b_cluster_barriers_3 H56.
+    + use b_async_units_2 H57.
+  - intros H; unfold b_wf_prog.
+    apply andb_true_iff; split; [back b_decl_start (decl_start H) |].
+    apply andb_true_iff; split; [back b_decl_start_one (decl_start_one H) |].
+    apply andb_true_iff; split; [back b_decl_owner_lone (decl_owner_lone H) |].
+    apply andb_true_iff; split; [back b_decl_po_lone (decl_po_lone H) |].
+    apply andb_true_iff; split; [back b_decl_address (decl_address H) |].
+    apply andb_true_iff; split; [back b_decl_address_one (decl_address_one H) |].
+    apply andb_true_iff; split; [back b_decl_proxy (decl_proxy H) |].
+    apply andb_true_iff; split; [back b_decl_proxy_one (decl_proxy_one H) |].
+    apply andb_true_iff; split; [back b_decl_acc (decl_acc H) |].
+    apply andb_true_iff; split; [back b_decl_acc_lone (decl_acc_lone H) |].
+    apply andb_true_iff; split; [back b_decl_rmw (decl_rmw H) |].
+    apply andb_true_iff; split; [back b_decl_rmw_lone (decl_rmw_lone H) |].
+    apply andb_true_iff; split; [back b_decl_dep (decl_dep H) |].
+    apply andb_true_iff; split; [back b_decl_SyncRestrictCta (decl_SyncRestrictCta H) |].
+    apply andb_true_iff; split; [back b_decl_SyncRestrictCluster (decl_SyncRestrictCluster H) |].
+    apply andb_true_iff; split; [back b_decl_OpRestrictInit (decl_OpRestrictInit H) |].
+    apply andb_true_iff; split; [back b_decl_dirs (decl_dirs H) |].
+    apply andb_true_iff; split; [back b_decl_pspace (decl_pspace H) |].
+    apply andb_true_iff; split; [back b_decl_paddr (decl_paddr H) |].
+    apply andb_true_iff; split; [back b_decl_bcount (decl_bcount H) |].
+    apply andb_true_iff; split; [back b_decl_bwait (decl_bwait H) |].
+    apply andb_true_iff; split; [back b_decl_bwait_lone (decl_bwait_lone H) |].
+    apply andb_true_iff; split; [back b_decl_cwait (decl_cwait H) |].
+    apply andb_true_iff; split; [back b_decl_cwait_lone (decl_cwait_lone H) |].
+    apply andb_true_iff; split; [back b_decl_ClusterArriveRelaxed (decl_ClusterArriveRelaxed H) |].
+    apply andb_true_iff; split; [back b_decl_MbarEv (decl_MbarEv H) |].
+    apply andb_true_iff; split; [back b_decl_MbarInit (decl_MbarInit H) |].
+    apply andb_true_iff; split; [back b_decl_MbarWait (decl_MbarWait H) |].
+    apply andb_true_iff; split; [back b_decl_wpar (decl_wpar H) |].
+    apply andb_true_iff; split; [back b_decl_wtok (decl_wtok H) |].
+    apply andb_true_iff; split; [back b_decl_TxAnchor (decl_TxAnchor H) |].
+    apply andb_true_iff; split; [back b_decl_txops (decl_txops H) |].
+    apply andb_true_iff; split; [back b_sig_Acquire (sig_Acquire H) |].
+    apply andb_true_iff; split; [back b_sig_Release (sig_Release H) |].
+    apply andb_true_iff; split; [back b_sig_Fence (sig_Fence H) |].
+    apply andb_true_iff; split; [back b_scope_tree_1 (scope_tree_1 H) |].
+    apply andb_true_iff; split; [back b_scope_tree_2 (scope_tree_2 H) |].
+    apply andb_true_iff; split; [back b_scope_tree_3 (scope_tree_3 H) |].
+    apply andb_true_iff; split; [back b_scope_tree_4 (scope_tree_4 H) |].
+    apply andb_true_iff; split; [back b_scope_tree_5 (scope_tree_5 H) |].
+    apply andb_true_iff; split; [back b_address_facts_1 (address_facts_1 H) |].
+    apply andb_true_iff; split; [back b_address_facts_2 (address_facts_2 H) |].
+    apply andb_true_iff; split; [back b_address_facts_3 (address_facts_3 H) |].
+    apply andb_true_iff; split; [back b_threads_1 (threads_1 H) |].
+    apply andb_true_iff; split; [back b_threads_2 (threads_2 H) |].
+    apply andb_true_iff; split; [back b_threads_3 (threads_3 H) |].
+    apply andb_true_iff; split; [back b_communication_5 (communication_5 H) |].
+    apply andb_true_iff; split; [back b_dependencies_1 (dependencies_1 H) |].
+    apply andb_true_iff; split; [back b_dependencies_2 (dependencies_2 H) |].
+    apply andb_true_iff; split; [back b_mbarrier_state_1 (mbarrier_state_1 H) |].
+    apply andb_true_iff; split; [back b_mbarrier_state_2 (mbarrier_state_2 H) |].
+    apply andb_true_iff; split; [back b_mbarrier_state_4 (mbarrier_state_4 H) |].
+    apply andb_true_iff; split; [back b_barriers_1 (barriers_1 H) |].
+    apply andb_true_iff; split; [back b_barriers_2 (barriers_2 H) |].
+    apply andb_true_iff; split; [back b_cluster_barriers_1 (cluster_barriers_1 H) |].
+    apply andb_true_iff; split; [back b_cluster_barriers_2 (cluster_barriers_2 H) |].
+    apply andb_true_iff; split; [back b_cluster_barriers_3 (cluster_barriers_3 H) |].
+    back b_async_units_2 (async_units_2 H).
+Qed.
+
+Theorem b_wf_exec_spec : bspec (b_wf_exec F) (wf_exec X).
+Proof.
+  split.
+  - intros Hb; unfold b_wf_exec in Hb.
+    apply andb_prop in Hb; destruct Hb as [H0 Hb].
+    apply andb_prop in Hb; destruct Hb as [H1 Hb].
+    apply andb_prop in Hb; destruct Hb as [H2 Hb].
+    apply andb_prop in Hb; destruct Hb as [H3 Hb].
+    apply andb_prop in Hb; destruct Hb as [H4 Hb].
+    apply andb_prop in Hb; destruct Hb as [H5 Hb].
+    apply andb_prop in Hb; destruct Hb as [H6 Hb].
+    apply andb_prop in Hb; destruct Hb as [H7 Hb].
+    apply andb_prop in Hb; destruct Hb as [H8 Hb].
+    apply andb_prop in Hb; destruct Hb as [H9 Hb].
+    apply andb_prop in Hb; destruct Hb as [H10 Hb].
+    apply andb_prop in Hb; destruct Hb as [H11 Hb].
+    apply andb_prop in Hb; destruct Hb as [H12 Hb].
+    apply andb_prop in Hb; destruct Hb as [H13 Hb].
+    apply andb_prop in Hb; destruct Hb as [H14 Hb].
+    apply andb_prop in Hb; destruct Hb as [H15 Hb].
+    apply andb_prop in Hb; destruct Hb as [H16 Hb].
+    apply andb_prop in Hb; destruct Hb as [H17 Hb].
+    apply andb_prop in Hb; destruct Hb as [H18 Hb].
+    apply andb_prop in Hb; destruct Hb as [H19 Hb].
+    apply andb_prop in Hb; destruct Hb as [H20 Hb].
+    apply andb_prop in Hb; destruct Hb as [H21 Hb].
+    apply andb_prop in Hb; destruct Hb as [H22 Hb].
+    apply andb_prop in Hb; destruct Hb as [H23 Hb].
+    apply andb_prop in Hb; destruct Hb as [H24 Hb].
+    apply andb_prop in Hb; destruct Hb as [H25 Hb].
+    apply andb_prop in Hb; destruct Hb as [H26 Hb].
+    apply andb_prop in Hb; destruct Hb as [H27 Hb].
+    apply andb_prop in Hb; destruct Hb as [H28 Hb].
+    apply andb_prop in Hb; destruct Hb as [H29 Hb].
+    apply andb_prop in Hb; destruct Hb as [H30 Hb].
+    apply andb_prop in Hb; destruct Hb as [H31 Hb].
+    rename Hb into H32.
+    constructor.
+    + use b_decl_rf H0.
+    + use b_decl_co H1.
+    + use b_decl_sc H2.
+    + use b_decl_bgen H3.
+    + use b_decl_synchronizes H4.
+    + use b_decl_cgen H5.
+    + use b_mbarrier_state_3 H6.
+    + use b_mbarrier_state_5 H7.
+    + use b_communication_1 H8.
+    + use b_communication_2 H9.
+    + use b_communication_3 H10.
+    + use b_communication_4 H11.
+    + use b_co_strong_1 H12.
+    + use b_co_strong_2 H13.
+    + use b_fence_sc_order_1 H14.
+    + use b_fence_sc_order_2 H15.
+    + use b_fence_sc_order_3 H16.
+    + use b_barriers_3 H17.
+    + use b_barriers_4 H18.
+    + use b_barriers_5 H19.
+    + use b_barriers_6 H20.
+    + use b_barriers_7 H21.
+    + use b_barriers_8 H22.
+    + use9 H23.
+    + use b_barriers_10 H24.
+    + use b_barriers_11 H25.
+    + use b_cluster_barriers_4 H26.
+    + use b_cluster_barriers_5 H27.
+    + use b_cluster_barriers_6 H28.
+    + use b_cluster_barriers_7 H29.
+    + use b_cluster_barriers_8 H30.
+    + use b_cluster_barriers_9 H31.
+    + use b_cluster_barriers_10 H32.
+  - intros H; unfold b_wf_exec.
+    apply andb_true_iff; split; [back b_decl_rf (decl_rf H) |].
+    apply andb_true_iff; split; [back b_decl_co (decl_co H) |].
+    apply andb_true_iff; split; [back b_decl_sc (decl_sc H) |].
+    apply andb_true_iff; split; [back b_decl_bgen (decl_bgen H) |].
+    apply andb_true_iff; split; [back b_decl_synchronizes (decl_synchronizes H) |].
+    apply andb_true_iff; split; [back b_decl_cgen (decl_cgen H) |].
+    apply andb_true_iff; split; [back b_mbarrier_state_3 (mbarrier_state_3 H) |].
+    apply andb_true_iff; split; [back b_mbarrier_state_5 (mbarrier_state_5 H) |].
+    apply andb_true_iff; split; [back b_communication_1 (communication_1 H) |].
+    apply andb_true_iff; split; [back b_communication_2 (communication_2 H) |].
+    apply andb_true_iff; split; [back b_communication_3 (communication_3 H) |].
+    apply andb_true_iff; split; [back b_communication_4 (communication_4 H) |].
+    apply andb_true_iff; split; [back b_co_strong_1 (co_strong_1 H) |].
+    apply andb_true_iff; split; [back b_co_strong_2 (co_strong_2 H) |].
+    apply andb_true_iff; split; [back b_fence_sc_order_1 (fence_sc_order_1 H) |].
+    apply andb_true_iff; split; [back b_fence_sc_order_2 (fence_sc_order_2 H) |].
+    apply andb_true_iff; split; [back b_fence_sc_order_3 (fence_sc_order_3 H) |].
+    apply andb_true_iff; split; [back b_barriers_3 (barriers_3 H) |].
+    apply andb_true_iff; split; [back b_barriers_4 (barriers_4 H) |].
+    apply andb_true_iff; split; [back b_barriers_5 (barriers_5 H) |].
+    apply andb_true_iff; split; [back b_barriers_6 (barriers_6 H) |].
+    apply andb_true_iff; split; [back b_barriers_7 (barriers_7 H) |].
+    apply andb_true_iff; split; [back b_barriers_8 (barriers_8 H) |].
+    apply andb_true_iff; split; [back9 (barriers_9 H) |].
+    apply andb_true_iff; split; [back b_barriers_10 (barriers_10 H) |].
+    apply andb_true_iff; split; [back b_barriers_11 (barriers_11 H) |].
+    apply andb_true_iff; split; [back b_cluster_barriers_4 (cluster_barriers_4 H) |].
+    apply andb_true_iff; split; [back b_cluster_barriers_5 (cluster_barriers_5 H) |].
+    apply andb_true_iff; split; [back b_cluster_barriers_6 (cluster_barriers_6 H) |].
+    apply andb_true_iff; split; [back b_cluster_barriers_7 (cluster_barriers_7 H) |].
+    apply andb_true_iff; split; [back b_cluster_barriers_8 (cluster_barriers_8 H) |].
+    apply andb_true_iff; split; [back b_cluster_barriers_9 (cluster_barriers_9 H) |].
+    back b_cluster_barriers_10 (cluster_barriers_10 H).
+Qed.
 
 End Spec.
