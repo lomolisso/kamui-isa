@@ -1,0 +1,9 @@
+RISCV add+st+st.weak
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/ptx87/rmw/add+st+st.weak.litmus"
+{
+0:x5=x; 1:x5=x; 2:x5=x;
+}
+ P0                   | P1          | P2          ;
+ ori x7,x0,1          | ori x7,x0,2 | ori x7,x0,3 ;
+ amoadd.w x10,x7,(x5) | sw x7,0(x5) | sw x7,0(x5) ;
+exists (0:x10=0 /\ x=1)

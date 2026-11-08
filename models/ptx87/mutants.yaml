@@ -33,7 +33,7 @@
   model: alloy
   rule: RMW atomicity (8.10.3)
   kind: weaken
-  find: "  no (fr & atomic_pair_r).(co & atomic_pair_r) & rmw\n"
+  find: "  no (fr & atomic_pair_r).(^co & atomic_pair_r) & rmw\n"
   replace: ""
 - id: A-no-thin-air
   model: alloy

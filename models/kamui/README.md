@@ -107,7 +107,7 @@ rule changes / of those, tests now allowed): `ld-acquire` 247 / 226, `fence-scop
 
 | Commands | Result | Solver and time per command |
 |---|---|---|
-| `core_std_*_4` (bound 4) | all 6 UNSAT | `fence_sc`, `no_thin_air`: 5 s (plingeling, 16 CPUs); `atomicity` 5442 s, `causality` 11117 s, `coherence` 11476 s, `sc_per_location` 21781 s (kissat, 1 CPU) |
+| `core_std_*_4` (bound 4) | all 6 UNSAT | `fence_sc`, `no_thin_air`: 5 s (plingeling, 16 CPUs); `atomicity` 6032 s, `causality` 11117 s, `coherence` 11476 s, `sc_per_location` 21781 s (kissat, 1 CPU) |
 | `core_std_*_3` (bound 3) | all 6 UNSAT | 4 s to 760 s (plingeling, 8 CPUs) |
 | identity groups `*_3` (bound 3) | 38 of 42 UNSAT, 4 no result in 3 h | 3 s to 7249 s (plingeling, 8 CPUs); no result: `async_coherence`, `async_causality`, `rest_coherence`, `rest_causality`. These hold at every size anyway (above). |
 | `sanity_*` | all 9 SAT | about 10 s (glucose) |
@@ -119,7 +119,11 @@ Bound 5 is not run. From bound 3 to bound 4 kissat's time grew about 21 times (`
 Two problems were found by these checks before the results above were final, both now fixed: the PTX model's
 Fence-SC axiom applied to every pair of `fence.sc` instead of morally strong pairs only (`models/ptx87`, D41; found
 by `core_std_fence_sc_4`), and `ldu` lowered to a plain `kldg` is not stronger than PTX (K9; found by
-`proxies_*_4`, kept as `broken_relax_nc`).
+`proxies_*_4`, kept as `broken_relax_nc`). A third was found later: the atomicity axiom took the write between a
+read-modify-write's read and write from `co` itself instead of its transitive closure (D42). After that fix the
+atomicity commands, the sanity runs and the broken lowerings were run again with the same results;
+`core_std_atomicity_4` took 6032 s (the time in the table). The other atomicity times on this page (261 s, 5442 s)
+are from before the fix.
 
 **Why some commands take hours.** The formulas are small (39 000 to 72 000 variables), but each holds two copies
 of the same model, and a SAT solver proves that two copies of the same circuit agree only slowly; the axioms built

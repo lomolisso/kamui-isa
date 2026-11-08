@@ -1,0 +1,10 @@
+PTX add+st+st.weak
+"An atom.add reads the initial value while a strong store by another thread precedes the atom's write in coherence order (x ends at 1), with a weak store by a third thread in between. Coherence order is transitive (8.9.6), so this breaks RMW atomicity (8.10.3, D42). Expected: forbidden."
+{
+x=0;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0                | P1@cta 1,gpu 0       | P2@cta 2,gpu 0 ;
+ atom.relaxed.gpu.add r0, x, 1 | st.relaxed.gpu x, 2  | st.weak x, 3   ;
+exists
+(P0:r0 == 0 /\ x == 1)

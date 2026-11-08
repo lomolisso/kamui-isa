@@ -2,7 +2,7 @@
 
 The PTX ISA 8.7 manual defines the memory model in English (chapter 8) and adds ordering rules in the
 instruction descriptions (chapter 9). Where the text leaves room, the model in `ptx87.als` makes a choice. This
-file lists every such choice, numbered `D1` to `D40`: the text it interprets (section and line of the plain-text
+file lists every such choice, numbered `D1` to `D42`: the text it interprets (section and line of the plain-text
 manual, PTX ISA 8.7, February 2025), the alternatives, the choice, and the litmus tests whose verdict depends on
 it (under `tests/litmus/ptx/`; most are in `kamui/ptx87/`).
 
@@ -586,3 +586,22 @@ needs a weak outcome that other axioms already decide); the C++ mapping checks a
 first version was stronger than PTX 8.7 for executions where narrow-scope `fence.sc` operations are ordered across
 their scope.
 
+
+### D42. RMW atomicity uses the transitive coherence order
+
+> "There exists a partial transitive order that relates overlapping write operations, determined at runtime,
+> called the coherence order." (8.9.6, 7023-7024) "When an atomic operation A and a write W overlap and are morally
+> strong, then the following two communications cannot both exist in the same execution, for the set of bytes
+> accessed by both A and W: A reads any byte from a write W' that precedes W in coherence order. A follows W in
+> coherence order." (8.10.3, 7076-7082)
+
+Found on 2026-11-08 while preparing the Rocq proof of the Kamui lowering: the model's `co` is any acyclic relation
+whose closure `^co` orders the morally strong pairs, and every rule reads coherence order as `^co`, except the
+first version of RMW atomicity, which used `co` itself. A weak write between the two made an atomicity violation
+pass: an `atom.relaxed.gpu.add` reads the initial value, a `st.relaxed.gpu` by a second thread and a `st.weak` by
+a third thread are both before the atom's write, with `co` = strong store, weak store, atom's write and no direct
+edge from the strong store to the atom's write. The 2019 model and the mixed-proxy model have the same form
+(`strong[co]`); the Dartagnan model's `co` is transitive, so it never allowed this.
+
+Choice: RMW atomicity takes the write in between from `^co`, as the manual's transitive order says. Test:
+`kamui/ptx87/rmw/add+st+st.weak` (forbidden; allowed by the first version).

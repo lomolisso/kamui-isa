@@ -452,7 +452,7 @@ pred fence_sc { (FenceSC <: cause_base :> FenceSC) & ms_r in sc }
 
 // 8.10.3 Atomicity. Single-copy atomicity: a read does not take some granules from a morally strong write and
 // others from a write before it in coherence order (D6). RMW atomicity, also for atomic operations that overlap
-// only partially (8.7.2).
+// only partially (8.7.2). Coherence order is transitive (8.9.6), so the write between is taken from ^co (D42).
 fun acc_lift[r: Event->Event] : Event->Event { (acc.~acc + iden).r.(acc.~acc + iden) }
 fun AtomicR : Read { rmw.Write }
 fun Atomics : MemoryEvent { AtomicR + AtomicR.rmw }
@@ -461,7 +461,7 @@ fun atomic_pair_r : Event->Event {
 }
 pred atomicity {
   no (Read <: ms_r :> Write) & acc_lift[~rf] & acc_lift[fr]
-  no (fr & atomic_pair_r).(co & atomic_pair_r) & rmw
+  no (fr & atomic_pair_r).(^co & atomic_pair_r) & rmw
 }
 
 // 8.10.4 No thin air.
