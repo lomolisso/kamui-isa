@@ -22,3 +22,4 @@
 	path = deps/hahn
 	url = https://github.com/vafeiadis/hahn
 	branch = master
+	shallow = true
