@@ -10,3 +10,4 @@ check/FExec.v
 check/Check.v
 extract/Extract.v
 proof/Embedding.v
+proof/Derived.v
