@@ -165,4 +165,7 @@ axiom is declared in hahn or in this proof, and only the four above in `Print As
 
 ## 8. Changes to the trusted files
 
+The trusted files were reviewed and frozen on 2026-11-08 (`trusted.sha256`). A later change needs its own review
+and a dated entry here that says what changed and why.
+
 None yet.
