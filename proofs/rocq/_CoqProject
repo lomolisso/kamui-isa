@@ -9,3 +9,4 @@ lib/Mat.v
 check/FExec.v
 check/Check.v
 extract/Extract.v
+proof/Embedding.v
