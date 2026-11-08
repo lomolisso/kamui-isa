@@ -157,6 +157,12 @@ library, known to be consistent together with Rocq's logic:
 
 `assumptions.txt` holds the output; CI compares it.
 
+`rocqchk`, which re-checks the compiled files independently, reports the axioms of every library that is loaded,
+whether a theorem uses them or not. hahn loads four more from the standard library, for its traces and countable
+sets: `constructive_indefinite_description`, `relational_choice`, `dependent_unique_choice` and
+`extensional_function_representative`. `tools/proofs/check.sh` accepts exactly these eight from `rocqchk`, so no
+axiom is declared in hahn or in this proof, and only the four above in `Print Assumptions`.
+
 ## 8. Changes to the trusted files
 
 None yet.

@@ -10,8 +10,8 @@
 #   1. the trusted files (Ptx87.v, Kamui.v, Lowering.v, Theorem.v) match proofs/rocq/trusted.sha256;
 #   2. models/kamui/kamui.als is models/ptx87/ptx87.als below the module line (Kamui.v relies on it);
 #   3. no proof file uses a forbidden command (Admitted, admit, Axiom, Parameter, ...); comments are ignored;
-#   4. rocqchk, the independent checker, re-checks every compiled file (hahn's too) and reports no axiom outside
-#      the four of STATEMENT.md;
+#   4. rocqchk, the independent checker, re-checks every compiled file (hahn's too); the axioms it reports, those
+#      of every loaded library, are the seven standard-library ones of STATEMENT.md section 7;
 #   5. the printed statements match proofs/rocq/statement.txt and the printed axioms proofs/rocq/assumptions.txt.
 set -uo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -21,6 +21,8 @@ update=0; [ "${1:-}" = --update ] && update=1
 fail=0
 bad() { echo "FAIL: $*"; fail=1; }
 whitelist='classic|functional_extensionality_dep|propositional_extensionality|constructive_definite_description'
+# every axiom the loaded libraries declare (rocqchk); the theorems may use only the four above (Print Assumptions)
+env_axioms='Stdlib\.Logic\.(Classical_Prop\.classic|FunctionalExtensionality\.functional_extensionality_dep|PropExtensionality\.propositional_extensionality|Description\.constructive_definite_description|IndefiniteDescription\.constructive_indefinite_description|RelationalChoice\.relational_choice|ClassicalUniqueChoice\.dependent_unique_choice|ExtensionalFunctionRepresentative\.extensional_function_representative)'
 
 # 1. trusted files
 if [ -f "$src/trusted.sha256" ]; then
@@ -47,9 +49,13 @@ if [ -d "$out/src" ] && [ -d "$out/hahn" ]; then
   mapfile -t ours < <(cd "$out/src" && find . -name '*.vo' | sed 's|^\./||; s|\.vo$||; s|/|.|g; s|^|KamuiProof.|' | sort)
   chk="$(cd "$out" && rocqchk -silent -o -R hahn hahn -Q src KamuiProof "${hahn[@]}" "${ours[@]}" 2>&1)" \
     || { echo "$chk" | tail -20; bad "rocqchk rejected a file"; }
-  extra="$(echo "$chk" | sed -n '/^\* Axioms:/,/^\*/p' | grep -E '^ +[A-Za-z]' | grep -vE "($whitelist) :" || true)"
-  [ -z "$extra" ] || { echo "$extra"; bad "rocqchk reports axioms outside the whitelist"; }
-  echo "$chk" | grep -qiE 'assumed|unsafe|guarded|positive' && { echo "$chk" | grep -iE 'assumed|unsafe|guarded|positive'; bad "rocqchk reports a disabled check"; }
+  extra="$(echo "$chk" | sed -n '/^\* Axioms:/,/^\* Constants/p' | grep -E '^ +[A-Za-z]' | grep -vxE " +$env_axioms" || true)"
+  [ -z "$extra" ] || { echo "$extra"; bad "rocqchk reports an axiom outside STATEMENT.md section 7"; }
+  # each of these lines ends in <none> unless some constant or inductive skips a check (type in type, an unguarded
+  # fixpoint, an assumed positivity)
+  unsafe="$(echo "$chk" | grep -E '^\* (Constants/Inductives relying|Inductives whose positivity)' | grep -v '<none>$' || true)"
+  [ -z "$unsafe" ] || { echo "$unsafe"; bad "rocqchk reports a disabled check"; }
+  echo "$chk" | grep -q '^\* Theory: Rewrite rules are not allowed' || bad "rocqchk reports rewrite rules"
 else
   bad "no build in $out: run make -C proofs/rocq first"
 fi
