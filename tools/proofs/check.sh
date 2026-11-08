@@ -73,7 +73,9 @@ if [ -d "$out/src" ]; then
     diff <(echo "$statement") "$src/statement.txt" > /dev/null || bad "the printed statements differ from statement.txt"
     diff <(echo "$assumptions") "$src/assumptions.txt" > /dev/null || bad "the printed axioms differ from assumptions.txt"
   fi
-  echo "$assumptions" | grep -E '^ *[A-Za-z_]+ :' | grep -vE "^ *($whitelist) :" && bad "an axiom outside the whitelist"
+  # one line per axiom, "Name : type", the name maybe qualified (Classical_Prop.classic)
+  echo "$assumptions" | grep -E "^ *[A-Za-z_][A-Za-z0-9_.']* :" | grep -vE "^ *([A-Za-z0-9_']+\.)*($whitelist) :" \
+    && bad "an axiom outside the whitelist"
 fi
 
 [ "$fail" = 0 ] && echo "proof checks passed"

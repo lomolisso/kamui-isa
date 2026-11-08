@@ -1,1 +1,4 @@
-
+Axioms:
+Classical_Prop.classic : forall P : Prop, P \/ ~ P
+Axioms:
+Classical_Prop.classic : forall P : Prop, P \/ ~ P
