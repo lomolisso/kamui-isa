@@ -18,14 +18,14 @@
 # Environment:
 #   KAMUI_BUILD_HOST     build host (default iacoma231); "local" means this machine (for CI)
 #   KAMUI_BUILD_AREA     build area on the build host (default /scratch/$USER/kamui-isa)
-#   KAMUI_DEV_IMAGE      image (default kamui-isa-dev:0.3)
+#   KAMUI_DEV_IMAGE      image (default kamui-isa-dev:0.4)
 #   KAMUI_DEV_MEMORY     memory cap of the container (default 128g)
 #   KAMUI_EXTRA_MOUNTS   colon-separated host paths to mount as well (default none)
 #   KAMUI_DOCKER         docker command (default docker)
 set -euo pipefail
 
 host="${KAMUI_BUILD_HOST:-iacoma231}"
-image="${KAMUI_DEV_IMAGE:-kamui-isa-dev:0.3}"
+image="${KAMUI_DEV_IMAGE:-kamui-isa-dev:0.4}"
 memory="${KAMUI_DEV_MEMORY:-128g}"
 extra="${KAMUI_EXTRA_MOUNTS:-}"
 self="$(realpath "$0")"

@@ -80,7 +80,7 @@ On any machine other than the build host it runs itself again on the build host 
 | `--memory 128g` | a runaway build cannot starve other users |
 
 Environment variables: `KAMUI_BUILD_HOST` (default `iacoma231`; `local` runs on the current machine and is meant for
-CI), `KAMUI_BUILD_AREA` (default `/scratch/$USER/kamui-isa`), `KAMUI_DEV_IMAGE` (default `kamui-isa-dev:0.3`),
+CI), `KAMUI_BUILD_AREA` (default `/scratch/$USER/kamui-isa`), `KAMUI_DEV_IMAGE` (default `kamui-isa-dev:0.4`),
 `KAMUI_DEV_MEMORY` (default `128g`), `KAMUI_EXTRA_MOUNTS`.
 
 Long runs: start them in the background and wait. Killing the local ssh client does not always stop the container
@@ -119,8 +119,7 @@ Persistent means "kept because rebuilding is slow", never "cannot be rebuilt". E
 
 | Item | Where | Size | Rebuild time | Rebuild |
 |---|---|---|---|---|
-| `kamui-isa-dev:0.3` (only the current tag) | Docker on iacoma231 (`/srv/docker`) | 16 GB | about 35 min | `docker build` on 231, see `tools/devcontainer.md` |
-
+| `kamui-isa-dev:0.4` (only the current tag) | Docker on iacoma231 (`/srv/docker`) | 17 GB | about 50 min | `docker build` on 231, see `docs/tools/devcontainer.md` |
 | `keep/m2` | build area of the build host that builds the Dartagnan fork | about 200 MB | about 3 min | `tools/dat3m/build.sh` (Maven downloads it again) |
 
 The Sail model build of `main` (about 12 minutes to rebuild) is expected to be the next entry once the Kamui Sail
@@ -131,8 +130,8 @@ model exists.
 Images do not move with the NFS home. Copy one by streaming it, with no temporary file:
 
 ```bash
-docker save kamui-isa-dev:0.3 | ssh iacoma232 docker load              # run on the host that has it
-ssh iacoma232 docker image inspect kamui-isa-dev:0.3 --format '{{.Id}}'  # must match the source
+docker save kamui-isa-dev:0.4 | ssh iacoma232 docker load              # run on the host that has it
+ssh iacoma232 docker image inspect kamui-isa-dev:0.4 --format '{{.Id}}'  # must match the source
 ```
 
 ## H100 results

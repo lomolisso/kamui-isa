@@ -17,7 +17,7 @@ declarations; clang wraps them with its own `__clang_cuda_runtime_wrapper.h`.
 
 ## Where it runs
 
-**Dev container** (`kamui-isa-dev:0.3`, clang 20 from apt.llvm.org on top of
+**Dev container** (`kamui-isa-dev:0.4`, clang 20 from apt.llvm.org on top of
 `nvidia/cuda:12.8.1-devel-ubuntu24.04`; see [devcontainer.md](devcontainer.md)).
 No GPU is needed. The H100 job image also has clang-20, but corpus PTX is
 always generated in the dev container so that it is reproducible and committed.

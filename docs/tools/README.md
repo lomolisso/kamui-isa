@@ -1,7 +1,7 @@
 # Tool guides
 
 How the project uses each third-party tool: concrete commands, input and output formats, and a worked example with
-real output. Tools marked "dev container" run in `kamui-isa-dev:0.3` on the build host, through `tools/dev.sh` (see
+real output. Tools marked "dev container" run in `kamui-isa-dev:0.4` on the build host, through `tools/dev.sh` (see
 [../development.md](../development.md)). Tools marked "H100" need the GPU and run as H100 jobs.
 
 | Tool | Guide | Runs in |
