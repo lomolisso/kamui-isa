@@ -1,0 +1,13 @@
+KAMUI WRC+barrier.sync+release-acquire
+"Lowered from tests/litmus/ptx/kamui/features/bar/WRC+barrier.sync+release-acquire.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+f=0;
+P2:r0=0;
+P2:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 | P2@cta 0,cluster 0,gpu 0 ;
+ kst.weak x, 1            | kbar.sync 0, 2           | kld.acquire.cta r0, f    ;
+ kbar.sync 0, 2           | kst.release.cta f, 1     | kld.weak r1, x           ;
+exists
+(P2:r0 == 1 /\ P2:r1 == 0)

@@ -1,0 +1,13 @@
+KAMUI CoRR+mixed-size.cta
+"Lowered from tests/litmus/ptx/kamui/features/ldst/CoRR+mixed-size.cta.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x[0]=0;
+x[1]=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0     ;
+ kst.relaxed.cta.b32 x, 1 | kld.relaxed.cta.b16 r0, x[0] ;
+                          | kld.relaxed.cta.b16 r1, x[0] ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

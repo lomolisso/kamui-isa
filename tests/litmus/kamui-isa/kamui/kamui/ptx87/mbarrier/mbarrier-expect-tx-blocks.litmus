@@ -1,0 +1,11 @@
+KAMUI mbarrier-expect-tx-blocks
+"Lowered from tests/litmus/ptx/kamui/ptx87/mbarrier/mbarrier-expect-tx-blocks.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+b=mbarrier(1) @cta 0;
+P1:r0=0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0             | P1@cta 0,cluster 0,gpu 0               ;
+ kmbar.arv.expect_tx.release.cta b, 1 | kmbar.test.parity.acquire.cta r0, b, 0 ;
+exists
+(P1:r0 == 1)

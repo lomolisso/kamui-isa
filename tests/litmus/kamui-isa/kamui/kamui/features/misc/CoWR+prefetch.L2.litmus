@@ -1,0 +1,13 @@
+KAMUI CoWR+prefetch.L2
+"Lowered from tests/litmus/ptx/kamui/features/misc/CoWR+prefetch.L2.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+P0:r0=0;
+x in global;
+}
+ P0@cta 0,cluster 0,gpu 0 ;
+ kstg.weak x, 1           ;
+ prefetch.r x             ;
+ kldg.weak r0, x          ;
+exists
+(P0:r0 == 0)

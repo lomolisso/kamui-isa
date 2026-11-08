@@ -1,0 +1,16 @@
+KAMUI SB+fence.sc.cluster+dsmem-local
+"Lowered from tests/litmus/ptx/kamui/features/ldst/SB+fence.sc.cluster+dsmem-local.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0 @cta 0;
+y=0 @cta 0;
+P0:r0=0;
+P1:r1=0;
+x in shared cta 0;
+y in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0  | P1@cta 0,cluster 0,gpu 0  ;
+ kst.relaxed.cluster x, 1  | kst.relaxed.cluster y, 1  ;
+ fence rw, rw              | fence rw, rw              ;
+ kld.relaxed.cluster r0, y | kld.relaxed.cluster r1, x ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

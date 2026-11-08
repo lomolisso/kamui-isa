@@ -1,0 +1,10 @@
+KAMUI LU+red.gpu+diff-cluster
+"Lowered from tests/litmus/ptx/kamui/features/rmw/LU+red.gpu+diff-cluster.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+x in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 1,gpu 0 ;
+ amoadd.w x0, x, 1        | amoadd.w x0, x, 1        ;
+exists
+(x == 1)

@@ -1,0 +1,13 @@
+KAMUI SB-weak
+"Lowered from tests/litmus/ptx/imported/dat3m/Manual/SB-weak.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+P0:r1=0;
+P1:r2=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 1,gpu 0 ;
+ kst.weak x, 1  | kst.weak y, 1  ;
+ kld.weak r1, y | kld.weak r2, x ;
+exists
+(P0:r1 != 1 /\ P1:r2 != 1)

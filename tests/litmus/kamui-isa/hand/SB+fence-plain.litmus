@@ -1,0 +1,12 @@
+KAMUI SB+fence-plain
+"Store buffering with fence rw,rw between plain accesses. fence rw,rw is fence.sc.sys (K3); two fence.sc are ordered by Fence-SC order, which is part of synchronizes-with, so whichever fence comes first makes its thread's earlier store visible to the other thread's later load, even for weak accesses: forbidden."
+{
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 1,gpu 0 ;
+ sw x, 1        | sw y, 1        ;
+ fence rw, rw   | fence rw, rw   ;
+ lw r0, y       | lw r1, x       ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

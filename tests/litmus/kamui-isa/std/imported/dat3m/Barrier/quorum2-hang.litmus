@@ -1,0 +1,10 @@
+KAMUI test2-hang
+"Lowered from tests/litmus/ptx/imported/dat3m/Barrier/quorum2-hang.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 0,gpu 0 | P2@cta 0,gpu 0 ;
+ lw r0, x       | kbar.sync 1, 4 | kbar.sync 1, 4 ;
+ kbar.sync 1, 4 | sw x, 1        |                ;
+exists
+(P0:r0 == 1)

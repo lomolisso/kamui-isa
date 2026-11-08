@@ -1,0 +1,16 @@
+KAMUI multimem.st+free-order
+"Lowered from tests/litmus/ptx/kamui/ptx87/multimem/multimem.st+free-order.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+m=multimem(x, y);
+P1:r0=0;
+P1:r1=0;
+x in global;
+y in global;
+}
+ P0@cta 0,gpu 0              | P1@cta 0,gpu 1         ;
+ kstgmc.release.sys.u32 m, 1 | kldg.acquire.sys r0, y ;
+                             | kldg.relaxed.sys r1, x ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

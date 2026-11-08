@@ -1,0 +1,18 @@
+KAMUI SB+named-bar-dyn-reg-const
+"Lowered from tests/litmus/ptx/imported/dat3m/Manual/SB+named-bar-sta-reg-const.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+z=0;
+P0:r0=0;
+P0:r2=0;
+P1:r1=0;
+P1:r3=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 0,gpu 0 | P2@cta 0,gpu 0 ;
+ kst.weak x, 1  | kst.weak y, 1  | kst.weak z, 1  ;
+ kld.weak r2, z | kbar.sync 1    |                ;
+ kbar.sync r2   | kld.weak r1, x |                ;
+ kld.weak r0, y |                |                ;
+exists
+(~((P0:r2 != 1 \/ P0:r0 == 1 \/ P1:r1 == 1)))

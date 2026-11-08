@@ -1,0 +1,13 @@
+KAMUI multimem.red+atomic
+"Lowered from tests/litmus/ptx/kamui/ptx87/multimem/multimem.red+atomic.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y=0;
+m=multimem(x, y);
+x in global;
+y in global;
+}
+ P0@cta 0,gpu 0       | P1@cta 0,gpu 1       ;
+ kredgmc.add.u32 m, 1 | kredgmc.add.u32 m, 1 ;
+exists
+(x != 2)

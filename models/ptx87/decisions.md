@@ -70,8 +70,8 @@ operation Y"), so read literally it never relates two fences.
 - A: literal: the axiom is empty (the mixed-proxy model's version is, because its fences have no proxy).
 - B: for fences, use base causality order (which relates any operations).
 
-Choice: **B**. The Fence-SC order itself: an acyclic order relating every pair of morally strong `fence.sc`
-operations (8.9.2, 6916), which is equivalent to "a total order per scope" (22617) for the trees the model
+Choice: **B**, for morally strong pairs only (D41). The Fence-SC order itself: an acyclic order relating every
+pair of morally strong `fence.sc` operations (8.9.2, 6916), which is equivalent to "a total order per scope" (22617) for the trees the model
 builds. Tests: `kamui/families/SB/SB+fence-sc.*`, `kamui/families/IRIW/IRIW+fence-sc.*`.
 
 ### D4. The Causality axiom
@@ -568,3 +568,21 @@ in proxy-preserved base causality order. CUTLASS's RS main loop
 (`sm90_mma_tma_gmma_rs_warpspecialized.hpp:666-684`) relies on it: the consumer reads the stage with `ldmatrix`,
 arrives on the mbarrier, and the producer refills the stage with a TMA copy, with no proxy fence. Test:
 `kamui/idioms/rs-mainloop-war+ldmatrix` (forbidden).
+
+### D41. The Fence-SC axiom applies to morally strong pairs only
+
+> "For a pair of morally strong fence.sc operations F1 and F2, if F1 precedes F2 in causality order, then F1
+> must precede F2 in Fence-SC order." (8.10.2, 7058-7060)
+
+Found on 2026-11-06 by the bounded check of the Kamui lowering (`models/kamui/compile_ptx87_kamui.als`, check
+`core_std_fence_sc_4`): the first version of this model required every pair of `fence.sc` related by base
+causality to be in Fence-SC order, while Fence-SC order relates only morally strong pairs (8.9.2). An execution in
+which two fences that are not morally strong (for example `fence.sc.cta` in two CTAs) are ordered by other
+synchronization (a `.gpu` release and acquire between them) therefore had no valid Fence-SC order, and the model
+rejected it, which the manual does not. The Dartagnan model had the manual's reading (`axiom-FenceSC`, M5).
+
+Choice: the axiom applies to morally strong pairs, as written. No litmus verdict changed (every test's condition
+needs a weak outcome that other axioms already decide); the C++ mapping checks are unchanged. Equivalently, the
+first version was stronger than PTX 8.7 for executions where narrow-scope `fence.sc` operations are ordered across
+their scope.
+

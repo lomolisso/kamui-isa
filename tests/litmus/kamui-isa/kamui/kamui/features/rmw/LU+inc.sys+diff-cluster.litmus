@@ -1,0 +1,12 @@
+KAMUI LU+inc.sys+diff-cluster
+"Lowered from tests/litmus/ptx/kamui/features/rmw/LU+inc.sys+diff-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+P0:r0=0;
+P1:r1=0;
+x in global;
+}
+ P0@cta 0,cluster 0,gpu 0        | P1@cta 1,cluster 1,gpu 0        ;
+ katomg.relaxed.sys.inc r0, x, 5 | katomg.relaxed.sys.inc r1, x, 5 ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

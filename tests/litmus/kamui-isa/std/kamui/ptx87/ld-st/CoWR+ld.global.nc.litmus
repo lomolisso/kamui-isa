@@ -1,0 +1,12 @@
+KAMUI CoWR+ld.global.nc
+"Lowered from tests/litmus/ptx/kamui/ptx87/ld-st/CoWR+ld.global.nc.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+P0:r0=0;
+x in global;
+}
+ P0@cta 0,gpu 0 ;
+ sw x, 1        ;
+ kldg.nc r0, x  ;
+exists
+(P0:r0 == 0)

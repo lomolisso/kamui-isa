@@ -1,0 +1,28 @@
+KAMUI tma-multicast-war+remote-arrive.cluster
+"Lowered from tests/litmus/ptx/kamui/idioms/tma-multicast-war+remote-arrive.cluster.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+g=7;
+d0=5 @cta 0;
+d1=5 @cta 1;
+c1=0 @cta 1;
+e0=mbarrier(1) @cta 0;
+f0=mbarrier(1) @cta 0;
+f1=mbarrier(1) @cta 1;
+P0:r0=0;
+P1:r1=0;
+g in global;
+d0 in shared cta 0;
+d1 in shared cta 1;
+c1 in shared cta 1;
+e0 in shared cta 0;
+f0 in shared cta 0;
+f1 in shared cta 1;
+}
+ P0@cta 0,cluster 0,gpu 0                   | P1@cta 1,cluster 0,gpu 0            | P2@cta 1,cluster 0,gpu 0              ;
+ kmbar.try.parity.acquire.cluster r0, e0, 0 | kwarpgroup.arrive                   | kmbar.arv.expect_tx.release.cta f1, 1 ;
+ kmbar.arv.expect_tx.release.cta f0, 1      | kgmma r1, d1, c1                    |                                       ;
+ kblkcp.s.g.mc d0+d1, g, f0+f1              | kwarpgroup.commit                   |                                       ;
+                                            | kwarpgroup.depbar 0                 |                                       ;
+                                            | kmbar.arv.release.cluster.remote e0 |                                       ;
+exists
+(P0:r0 == 1 /\ P1:r1 == 7)

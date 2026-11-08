@@ -1,0 +1,14 @@
+KAMUI MP+barrier.cluster-relaxed+fence-restrict-cta+global
+"Lowered from tests/litmus/ptx/kamui/ptx87/barrier-cluster/MP+barrier.cluster-relaxed+fence-restrict-cta+global.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+d=0;
+P1:r0=0;
+d in global;
+}
+ P0@cta 0,cluster 0,gpu 0                   | P1@cta 1,cluster 0,gpu 0 ;
+ sw d, 1                                    | kcgabar.arv.release      ;
+ kfence.restrict.shared_cta.release.cluster | kcgabar.wait.acquire     ;
+ kcgabar.arv.relaxed                        | lw r0, d                 ;
+ kcgabar.wait.acquire                       |                          ;
+exists
+(P1:r0 == 0)

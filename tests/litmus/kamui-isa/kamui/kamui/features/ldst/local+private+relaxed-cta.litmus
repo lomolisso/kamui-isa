@@ -1,0 +1,14 @@
+KAMUI local+private+relaxed-cta
+"Lowered from tests/litmus/ptx/kamui/features/ldst/local+private+relaxed-cta.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+l=0;
+m=0;
+P0:r0=0;
+l in local P0;
+m in local P1;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ kstl.relaxed.cta l, 1    | kstl.relaxed.cta m, 2    ;
+ kldl.relaxed.cta r0, l   |                          ;
+exists
+(P0:r0 == 1)

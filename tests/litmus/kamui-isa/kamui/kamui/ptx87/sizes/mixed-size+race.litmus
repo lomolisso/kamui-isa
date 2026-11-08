@@ -1,0 +1,11 @@
+KAMUI mixed-size+race
+"Lowered from tests/litmus/ptx/kamui/ptx87/sizes/mixed-size+race.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x[0]=0;
+x[1]=0;
+P1:r0=0;
+}
+ P0@cta 0,gpu 0           | P1@cta 1,gpu 0               ;
+ kst.relaxed.gpu.b32 x, 1 | kld.relaxed.gpu.b16 r0, x[0] ;
+exists
+(P1:r0 == 7)

@@ -1,0 +1,13 @@
+KAMUI Atom-SB
+"Lowered from tests/litmus/ptx/imported/dat3m/Nvidia/Atom-SB.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+P0:r0=0;
+P1:r1=0;
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0         | P1@cta 1,gpu 0         ;
+ amoadd.w.aqrl r1, x, 1 | amoadd.w.aqrl r3, y, 1 ;
+ amoadd.w.aqrl r2, y, 1 | amoadd.w.aqrl r4, x, 1 ;
+exists
+(~((P0:r2 != 0 \/ P1:r4 != 0)))

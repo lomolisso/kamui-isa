@@ -1,0 +1,12 @@
+KAMUI MP+kfence
+"Message passing with Kamui instructions: a release fence before a relaxed store at gpu scope, an acquire fence after a relaxed load at gpu scope: forbidden."
+{
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0          | P1@cta 1,gpu 0           ;
+ kstg.weak x, 1          | kldg.relaxed.gpu r0, y   ;
+ kfence.release.gpu      | kfence.acquire.gpu       ;
+ kstg.relaxed.gpu y, 1   | kldg.weak r1, x          ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

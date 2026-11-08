@@ -1,0 +1,14 @@
+KAMUI cub-lookback+no-fence
+"Lowered from tests/litmus/ptx/kamui/idioms/cub-lookback+no-fence.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+v=0;
+t=0;
+P1:r0=0;
+P1:r1=0;
+v in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ sw v, 1                  | kld.relaxed.gpu r0, t    ;
+ sw.rl t, 1               | lw r1, v                 ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

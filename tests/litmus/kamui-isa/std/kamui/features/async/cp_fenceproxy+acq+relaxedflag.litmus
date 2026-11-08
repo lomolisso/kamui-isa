@@ -1,0 +1,24 @@
+KAMUI cp_fenceproxy+acq+relaxedflag
+"Lowered from tests/litmus/ptx/kamui/features/async/cp_fenceproxy+acq+relaxedflag.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+tms=1 @cta 0;
+g=5;
+d=0 @cta 1;
+b=mbarrier(1) @cta 1;
+tm=0;
+f=0;
+P1:r0=0;
+P1:r2=0;
+tms in shared cta 0;
+g in global;
+d in shared cta 1;
+b in shared cta 1;
+tm in global;
+}
+ P0@cta 0,cluster 0,gpu 0           | P1@cta 1,cluster 0,gpu 0                   ;
+ klds.weak rk1, tms                 | kld.relaxed.gpu r0, f                      ;
+ kstg.weak tm, rk1                  | kfence.proxy.tensormap.acquire.gpu tm, 128 ;
+ kfence.proxy.tensormap.release.gpu | ktmaldg.1d.tile d, g, b, tm, r2            ;
+ kst.relaxed.gpu f, 1               |                                            ;
+exists
+(P1:r0 == 1 /\ P1:r2 == 0)

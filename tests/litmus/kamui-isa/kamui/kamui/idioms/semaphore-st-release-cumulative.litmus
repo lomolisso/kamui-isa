@@ -1,0 +1,14 @@
+KAMUI semaphore-st-release-cumulative
+"Lowered from tests/litmus/ptx/kamui/idioms/semaphore-st-release-cumulative.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+w=0;
+l=0;
+P2:r0=0;
+P3:r1=0;
+w in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 | P2@cta 1,cluster 0,gpu 0 | P3@cta 1,cluster 0,gpu 0 ;
+ kstg.weak w, 1           | kbar.sync 1, 2           | kld.acquire.gpu r0, l    | kbar.sync 1, 2           ;
+ kbar.sync 1, 2           | kst.release.gpu l, 1     | kbar.sync 1, 2           | kldg.weak r1, w          ;
+exists
+(P2:r0 == 1 /\ P3:r1 == 0)

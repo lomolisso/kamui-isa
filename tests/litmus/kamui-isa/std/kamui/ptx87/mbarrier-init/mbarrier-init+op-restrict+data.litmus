@@ -1,0 +1,17 @@
+KAMUI mbarrier-init+op-restrict+data
+"Lowered from tests/litmus/ptx/kamui/ptx87/mbarrier-init/mbarrier-init+op-restrict+data.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+b=mbarrier() @cta 0;
+d=0;
+P1:r1=0;
+b in shared cta 0;
+d in global;
+}
+ P0@cta 0,cluster 0,gpu 0                      | P1@cta 1,cluster 0,gpu 0 ;
+ kmbar.init b, 2                               | kcgabar.arv.relaxed      ;
+ sw d, 1                                       | kcgabar.wait.acquire     ;
+ kfence.restrict.mbarrier_init.release.cluster | lw r1, d                 ;
+ kcgabar.arv.relaxed                           |                          ;
+ kcgabar.wait.acquire                          |                          ;
+exists
+(P1:r1 == 0)

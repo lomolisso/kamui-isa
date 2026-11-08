@@ -1,0 +1,21 @@
+KAMUI rs-mainloop-war+ldmatrix
+"Lowered from tests/litmus/ptx/kamui/idioms/rs-mainloop-war+ldmatrix.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+g=7;
+d=5 @cta 0;
+c=0 @cta 0;
+e=mbarrier(1) @cta 0;
+f=mbarrier(1) @cta 0;
+P0:r0=0;
+P1:r1=0;
+g in global;
+d in shared cta 0;
+e in shared cta 0;
+f in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0              | P1@cta 0,cluster 0,gpu 0 ;
+ kmbar.try.parity.acquire.cta r0, e, 0 | kldsm.m8n8.x1 r1, d      ;
+ kmbar.arv.expect_tx.release.cta f, 1  | kmbar.arv.release.cta e  ;
+ kblkcp.s.g d, g, f                    |                          ;
+exists
+(P0:r0 == 1 /\ P1:r1 == 7)

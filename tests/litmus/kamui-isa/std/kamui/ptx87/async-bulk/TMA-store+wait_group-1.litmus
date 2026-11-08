@@ -1,0 +1,27 @@
+KAMUI TMA-store+wait_group-1
+"Lowered from tests/litmus/ptx/kamui/ptx87/async-bulk/TMA-store+wait_group-1.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+s=0 @cta 0;
+t=0 @cta 0;
+g=0;
+h=0;
+P0:r0=0;
+P0:r1=0;
+s in shared cta 0;
+t in shared cta 0;
+g in global;
+h in global;
+}
+ P0@cta 0,cluster 0,gpu 0      ;
+ sw s, 1                       ;
+ sw t, 1                       ;
+ kfence.proxy.async.shared_cta ;
+ kblkcp.g.s g, s               ;
+ ktmacmdflush                  ;
+ kblkcp.g.s h, t               ;
+ ktmacmdflush                  ;
+ kdepbar.bulk 1                ;
+ lw r0, g                      ;
+ lw r1, h                      ;
+exists
+(P0:r1 == 0)

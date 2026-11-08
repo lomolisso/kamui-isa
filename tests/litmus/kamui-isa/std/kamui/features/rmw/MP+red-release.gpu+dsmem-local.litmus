@@ -1,0 +1,15 @@
+KAMUI MP+red-release.gpu+dsmem-local
+"Lowered from tests/litmus/ptx/kamui/features/rmw/MP+red-release.gpu+dsmem-local.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0 @cta 0;
+f=0 @cta 0;
+P1:r0=0;
+P1:r1=0;
+x in shared cta 0;
+f in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ sw x, 1                  | lw.aq r0, f              ;
+ amoadd.w.rl x0, f, 1     | lw r1, x                 ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

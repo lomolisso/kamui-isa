@@ -1,0 +1,12 @@
+KAMUI Atom-plus-register
+"Lowered from tests/litmus/ptx/imported/dat3m/Manual/Atom-plus-register.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+P0:r0=0;
+P1:r0=0;
+x=0;
+}
+ P0@cta 0,gpu 0         | P1@cta 1,gpu 0         ;
+ amoadd.w.aqrl x0, x, 1 | amoadd.w.aqrl x0, x, 1 ;
+                        | lw.aq r0, x            ;
+exists
+(P1:r0 == 1)

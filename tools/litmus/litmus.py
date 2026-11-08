@@ -390,8 +390,8 @@ def _parse(text: str) -> Litmus:
     if not m:
         raise LitmusError("first line must be '<arch> <name>'")
     arch, name = m.group(1), m.group(2)
-    if arch.upper() != "PTX":
-        raise LitmusError(f"not a PTX test: {arch}")
+    if arch.upper() not in ("PTX", "KAMUI"):
+        raise LitmusError(f"not a PTX or Kamui test: {arch}")
     brace = _find_brace(text, m.end())
     comments = text[m.end():brace]
     close = text.index("}", brace)

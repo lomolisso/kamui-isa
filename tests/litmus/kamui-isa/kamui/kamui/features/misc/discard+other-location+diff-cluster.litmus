@@ -1,0 +1,17 @@
+KAMUI discard+other-location+diff-cluster
+"Lowered from tests/litmus/ptx/kamui/features/misc/discard+other-location+diff-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+y=0;
+x=0;
+z=0;
+P0:r0=0;
+y in global;
+x in global;
+z in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 1,gpu 0 ;
+ kstg.weak y, 1           | kstg.weak z, 1           ;
+ kcctl.rml2 x, 128        |                          ;
+ kldg.weak r0, y          |                          ;
+exists
+(P0:r0 != 1)

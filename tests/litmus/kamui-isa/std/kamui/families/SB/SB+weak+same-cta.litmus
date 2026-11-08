@@ -1,0 +1,13 @@
+KAMUI SB+weak+same-cta
+"Lowered from tests/litmus/ptx/kamui/families/SB/SB+weak+same-cta.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y=0;
+P0:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ sw x, 1                  | sw y, 1                  ;
+ lw r0, y                 | lw r1, x                 ;
+exists
+(P0:r0 == 0 /\ P1:r1 == 0)

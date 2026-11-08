@@ -1,0 +1,16 @@
+KAMUI MP+atom-acq_rel.cluster+dsmem-remote-writer
+"Lowered from tests/litmus/ptx/kamui/features/rmw/MP+atom-acq_rel.cluster+dsmem-remote-writer.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0 @cta 1;
+f=0 @cta 1;
+P0:r9=0;
+P1:r0=0;
+P1:r1=0;
+x in shared cta 1;
+f in shared cta 1;
+}
+ P0@cta 0,cluster 0,gpu 0            | P1@cta 1,cluster 0,gpu 0            ;
+ kst.weak x, 1                       | katoms.acq_rel.cluster.add r0, f, 0 ;
+ katom.acq_rel.cluster.exch r9, f, 1 | klds.weak r1, x                     ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

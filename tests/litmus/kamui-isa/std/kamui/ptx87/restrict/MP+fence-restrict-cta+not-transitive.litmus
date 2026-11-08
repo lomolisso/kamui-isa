@@ -1,0 +1,18 @@
+KAMUI MP+fence-restrict-cta+not-transitive
+"Lowered from tests/litmus/ptx/kamui/ptx87/restrict/MP+fence-restrict-cta+not-transitive.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+s=0 @cta 0;
+d=0;
+f=0;
+P1:r0=0;
+P1:r1=0;
+s in shared cta 0;
+d in global;
+}
+ P0@cta 0,cluster 0,gpu 0                   | P1@cta 1,cluster 0,gpu 0  ;
+ sw d, 1                                    | kld.relaxed.cluster r0, f ;
+ sw s, 1                                    | fence.tso                 ;
+ kfence.restrict.shared_cta.release.cluster | lw r1, d                  ;
+ kst.relaxed.cluster f, 1                   |                           ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

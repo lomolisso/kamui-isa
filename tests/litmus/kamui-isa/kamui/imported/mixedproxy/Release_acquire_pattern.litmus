@@ -1,0 +1,14 @@
+KAMUI Release_acquire_pattern
+"Lowered from tests/litmus/ptx/imported/mixedproxy/Release_acquire_pattern.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+P1:r1=0;
+P1:r3=0;
+}
+ P0@cta 0,gpu 0       | P1@cta 1,gpu 0        ;
+ kst.weak y, 1        | kld.relaxed.sys r1, x ;
+ kst.release.sys x, 1 | kfence.acq_rel.sys    ;
+ kst.relaxed.sys x, 2 | kld.weak r3, y        ;
+exists
+(P1:r1 == 2 /\ P1:r3 == 0)

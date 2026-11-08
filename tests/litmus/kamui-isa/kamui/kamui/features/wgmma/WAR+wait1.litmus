@@ -1,0 +1,17 @@
+KAMUI WAR+wait1
+"Lowered from tests/litmus/ptx/kamui/features/wgmma/WAR+wait1.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+a=1 @cta 0;
+c=0 @cta 0;
+P0:r0=0;
+a in shared cta 0;
+c in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 ;
+ kwarpgroup.arrive        ;
+ kgmma r0, a, c           ;
+ kwarpgroup.commit        ;
+ kwarpgroup.depbar 1      ;
+ ksts.weak a, 2           ;
+exists
+(P0:r0 == 2)

@@ -1,0 +1,15 @@
+KAMUI mbarrier-arrive-drop
+"Lowered from tests/litmus/ptx/kamui/ptx87/mbarrier/mbarrier-arrive-drop.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+b=mbarrier(2) @cta 0;
+P1:r0=0;
+P1:r1=0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0     | P1@cta 0,cluster 0,gpu 0               ;
+ kmbar.arv.drop.release.cta b | kmbar.arv.release.cta b                ;
+                              | kmbar.test.parity.acquire.cta r0, b, 0 ;
+                              | kmbar.arv.release.cta b                ;
+                              | kmbar.test.parity.acquire.cta r1, b, 1 ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

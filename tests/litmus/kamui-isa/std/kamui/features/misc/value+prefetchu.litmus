@@ -1,0 +1,12 @@
+KAMUI value+prefetchu
+"Lowered from tests/litmus/ptx/kamui/features/misc/value+prefetchu.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+P0:r0=0;
+x in global;
+}
+ P0@cta 0,cluster 0,gpu 0 ;
+ prefetch.r x             ;
+ lw r0, x                 ;
+exists
+(P0:r0 != 0)

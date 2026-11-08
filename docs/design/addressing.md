@@ -32,11 +32,17 @@ readable by the program.
 | Space | H100 | Kamui | Address operand |
 |---|---|---|---|
 | global | `LDG`, `STG`, `ATOMG`, `RED` | `kldg`, `kstg`, `katomg`, `kred` | 64-bit register pair plus offset |
-| shared (CTA and cluster window offsets) | `LDS`, `STS`, `ATOMS` | `klds`, `ksts`, `katoms` | one 32-bit register plus offset |
+| shared memory of the executing CTA | `LDS`, `STS`, `ATOMS` | `klds`, `ksts`, `katoms` | one 32-bit register plus offset |
 | local | `LDL`, `STL` | `kldl`, `kstl` | one 32-bit register plus offset |
 | generic | `LD`, `ST`, `ATOM` | `kld`, `kst`, `katom` | 64-bit register pair plus offset |
 
 All of them carry the scope and ordering fields of [scope-encoding.md](scope-encoding.md) where PTX has them.
+
+The shared memory of another CTA of the cluster (PTX `.shared::cluster`) is reached through the generic forms
+`kld`, `kst`, `katom` with a full generic address: the compiler adds the window base and puts the target CTA's rank
+in bits 24 and up, as the H100 does (`LD.E`, `ST.E`, `ATOM.E`; `evidence/sass/ld.shared.cluster.sass`). `LDS`,
+`STS` and `ATOMS`, and so `klds`, `ksts` and `katoms`, reach only the executing CTA's window. (Corrected
+2026-11-06; the first version of this document listed cluster-window offsets for the shared forms.)
 
 - `cvta` is an add or a subtract of the window base (one integer instruction).
 - `isspacep` is one instruction (the H100 has `QSPC`), or a compare of the high address bits.

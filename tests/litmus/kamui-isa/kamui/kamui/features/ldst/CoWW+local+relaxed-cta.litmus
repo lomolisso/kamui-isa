@@ -1,0 +1,13 @@
+KAMUI CoWW+local+relaxed-cta
+"Lowered from tests/litmus/ptx/kamui/features/ldst/CoWW+local+relaxed-cta.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+l=0;
+P0:r0=0;
+l in local P0;
+}
+ P0@cta 0,cluster 0,gpu 0 ;
+ kstl.relaxed.cta l, 1    ;
+ kstl.relaxed.cta l, 2    ;
+ kldl.relaxed.cta r0, l   ;
+exists
+(P0:r0 == 1)

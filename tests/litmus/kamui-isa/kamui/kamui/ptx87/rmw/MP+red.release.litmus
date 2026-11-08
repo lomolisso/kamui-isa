@@ -1,0 +1,13 @@
+KAMUI MP+red.release
+"Lowered from tests/litmus/ptx/kamui/ptx87/rmw/MP+red.release.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+f=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,gpu 0            | P1@cta 1,gpu 0        ;
+ kst.weak x, 1             | kld.acquire.gpu r0, f ;
+ kred.release.gpu.add f, 1 | kld.weak r1, x        ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

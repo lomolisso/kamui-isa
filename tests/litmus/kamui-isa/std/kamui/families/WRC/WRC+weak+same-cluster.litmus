@@ -1,0 +1,14 @@
+KAMUI WRC+weak+same-cluster
+"Lowered from tests/litmus/ptx/kamui/families/WRC/WRC+weak+same-cluster.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y=0;
+P1:r0=0;
+P2:r1=0;
+P2:r2=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 | P2@cta 2,cluster 0,gpu 0 ;
+ sw x, 1                  | lw r0, x                 | lw r1, y                 ;
+                          | sw y, 1                  | lw r2, x                 ;
+exists
+(P1:r0 == 1 /\ P2:r1 == 1 /\ P2:r2 == 0)

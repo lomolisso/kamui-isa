@@ -1,0 +1,14 @@
+KAMUI multimem.ld_reduce+add
+"Lowered from tests/litmus/ptx/kamui/ptx87/multimem/multimem.ld_reduce+add.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=2;
+y=3;
+m=multimem(x, y);
+P0:r0=0;
+x in global;
+y in global;
+}
+ P0@cta 0,gpu 0                   ;
+ kldgmc.relaxed.sys.add.u32 r0, m ;
+exists
+(P0:r0 != 5)

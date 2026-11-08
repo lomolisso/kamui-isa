@@ -1,0 +1,11 @@
+KAMUI _Atom-plus-location
+"Lowered from tests/litmus/ptx/imported/dat3m/Manual/Atom-plus-location-weak_.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+P0:r0=0;
+P1:r0=0;
+x=0;
+}
+ P0@cta 0,gpu 0         | P1@cta 1,gpu 0         ;
+ amoadd.w.aqrl r0, x, 1 | amoadd.w.aqrl r0, x, 1 ;
+exists
+(x != 2)

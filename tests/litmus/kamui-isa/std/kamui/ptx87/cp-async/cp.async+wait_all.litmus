@@ -1,0 +1,17 @@
+KAMUI cp.async+wait_all
+"Lowered from tests/litmus/ptx/kamui/ptx87/cp-async/cp.async+wait_all.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+g=0;
+d=0 @cta 0;
+P0:r0=0;
+g in global;
+d in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 ;
+ sw g, 1                  ;
+ kldgsts d, g             ;
+ kldgdepbar               ;
+ kdepbar.ldgsts 0         ;
+ lw r0, d                 ;
+exists
+(P0:r0 == 0)

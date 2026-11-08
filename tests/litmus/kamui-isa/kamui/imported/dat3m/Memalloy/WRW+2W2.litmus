@@ -1,0 +1,19 @@
+KAMUI WRW+WR2
+"Lowered from tests/litmus/ptx/imported/dat3m/Memalloy/WRW+2W2.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+P0:r0=0;
+P1:r0=0;
+P1:r2=0;
+P2:r0=0;
+P2:r2=0;
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 1,gpu 0 | P2@cta 1,gpu 0 ;
+ li r0, 2       | kld.weak r0, x | li r0, 2       ;
+ kst.weak x, r0 | kfence.sc.gpu  | kst.weak x, r0 ;
+                | li r2, 1       | kfence.sc.cta  ;
+                | kst.weak y, r2 | li r2, 1       ;
+                |                | kst.weak y, r2 ;
+exists
+(x == 2 /\ y == 2 /\ P1:r0 == 2)

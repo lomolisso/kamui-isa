@@ -1,0 +1,13 @@
+KAMUI CoRW-R
+"Lowered from tests/litmus/ptx/imported/dat3m/Manual/CoRW-R.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+P1:r1=0;
+P1:r2=0;
+x=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 1,gpu 0 ;
+ sw.rl x, 1     | lw.aq r1, x    ;
+                | sw x, 2        ;
+                | lw r2, x       ;
+exists
+(P1:r1 == 1 /\ P1:r2 == 1)

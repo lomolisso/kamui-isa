@@ -1,0 +1,12 @@
+KAMUI CoMP_volatile
+"Lowered from tests/litmus/ptx/imported/mixedproxy/CoMP_volatile.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,gpu 0       | P1@cta 1,gpu 0        ;
+ sw x, 1              | lw r0, x              ;
+ kst.relaxed.sys x, 2 | kld.relaxed.sys r1, x ;
+exists
+(P1:r0 == 2 /\ (P1:r1 != 2))

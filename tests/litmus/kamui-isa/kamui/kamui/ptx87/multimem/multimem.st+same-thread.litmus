@@ -1,0 +1,17 @@
+KAMUI multimem.st+same-thread
+"Lowered from tests/litmus/ptx/kamui/ptx87/multimem/multimem.st+same-thread.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+m=multimem(x, y);
+P0:r0=0;
+P0:r1=0;
+x in global;
+y in global;
+}
+ P0@cta 0,gpu 0       ;
+ kstgmc.weak.u32 m, 1 ;
+ kldg.weak r0, x      ;
+ kldg.weak r1, y      ;
+exists
+(P0:r0 == 0 \/ P0:r1 == 0)

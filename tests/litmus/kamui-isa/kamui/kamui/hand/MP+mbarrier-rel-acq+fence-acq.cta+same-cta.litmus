@@ -1,0 +1,15 @@
+KAMUI MP+mbarrier-rel-acq+fence-acq.cta+same-cta
+"Lowered from tests/litmus/ptx/kamui/hand/MP+mbarrier-rel-acq+fence-acq.cta+same-cta.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+b=mbarrier(1);
+P1:r0=0;
+P1:r1=0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0               ;
+ kst.weak x, 1            | kmbar.test.parity.acquire.cta r0, b, 0 ;
+ kmbar.arv.release.cta b  | kfence.acq_rel.cta                     ;
+                          | kld.weak r1, x                         ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

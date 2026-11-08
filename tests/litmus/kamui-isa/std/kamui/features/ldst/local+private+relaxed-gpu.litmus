@@ -1,0 +1,14 @@
+KAMUI local+private+relaxed-gpu
+"Lowered from tests/litmus/ptx/kamui/features/ldst/local+private+relaxed-gpu.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+l=0;
+m=0;
+P0:r0=0;
+l in local P0;
+m in local P1;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ kstl.relaxed.gpu l, 1    | kstl.relaxed.gpu m, 2    ;
+ kldl.relaxed.gpu r0, l   |                          ;
+exists
+(P0:r0 == 1)

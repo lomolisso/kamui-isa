@@ -1,0 +1,14 @@
+KAMUI Atom-SB-ld
+"Lowered from tests/litmus/ptx/imported/dat3m/Nvidia/Atom-SB-ld.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+P0:r1=0;
+P0:r2=0;
+P1:r3=0;
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0         | P1@cta 1,gpu 0        ;
+ amoadd.w.aqrl r1, x, 1 | kst.relaxed.gpu y, 1  ;
+ amoadd.w.aqrl r2, y, 1 | kld.relaxed.gpu r3, x ;
+exists
+(P0:r2 == 0 /\ P1:r3 == 0)

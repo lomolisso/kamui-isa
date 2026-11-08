@@ -1,0 +1,24 @@
+KAMUI tensormap-update-in-smem
+"Lowered from tests/litmus/ptx/kamui/idioms/tensormap-update-in-smem.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+tms=0 @cta 0;
+tm=0;
+g=5;
+d=0 @cta 0;
+b=mbarrier(1) @cta 0;
+P0:r2=0;
+tms in shared cta 0;
+tm in global;
+g in global;
+d in shared cta 0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0                   ;
+ sw tms, 1                                  ;
+ klds.weak rk1, tms                         ;
+ kstg.weak tm, rk1                          ;
+ kfence.proxy.tensormap.release.gpu         ;
+ kfence.proxy.tensormap.acquire.gpu tm, 128 ;
+ ktmaldg.1d.tile d, g, b, tm, r2            ;
+exists
+(P0:r2 == 0)

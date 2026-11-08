@@ -1,0 +1,13 @@
+KAMUI MP+and.acquire-reader
+"Lowered from tests/litmus/ptx/kamui/features/rmw/MP+and.acquire-reader.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+f=3;
+x=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ sw x, 1                  | amoand.w.aq r0, f, 1     ;
+ sw.rl f, 1               | lw r1, x                 ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

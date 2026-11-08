@@ -1,0 +1,19 @@
+KAMUI tensor-reduce+atomic+fence
+"Lowered from tests/litmus/ptx/kamui/features/async/tensor-reduce+atomic+fence.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+s=0 @cta 0;
+tm=1;
+g=0;
+P0:r2=0;
+s in shared cta 0;
+tm in global;
+g in global;
+}
+ P0@cta 0,cluster 0,gpu 0          | P1@cta 1,cluster 0,gpu 0 ;
+ sw s, 1                           | amoadd.w x0, g, 1        ;
+ kfence.proxy.async.shared_cta     |                          ;
+ ktmaredg.1d.add.tile g, s, tm, r2 |                          ;
+ ktmacmdflush                      |                          ;
+ kdepbar.bulk 0                    |                          ;
+exists
+(g == 1)

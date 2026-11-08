@@ -1,0 +1,428 @@
+# The lowering from PTX 8.7 to Kamui: for every memory operation of PTX, the Kamui instruction sequence that
+# implements it, and the standard RISC-V instruction a compiler may use instead (`std`).
+#
+# `rules` are the lowering itself, one per PTX form; tools/litmus/to_kamui.py applies them to every litmus test
+# (and must implement every rule listed here, and nothing else). `features` maps each modelled feature of
+# models/ptx87/coverage.yaml to its rules. The meaning of each Kamui instruction is in instructions.yaml, written
+# separately: the checks compare the lowered program, read through that table, with the original.
+#
+# Template words: <o> ordering, <s> scope, <op> RMW operation, <t> type, <v> vector width (.v2, .v4), <n> count;
+# [a] memory operand, rd/rs registers. `kind` says how the Kamui events compare with the PTX ones:
+#   same      the same events (most rows: Kamui has one instruction per PTX operation, decision 3)
+#   alias     PTX itself defines the form as another one (membar = fence.sc, .volatile = .relaxed.sys)
+#   stronger  Kamui's events are stronger (wider scope or ordering, or the generic proxy for a weaker one)
+#   sequence  several Kamui instructions
+#   none      no memory event on either side
+# `std` alternatives marked (exact) produce the same events; (stronger) ones widen the scope or the ordering.
+# K<n> refers to decisions.md.
+
+rules:
+  # -------------------------------------------------------------------------------- loads and stores
+  - id: ld
+    ptx: 'ld{.weak|.relaxed.<s>|.acquire.<s>}{<v>} rd, [a]           (generic address)'
+    kamui: ['kld<o><s><v> rd, [a]']
+    kind: same
+    std: 'weak: lw/ld rd, [a] (exact); acquire.sys: lw.aq/ld.aq (exact)'
+  - id: ld.global
+    ptx: 'ld.global{.weak|.relaxed.<s>|.acquire.<s>}{<v>} rd, [a]'
+    kamui: ['kldg<o><s><v> rd, [a]']
+    kind: same
+    std: 'weak: lw/ld (exact); acquire.sys: lw.aq/ld.aq (exact)'
+  - id: ld.shared
+    ptx: 'ld.shared{::cta}{.weak|.relaxed.<s>|.acquire.<s>}{<v>} rd, [a]'
+    kamui: ['klds<o><s><v> rd, [a]']
+    kind: same
+    std: 'weak: lw/ld with the generic address (exact)'
+  - id: ld.shared::cluster
+    ptx: 'ld.shared::cluster{.weak|.relaxed.<s>|.acquire.<s>} rd, [a]'
+    kamui: ['kld<o><s> rd, [a]    (generic address in the cluster window)']
+    kind: same
+    why: the H100 reaches other CTAs' shared memory with generic LD (K7)
+    std: 'weak: lw/ld (exact)'
+  - id: ld.local
+    ptx: 'ld.local{.weak|.relaxed.<s>|.acquire.<s>} rd, [a]'
+    kamui: ['kldl<o><s> rd, [a]']
+    kind: same
+    std: 'weak: lw/ld with the generic address (exact)'
+  - id: ld.const
+    ptx: 'ld.const rd, [a]'
+    kamui: ['kldc.const rd, [a]']
+    kind: same
+  - id: ld.param
+    ptx: 'ld.param rd, [a]'
+    kamui: ['kldc.param rd, [a]']
+    kind: same
+  - id: ld.global.nc
+    ptx: 'ld.global.nc rd, [a]'
+    kamui: ['kldg.nc rd, [a]']
+    kind: same
+    why: 'no standard alternative: a plain lw is not stronger than a non-coherent read when the thread also reads the location through the non-coherent path (K9)'
+  - id: ldu
+    ptx: 'ldu.global rd, [a]'
+    kamui: ['kldg.nc rd, [a]']
+    kind: same
+    why: the PTX model reads ldu through the non-coherent path (D29); a generic read in its place is not stronger (K9)
+  - id: ld.volatile
+    ptx: 'ld.volatile{.space} rd, [a]'
+    kamui: ['k<ld form of the space>.relaxed.sys rd, [a]']
+    kind: alias
+    why: 'PTX 8.4.2: volatile = relaxed at system scope; "never merged or split" is a compiler rule (K10)'
+  - id: ld.mmio
+    ptx: 'ld.mmio.relaxed.sys.global rd, [a]'
+    kamui: ['kldg.mmio.relaxed.sys rd, [a]']
+    kind: same
+    std: 'lw/ld on an I/O region (exact, K5)'
+  - id: st
+    ptx: 'st{.weak|.relaxed.<s>|.release.<s>}{<v>} [a], rs           (generic address)'
+    kamui: ['kst<o><s><v> [a], rs']
+    kind: same
+    std: 'weak: sw/sd (exact); release.sys: sw.rl/sd.rl (exact)'
+  - id: st.global
+    ptx: 'st.global{.weak|.relaxed.<s>|.release.<s>}{<v>} [a], rs'
+    kamui: ['kstg<o><s><v> [a], rs']
+    kind: same
+    std: 'weak: sw/sd (exact); release.sys: sw.rl/sd.rl (exact)'
+  - id: st.shared
+    ptx: 'st.shared{::cta}{.weak|.relaxed.<s>|.release.<s>} [a], rs'
+    kamui: ['ksts<o><s> [a], rs']
+    kind: same
+    std: 'weak: sw/sd with the generic address (exact)'
+  - id: st.shared::cluster
+    ptx: 'st.shared::cluster{.weak|.relaxed.<s>|.release.<s>} [a], rs'
+    kamui: ['kst<o><s> [a], rs    (generic address in the cluster window)']
+    kind: same
+    why: the H100 uses generic ST (K7)
+    std: 'weak: sw/sd (exact)'
+  - id: st.local
+    ptx: 'st.local{.weak|.relaxed.<s>|.release.<s>} [a], rs'
+    kamui: ['kstl<o><s> [a], rs']
+    kind: same
+    std: 'weak: sw/sd with the generic address (exact)'
+  - id: st.volatile
+    ptx: 'st.volatile{.space} [a], rs'
+    kamui: ['k<st form of the space>.relaxed.sys [a], rs']
+    kind: alias
+    why: 'PTX 8.4.2 (K10)'
+  - id: st.mmio
+    ptx: 'st.mmio.relaxed.sys.global [a], rs'
+    kamui: ['kstg.mmio.relaxed.sys [a], rs']
+    kind: same
+    std: 'sw/sd on an I/O region (exact, K5)'
+  - id: st.param
+    ptx: 'st.param [a], rs   (an argument of a device-function call)'
+    kamui: ['a register move, or kstl to the callee''s stack frame']
+    kind: none
+    why: call arguments are private to the thread; the H100 uses MOV (K14). PTX litmus tests cannot store to .param.
+  # ------------------------------------------------------------------------------- atomics and reductions
+  - id: atom
+    ptx: 'atom{.space}{.relaxed|.acquire|.release|.acq_rel}{.<s>}.<op>{<v>} rd, [a], b{, c}'
+    kamui: ['katom{g,s,}.<op><o><s><v> rd, [a], b{, c}    (katomg for .global, katoms for .shared::cta, katom for generic and .shared::cluster)']
+    kind: same
+    why: defaults .relaxed and .gpu as PTX; .shared::cluster uses the generic form as on the H100 (K7)
+    std: '<op> in add, and, or, xor, min, max, exch, cas: amo<op>.w/.d (.aq, .rl) or amocas.w/.d/.q at sys scope (exact at sys, stronger at narrower scopes); acq_rel: amo<op>.aqrl (stronger: adds fence.sc.sys)'
+  - id: red
+    ptx: 'red{.space}{.relaxed|.release}{.<s>}.<op>{<v>} [a], b'
+    kamui: ['kredg / kred .<op><o><s><v> [a], b    (.global / generic)', 'katoms.<op><o><s> RZ, [a], b    (.shared::cta: the H100 has no shared RED, K8)', 'katom.<op><o><s> RZ, [a], b    (.shared::cluster)']
+    kind: same
+    why: a reduction is an atomic whose read returns nothing (D34)
+    std: 'amo<op>.w with rd = x0 (exact at sys, stronger at narrower scopes)'
+  - id: red.acq_rel
+    ptx: 'red.acq_rel / red.acquire  (Dat3M tests only; not PTX 8.7)'
+    kamui: ['katom{g,s,}.<op>.acq_rel<s> RZ, [a], b']
+    kind: same
+    why: D34 reads it as an acquire-release reduction; Kamui's kred has only relaxed and release
+  # ------------------------------------------------------------------------------------------- fences
+  - id: fence
+    ptx: 'fence.{sc|acq_rel|acquire|release}.<s>'
+    kamui: ['kfence.<sem>.<s>']
+    kind: same
+    std: 'sys scope: fence rw,rw / fence.tso / fence r,rw / fence rw,w (exact); narrower scopes: the same (stronger)'
+  - id: membar
+    ptx: 'membar.{cta|gl|sys}'
+    kamui: ['kfence.sc.{cta|gpu|sys}']
+    kind: alias
+    why: 'PTX 9.7.13.4: membar is fence.sc'
+    std: 'fence rw,rw (exact for .sys, stronger otherwise)'
+  - id: fence.restrict
+    ptx: 'fence.release.sync_restrict::shared::cta.cluster | fence.acquire.sync_restrict::shared::cluster.cluster | fence.mbarrier_init.release.cluster'
+    kamui: ['kfence.restrict.shared_cta.release.cluster | kfence.restrict.shared_cluster.acquire.cluster | kfence.restrict.mbarrier_init.release.cluster']
+    kind: same
+  - id: fence.proxy.alias
+    ptx: 'fence.proxy.alias'
+    kamui: ['kfence.proxy.alias']
+    kind: same
+  - id: fence.proxy.async
+    ptx: 'fence.proxy.async{.global|.shared::cta|.shared::cluster}'
+    kamui: ['kfence.proxy.async{.global|.shared_cta|.shared_cluster}']
+    kind: same
+  - id: fence.proxy.async.restrict
+    ptx: 'fence.proxy.async::generic.acquire.sync_restrict::shared::cluster.cluster'
+    kamui: ['kfence.proxy.async.restrict.shared_cluster.acquire.cluster']
+    kind: same
+  - id: fence.proxy.tensormap
+    ptx: 'fence.proxy.tensormap::generic.{release|acquire}.<s> {[a], size}'
+    kamui: ['kfence.proxy.tensormap.{release|acquire}.<s> {[a], size}']
+    kind: same
+  - id: discard
+    ptx: 'discard.global.L2 [a], 128'
+    kamui: ['kcctl.rml2 [a], 128']
+    kind: same
+    std: 'cbo.inval [a] with a 128-byte cache block (exact)'
+  # -------------------------------------------------------------------------------------- CTA barriers
+  - id: bar.sync
+    ptx: 'bar.sync a{, b} | barrier.sync{.aligned} a{, b} | bar.cta.sync i{, a{, b}} (Dat3M: instance i, barrier a)'
+    kamui: ['kbar.sync a{, b}']
+    kind: same
+  - id: bar.arrive
+    ptx: 'bar.arrive a, b | barrier.arrive a, b | bar.cta.arrive i, a, b'
+    kamui: ['kbar.arv a, b']
+    kind: same
+  - id: bar.red
+    ptx: 'bar.red.{popc|and|or} rd, a{, b}, p'
+    kamui: ['kbar.red.{popc|and|or} rd, a{, b}, p']
+    kind: same
+  - id: bar.warp.sync
+    ptx: 'bar.warp.sync m'
+    kamui: ['kwarpsync m']
+    kind: same
+  - id: barrier.cluster
+    ptx: 'barrier.cluster.arrive{.release|.relaxed}{.aligned} | barrier.cluster.wait{.acquire}{.aligned}'
+    kamui: ['kcgabar.arv{.release|.relaxed}', 'kcgabar.wait.acquire']
+    kind: same
+    why: warp-uniform on Kamui as on the H100 (K6); a non-aligned PTX barrier.cluster is reached by a converged warp first
+  # ------------------------------------------------------------------------------------------- mbarrier
+  - id: mbarrier
+    ptx: 'mbarrier.{init|inval|arrive|arrive_drop|arrive.expect_tx|expect_tx|complete_tx|test_wait|try_wait}{.parity}{<o>}{.<s>}{.shared::cta|.shared::cluster} ...'
+    kamui: ['kmbar.{init|inval|arv|arv.drop|arv.expect_tx|expect_tx|complete_tx|test|try}{.parity}<o><s>{.remote} ...   (.remote for .shared::cluster)']
+    kind: same
+    why: one SYNCS instruction each on the H100; at .cta scope the arrive has the full release ordering of the manual, which the H100 lacks (K11)
+  - id: cp.async.mbarrier.arrive
+    ptx: 'cp.async.mbarrier.arrive{.noinc}.shared [b]'
+    kamui: ['kmbar.arv.ldgsts{.noinc} [b]']
+    kind: same
+  # ------------------------------------------------------------------------------------ async copies
+  - id: cp.async
+    ptx: 'cp.async.{ca|cg}.shared.global [d], [g], size'
+    kamui: ['kldgsts [d], [g], size']
+    kind: same
+  - id: cp.async.commit_group
+    ptx: 'cp.async.commit_group'
+    kamui: ['kldgdepbar']
+    kind: same
+  - id: cp.async.wait_group
+    ptx: 'cp.async.wait_group n'
+    kamui: ['kdepbar.ldgsts n']
+    kind: same
+  - id: cp.async.wait_all
+    ptx: 'cp.async.wait_all'
+    kamui: ['kldgdepbar', 'kdepbar.ldgsts 0']
+    kind: sequence
+    why: 'PTX 9.7.9.24.3: wait_all is commit_group followed by wait_group 0'
+  - id: cp.async.bulk
+    ptx: 'cp.async.bulk.{shared::cluster.global.mbarrier|shared::cluster.shared::cta.mbarrier|global.shared::cta.bulk_group}{.multicast::cluster} [d], [s], {[b],} size{, mask}'
+    kamui: ['kblkcp.{s.g|s.s|g.s}{.mc} [d], [s], {[b],} size{, mask}']
+    kind: same
+    why: 'warp-uniform (K6): with several active threads the compiler issues one copy per thread through an elect loop (kelect; uniform moves of the picked thread''s operands; kblkcp), each performed for the picked thread and ordered after its earlier instructions only; with one active thread it is the instruction alone'
+  - id: cp.reduce.async.bulk
+    ptx: 'cp.reduce.async.bulk.global.shared::cta.bulk_group.<op> [g], [s], size'
+    kamui: ['kblkred.g.s.<op> [g], [s], size']
+    kind: same
+    why: warp-uniform (K6)
+  - id: cp.async.bulk.tensor
+    ptx: 'cp.async.bulk.tensor.<dim>.{shared::cluster.global.{tile|im2col}.mbarrier|global.shared::cta.tile.bulk_group}{.multicast::cluster} ...'
+    kamui: ['ktmaldg.<dim>.{tile|im2col}{.mc} ... (load) | ktmastg.<dim>.tile ... (store)']
+    kind: same
+    why: warp-uniform (K6)
+  - id: cp.reduce.async.bulk.tensor
+    ptx: 'cp.reduce.async.bulk.tensor.<dim>.global.shared::cta.<op>.tile.bulk_group ...'
+    kamui: ['ktmaredg.<dim>.<op>.tile ...']
+    kind: same
+    why: warp-uniform (K6)
+  - id: cp.async.bulk.commit_group
+    ptx: 'cp.async.bulk.commit_group'
+    kamui: ['ktmacmdflush']
+    kind: same
+  - id: cp.async.bulk.wait_group
+    ptx: 'cp.async.bulk.wait_group{.read} n'
+    kamui: ['kdepbar.bulk{.read} n']
+    kind: same
+  - id: st.async
+    ptx: 'st.async{.release.<s>.global | .shared::cluster.mbarrier::complete_tx::bytes} [d], rs{, [b]}'
+    kamui: ['kstas{.release.<s>} [d], rs{, [b]}']
+    kind: same
+  - id: red.async
+    ptx: 'red.async{<o><s>}.shared::cluster.mbarrier::complete_tx::bytes.<op> [d], rs, [b]'
+    kamui: ['kredas.<op><o><s> [d], rs, [b]']
+    kind: same
+  - id: griddepcontrol
+    ptx: 'griddepcontrol.wait | griddepcontrol.launch_dependents'
+    kamui: ['kacqbulk', 'kpreexit']
+    kind: same
+  # ------------------------------------------------------------------------------- tensor maps, wgmma
+  - id: tensormap.replace
+    ptx: 'tensormap.replace.tile.<field>.global [tm], v'
+    kamui: ['kstg.weak [tm + field offset], v']
+    kind: same
+    why: a weak generic write of the tensor-map field, as the H100's STG sequence (K12)
+  - id: tensormap.cp_fenceproxy
+    ptx: 'tensormap.cp_fenceproxy.global.shared::cta.tensormap::generic.release.<s>.sync.aligned [tm], [tms], 128'
+    kamui: ['klds.weak r, [tms]', 'kstg.weak [tm], r', 'kfence.proxy.tensormap.release.<s> [tm], 128']
+    kind: sequence
+    why: the copy is weak generic accesses followed by the release proxy fence (9.7.9.26; K12); 128 bytes are 16 such pairs, counted as one in the litmus form
+  - id: wgmma
+    ptx: 'wgmma.fence | wgmma.mma_async ... | wgmma.commit_group | wgmma.wait_group n'
+    kamui: ['kwarpgroup.arrive', 'kgmma ...', 'kwarpgroup.commit (K13)', 'kwarpgroup.depbar n']
+    kind: same
+  - id: ldmatrix
+    ptx: 'ldmatrix.sync.aligned.<shape>.shared.b16 rd, [s] | stmatrix.sync.aligned.<shape>.shared.b16 [s], rs'
+    kamui: ['kldsm.<shape> rd, [s]', 'kstsm.<shape> [s], rs']
+    kind: same
+  - id: multimem
+    ptx: 'multimem.{ld_reduce|st|red}{<o><s>}.global ...'
+    kamui: ['kldgmc | kstgmc | kredgmc ...']
+    kind: same
+  # ----------------------------------------------------------------------------- no memory event (D27)
+  - id: hints
+    ptx: 'prefetch{u}, cp.async.bulk.prefetch{.tensor}, prefetch.tensormap, applypriority, createpolicy'
+    kamui: ['prefetch.r [a] (Zicbop) for prefetch and prefetchu; ktmacctl.pf for the bulk and tensor-map prefetches; nothing for applypriority and createpolicy']
+    kind: none
+
+# Every modelled feature of models/ptx87/coverage.yaml and the rules that lower it.
+features:
+  atom.b128: [atom]
+  atom.generic.add: [atom]
+  atom.global.add: [atom]
+  atom.global.and: [atom]
+  atom.global.cas: [atom]
+  atom.global.dec: [atom]
+  atom.global.exch: [atom]
+  atom.global.inc: [atom]
+  atom.global.max: [atom]
+  atom.global.min: [atom]
+  atom.global.or: [atom]
+  atom.global.xor: [atom]
+  atom.half: [atom]
+  atom.scope.cluster: [atom]
+  atom.scope.cta: [atom]
+  atom.scope.gpu: [atom]
+  atom.scope.sys: [atom]
+  atom.sem.acq_rel: [atom]
+  atom.sem.acquire: [atom]
+  atom.sem.relaxed: [atom]
+  atom.sem.release: [atom]
+  atom.shared.add: [atom]
+  atom.shared::cluster.add: [atom]
+  atom.vector: [atom]
+  bar.arrive: [bar.arrive]
+  bar.red: [bar.red]
+  bar.sync: [bar.sync]
+  bar.sync.named: [bar.sync]
+  bar.warp.sync: [bar.warp.sync]
+  barrier.cluster: [barrier.cluster]
+  barrier.sync: [bar.sync]
+  cp.async: [cp.async]
+  cp.async.bulk.commit_group: [cp.async.bulk.commit_group]
+  cp.async.bulk.global_to_shared: [cp.async.bulk]
+  cp.async.bulk.multicast: [cp.async.bulk]
+  cp.async.bulk.shared_to_cluster: [cp.async.bulk]
+  cp.async.bulk.shared_to_global: [cp.async.bulk]
+  cp.async.bulk.tensor.im2col: [cp.async.bulk.tensor]
+  cp.async.bulk.tensor.multicast: [cp.async.bulk.tensor]
+  cp.async.bulk.tensor.store: [cp.async.bulk.tensor]
+  cp.async.bulk.tensor.tile: [cp.async.bulk.tensor]
+  cp.async.bulk.wait_group: [cp.async.bulk.wait_group]
+  cp.async.commit_group: [cp.async.commit_group]
+  cp.async.mbarrier.arrive: [cp.async.mbarrier.arrive]
+  cp.async.wait_group: [cp.async.wait_group, cp.async.wait_all]
+  cp.reduce.async.bulk: [cp.reduce.async.bulk]
+  cp.reduce.async.bulk.tensor: [cp.reduce.async.bulk.tensor]
+  discard: [discard]
+  fence.op_restrict: [fence.restrict]
+  fence.proxy.alias: [fence.proxy.alias]
+  fence.proxy.async: [fence.proxy.async, fence.proxy.async.restrict]
+  fence.proxy.tensormap: [fence.proxy.tensormap]
+  fence.scope.cluster: [fence]
+  fence.scope.cta: [fence]
+  fence.scope.gpu: [fence]
+  fence.scope.sys: [fence]
+  fence.sem.acq_rel: [fence]
+  fence.sem.acquire: [fence]
+  fence.sem.release: [fence]
+  fence.sem.sc: [fence]
+  fence.sync_restrict: [fence.restrict]
+  griddepcontrol: [griddepcontrol]
+  ld.const: [ld.const]
+  ld.generic: [ld]
+  ld.global: [ld.global]
+  ld.global.nc: [ld.global.nc]
+  ld.local: [ld.local]
+  ld.mmio: [ld.mmio]
+  ld.param: [ld.param]
+  ld.scope.cluster: [ld, ld.global, ld.shared, ld.shared::cluster]
+  ld.scope.cta: [ld, ld.global, ld.shared, ld.shared::cluster]
+  ld.scope.gpu: [ld, ld.global]
+  ld.scope.sys: [ld, ld.global]
+  ld.sem.acquire: [ld, ld.global, ld.shared, ld.shared::cluster]
+  ld.sem.relaxed: [ld, ld.global, ld.shared, ld.shared::cluster, ld.local]
+  ld.shared: [ld.shared]
+  ld.shared::cluster: [ld.shared::cluster]
+  ld.volatile: [ld.volatile]
+  ldmatrix: [ldmatrix]
+  ldu: [ldu]
+  mbarrier.arrive: [mbarrier]
+  mbarrier.arrive.expect_tx: [mbarrier]
+  mbarrier.arrive.shared::cluster: [mbarrier]
+  mbarrier.arrive_drop: [mbarrier]
+  mbarrier.complete_tx: [mbarrier]
+  mbarrier.expect_tx: [mbarrier]
+  mbarrier.init: [mbarrier]
+  mbarrier.inval: [mbarrier]
+  mbarrier.scope.cluster: [mbarrier]
+  mbarrier.test_wait: [mbarrier]
+  mbarrier.try_wait: [mbarrier]
+  mbarrier.wait.parity: [mbarrier]
+  membar: [membar]
+  multimem: [multimem]
+  red.async: [red.async]
+  red.generic: [red]
+  red.global: [red]
+  red.scope: [red]
+  red.scope.cluster: [red]
+  red.sem.release: [red]
+  red.shared: [red]
+  red.shared::cluster: [red]
+  red.vector: [red]
+  space.const: [ld.const]
+  space.global: [ld.global, st.global]
+  space.local: [ld.local, st.local]
+  space.param: [ld.param, st.param]
+  space.shared: [ld.shared, st.shared]
+  space.shared::cluster: [ld.shared::cluster, st.shared::cluster]
+  st.async: [st.async]
+  st.generic: [st]
+  st.global: [st.global]
+  st.local: [st.local]
+  st.mmio: [st.mmio]
+  st.param: [st.param]
+  st.scope.cluster: [st, st.global, st.shared, st.shared::cluster]
+  st.scope.cta: [st, st.global, st.shared, st.shared::cluster]
+  st.scope.gpu: [st, st.global]
+  st.scope.sys: [st, st.global]
+  st.sem.relaxed: [st, st.global, st.shared, st.shared::cluster, st.local]
+  st.sem.release: [st, st.global, st.shared, st.shared::cluster]
+  st.shared: [st.shared]
+  st.shared::cluster: [st.shared::cluster]
+  st.volatile: [st.volatile]
+  stmatrix: [ldmatrix]
+  tensormap.cp_fenceproxy: [tensormap.cp_fenceproxy]
+  tensormap.replace: [tensormap.replace]
+  wgmma.commit_group: [wgmma]
+  wgmma.fence: [wgmma]
+  wgmma.mma_async: [wgmma]
+  wgmma.mma_async.b1: [wgmma]
+  wgmma.mma_async.fp8: [wgmma]
+  wgmma.mma_async.int8: [wgmma]
+  wgmma.mma_async.rs: [wgmma]
+  wgmma.mma_async.sp: [wgmma]
+  wgmma.mma_async.tf32: [wgmma]
+  wgmma.wait_group: [wgmma]

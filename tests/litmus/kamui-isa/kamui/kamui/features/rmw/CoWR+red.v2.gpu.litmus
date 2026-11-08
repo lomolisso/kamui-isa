@@ -1,0 +1,16 @@
+KAMUI CoWR+red.v2.gpu
+"Lowered from tests/litmus/ptx/kamui/features/rmw/CoWR+red.v2.gpu.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+P0:r0=0;
+P0:r1=0;
+x in global;
+y in global;
+}
+ P0@cta 0,cluster 0,gpu 0                ;
+ kredg.relaxed.gpu.v2.f32.add x, y, 1, 1 ;
+ kldg.relaxed.gpu r0, x                  ;
+ kldg.relaxed.gpu r1, y                  ;
+exists
+(P0:r0 == 0 \/ P0:r1 == 0)

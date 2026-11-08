@@ -1,0 +1,16 @@
+KAMUI inval+reinit+wait.cluster
+"Lowered from tests/litmus/ptx/kamui/features/mbarrier/inval+reinit+wait.cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+b=mbarrier(1) @cta 0;
+P0:r0=0;
+P0:r1=0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0               ;
+ kmbar.arv.release.cta b                ;
+ kmbar.test.parity.acquire.cta r0, b, 0 ;
+ kmbar.inval b                          ;
+ kmbar.init b, 1                        ;
+ kmbar.test.parity.acquire.cta r1, b, 0 ;
+exists
+(P0:r0 == 1 /\ P0:r1 == 1)

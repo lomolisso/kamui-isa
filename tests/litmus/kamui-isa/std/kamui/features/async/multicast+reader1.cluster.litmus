@@ -1,0 +1,22 @@
+KAMUI multicast+reader1.cluster
+"Lowered from tests/litmus/ptx/kamui/features/async/multicast+reader1.cluster.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+g=5;
+d0=0 @cta 0;
+d1=0 @cta 1;
+b0=mbarrier(1) @cta 0;
+b1=mbarrier(1) @cta 1;
+P1:r0=0;
+P1:r1=0;
+g in global;
+d0 in shared cta 0;
+d1 in shared cta 1;
+b0 in shared cta 0;
+b1 in shared cta 1;
+}
+ P0@cta 0,cluster 0,gpu 0              | P1@cta 1,cluster 0,gpu 0                   ;
+ kmbar.arv.expect_tx.release.cta b0, 1 | kmbar.arv.expect_tx.release.cta b1, 1      ;
+ kblkcp.s.g.mc d0+d1, g, b0+b1         | kmbar.try.parity.acquire.cluster r0, b1, 0 ;
+                                       | lw r1, d1                                  ;
+exists
+(P1:r0 == 1 /\ P1:r1 != 5)

@@ -1,0 +1,16 @@
+KAMUI const+value-with-global-traffic
+"Lowered from tests/litmus/ptx/kamui/features/ldst/const+value-with-global-traffic.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+c=3;
+x=0;
+f=0;
+P1:r0=0;
+P1:r1=0;
+c in const;
+x in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ sw x, 1                  | lw.aq r0, f              ;
+ sw.rl f, 1               | kldc.const r1, c         ;
+exists
+(P1:r1 != 3)

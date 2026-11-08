@@ -1,0 +1,19 @@
+KAMUI IRRWIW3
+"Lowered from tests/litmus/ptx/imported/dat3m/Memalloy/IRRWIW4.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+P0:r0=0;
+P1:r0=0;
+P1:r2=0;
+P2:r0=0;
+P3:r0=0;
+P3:r2=0;
+x=0;
+y=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 0,gpu 0 | P2@cta 0,gpu 0 | P3@cta 1,gpu 0 ;
+ li r0, 2       | lw r0, x       | li r0, 1       | lw r0, x       ;
+ sw x, r0       | fence rw, rw   | sw x, r0       | fence rw, rw   ;
+                | lw r2, y       |                | li r2, 1       ;
+                |                |                | sw y, r2       ;
+exists
+(x == 2 /\ P1:r0 == 2 /\ P1:r2 == 0 /\ P3: r0 == 1)

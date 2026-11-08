@@ -1,0 +1,14 @@
+KAMUI MP-sys-fence
+"Lowered from tests/litmus/ptx/imported/dat3m/Manual/MP-sys-fence.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y=0;
+P1:r1=0;
+P1:r2=0;
+}
+ P0@cta 0,gpu 0       | P1@cta 0,gpu 0        ;
+ sw x, 1              | kld.relaxed.sys r1, y ;
+ fence.tso            | fence.tso             ;
+ kst.relaxed.sys y, 1 | lw r2, x              ;
+exists
+(P1:r1 == 1 /\ P1:r2 != 1)

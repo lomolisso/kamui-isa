@@ -1,0 +1,13 @@
+KAMUI MP+barrier.cluster.relaxed+fence.release+global+same-cta
+"Lowered from tests/litmus/ptx/kamui/features/bar/MP+barrier.cluster.relaxed+fence.release+global+same-cta.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+P1:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 0,cluster 0,gpu 0 ;
+ sw x, 1                  | kcgabar.arv.release      ;
+ fence rw, w              | kcgabar.wait.acquire     ;
+ kcgabar.arv.relaxed      | lw r0, x                 ;
+ kcgabar.wait.acquire     |                          ;
+exists
+(P1:r0 == 0)

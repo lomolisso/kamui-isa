@@ -1,0 +1,18 @@
+KAMUI MP_cta_synonym+18
+"Lowered from tests/litmus/ptx/imported/mixedproxy/MP_cta_synonym+18.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y @ generic aliases x;
+c @ surface aliases x;
+s @ surface aliases y;
+t @ texture aliases y;
+flag=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,gpu 0     | P1@cta 0,gpu 0 ;
+ sw x, 2            | lw.aq r0, flag ;
+ kfence.proxy.alias | lw r1, y       ;
+ sw.rl flag, 1      |                ;
+exists
+(P1:r0 == 1 /\ ~(P1:r1 == 2))

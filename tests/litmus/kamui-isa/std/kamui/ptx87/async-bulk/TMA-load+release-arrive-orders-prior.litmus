@@ -1,0 +1,20 @@
+KAMUI TMA-load+release-arrive-orders-prior
+"Lowered from tests/litmus/ptx/kamui/ptx87/async-bulk/TMA-load+release-arrive-orders-prior.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+g=5;
+h=0;
+d=0 @cta 0;
+b=mbarrier(1) @cta 0;
+P1:r0=0;
+P1:r1=0;
+g in global;
+h in global;
+d in shared cta 0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0             | P1@cta 0,cluster 0,gpu 0               ;
+ sw h, 1                              | kmbar.test.parity.acquire.cta r0, b, 0 ;
+ kmbar.arv.expect_tx.release.cta b, 1 | lw r1, h                               ;
+ kblkcp.s.g d, g, b                   |                                        ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

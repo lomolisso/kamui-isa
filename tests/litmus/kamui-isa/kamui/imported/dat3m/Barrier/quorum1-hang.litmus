@@ -1,0 +1,10 @@
+KAMUI test1-hang
+"Lowered from tests/litmus/ptx/imported/dat3m/Barrier/quorum1-hang.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+}
+ P0@cta 0,gpu 0 | P1@cta 0,gpu 0 | P2@cta 0,gpu 0 ;
+ kst.weak x, 1  | kbar.sync 1, 4 | kbar.sync 1, 4 ;
+ kbar.sync 1, 4 | kld.weak r0, x |                ;
+exists
+(P1:r0 == 0)

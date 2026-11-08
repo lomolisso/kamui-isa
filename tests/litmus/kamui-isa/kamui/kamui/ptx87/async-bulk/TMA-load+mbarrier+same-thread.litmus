@@ -1,0 +1,19 @@
+KAMUI TMA-load+mbarrier+same-thread
+"Lowered from tests/litmus/ptx/kamui/ptx87/async-bulk/TMA-load+mbarrier+same-thread.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+g=5;
+d=0 @cta 0;
+b=mbarrier(1) @cta 0;
+P0:r0=0;
+P0:r1=0;
+g in global;
+d in shared cta 0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0               ;
+ kmbar.arv.expect_tx.release.cta b, 1   ;
+ kblkcp.s.g d, g, b                     ;
+ kmbar.test.parity.acquire.cta r0, b, 0 ;
+ klds.weak r1, d                        ;
+exists
+(P0:r0 == 1 /\ P0:r1 != 5)

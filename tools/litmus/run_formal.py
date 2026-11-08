@@ -26,6 +26,10 @@ Models (column `model`):
 - `ptx-v8.7-alloy`: the PTX ISA 8.7 model (models/ptx87/ptx87.als) on Alloy 6.2.0, on the queries
   tools/litmus/to_alloy87.py writes to tests/litmus/alloy-ptx87/. Each query also asks whether the program has
   any execution; if not, the result is `forbidden` and the flags end in `(no execution)`.
+- `kamui-alloy`, `kamui-std-alloy`: the Kamui model (models/kamui/kamui.als, which is the PTX 8.7 model) on the
+  Kamui lowering of the test that tools/litmus/to_kamui.py writes to tests/litmus/alloy-kamui/ (Kamui
+  instructions only, or standard RISC-V instructions where allowed), and on the hand-written Kamui tests of
+  tests/litmus/kamui-isa/hand/. A lowered program may be stronger than the PTX test, never weaker.
 - `rvwmo`: herd7 with RISC-V's `riscv.cat` (RVWMO), on the naive RISC-V lowering of the test that
   tools/litmus/to_riscv.py writes to tests/litmus/riscv/. This judges a different program (scopes erased,
   C++-style fences), so it is a baseline, not a PTX verdict.
@@ -63,6 +67,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import litmus  # noqa: E402
 import to_alloy  # noqa: E402
 import to_alloy87  # noqa: E402
+import to_kamui  # noqa: E402
 import to_riscv  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -77,7 +82,7 @@ TIMEOUT_S = 600  # per Dartagnan run; a run that takes longer is recorded as unk
 
 
 def all_tests() -> list[Path]:
-    return sorted((SUITE / "ptx").rglob("*.litmus"))
+    return sorted((SUITE / "ptx").rglob("*.litmus")) + to_kamui.hand_tests()
 
 
 def test_id(path: Path) -> str:
@@ -86,6 +91,8 @@ def test_id(path: Path) -> str:
 
 def source_of(tid: str) -> str:
     parts = tid.split("/")
+    if parts[0] == "kamui-isa":
+        return "kamui-isa"
     return parts[2] if parts[1] == "imported" else parts[1]
 
 
@@ -313,14 +320,20 @@ class Alloy6:
     def tool_version(self) -> str:
         return "6.2.0 (glucose)"
 
+    def query(self, tid: str) -> Path:
+        return to_alloy87.als_path(tid)
+
+    def model_files(self) -> list[Path]:
+        return [to_alloy87.MODEL / f for f in self.files]
+
     def run(self, path: Path, extra: str) -> tuple[str, float, str]:
         tid = test_id(path)
-        query = to_alloy87.als_path(tid)
+        query = self.query(tid)
         base = ROOT / "build" / "litmus" / "alloy87"
         base.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(dir=base) as w:
-            for f in self.files:
-                shutil.copyfile(to_alloy87.MODEL / f, Path(w) / f)
+            for f in self.model_files():
+                shutil.copyfile(f, Path(w) / f.name)
             shutil.copyfile(query, Path(w) / "q.als")
             t0 = time.monotonic()
             p = subprocess.run(["java", f"-Djava.io.tmpdir={w}", f"-Djava.library.path={self.native}", "-jar", str(self.jar), *self.flags.split(), "-f",
@@ -342,6 +355,34 @@ class Alloy6:
         # written values: its outcomes are those of the executions that satisfy only the facts (D38).
         allowed = sat["test"] or (sat["racy"] and sat["unconstrained"])
         return ("allowed" if allowed else "forbidden"), dt, self.flags
+
+
+class KamuiAlloy(Alloy6):
+    """The Kamui model (models/kamui/kamui.als, the PTX 8.7 model) on the lowered tests that
+    tools/litmus/to_kamui.py writes to tests/litmus/alloy-kamui/: `kamui-alloy` for the lowering to Kamui
+    instructions (and the hand-written Kamui tests), `kamui-std-alloy` for the lowering that uses standard RISC-V
+    instructions where allowed. The row's test is the PTX test the program was lowered from."""
+
+    def __init__(self, model: str):
+        self.model = model
+
+    def applies_path(self, path: Path) -> bool:
+        return to_kamui.kamui_query_for(test_id(path), self.model) is not None
+
+    def applies(self, t: litmus.Litmus) -> bool:
+        return False  # decided per file (applies_path)
+
+    @property
+    def model_version(self) -> str:
+        # the lowering itself is in the queries, which tools/litmus/to_kamui.py --check keeps current
+        h = hashlib.sha256(b"".join(f.read_bytes() for f in self.model_files())).hexdigest()[:12]
+        return f"kamui.als+util.als sha256:{h}"
+
+    def query(self, tid: str) -> Path:
+        return to_kamui.kamui_query_for(tid, self.model)
+
+    def model_files(self) -> list[Path]:
+        return [to_kamui.MODEL / "kamui.als", to_alloy87.MODEL / "util.als"]
 
 
 class Herd7:
@@ -407,6 +448,8 @@ MODELS = {
     "ptx-2019-alloy": Alloy2019("ptx-2019-alloy"),
     "ptx-2019-alloy+ext": Alloy2019("ptx-2019-alloy+ext"),
     to_alloy87.MODEL_NAME: Alloy6(),
+    "kamui-alloy": KamuiAlloy("kamui-alloy"),
+    "kamui-std-alloy": KamuiAlloy("kamui-std-alloy"),
     "rvwmo": Herd7(),
     "manual-reasoning": Manual(),
 }
@@ -442,6 +485,12 @@ def plan(tests: list[Path], models: list[str]) -> list[tuple[Path, litmus.Litmus
     for p in tests:
         t = litmus.load(p)
         for m in models:
+            if isinstance(MODELS[m], KamuiAlloy):
+                if MODELS[m].applies_path(p):
+                    jobs.append((p, t, m))
+                continue
+            if t.arch.upper() == "KAMUI":
+                continue  # a hand-written Kamui test: only the Kamui model reads it
             if MODELS[m].applies(t) or (m == "manual-reasoning" and test_id(p) in manual):
                 jobs.append((p, t, m))
     return jobs

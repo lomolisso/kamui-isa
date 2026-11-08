@@ -1,0 +1,12 @@
+KAMUI 2+2W+fence-sc.gpu+same-cluster
+"Lowered from tests/litmus/ptx/kamui/families/2+2W/2+2W+fence-sc.gpu+same-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ kst.relaxed.gpu x, 1     | kst.relaxed.gpu y, 1     ;
+ kfence.sc.gpu            | kfence.sc.gpu            ;
+ kst.relaxed.gpu y, 2     | kst.relaxed.gpu x, 2     ;
+exists
+(x == 1 /\ y == 1)

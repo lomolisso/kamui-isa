@@ -1,0 +1,15 @@
+KAMUI arrive-beyond-pending
+"Lowered from tests/litmus/ptx/kamui/features/mbarrier/arrive-beyond-pending.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+b=mbarrier(1) @cta 0;
+x=0;
+P0:r1=0;
+P0:r0=0;
+b in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0       ;
+ kst.weak x, 1                  ;
+ kmbar.arv.release.cta r1, b, 2 ;
+ kld.weak r0, x                 ;
+exists
+(P0:r0 == 0)

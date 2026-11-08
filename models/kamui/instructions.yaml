@@ -1,0 +1,455 @@
+# What every Kamui memory instruction, and every standard RISC-V memory instruction, means on GPU memory.
+#
+# Kamui's memory model is the PTX ISA 8.7 model (models/kamui/kamui.als, identical to models/ptx87/ptx87.als).
+# This table gives each instruction its meaning in that model: the PTX operation whose events it produces
+# (`events`). An instruction whose PTX operation has qualifiers (ordering, scope, type, vector width, ...) keeps
+# them: `kldg.acquire.gpu r0, x` produces the events of `ld.global.acquire.gpu r0, x`. A list is a sequence, in
+# program order. An empty list means no memory event.
+#
+# Names are provisional: the ISA specification gives the encodings. `h100` is the H100 instruction Kamui copies.
+# K<n> refers to models/kamui/decisions.md. tools/litmus/to_kamui.py reads this file to turn a Kamui litmus test
+# into events; models/kamui/lowering.yaml (PTX to Kamui) is written separately, so the two check each other.
+#
+# Qualifier vocabulary (the same words as PTX, because the fields hold the same values):
+#   ordering: weak, relaxed, acquire, release, acq_rel, sc        scope: cta, cluster, gpu, sys
+
+kamui:
+  # ----------------------------------------------------------------------------------------------- Xkmscope
+  # Loads and stores: one form per address space (docs/design/addressing.md). Ordering defaults to weak.
+  - name: kld
+    family: Xkmscope
+    h100: LD
+    syntax: 'kld{.weak|.relaxed.<scope>|.acquire.<scope>}{.mmio}{.v2|.v4}{.<type>} rd, [a]'
+    events: ld
+    note: generic address; the window the address falls in decides the space. Also used for the shared memory of other CTAs of the cluster (K7).
+  - name: kldg
+    family: Xkmscope
+    h100: LDG
+    syntax: 'kldg{.weak|.relaxed.<scope>|.acquire.<scope>}{.nc}{.mmio}{.v2|.v4}{.<type>} rd, [a]'
+    events: ld.global
+    note: '.nc reads through the non-coherent path (PTX ld.global.nc and ldu, D29, K9). .mmio is relaxed at sys scope (K5).'
+  - name: klds
+    family: Xkmscope
+    h100: LDS
+    syntax: 'klds{.weak|.relaxed.<scope>|.acquire.<scope>}{.v2|.v4}{.<type>} rd, [a]'
+    events: ld.shared::cta
+    note: 32-bit offset in the executing CTA's shared window (K7).
+  - name: kldl
+    family: Xkmscope
+    h100: LDL
+    syntax: 'kldl{.weak|.relaxed.<scope>|.acquire.<scope>}{.v2|.v4}{.<type>} rd, [a]'
+    events: ld.local
+  - name: kldc
+    family: Xkmscope
+    h100: LDC
+    syntax: 'kldc.{const|param}{.<type>} rd, [a]'
+    events: ld
+    note: a read of a constant bank (user constants or kernel parameters); the qualifier names the space.
+  - name: kst
+    family: Xkmscope
+    h100: ST
+    syntax: 'kst{.weak|.relaxed.<scope>|.release.<scope>}{.mmio}{.v2|.v4}{.<type>} [a], rs'
+    events: st
+  - name: kstg
+    family: Xkmscope
+    h100: STG
+    syntax: 'kstg{.weak|.relaxed.<scope>|.release.<scope>}{.mmio}{.v2|.v4}{.<type>} [a], rs'
+    events: st.global
+  - name: ksts
+    family: Xkmscope
+    h100: STS
+    syntax: 'ksts{.weak|.relaxed.<scope>|.release.<scope>}{.v2|.v4}{.<type>} [a], rs'
+    events: st.shared::cta
+  - name: kstl
+    family: Xkmscope
+    h100: STL
+    syntax: 'kstl{.weak|.relaxed.<scope>|.release.<scope>}{.v2|.v4}{.<type>} [a], rs'
+    events: st.local
+  # Atomics and reductions. Ordering defaults to relaxed, scope to gpu (as PTX). A result register RZ discards the
+  # value read; the events are the same (D34).
+  - name: katom
+    family: Xkmscope
+    h100: ATOM
+    syntax: 'katom.<op>{.relaxed|.acquire|.release|.acq_rel}{.<scope>}{.v2|.v4}{.<type>} rd, [a], rs1{, rs2}'
+    events: atom
+    note: 'op: add, sub, exch, cas, inc, dec, min, max, and, or, xor; cas up to .b128 (rs1, rs2 = compare, new).'
+  - name: katomg
+    family: Xkmscope
+    h100: ATOMG
+    syntax: 'katomg.<op>{.relaxed|.acquire|.release|.acq_rel}{.<scope>}{.v2|.v4}{.<type>} rd, [a], rs1{, rs2}'
+    events: atom.global
+  - name: katoms
+    family: Xkmscope
+    h100: ATOMS
+    syntax: 'katoms.<op>{.relaxed|.acquire|.release|.acq_rel}{.<scope>}{.<type>} rd, [a], rs1{, rs2}'
+    events: atom.shared::cta
+    note: also the reduction on the CTA's shared memory (rd = RZ); the H100 has no shared-memory RED (K8).
+  - name: kred
+    family: Xkmscope
+    h100: RED
+    syntax: 'kred.<op>{.relaxed|.release}{.<scope>}{.v2|.v4}{.<type>} [a], rs'
+    events: red
+  - name: kredg
+    family: Xkmscope
+    h100: REDG
+    syntax: 'kredg.<op>{.relaxed|.release}{.<scope>}{.v2|.v4}{.<type>} [a], rs'
+    events: red.global
+  # Multimem (multicast objects).
+  - name: kldgmc
+    family: Xkmscope
+    h100: LDGMC
+    syntax: 'kldgmc.<op>{.weak|.relaxed.<scope>|.acquire.<scope>}{.<type>} rd, [a]'
+    events: multimem.ld_reduce.global
+  - name: kstgmc
+    family: Xkmscope
+    h100: STG (to a multicast address)
+    syntax: 'kstgmc{.weak|.relaxed.<scope>|.release.<scope>}{.<type>} [a], rs'
+    events: multimem.st.global
+  - name: kredgmc
+    family: Xkmscope
+    h100: REDG (to a multicast address)
+    syntax: 'kredgmc.<op>{.relaxed|.release}{.<scope>}{.<type>} [a], rs'
+    events: multimem.red.global
+  # Fences: one instruction per PTX fence (the H100 uses MEMBAR, ERRBAR, CGAERRBAR and CCTL.IVALL sequences).
+  - name: kfence
+    family: Xkmscope
+    h100: MEMBAR.{ALL,SC}.<scope>; ERRBAR; CGAERRBAR; CCTL.IVALL
+    syntax: 'kfence.{acquire|release|acq_rel|sc}.<scope>'
+    events: fence
+  - name: kfence.restrict.shared_cta
+    family: Xkmscope
+    h100: MEMBAR.ALL.CTA; FENCE.VIEW.ASYNC.S
+    syntax: 'kfence.restrict.shared_cta.release.cluster'
+    events: fence.release.sync_restrict::shared::cta.cluster
+  - name: kfence.restrict.shared_cluster
+    family: Xkmscope
+    h100: (no instruction)
+    syntax: 'kfence.restrict.shared_cluster.acquire.cluster'
+    events: fence.acquire.sync_restrict::shared::cluster.cluster
+  - name: kfence.restrict.mbarrier_init
+    family: Xkmmbar
+    h100: MEMBAR.ALL.CTA; MEMBAR.ALL.GPU; ERRBAR; CGAERRBAR
+    syntax: 'kfence.restrict.mbarrier_init.release.cluster'
+    events: fence.mbarrier_init.release.cluster
+  - name: kfence.proxy.alias
+    family: Xkmscope
+    h100: MEMBAR.SC.<scope>; CCTL.IVALL
+    syntax: 'kfence.proxy.alias'
+    events: fence.proxy.alias
+  - name: kfence.proxy.async
+    family: Xkmscope
+    h100: MEMBAR.ALL.CTA; FENCE.VIEW.ASYNC.S; CCTL.IVALL
+    syntax: 'kfence.proxy.async{.global|.shared_cta|.shared_cluster}'
+    events: fence.proxy.async
+    note: the space qualifier is written shared::cta and shared::cluster in PTX.
+  - name: kfence.proxy.async.restrict
+    family: Xkmscope
+    h100: (no instruction)
+    syntax: 'kfence.proxy.async.restrict.shared_cluster.acquire.cluster'
+    events: fence.proxy.async::generic.acquire.sync_restrict::shared::cluster.cluster
+  - name: kfence.proxy.tensormap
+    family: Xkmasync
+    h100: UTMACCTL.IV; MEMBAR.ALL.<scope>
+    syntax: 'kfence.proxy.tensormap.{release|acquire}.<scope> {[a], size}'
+    events: fence.proxy.tensormap::generic
+  - name: kcctl.rml2
+    family: Xkmscope
+    h100: CCTL.E.RML2
+    syntax: 'kcctl.rml2 [a], size'
+    events: discard.global.L2
+  # ------------------------------------------------------------------------------------------------- Xkmbar
+  - name: kbar.sync
+    family: Xkmbar
+    h100: BAR.SYNC.DEFER_BLOCKING
+    syntax: 'kbar.sync id{, count}'
+    events: bar.sync
+  - name: kbar.arv
+    family: Xkmbar
+    h100: BAR.ARV
+    syntax: 'kbar.arv id, count'
+    events: bar.arrive
+  - name: kbar.red
+    family: Xkmbar
+    h100: BAR.RED.{POPC,AND,OR}
+    syntax: 'kbar.red.{popc|and|or} rd, id{, count}, p'
+    events: bar.red
+    note: the reduction result is a register value; the memory effect is that of bar.sync.
+  - name: kwarpsync
+    family: Xkmsimt
+    h100: WARPSYNC
+    syntax: 'kwarpsync mask'
+    events: bar.warp.sync
+  # --------------------------------------------------------------------------------------------- Xkmcluster
+  - name: kcgabar.arv
+    family: Xkmcluster
+    h100: MEMBAR.ALL.GPU; UCGABAR_ARV (release) / WARPSYNC.ALL; UCGABAR_ARV (relaxed)
+    syntax: 'kcgabar.arv{.release|.relaxed}'
+    events: barrier.cluster.arrive
+    note: warp-uniform; counts the arrival of every active thread, each with its own release (K6). The default is release.
+  - name: kcgabar.wait
+    family: Xkmcluster
+    h100: UCGABAR_WAIT; CCTL.IVALL
+    syntax: 'kcgabar.wait{.acquire}'
+    events: barrier.cluster.wait
+  # ------------------------------------------------------------------------------------------------ Xkmmbar
+  # mbarrier objects live in shared memory; their state is the value of the location (D12). Every form keeps the
+  # PTX ordering and scope; arrive at .cta scope has the full release ordering of the PTX manual (K11).
+  - name: kmbar.init
+    family: Xkmmbar
+    h100: SYNCS.EXCH.64
+    syntax: 'kmbar.init [b], count'
+    events: mbarrier.init.shared::cta
+  - name: kmbar.inval
+    family: Xkmmbar
+    h100: SYNCS.EXCH.64
+    syntax: 'kmbar.inval [b]'
+    events: mbarrier.inval.shared::cta
+  - name: kmbar.arv
+    family: Xkmmbar
+    h100: SYNCS.ARRIVE.TRANS64[.RED].A1T0
+    syntax: 'kmbar.arv{.release|.relaxed}.{cta|cluster}{.remote} {rd,} [b]'
+    events: mbarrier.arrive
+    note: .remote is an arrive on the mbarrier of another CTA of the cluster (PTX .shared::cluster).
+  - name: kmbar.arv.drop
+    family: Xkmmbar
+    h100: SYNCS.ARRIVE.TRANS64.OPTOUT
+    syntax: 'kmbar.arv.drop{.release|.relaxed}.{cta|cluster}{.remote} {rd,} [b]'
+    events: mbarrier.arrive_drop
+  - name: kmbar.arv.expect_tx
+    family: Xkmmbar
+    h100: SYNCS.ARRIVE.TRANS64.A1TR
+    syntax: 'kmbar.arv.expect_tx{.release|.relaxed}.{cta|cluster}{.remote} {rd,} [b], tx'
+    events: mbarrier.arrive.expect_tx
+  - name: kmbar.expect_tx
+    family: Xkmmbar
+    h100: SYNCS.ARRIVE.TRANS64.RED.A0TX
+    syntax: 'kmbar.expect_tx{.relaxed}.{cta|cluster}{.remote} [b], tx'
+    events: mbarrier.expect_tx
+  - name: kmbar.complete_tx
+    family: Xkmmbar
+    h100: SYNCS.ARRIVE.TRANS64.RED.A0TR
+    syntax: 'kmbar.complete_tx{.relaxed}.{cta|cluster}{.remote} [b], tx'
+    events: mbarrier.complete_tx
+  - name: kmbar.test
+    family: Xkmmbar
+    h100: SYNCS.PHASECHK.TRANS64
+    syntax: 'kmbar.test{.parity}{.acquire|.relaxed}.{cta|cluster} pd, [b], state'
+    events: mbarrier.test_wait
+  - name: kmbar.try
+    family: Xkmmbar
+    h100: SYNCS.PHASECHK.TRANS64.TRYWAIT
+    syntax: 'kmbar.try{.parity}{.acquire|.relaxed}.{cta|cluster} pd, [b], state'
+    events: mbarrier.try_wait
+  - name: kmbar.arv.ldgsts
+    family: Xkmmbar
+    h100: ARRIVES.LDGSTSBAR.64
+    syntax: 'kmbar.arv.ldgsts{.noinc} [b]'
+    events: cp.async.mbarrier.arrive.shared
+  # ----------------------------------------------------------------------------------------------- Xkmasync
+  - name: kldgsts
+    family: Xkmasync
+    h100: LDGSTS
+    syntax: 'kldgsts [d], [g]{, size}'
+    events: cp.async.shared.global
+  - name: kldgdepbar
+    family: Xkmasync
+    h100: LDGDEPBAR
+    syntax: 'kldgdepbar'
+    events: cp.async.commit_group
+  - name: kdepbar.ldgsts
+    family: Xkmasync
+    h100: DEPBAR.LE SB0, n
+    syntax: 'kdepbar.ldgsts n'
+    events: cp.async.wait_group
+  - name: kblkcp
+    family: Xkmasync
+    h100: UBLKCP
+    syntax: 'kblkcp.{s.g|s.s|g.s}{.mc} [d], [s], {[b] | bulk_group}, size{, ctamask}'
+    events: cp.async.bulk
+    note: warp-uniform; performed for the thread an elect loop picked, ordered after that thread's earlier instructions only (K6). s.g = global to shared (completes on the mbarrier b), s.s = shared of this CTA to shared of a CTA of the cluster, g.s = shared to global (completes in a bulk group).
+  - name: kblkred
+    family: Xkmasync
+    h100: UBLKRED
+    syntax: 'kblkred.g.s.<op> [g], [s], size'
+    events: cp.reduce.async.bulk.global.shared::cta.bulk_group
+    note: warp-uniform, performed for the thread an elect loop picked (K6).
+  - name: ktmaldg
+    family: Xkmasync
+    h100: UTMALDG
+    syntax: 'ktmaldg.<dim>{.tile|.im2col}{.mc} [d], [tm, coords], [b]{, ctamask}'
+    events: cp.async.bulk.tensor
+    note: warp-uniform, performed for the thread an elect loop picked (K6).
+  - name: ktmastg
+    family: Xkmasync
+    h100: UTMASTG
+    syntax: 'ktmastg.<dim>.tile [tm, coords], [s]'
+    events: cp.async.bulk.tensor
+  - name: ktmaredg
+    family: Xkmasync
+    h100: UTMAREDG
+    syntax: 'ktmaredg.<dim>.<op>.tile [tm, coords], [s]'
+    events: cp.reduce.async.bulk.tensor
+  - name: ktmacmdflush
+    family: Xkmasync
+    h100: UTMACMDFLUSH
+    syntax: 'ktmacmdflush'
+    events: cp.async.bulk.commit_group
+  - name: kdepbar.bulk
+    family: Xkmasync
+    h100: DEPBAR.LE SB<k>, n
+    syntax: 'kdepbar.bulk{.read} n'
+    events: cp.async.bulk.wait_group
+  - name: kstas
+    family: Xkmasync
+    h100: STAS
+    syntax: 'kstas{.release.<scope>}{.<type>} [d], rs{, [b]}'
+    events: st.async
+  - name: kredas
+    family: Xkmasync
+    h100: REDAS
+    syntax: 'kredas.<op>{.relaxed|.release}{.<scope>}{.<type>} [d], rs{, [b]}'
+    events: red.async
+  - name: ktmacctl.pf
+    family: Xkmasync
+    h100: UTMACCTL.PF, UTMAPF, UBLKPF
+    syntax: 'ktmacctl.pf [tm]'
+    events: []
+    note: prefetches have no memory effect (D27).
+  - name: kacqbulk
+    family: Xkmsimt
+    h100: ACQBULK
+    syntax: 'kacqbulk'
+    events: griddepcontrol.wait
+  - name: kpreexit
+    family: Xkmsimt
+    h100: PREEXIT
+    syntax: 'kpreexit'
+    events: []
+  # ------------------------------------------------------------------------------------- Xkmmma, memory side
+  - name: kldsm
+    family: Xkmmma
+    h100: LDSM
+    syntax: 'kldsm.<shape>{.trans} rd, [s]'
+    events: ldmatrix.shared
+  - name: kstsm
+    family: Xkmmma
+    h100: STSM
+    syntax: 'kstsm.<shape>{.trans} [s], rs'
+    events: stmatrix.shared
+  - name: kwarpgroup.arrive
+    family: Xkmmma
+    h100: WARPGROUP.ARRIVE
+    syntax: 'kwarpgroup.arrive'
+    events: wgmma.fence
+  - name: kgmma
+    family: Xkmmma
+    h100: HGMMA, QGMMA, IGMMA, BGMMA
+    syntax: 'kgmma.<shape>.<types> rd, [a], [b]'
+    events: wgmma.mma_async
+  - name: kwarpgroup.commit
+    family: Xkmmma
+    h100: (none; the H100 names the group in an operand of HGMMA, K13)
+    syntax: 'kwarpgroup.commit'
+    events: wgmma.commit_group
+  - name: kwarpgroup.depbar
+    family: Xkmmma
+    h100: WARPGROUP.DEPBAR.LE
+    syntax: 'kwarpgroup.depbar n'
+    events: wgmma.wait_group
+  - name: kelect
+    family: Xkmwarp
+    h100: ELECT
+    syntax: 'kelect pd, upd'
+    events: []
+    note: picks one active thread; a register operation.
+
+# Standard RISC-V instructions (Kamui's base ISA) on GPU memory: exact PTX equivalents at system scope (K2).
+# `match` is a regular expression on the mnemonic with its suffixes; `{op}` in `events` is the PTX operation of
+# the AMO (swap -> exch, minu -> min, maxu -> max).
+standard:
+  - match: '(lb|lbu|lh|lhu|lw|lwu|ld)'
+    ext: I
+    events: [ld.weak]
+  - match: '(sb|sh|sw|sd)'
+    ext: I
+    events: [st.weak]
+  - match: '(lb|lh|lw|ld)\.aq'
+    ext: Zalasr
+    events: [ld.acquire.sys]
+  - match: '(lb|lh|lw|ld)\.aqrl'
+    ext: Zalasr
+    events: [fence.sc.sys, ld.acquire.sys]
+  - match: '(sb|sh|sw|sd)\.rl'
+    ext: Zalasr
+    events: [st.release.sys]
+  - match: '(sb|sh|sw|sd)\.aqrl'
+    ext: Zalasr
+    events: [fence.sc.sys, st.release.sys]
+  - match: 'amo(swap|add|and|or|xor|min|max|minu|maxu)\.(b|h|w|d)'
+    ext: A (Zaamo); .b and .h are Zabha
+    events: ['atom.relaxed.sys.{op}']
+  - match: 'amo(swap|add|and|or|xor|min|max|minu|maxu)\.(b|h|w|d)\.aq'
+    ext: A
+    events: ['atom.acquire.sys.{op}']
+  - match: 'amo(swap|add|and|or|xor|min|max|minu|maxu)\.(b|h|w|d)\.rl'
+    ext: A
+    events: ['atom.release.sys.{op}']
+  - match: 'amo(swap|add|and|or|xor|min|max|minu|maxu)\.(b|h|w|d)\.aqrl'
+    ext: A
+    events: [fence.sc.sys, 'atom.acq_rel.sys.{op}']
+  - match: 'amocas\.(b|h|w|d)'
+    ext: Zacas; .b and .h are Zabha
+    events: [atom.relaxed.sys.cas]
+  - match: 'amocas\.q'
+    ext: Zacas
+    events: [atom.relaxed.sys.cas.b128]
+  - match: 'amocas\.(b|h|w|d|q)\.aq'
+    ext: Zacas
+    events: [atom.acquire.sys.cas]
+  - match: 'amocas\.(b|h|w|d|q)\.rl'
+    ext: Zacas
+    events: [atom.release.sys.cas]
+  - match: 'amocas\.(b|h|w|d|q)\.aqrl'
+    ext: Zacas
+    events: [fence.sc.sys, atom.acq_rel.sys.cas]
+  - match: 'lr\.(w|d)(\.aq|\.rl|\.aqrl)?'
+    ext: A (Zalrsc)
+    events: none (no litmus form)
+    note: 'K4: an LR and a successful SC are one atomic read-modify-write at sys scope, ordered by the aq/rl bits as an AMO (the read is the LR, the write the SC); a failed SC writes nothing and the LR is a strong relaxed read at sys scope.'
+  - match: 'sc\.(w|d)(\.aq|\.rl|\.aqrl)?'
+    ext: A (Zalrsc)
+    events: none (no litmus form)
+  # FENCE pred, succ: i counts as r and o as w (device input and output are reads and writes); see K3.
+  - match: 'fence (pred has w and succ has r)'
+    ext: I
+    events: [fence.sc.sys]
+  - match: 'fence (pred is r only)'
+    ext: I
+    events: [fence.acquire.sys]
+  - match: 'fence (succ is w only)'
+    ext: I
+    events: [fence.release.sys]
+  - match: 'fence.tso (every other FENCE is covered above)'
+    ext: I
+    events: [fence.acq_rel.sys]
+  - match: 'fence.i'
+    ext: Zifencei
+    events: []
+  - match: 'cbo\.inval'
+    ext: Zicbom
+    events: [discard.global.L2]
+  - match: 'cbo\.(clean|flush)'
+    ext: Zicbom
+    events: []
+  - match: 'prefetch\.(i|r|w)'
+    ext: Zicbop
+    events: []
+  - match: 'ntl\.(p1|pall|s1|all)'
+    ext: Zihintntl
+    events: []
+  - match: 'pause'
+    ext: Zihintpause
+    events: []
+  - match: 'wrs\.(nto|sto)'
+    ext: Zawrs
+    events: []

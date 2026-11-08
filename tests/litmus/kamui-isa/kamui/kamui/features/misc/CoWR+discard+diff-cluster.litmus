@@ -1,0 +1,15 @@
+KAMUI CoWR+discard+diff-cluster
+"Lowered from tests/litmus/ptx/kamui/features/misc/CoWR+discard+diff-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y=0;
+P0:r0=0;
+x in global;
+y in global;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 1,gpu 0 ;
+ kstg.weak x, 1           | kstg.weak y, 1           ;
+ kcctl.rml2 x, 128        |                          ;
+ kldg.weak r0, x          |                          ;
+exists
+(P0:r0 == 7)

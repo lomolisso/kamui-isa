@@ -1,0 +1,13 @@
+KAMUI CoRR+mmio+global+same-cluster
+"Lowered from tests/litmus/ptx/kamui/features/ldst/CoRR+mmio+global+same-cluster.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+P1:r0=0;
+P1:r1=0;
+x in global;
+}
+ P0@cta 0,cluster 0,gpu 0   | P1@cta 1,cluster 0,gpu 0    ;
+ kstg.mmio.relaxed.sys x, 1 | kldg.mmio.relaxed.sys r0, x ;
+                            | kldg.mmio.relaxed.sys r1, x ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)
