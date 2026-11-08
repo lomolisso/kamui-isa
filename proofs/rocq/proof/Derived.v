@@ -432,4 +432,29 @@ Proof. intros H; unfold acc_lift; mono_tac. Qed.
 Lemma m_atomic_pair_r : mono ev (atomic_pair_r P) (atomic_pair_r K).
 Proof. unfold atomic_pair_r; mono_tac. Qed.
 
+#[local] Hint Resolve m_cause m_atomic_pair_r m_acc_lift : mono.
+
+(** ** The relations the axioms and facts are about *)
+
+Lemma m_coherence : mono ev (same_location P (⦗Write P⦘ ⨾ cause P ⨾ ⦗Write P⦘))
+                            (same_location K (⦗Write K⦘ ⨾ cause K ⨾ ⦗Write K⦘)).
+Proof. unfold same_location; mono_tac. Qed.
+Lemma m_fence_sc : mono ev (⦗FenceSC P⦘ ⨾ cause_base P ⨾ ⦗FenceSC P⦘) (⦗FenceSC K⦘ ⨾ cause_base K ⨾ ⦗FenceSC K⦘).
+Proof. mono_tac. Qed.
+Lemma m_atom1 : mono ev ((⦗Read P⦘ ⨾ ms_r P ⨾ ⦗Write P⦘) ∩ (acc_lift P (rf P)⁻¹ ∩ acc_lift P (fr P)))
+                        ((⦗Read K⦘ ⨾ ms_r K ⨾ ⦗Write K⦘) ∩ (acc_lift K (rf K)⁻¹ ∩ acc_lift K (fr K))).
+Proof. apply mono_inter; [mono_tac | apply mono_inter; apply m_acc_lift; mono_tac]. Qed.
+Lemma m_atom2 : mono ev (((fr P ∩ atomic_pair_r P) ⨾ ((co P)⁺ ∩ atomic_pair_r P)) ∩ rmw P)
+                        (((fr K ∩ atomic_pair_r K) ⨾ ((co K)⁺ ∩ atomic_pair_r K)) ∩ rmw K).
+Proof. mono_tac. Qed.
+Lemma m_thin_air : mono ev (rf P ∪ dep P)⁺ (rf K ∪ dep K)⁺. Proof. mono_tac. Qed.
+Lemma m_sc_loc : mono ev (strong P (com P) ∪ po_loc P)⁺ (strong K (com K) ∪ po_loc K)⁺.
+Proof. unfold strong; mono_tac. Qed.
+Lemma m_causality : mono ev ((rf P ∪ fr P) ⨾ cause P) ((rf K ∪ fr K) ⨾ cause K). Proof. mono_tac. Qed.
+Lemma m_unordered : mono ev (ms_r P ∪ cause P ∪ (cause P)⁻¹) (ms_r K ∪ cause K ∪ (cause K)⁻¹). Proof. mono_tac. Qed.
+Lemma m_co_strong : mono ev (⦗Write P⦘ ⨾ ms_r P ⨾ ⦗Write P⦘) (⦗Write K⦘ ⨾ ms_r K ⨾ ⦗Write K⦘). Proof. mono_tac. Qed.
+Lemma m_co_plus : mono ev (co P)⁺ (co K)⁺. Proof. mono_tac. Qed.
+Lemma m_sc_plus : mono ev (sc P)⁺ (sc K)⁺. Proof. mono_tac. Qed.
+Lemma m_co_ct : mono ev (co P)⁺ (co K)⁺. Proof. mono_tac. Qed.
+
 End Derived.
