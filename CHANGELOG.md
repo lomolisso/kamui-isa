@@ -8,6 +8,8 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- Kamui memory model (`spec/memory-model.md`, `models/kamui/`): every memory instruction's meaning, the meaning of
+  the standard RISC-V atomics and fences on GPU memory, the PTX lowering and its litmus and bounded checks.
 - Execution-model design decisions in `docs/design/`: H100 register model, 64-bit instructions, convergence, scopes,
   addressing and the uniform datapath.
 - PTX 8.7 feature catalog with coverage checks against the manual, clang 20 and the release notes, and the
@@ -43,6 +45,11 @@ All notable changes to this project are listed here. The format follows
   frees a program from the axioms but not from written values (decisions D37, D38).
 - PTX 8.7 Alloy model: a bulk copy from `.shared::cta` into the issuing CTA is undefined behaviour, and a generic
   read is ordered before a later async-proxy write without a proxy fence (decisions D39, D40).
+
+### Fixed
+
+- PTX 8.7 Alloy model: the Fence-SC axiom applies only to morally strong pairs of `fence.sc`, as the manual says
+  (decision D41).
 
 ## [0.1.0] - 2026-10-31
 

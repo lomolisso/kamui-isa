@@ -64,7 +64,7 @@ Custom extensions use the RISC-V vendor prefix `Xkm`. Each family has one specif
 | `Xkmsimt` | warp spawn, convergence barriers and independent thread scheduling, predicate registers and guards, special-register CSRs (`%tid`, `%ntid`, `%ctaid`, `%laneid`, `%warpid`, `%smid`, `%clock64`, `%globaltimer`, cluster ids) |
 | `Xkmwarp` | `shfl.sync`, `vote.sync`, `match.sync`, `redux.sync`, `activemask`, `elect.sync` |
 | `Xkmbar` | named barriers with counts, `bar.arrive`, `bar.red`, `barrier.cluster` |
-| `Xkmscope` | scoped and ordered `ld`, `st`, `atom`, `red`, `fence`, `fence.proxy`, in global, shared, local and generic forms |
+| `Xkmscope` | scoped and ordered `ld`, `st`, `atom`, `red`, `fence`, `fence.proxy`, in global, shared (own CTA), local and generic forms |
 | `Xkmuni` | uniform registers and predicates, uniform integer instructions, moves between the files, uniform branches |
 | `Xkmmbar` | `mbarrier` init, arrive, `arrive.expect_tx`, `try_wait`, `test_wait` with phase parity |
 | `Xkmasync` | `cp.async`, `cp.async.bulk`, tensor TMA, commit and wait groups |
@@ -111,7 +111,9 @@ guiding rule is that Kamui works like the H100 while staying a RISC-V ISA.
 2. **Convergence** ([convergence.md](design/convergence.md)): independent thread scheduling with convergence
    barriers, required from tier 1.
 3. **Memory scopes** ([scope-encoding.md](design/scope-encoding.md)): scope and ordering fields in every memory
-   instruction; all GPU memory follows the PTX 8.7 memory model; plain RISC-V loads and stores are `.weak`.
+   instruction; all GPU memory follows the PTX 8.7 memory model; plain RISC-V loads and stores are `.weak`. The
+   memory model itself, every memory instruction's meaning and the lowering from PTX are in
+   [spec/memory-model.md](../spec/memory-model.md).
 4. **Addressing** ([addressing.md](design/addressing.md)): the H100's windows and its global, shared, local and
    generic instructions.
 5. **Uniform datapath** ([uniform-datapath.md](design/uniform-datapath.md)): the H100's uniform registers,

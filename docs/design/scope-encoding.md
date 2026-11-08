@@ -46,9 +46,10 @@ regions the platform does not mark as GPU memory.
 accesses of that width, like the H100's plain `LD`/`LDG` without `.STRONG`. This is what lets the compiler use a
 32-bit standard instruction in place of a weak Kamui load or store.
 
-The meaning of the standard atomic and ordering instructions on GPU memory (the A extension, Zacas, Zabha,
-Zalasr, Zawrs, `FENCE`) is fixed by the Kamui memory model specification. The starting proposal is the system
-scope, the strongest, so that standard code stays correct; scoped code uses the Kamui instructions.
+The standard atomic and ordering instructions on GPU memory (the A extension, Zacas, Zabha, Zalasr, `FENCE`) are
+exact PTX operations at the system scope, the widest; scoped code uses the Kamui instructions. The table is in the
+Kamui memory model specification, [`spec/memory-model.md`](../../spec/memory-model.md) section 6 (decided
+2026-11-06).
 
 ## Why
 
