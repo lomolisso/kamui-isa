@@ -27,10 +27,12 @@ Run in the dev container after `make -C proofs/rocq checker`:
     tools/dev.sh 'proofs/rocq/extract/litmus.py --jobs 24'                  # every test, all three models
     tools/dev.sh 'proofs/rocq/extract/litmus.py --model kamui-alloy mp'     # tests whose name contains "mp"
     tools/dev.sh 'proofs/rocq/extract/litmus.py --max 20000 --jobs 24'
+    tools/dev.sh 'proofs/rocq/extract/litmus.py --report'                  # the table of results.csv, in Markdown
 
-Results: build/rocq-extract/litmus/results.csv (one row per test and model) and, for each disagreement, the dump
-and the checker's answers in build/rocq-extract/litmus/fail/. Exit status 1 if any execution or verdict disagrees,
-or if a test was cut at --max (its verdict is then not checked).
+Results: build/rocq-extract/litmus/results.csv (one row per test and model; a run of some tests replaces their rows
+and keeps the others) and, for each disagreement, the dump and the checker's answers in
+build/rocq-extract/litmus/fail/. Exit status 1 if any execution or verdict of this run disagrees, or if a test was
+cut at --max (its verdict is then not checked).
 """
 import argparse
 import csv
@@ -145,13 +147,35 @@ def run(tid, model, expected, args):
                 detail="; ".join(bad[:3]))
 
 
+FIELDS = ["test", "model", "status", "mode", "instances", "verdict", "expected", "seconds", "detail"]
+
+
+def report():
+    """Print results.csv as a Markdown table: per model and mode, the test runs by status and the executions."""
+    rows = list(csv.DictReader(open(OUT / "results.csv")))
+    statuses = sorted({r["status"] for r in rows}, key=lambda x: (x != "ok", x))
+    print("| Model | Executions enumerated | Test runs | " + " | ".join(statuses) + " | Executions checked |")
+    print("|---" * (4 + len(statuses)) + "|")
+    for m in MODELS + ("all",):
+        for mode in ("outcome", "all", "candidates", "total"):
+            sel = [r for r in rows if (m == "all" or r["model"] == m) and (mode == "total" or r["mode"] == mode)]
+            if not sel:
+                continue
+            n = [str(sum(r["status"] == st for r in sel)) for st in statuses]
+            ex = sum(int(r["instances"] or 0) for r in sel)
+            print(f"| {m} | {mode} | {len(sel)} | " + " | ".join(n) + f" | {ex} |")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("filter", nargs="*", help="only tests whose name contains one of these strings")
     ap.add_argument("--model", choices=MODELS + ("all",), default="all")
     ap.add_argument("--jobs", type=int, default=8)
     ap.add_argument("--max", type=int, default=3000, help="instances per test at most (default 3000)")
+    ap.add_argument("--report", action="store_true", help="print the table of results.csv and stop")
     args = ap.parse_args()
+    if args.report:
+        return report()
     if not CHECKER.exists():
         sys.exit("no checker: run make -C proofs/rocq checker first")
     models = MODELS if args.model == "all" else (args.model,)
@@ -160,11 +184,14 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(args.jobs) as ex:
         res = list(ex.map(lambda r: run(r["test"], r["model"], r["result"], args), rows))
-    fields = ["test", "model", "status", "mode", "instances", "verdict", "expected", "seconds", "detail"]
+    old = []
+    if (OUT / "results.csv").exists():
+        done = {(r["test"], r["model"]) for r in res}
+        old = [r for r in csv.DictReader(open(OUT / "results.csv")) if (r["test"], r["model"]) not in done]
     with open(OUT / "results.csv", "w", newline="") as f:
-        w = csv.DictWriter(f, fields)
+        w = csv.DictWriter(f, FIELDS)
         w.writeheader()
-        w.writerows(res)
+        w.writerows(sorted(old + res, key=lambda r: (r["test"], r["model"])))
     counts = {}
     for r in res:
         counts[r["status"]] = counts.get(r["status"], 0) + 1
