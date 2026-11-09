@@ -59,8 +59,7 @@ if [ ! -d "$classes" ]; then
 fi
 
 w=""
-cleanup() { if [ -n "$w" ]; then rm -rf "$w"; fi; }
-trap cleanup EXIT
+trap '[ -z "$w" ] || rm -rf "$w"' EXIT
 
 status=0
 for q in "${queries[@]}"; do

@@ -27,11 +27,11 @@ src="$here/extra.als"
 cmds=()
 for a in "${@:-all}"; do
   case "$a" in
-    all)    mapfile -t c < <(grep -oE '^[a-z_0-9]+_3:' "$src" | tr -d :); cmds+=("${c[@]}")
-            mapfile -t c < <(grep -oE '^run [a-z_]+' "$src" | cut -d' ' -f2); cmds+=("${c[@]}") ;;
-    std)    mapfile -t c < <(grep -oE '^[a-z_0-9]+_3:' "$src" | tr -d :); cmds+=("${c[@]}") ;;
-    sanity) mapfile -t c < <(grep -oE '^run sanity_[a-z_]+' "$src" | cut -d' ' -f2); cmds+=("${c[@]}") ;;
-    broken) mapfile -t c < <(grep -oE '^run broken_[a-z_]+' "$src" | cut -d' ' -f2); cmds+=("${c[@]}") ;;
+    all)    mapfile -t found < <(grep -oE '^[a-z_0-9]+_3:' "$src" | tr -d :); cmds+=("${found[@]}")
+            mapfile -t found < <(grep -oE '^run [a-z_]+' "$src" | cut -d' ' -f2); cmds+=("${found[@]}") ;;
+    std)    mapfile -t found < <(grep -oE '^[a-z_0-9]+_3:' "$src" | tr -d :); cmds+=("${found[@]}") ;;
+    sanity) mapfile -t found < <(grep -oE '^run sanity_[a-z_]+' "$src" | cut -d' ' -f2); cmds+=("${found[@]}") ;;
+    broken) mapfile -t found < <(grep -oE '^run broken_[a-z_]+' "$src" | cut -d' ' -f2); cmds+=("${found[@]}") ;;
     *)      cmds+=("$a") ;;
   esac
 done
@@ -41,7 +41,7 @@ out="$(mktemp -p "$base" results.XXXX)"
 echo "results: $out" >&2
 
 run_one() {
-  c="$1"
+  local c="$1" w start s cnf log r t want ok
   w="$(mktemp -d -p "$base")"
   cp "$root"/models/ptx87/{ptx87,util}.als "$root"/models/kamui/{kamui,compile_ptx87_kamui}.als "$here/extra.als" "$w/"
   start=$(date +%s)
