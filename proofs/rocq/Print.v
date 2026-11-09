@@ -3,7 +3,7 @@
 
 From KamuiProof Require Import Ptx87 Kamui Lowering.
 Require Import KamuiProof.Theorem.
-From KamuiProof.proof Require Import Main.
+From KamuiProof.proof Require Import Main Broken.
 
 Print LoweringRel.
 Print correct_for.
@@ -14,3 +14,4 @@ Print broken_lowerings_fail.
 
 Print Assumptions lowering_correct.
 Print Assumptions lowering_correct_programs.
+Print Assumptions lowering_broken_fail.

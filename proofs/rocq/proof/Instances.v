@@ -180,3 +180,74 @@ Proof.
   rewrite forallb_forall in B; specialize (B p (all_proxies_in p)).
   simpl in Hpr; rewrite Hpr in B; exact B.
 Qed.
+
+(** ** Facts about concrete executions, by computation
+
+    [psolve leaf] proves [bspec ?b Q] for a proposition [Q] about concrete executions and builds the boolean [?b]
+    from the shape of [Q]: [forall] and [exists] over a carrier become [forallb] and [existsb], the connectives
+    become boolean ones, and each atom ([R x y], [Q x], [x = y]) becomes an entry of the matrix that a checker
+    computes for it ([leaf] finds the checker's specification). [by_bool leaf] then proves [Q] by computing
+    [?b]. *)
+
+Lemma bf_forall {n} (p : nat -> bool) (P : Fin n -> Prop) :
+  (forall i (x : Fin n), fin_val x = i -> bspec (p i) (P x)) -> bspec (forallb p (List.seq 0 n)) (forall x, P x).
+Proof. intros H; apply bspec_forallb; intros x; apply (H _ x eq_refl). Qed.
+Lemma bf_exists {n} (p : nat -> bool) (P : Fin n -> Prop) :
+  (forall i (x : Fin n), fin_val x = i -> bspec (p i) (P x)) -> bspec (existsb p (List.seq 0 n)) (exists x, P x).
+Proof. intros H; apply bspec_existsb; intros x; apply (H _ x eq_refl). Qed.
+Lemma bf_forall_proxy (p : Proxy -> bool) (P : Proxy -> Prop) :
+  (forall q, bspec (p q) (P q)) -> bspec (forallb p all_proxies) (forall q, P q).
+Proof. intros H; apply bspec_foralll; [apply all_proxies_in | exact H]. Qed.
+Lemma bspec_false' : bspec false False. Proof. unfold bspec; split; [discriminate | intros []]. Qed.
+
+Lemma gen_pre_none nP nK FM (VM : mvalid nP nK FM = true) x i : fin_val x = i ->
+  bspec (match pre_at FM i with Some f => negb (Nat.ltb f nK) | None => true end) (pre (@dmap nP nK FM VM) x = None).
+Proof.
+  intros <-; unfold bspec; simpl; destruct (pre_at FM (fin_val x)) as [f |] eqn:E; [| split; reflexivity].
+  unfold fin_of; destruct (lt_dec f nK) as [H | H].
+  - rewrite (proj2 (Nat.ltb_lt f nK) H); split; discriminate.
+  - rewrite (proj2 (Nat.ltb_nlt f nK) H); split; reflexivity.
+Qed.
+
+Ltac solve_val := first [match goal with H : fin_val _ = _ |- _ => exact H end | reflexivity].
+
+Ltac pstep leaf :=
+  cbv beta;
+  match goal with
+  | |- bspec _ (forall x : Fin _, _) => refine (bf_forall (fun i => _) _ _); intros ? ? ?
+  | |- bspec _ (forall q : Proxy, _) => refine (bf_forall_proxy (fun q => _) _ _); intros ?
+  | |- bspec _ (exists x : Fin _, _) => refine (bf_exists (fun i => _) _ _); intros ? ? ?
+  | |- bspec _ (_ /\ _) => refine (bspec_and _ _)
+  | |- bspec _ (_ \/ _) => refine (bspec_or _ _)
+  | |- bspec _ (~ _) => refine (bspec_not _)
+  | |- bspec _ (_ <-> _) => refine (bspec_iff _ _)
+  | |- bspec _ (_ -> _) => refine (bspec_imp _ _)
+  | |- bspec _ True => exact bspec_true
+  | |- bspec _ False => exact bspec_false'
+  | |- bspec _ (same_relation _ _) => unfold same_relation
+  | |- bspec _ (inclusion _ _) => unfold inclusion
+  | |- bspec _ (set_union _ _ _) => unfold set_union
+  | |- bspec _ (set_inter _ _ _) => unfold set_inter
+  | |- bspec _ (set_minus _ _ _) => unfold set_minus
+  | |- bspec _ (@eq (Fin _) _ _) => eapply gen_eq; solve_val
+  | |- bspec _ (@eq Kind _ _) => apply kind_eqb_eq
+  | |- bspec _ (@eq Proxy _ _) => apply proxy_eqb_eq
+  | |- bspec _ (@eq bool (mem1 _ _) true) => eapply gen_mem1; solve_val
+  | |- bspec _ (widen (dmap _ _ _ _) _) => cbn [widen dmap]
+  | |- bspec _ (relax (dmap _ _ _ _) _) => cbn [relax dmap]
+  | |- bspec _ (@eq (option _) (pre _ _) None) => eapply gen_pre_none; solve_val
+  | |- bspec _ (proxy _ _ _) => eapply gen_memp; solve_val
+  | |- bspec _ (dirs _ _ _ _) => eapply gen_memd; solve_val
+  | |- bspec _ _ => first [eapply gen_get; [leaf | solve_val | solve_val] | eapply gen_vget; [leaf | solve_val]]
+  end.
+
+Ltac psolve leaf := repeat (pstep leaf).
+Ltac by_bool leaf := eapply bspec_use; [solve [psolve leaf] | vm_compute; reflexivity].
+
+(** [x] is the only element of [mem1 [fin_val x]]. *)
+Lemma set1_mem {n} (a e : Fin n) : mem1 [fin_val a] (fin_val e) = true <-> set1 a e.
+Proof.
+  unfold mem1, set1; simpl; rewrite orb_false_r, Nat.eqb_eq; split; [intros E; apply fin_eq; auto | intros ->; reflexivity].
+Qed.
+Lemma none_mem {n} (e : Fin n) : mem1 [] (fin_val e) = true <-> (∅ : Fin n -> Prop) e.
+Proof. simpl; split; [discriminate | intros []]. Qed.
