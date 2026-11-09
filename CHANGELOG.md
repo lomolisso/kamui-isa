@@ -8,6 +8,8 @@ All notable changes to this project are listed here. The format follows
 
 ### Added
 
+- Rocq proof that the PTX 8.7 to Kamui lowering is correct for every program (`proofs/rocq/`), with checkers
+  tested against Alloy on every litmus execution.
 - Kamui memory model (`spec/memory-model.md`, `models/kamui/`): every memory instruction's meaning, the meaning of
   the standard RISC-V atomics and fences on GPU memory, the PTX lowering and its litmus and bounded checks.
 - Execution-model design decisions in `docs/design/`: H100 register model, 64-bit instructions, convergence, scopes,
