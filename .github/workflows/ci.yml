@@ -132,6 +132,7 @@ jobs:
           python tools/litmus/scorecard.py --check
           python tools/litmus/mutate.py --check
           python tools/litmus/mutate.py --report-check
+          python proofs/rocq/extract/to_rocq.py --check
 
       # The Rocq proof of the PTX 8.7 to Kamui lowering (proofs/rocq), in the official Rocq image (the versions of
       # the dev image's Rocq switch). The built relation library (deps/hahn) is cached between runs.
