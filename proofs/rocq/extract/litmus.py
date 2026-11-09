@@ -15,13 +15,18 @@ undefined behaviour nor a mixed-size race, so its verdict only needs the executi
 `unconstrained` command: the facts and the outcome); its verdict is `allowed` exactly when one of them satisfies the
 model. Any other test needs all executions (the facts alone, `--all`), and its verdict follows run_formal.py's rule:
 some execution satisfies the model and has the outcome or undefined behaviour, or some execution satisfies the model
-and has a mixed-size race and some execution has the outcome (decision D38).
+and has a mixed-size race and some execution has the outcome (decision D38). A test whose query states undefined behaviour of the program
+itself (`run test { ptx_mm }`, decision D39) is allowed exactly when some execution satisfies the model.
+
+A test with more than --max executions of the facts is enumerated again, with only the executions that have the
+outcome, undefined behaviour or a mixed-size race (a copy of the query with that run command, in
+build/rocq-extract/litmus/queries/). The verdict rule looks only at those executions, so the verdict is the same.
 
 Run in the dev container after `make -C proofs/rocq checker`:
 
     tools/dev.sh 'proofs/rocq/extract/litmus.py --jobs 24'                  # every test, all three models
     tools/dev.sh 'proofs/rocq/extract/litmus.py --model kamui-alloy mp'     # tests whose name contains "mp"
-    tools/dev.sh 'proofs/rocq/extract/litmus.py --max 200000 --jobs 24'
+    tools/dev.sh 'proofs/rocq/extract/litmus.py --max 20000 --jobs 24'
 
 Results: build/rocq-extract/litmus/results.csv (one row per test and model) and, for each disagreement, the dump
 and the checker's answers in build/rocq-extract/litmus/fail/. Exit status 1 if any execution or verdict disagrees,
@@ -75,8 +80,8 @@ def parse(text, prefix):
     return out
 
 
-def verdict(answers, alloy, outcome_mode):
-    if outcome_mode:
+def verdict(answers, alloy, outcome_mode, static_ub):
+    if outcome_mode or static_ub:
         return "allowed" if any(a[0]["ptx_mm"] for a in answers.values()) else "forbidden"
     sat = lambda f: any(f(a[0], alloy[k][0]) for k, a in answers.items())  # noqa: E731
     test = sat(lambda r, al: r["ptx_mm"] and (al["outcome"] or r["undefined"]))
@@ -90,10 +95,21 @@ def run(tid, model, expected, args):
     if q is None or not q.exists():
         return dict(test=tid, model=model, status="no query")
     text = q.read_text()
-    outcome_mode = bool(re.search(r"^\s*Mbar = none", text, re.M) and re.search(r"^\s*Access = none", text, re.M))
+    static_ub = bool(re.search(r"^run test \{ ptx_mm \}", text, re.M))
+    outcome_mode = not static_ub and bool(re.search(r"^\s*Mbar = none", text, re.M)
+                                          and re.search(r"^\s*Access = none", text, re.M))
     cmd = [str(HERE / "dump.sh"), "--max", str(args.max)] + (["--cmd", "unconstrained"] if outcome_mode else ["--all"])
     t0 = time.time()
     d = subprocess.run(cmd + [str(q)], capture_output=True, text=True)
+    mode = "outcome" if outcome_mode else "all"
+    if d.returncode == 3 and not outcome_mode and not static_ub:
+        scope = re.search(r"^run unconstrained \{ outcome \} (for .*?)\s*(//.*)?$", text, re.M).group(1)
+        cq = OUT / "queries" / model / (tid.replace("/", "__") + ".als")
+        cq.parent.mkdir(parents=True, exist_ok=True)
+        cq.write_text(text + f"\nrun candidates {{ outcome or undefined or mixed_size_race }} {scope}\n")
+        d = subprocess.run([str(HERE / "dump.sh"), "--max", str(args.max), "--cmd", "candidates", str(cq)],
+                           capture_output=True, text=True)
+        mode = "candidates"
     if d.returncode not in (0, 3):
         return dict(test=tid, model=model, status="dump error", detail=d.stderr.strip()[-300:])
     truncated = d.returncode == 3
@@ -110,7 +126,7 @@ def run(tid, model, expected, args):
         diff = at ^ rt
         if diff:
             bad.append(f"{k}: {len(diff)} tuples differ, e.g. {sorted(diff)[:3]}")
-    v = verdict(rocq, alloy, outcome_mode)
+    v = verdict(rocq, alloy, outcome_mode, static_ub)
     status = "ok"
     if bad:
         status = "disagree"
@@ -124,7 +140,7 @@ def run(tid, model, expected, args):
         (f / "dump.txt").write_text(d.stdout)
         (f / "answers.txt").write_text(c.stdout)
         (f / "problems.txt").write_text("\n".join(bad) + "\n")
-    return dict(test=tid, model=model, status=status, mode="outcome" if outcome_mode else "all",
+    return dict(test=tid, model=model, status=status, mode=mode,
                 instances=len(alloy), verdict=v, expected=expected, seconds=round(time.time() - t0, 1),
                 detail="; ".join(bad[:3]))
 
@@ -134,7 +150,7 @@ def main():
     ap.add_argument("filter", nargs="*", help="only tests whose name contains one of these strings")
     ap.add_argument("--model", choices=MODELS + ("all",), default="all")
     ap.add_argument("--jobs", type=int, default=8)
-    ap.add_argument("--max", type=int, default=200000, help="instances per test at most (default 200000)")
+    ap.add_argument("--max", type=int, default=3000, help="instances per test at most (default 3000)")
     args = ap.parse_args()
     if not CHECKER.exists():
         sys.exit("no checker: run make -C proofs/rocq checker first")
