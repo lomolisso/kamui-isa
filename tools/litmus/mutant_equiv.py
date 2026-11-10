@@ -138,7 +138,11 @@ def defs(text):
     return out
 
 
-def module(m, bounds):
+CORE = ("no AsyncUnit and no Marker and no MbarEv and no acc and no SyncRestrictCta + SyncRestrictCluster + "
+        "OpRestrictInit and ProxyFence in PlainProxyFence and no pspace and Address.space in Global + Shared")
+
+
+def module(m, bounds, core=False):
     text = MODEL.read_text()
     if text.count(m["find"]) != 1:
         raise SystemExit(f"{m['id']}: its text does not occur once")
@@ -159,7 +163,10 @@ def module(m, bounds):
         body + [""] + body_t + [""] + SANITY
     for b in bounds:
         for p in PREDS:
-            out.append(f"eq_{p}_{b}: check {{ emitted => ({p} <=> {p}_m) }} {SCOPES[b]}")
+            cond = f"(emitted and {CORE})" if core else "emitted"
+            out.append(f"eq_{p}_{b}: check {{ {cond} => ({p} <=> {p}_m) }} {SCOPES[b]}")
+    if core:
+        return "\n".join(out) + "\n"
     # Coherence order is a witness: the solver picks co, and ptx87.als only uses its closure ^co (and acyclic[co],
     # rf + co in same_location_r, which ^co also satisfies), so a test's verdict is the same with co and with ^co.
     # A mutant that reads co itself can differ only on executions whose co is not transitive. It judges every
@@ -204,6 +211,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("ids", nargs="*")
     ap.add_argument("--validate", action="store_true", help="check `emitted` against every translated query")
+    ap.add_argument("--core", action="store_true",
+                    help="search only executions without asynchronous units, mbarriers, mixed-size accesses or "
+                         "restricted fences (counterexamples that tools/litmus/cex_litmus.py can write back)")
     ap.add_argument("--bounds", default="4,5")
     ap.add_argument("--limit", default="3600")
     ap.add_argument("--jobs", default="8")
@@ -219,22 +229,26 @@ def main():
         if m["model"] != "alloy":
             print(f"{mid}: not an Alloy mutant")
             continue
-        src = module(m, bounds)
+        src = module(m, bounds, a.core)
         if src is None:
             print(f"{mid}: changes a fact (not handled)")
             (OUT / f"{mid}.txt").write_text("fact\n")
             continue
-        path = OUT / f"mut_{re.sub(r'[^A-Za-z0-9_]', '_', mid)}.als"
+        tag = "_core" if a.core else ""
+        path = OUT / f"mut_{re.sub(r'[^A-Za-z0-9_]', '_', mid)}{tag}.als"
         path.write_text(src)
         env = dict(os.environ, LIMIT=a.limit, JOBS=a.jobs)
         r = subprocess.run([str(EQUIV / "check.sh"), str(path)], capture_output=True, text=True, env=env)
         res = [l for l in r.stdout.splitlines() if l[:3] in ("eq_", "cw_", "cm_")]
-        (OUT / f"{mid}.txt").write_text("\n".join(res) + "\n")
+        (OUT / f"{mid}{tag.replace('_', '.')}.txt").write_text("\n".join(res) + "\n")
         ok = lambda k: all("UNSAT" in l for l in res if l.startswith(k)) and any(l.startswith(k) for l in res)
         bad = [l for l in r.stdout.splitlines() if l.startswith("sanity_") and "WRONG" in l]
         verdict = "no result" if bad or any("no result" in l for l in res if l.startswith("eq_")) else \
             "equivalent" if ok("eq_") else \
             "equivalent up to the coherence witness" if ok("cw_") and ok("cm_") else "differs"
+        if a.core:   # agreement on the core fragment proves nothing about the whole model
+            verdict = {"equivalent": "agrees on the core fragment", "differs": "differs on the core fragment"}.get(
+                verdict, verdict)
         res = [l for l in res if l.startswith("eq_")] if verdict == "equivalent" else res
         print(f"{mid}: {verdict} ({'; '.join(res)})", flush=True)
     return 0
