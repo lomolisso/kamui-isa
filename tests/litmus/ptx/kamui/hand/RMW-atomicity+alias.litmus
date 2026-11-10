@@ -1,0 +1,10 @@
+PTX RMW-atomicity+alias
+"Two atom.exch on the same memory through two virtual addresses (x and its alias y), in one CTA. RMW atomicity (8.10.3) also holds for atomic operations of the same proxy and scope on overlapping memory (8.7.2), aliases included: no write comes between the read and the write of either. P1 reading 0, P0 reading 2 (from P1) and the final value 2 (P1's write last) would put P0's write between P1's read and write: forbidden."
+{
+x = 0 @cta 0;
+y @ generic aliases x;
+}
+ P0@cta 0,gpu 0                  | P1@cta 0,gpu 0                  ;
+ atom.relaxed.gpu.exch r0, y, 1  | atom.relaxed.gpu.exch r0, x, 2  ;
+exists
+(P0:r0 == 2 /\ P1:r0 == 0 /\ x == 2)

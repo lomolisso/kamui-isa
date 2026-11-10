@@ -1,0 +1,10 @@
+KAMUI RMW-atomicity+alias
+"Lowered from tests/litmus/ptx/kamui/hand/RMW-atomicity+alias.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x = 0 @cta 0;
+y @ generic aliases x;
+}
+ P0@cta 0,gpu 0     | P1@cta 0,gpu 0     ;
+ amoswap.w r0, y, 1 | amoswap.w r0, x, 2 ;
+exists
+(P0:r0 == 2 /\ P1:r0 == 0 /\ x == 2)

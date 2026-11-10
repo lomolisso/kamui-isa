@@ -1,0 +1,11 @@
+PTX CoWR+3writes+surface
+"P1 writes x twice (generic, then surface) and reads it back through the surface proxy; P0 writes x once. The final value 3 puts P0's write first in coherence order, so P1's surface read, which follows its own surface write of 3, cannot read P0's 1 (SC per location, 8.10.2, over the transitive coherence order, 8.9.6): forbidden."
+{
+x = 0;
+}
+ P0@cta 0,gpu 0       | P1@cta 0,gpu 0       ;
+ st.relaxed.gpu x, 1  | st.relaxed.gpu x, 2  ;
+                      | sust.weak x, 3       ;
+                      | suld.weak r0, x      ;
+exists
+(P1:r0 == 1 /\ x == 3)

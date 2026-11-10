@@ -1,0 +1,12 @@
+KAMUI CoWW+alias+fence.proxy.alias
+"Lowered from tests/litmus/ptx/kamui/hand/CoWW+alias+fence.proxy.alias.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x = 0;
+y @ generic aliases x;
+}
+ P0@cta 0,gpu 0     ;
+ kst.weak x, 1      ;
+ kfence.proxy.alias ;
+ kst.weak y, 2      ;
+exists
+(x == 1)
