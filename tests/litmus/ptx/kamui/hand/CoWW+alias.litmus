@@ -1,0 +1,11 @@
+PTX CoWW+alias
+"Two stores of one thread to the same memory through two virtual addresses (x and its alias y), no fence. Distinct virtual addresses behave as distinct proxies (8.6), so SC per location does not order the stores: x == 1 at the end (the second store first in coherence order) is allowed."
+{
+x = 0;
+y @ generic aliases x;
+}
+ P0@cta 0,gpu 0 ;
+ st.weak x, 1   ;
+ st.weak y, 2   ;
+exists
+(x == 1)

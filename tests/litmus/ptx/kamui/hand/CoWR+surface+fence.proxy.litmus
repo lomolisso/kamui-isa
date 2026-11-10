@@ -1,0 +1,15 @@
+PTX CoWR+surface+fence.proxy
+"Write then two reads of one location through the surface proxy, in one thread, with a surface proxy fence between the reads. SC per location (8.10.2) makes both reads see the write."
+{
+x = 0;
+s @ surface aliases x;
+P0:r0=0;
+P0:r1=0;
+}
+ P0@cta 0,gpu 0       ;
+ sust.weak s, 1       ;
+ suld.weak r0, s      ;
+ fence.proxy.surface  ;
+ suld.weak r1, s      ;
+exists
+(P0:r0 == 0 \/ P0:r1 == 0)

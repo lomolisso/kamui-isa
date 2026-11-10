@@ -1,0 +1,12 @@
+PTX CoWW+alias+fence.proxy.alias
+"As CoWW+alias, with fence.proxy.alias between the stores: the fence orders operations on aliases (8.6), so the stores keep program order in coherence order and x == 1 at the end is forbidden."
+{
+x = 0;
+y @ generic aliases x;
+}
+ P0@cta 0,gpu 0     ;
+ st.weak x, 1       ;
+ fence.proxy.alias  ;
+ st.weak y, 2       ;
+exists
+(x == 1)

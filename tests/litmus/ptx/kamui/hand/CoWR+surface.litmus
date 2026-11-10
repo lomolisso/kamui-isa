@@ -1,0 +1,12 @@
+PTX CoWR+surface
+"Write then read of one location through the surface proxy, in one thread. Both use the same proxy and the same address, so SC per location (8.10.2) makes the read see the write: r0 == 0 is forbidden."
+{
+x = 0;
+s @ surface aliases x;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0 ;
+ sust.weak s, 1 ;
+ suld.weak r0, s ;
+exists
+(P0:r0 == 0)
