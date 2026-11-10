@@ -1,0 +1,244 @@
+#!/usr/bin/env python3
+"""Check by bounded model finding whether a surviving mutant of ptx87.als is equivalent to the model.
+
+A mutant that no litmus test kills either changes nothing (it is equivalent), or the suite has a gap. Instead of an
+argument by hand, this tool asks Alloy: it writes a module that holds every `fun` and `pred` of ptx87.als twice,
+once as is and once with the mutation applied and an `_m` suffix on every name, and checks that the two versions
+of `ptx_mm`, `undefined` and `mixed_size_race` agree on every execution with at most N events that has the shape
+of a translated litmus test (`emitted` below). A counterexample is
+an execution that a new litmus test can pin. Mutants that change a fact are not handled (the facts exist once).
+
+    python3 tools/litmus/mutant_equiv.py R-cause_base-closure-386      # bounds 4 and 5, in the dev container
+    python3 tools/litmus/mutant_equiv.py --bounds 4 --limit 3600 ID...
+
+Writes build/mutation/equiv/<id>.txt (one line per command: UNSAT, SAT or no result) and prints a summary. Uses
+models/ptx87/equiv/check.sh (kissat; counterexamples kept in build/ptx87-equiv/cex/).
+"""
+import argparse
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+import yaml
+
+ROOT = Path(__file__).resolve().parents[2]
+MODEL = ROOT / "models" / "ptx87" / "ptx87.als"
+EQUIV = ROOT / "models" / "ptx87" / "equiv"
+OUT = ROOT / "build" / "mutation" / "equiv"
+SCOPES = {4: "for 4 but 6 Scope, 3 Address, 3 Access, 4 Int", 5: "for 5 but 7 Scope, 3 Address, 3 Access, 4 Int"}
+PREDS = ("ptx_mm", "undefined", "mixed_size_race")
+
+# The facts of ptx87.als accept executions that no program has: a store that is also a proxy fence, `issue` edges
+# between ordinary events, a complete-tx that orders itself. A mutant may differ only there, which no test can
+# show. `emitted` states what tools/litmus/to_alloy87.py always emits, and the checks compare the two versions on
+# executions it accepts only. The sanity runs show that the shape still admits the asynchronous features.
+SHAPE = """\
+fun PlainScope : Scope { Scope - CtaScope - ClusterScope - Thread }
+pred emitted {
+  // the scope tree: system, GPUs, clusters (in every GPU or in none), CTAs, threads and asynchronous units
+  System in PlainScope
+  (PlainScope - System) in System.subscope
+  System.subscope in PlainScope
+  ClusterScope in (PlainScope - System).subscope
+  CtaScope in (PlainScope - System + ClusterScope).subscope
+  some ClusterScope => CtaScope in ClusterScope.subscope
+  Thread in CtaScope.subscope
+  ClusterScope.subscope in CtaScope
+  CtaScope.subscope in Thread
+  // aliases: views of one physical location, in its state space and with its owner
+  no alias.alias
+  all a: Address | a.aliases.space = a.space and a.aliases.owner = a.owner
+  // local memory is used by its own thread only
+  all e: MemoryEvent - thd.AsyncUnit | e.address.space = Local => e.address.owner = e.thd
+  // only generic operations and the reductions of cp.reduce.async.bulk are strong (texture, surface and constant
+  // instructions take no order qualifier); weak operations have the scope of their thread
+  MemoryEvent - Weak in proxy.(Generic + Async)
+  all e: MemoryEvent & Weak | e.scope = e.thd
+  // proxy fences: fence.proxy.<kind> (PlainProxyFence) and fence.proxy.{tensormap,async}::generic.{release,acquire}
+  ProxyFence in PlainProxyFence + FenceRel + FenceAcq
+  PlainProxyFence in ProxyFence
+  all f: PlainProxyFence | some p: Proxy - Generic | f.dirs = p->Generic + Generic->p
+  all f: ProxyFence - PlainProxyFence | some p: TensorMap + Async | f.dirs = Generic->p
+  pspace in PlainProxyFence -> Space
+  paddr in FenceAcq -> Address
+  // completions go from an asynchronous unit to a marker or to another unit
+  done in thd.AsyncUnit -> (Marker + thd.AsyncUnit)
+  no done & thd.~thd
+  // an issuing thread marks the issue point; the first event of an asynchronous unit is issued
+  issue in (Marker & thd.(Thread - AsyncUnit)) -> AsyncUnit.start
+  // griddepcontrol.wait is a marker in an ordinary thread
+  gdep in Event -> (Marker & thd.(Thread - AsyncUnit))
+  // the complete-tx of an asynchronous instruction: a release update of an mbarrier in the unit, ordering that
+  // instruction's other operations
+  TxAnchor in Release & MbarEv & thd.AsyncUnit
+  no txops & iden
+  // the restricted fences are .cluster fences
+  SyncRestrictCta + SyncRestrictCluster + OpRestrictInit in scope.ClusterScope
+  // writes: st, red, atom (generic), sust, sured, suatom (surface), asynchronous copies (async); the texture and
+  // constant proxies only read
+  Write.proxy in Generic + Surface + Async
+  // operations in the async proxy are performed by asynchronous units
+  proxy.Async in thd.AsyncUnit
+  // asynchronous units perform memory operations and proxy fences only
+  thd.AsyncUnit in MemoryEvent + PlainProxyFence
+  // an mbarrier object is in shared memory, and every operation on it is a generic one; mbarrier.init is a plain
+  // write of an ordinary thread
+  Mbar in space.Shared
+  MbarEv.proxy in Generic
+  MbarInit in (Write - Release) & thd.(Thread - AsyncUnit)
+  // the issue, completion and grid-dependency edges never form a cycle with program order
+  acyclic[po + issue + done + gdep]
+  // an access (D6) is one instruction: one thread, one kind, one scope, one proxy, distinct granules
+  all a: Access | lone acc.a.thd and lone acc.a.scope and lone acc.a.proxy
+  all a: Access | acc.a in Read or acc.a in Write
+  all a: Access | (acc.a in Acquire or no acc.a & Acquire) and (acc.a in Release or no acc.a & Release)
+  acc.~acc & address.~address in iden
+  all a: Access | no acc.a or not lone acc.a
+  all a: Access | lone acc.a.address.space and lone acc.a.address.owner
+  // texture, surface and constant operations are instructions of ordinary threads
+  proxy.(Texture + Surface + Constant) in thd.(Thread - AsyncUnit)
+  // strong async-proxy operations are the read-modify-writes of cp.reduce.async.bulk
+  (MemoryEvent - Weak) & proxy.Async in Read.rmw + rmw.Write
+  // in an asynchronous unit, mbarrier operations are read-modify-write updates
+  MbarEv & thd.AsyncUnit in Read.rmw + rmw.Write
+  // no location is owned by an asynchronous unit
+  no Address.owner & AsyncUnit
+  // a completion ends at a marker or at the first event of a unit; units never acquire
+  Event.done in Marker + AsyncUnit.start
+  no Acquire & thd.AsyncUnit
+  // operations on an mbarrier object: init, inval (phase -1), read-modify-write updates and waits
+  MbarEv & Write in MbarInit + Read.rmw + { w: Write | w.ph = -1 }
+  MbarEv & Read in MbarWait + rmw.Write
+}
+"""
+SANITY = ["sanity_shape_tx: run { emitted and ptx_mm and some TxAnchor and some issue } for 5 but 7 Scope, "
+          "3 Address, 3 Access, 4 Int",
+          "sanity_shape_pf: run { emitted and ptx_mm and some ProxyFence and some proxy.Async } for 5 but 7 Scope, "
+          "3 Address, 3 Access, 4 Int"]
+
+
+def defs(text):
+    """The fun and pred definitions of the model, as (name, text), in order."""
+    lines, out, cur, depth, opened = text.split("\n"), [], None, 0, False
+    for line in lines:
+        code = line.split("//")[0]
+        if cur is None:
+            m = re.match(r"^(?:fun|pred)\s+(\w+)", code)
+            if not m:
+                continue
+            cur, depth, opened = [m.group(1), []], 0, False
+        cur[1].append(line)
+        depth += code.count("{") - code.count("}")
+        opened = opened or "{" in code
+        if opened and depth <= 0:
+            out.append((cur[0], "\n".join(cur[1])))
+            cur = None
+    return out
+
+
+def module(m, bounds):
+    text = MODEL.read_text()
+    if text.count(m["find"]) != 1:
+        raise SystemExit(f"{m['id']}: its text does not occur once")
+    mutated = text.replace(m["find"], m["replace"], 1)
+    orig_defs, mut_defs = defs(text), defs(mutated)
+    if [n for n, _ in orig_defs] != [n for n, _ in mut_defs]:
+        raise SystemExit(f"{m['id']}: the mutation changes the definitions themselves")
+    if sum(a != b for (_, a), (_, b) in zip(orig_defs, mut_defs)) == 0:
+        return None   # the mutation is outside every fun and pred: a fact
+    names = {n for n, _ in orig_defs}
+    pat = re.compile(r"\b(" + "|".join(sorted(names, key=len, reverse=True)) + r")\b")
+    body = [pat.sub(lambda x: x.group(1) + "_m", t) for _, t in mut_defs]
+    # the mutant again, with the coherence order read from CoW.tco instead of co (suffix _t)
+    body_t = [re.sub(r"\bco\b", "(CoW.tco)", pat.sub(lambda x: x.group(1) + "_t", t)) for _, t in mut_defs]
+    out = [f"// The mutant {m['id']} of ptx87.als ({m['rule']}): every fun and pred, renamed with _m, and again",
+           "// with co read from CoW.tco, renamed with _t.",
+           "module mutant", "open ptx87", "", SHAPE, "one sig CoW { tco: Write -> Write }", ""] + \
+        body + [""] + body_t + [""] + SANITY
+    for b in bounds:
+        for p in PREDS:
+            out.append(f"eq_{p}_{b}: check {{ emitted => ({p} <=> {p}_m) }} {SCOPES[b]}")
+    # Coherence order is a witness: the solver picks co, and ptx87.als only uses its closure ^co (and acyclic[co],
+    # rf + co in same_location_r, which ^co also satisfies), so a test's verdict is the same with co and with ^co.
+    # A mutant that reads co itself can differ only on executions whose co is not transitive. It judges every
+    # program as the model does if (cw) it agrees with the model when co is transitive, and (cm) whenever it
+    # accepts an execution it also accepts it with co replaced by ^co.
+    for b in bounds:
+        for p in PREDS:
+            out.append(f"cw_{p}_{b}: check {{ (emitted and co = ^co) => ({p} <=> {p}_m) }} {SCOPES[b]}")
+            out.append(f"cm_{p}_{b}: check {{ (emitted and CoW.tco = ^co and {p}_m) => {p}_t }} {SCOPES[b]}")
+    return "\n".join(out) + "\n"
+
+
+def validate(jobs):
+    """Check that every translated litmus query satisfies `emitted`: each query fixes its program in a fact and
+    leaves the execution free, so `check { emitted }` with the query's own scope must find no counterexample."""
+    import concurrent.futures as cf
+    out = ROOT / "build" / "mutation" / "emitted"
+    out.mkdir(parents=True, exist_ok=True)
+    paths = []
+    queries = ROOT / "tests" / "litmus" / "alloy-ptx87"
+    for q in sorted(queries.rglob("*.als")):
+        text = q.read_text()
+        scope = re.search(r"^run test \{.*\} (for .*?)(?://.*)?$", text, re.M).group(1).strip()
+        p = out / (re.sub(r"[^A-Za-z0-9_]", "_", str(q.relative_to(queries))) + ".als")
+        p.write_text(text + "\n" + SHAPE + f"\nemitted_ok: check {{ emitted }} {scope}\n")
+        paths.append((q, p))
+    env = dict(os.environ, JOBS="1")
+    def one(qp):
+        r = subprocess.run([str(EQUIV / "check.sh"), str(qp[1])], capture_output=True, text=True, env=env)
+        return qp[0], r.stdout.strip()
+    bad = 0
+    with cf.ThreadPoolExecutor(int(jobs)) as ex:
+        for q, res in ex.map(one, paths):
+            if "UNSAT" not in res:
+                bad += 1
+                print(f"{q.relative_to(ROOT)}: {res}", flush=True)
+    print(f"{len(paths)} queries, {bad} not accepted by emitted")
+    return 1 if bad else 0
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("ids", nargs="*")
+    ap.add_argument("--validate", action="store_true", help="check `emitted` against every translated query")
+    ap.add_argument("--bounds", default="4,5")
+    ap.add_argument("--limit", default="3600")
+    ap.add_argument("--jobs", default="8")
+    a = ap.parse_args()
+    if a.validate:
+        return validate(a.jobs)
+    bounds = [int(b) for b in a.bounds.split(",")]
+    mutants = {m["id"]: m for f in ("mutants.yaml", "mutants-reword.yaml")
+               for m in yaml.safe_load((ROOT / "models" / "ptx87" / f).read_text()) or []}
+    OUT.mkdir(parents=True, exist_ok=True)
+    for mid in a.ids:
+        m = mutants[mid]
+        if m["model"] != "alloy":
+            print(f"{mid}: not an Alloy mutant")
+            continue
+        src = module(m, bounds)
+        if src is None:
+            print(f"{mid}: changes a fact (not handled)")
+            (OUT / f"{mid}.txt").write_text("fact\n")
+            continue
+        path = OUT / f"mut_{re.sub(r'[^A-Za-z0-9_]', '_', mid)}.als"
+        path.write_text(src)
+        env = dict(os.environ, LIMIT=a.limit, JOBS=a.jobs)
+        r = subprocess.run([str(EQUIV / "check.sh"), str(path)], capture_output=True, text=True, env=env)
+        res = [l for l in r.stdout.splitlines() if l[:3] in ("eq_", "cw_", "cm_")]
+        (OUT / f"{mid}.txt").write_text("\n".join(res) + "\n")
+        ok = lambda k: all("UNSAT" in l for l in res if l.startswith(k)) and any(l.startswith(k) for l in res)
+        bad = [l for l in r.stdout.splitlines() if l.startswith("sanity_") and "WRONG" in l]
+        verdict = "no result" if bad or any("no result" in l for l in res if l.startswith("eq_")) else \
+            "equivalent" if ok("eq_") else \
+            "equivalent up to the coherence witness" if ok("cw_") and ok("cm_") else "differs"
+        res = [l for l in res if l.startswith("eq_")] if verdict == "equivalent" else res
+        print(f"{mid}: {verdict} ({'; '.join(res)})", flush=True)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

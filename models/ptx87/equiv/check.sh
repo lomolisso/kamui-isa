@@ -4,6 +4,7 @@
 #
 #   tools/dev.sh 'models/ptx87/equiv/check.sh nv2019.als'                    # every check and run of the file
 #   tools/dev.sh 'JOBS=16 models/ptx87/equiv/check.sh nv2019.als ours_atomicity_4 sanity_core_sc'
+#   tools/dev.sh 'models/ptx87/equiv/check.sh build/x/other.als'        # a file elsewhere (a path with a /)
 #
 #   JOBS    commands run at once (default 8); each uses one CPU
 #   LIMIT   time limit per command in seconds (default 3600; a command still running is reported as "no result")
@@ -20,8 +21,9 @@ alloy_home="${ALLOY6_HOME:-/opt/alloy/alloy-6.2.0}"
 jar="$alloy_home/lib/app/org.alloytools.alloy.dist.jar"
 limit="${LIMIT:-3600}"
 [ $# -ge 1 ] || { echo "usage: check.sh FILE.als [COMMAND...]" >&2; exit 2; }
-file="$1"; shift
-src="$here/$file"
+file="$(basename "$1")"
+if [ -f "$1" ] && [[ "$1" == */* ]]; then src="$(cd "$(dirname "$1")" && pwd)/$file"; else src="$here/$1"; fi
+shift
 [ -f "$src" ] || { echo "check.sh: no file $src" >&2; exit 2; }
 cmds=("$@")
 if [ ${#cmds[@]} -eq 0 ]; then
