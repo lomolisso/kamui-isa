@@ -118,6 +118,16 @@
   reason: *quorum
 
 - kind: models
+  test: ptx/kamui/hand/RMW-atomicity+alias
+  model: "*"
+  reason: >-
+    The models agree on every execution; they read the final-value condition `x == 2` differently. The two
+    exchanges use different virtual addresses of one location, so they are not morally strong and coherence order
+    need not relate their writes (8.9.6). The ptx-v8.7-alloy query reads `x == 2` as "P1's write follows P0's",
+    which with the values read breaks RMW atomicity; Dartagnan (ptx-v8.7) reads it as "no write follows P1's",
+    which also holds when the two writes are unordered (models/ptx87/equiv/README.md).
+
+- kind: models
   test: ptx/kamui/hand/CoWR+3writes+surface
   model: "*"
   reason: >-
