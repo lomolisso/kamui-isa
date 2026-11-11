@@ -1,0 +1,14 @@
+PTX mixed-size+reads-only
+"P0 reads x with a 32-bit load and P1 its low half with a 16-bit load; nobody writes x. A mixed-size data race needs at least one write (8.7.2), so the program has none and the axioms decide: P0 cannot read 0 after its own store of 1 to y (SC per location, 8.10.5): forbidden."
+{
+x[0]=0;
+x[1]=0;
+y=0;
+P0:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ ld.weak.b32 r0, x        | ld.weak.b16 r0, x[0]     ;
+ st.weak y, 1             |                          ;
+ ld.weak r1, y            |                          ;
+exists
+(P0:r1 == 0)

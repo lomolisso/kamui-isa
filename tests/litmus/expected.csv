@@ -10365,6 +10365,10 @@ ptx/kamui/hand/CoWR+fence.proxy.async+async-bulk+same-cta,kamui,(P0:r0 == 0),man
 ptx/kamui/hand/CoWR+fence.proxy.async+async-bulk+same-cta,kamui,(P0:r0 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
 +dirty",--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,3.1
 ptx/kamui/hand/CoWR+fence.proxy.async+async-bulk+same-cta,kamui,(P0:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,8.8
+ptx/kamui/hand/CoWR+mbarrier.init-negative,kamui,(P0:r0 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,5.7
+ptx/kamui/hand/CoWR+mbarrier.init-negative,kamui,(P0:r0 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,5.8
+ptx/kamui/hand/CoWR+mbarrier.init-negative,kamui,(P0:r0 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec (undefined behaviour),allowed,0.9
+ptx/kamui/hand/CoWR+mbarrier.init-negative,kamui,(P0:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,5.7
 ptx/kamui/hand/CoWR+surface,kamui,(P0:r0 == 0),ptx-v7.5,ptx-v7.5.cat sha256:a2d5f7d98e3f,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,0.6
 ptx/kamui/hand/CoWR+surface,kamui,(P0:r0 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,2.2
 ptx/kamui/hand/CoWR+surface,kamui,(P0:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,5.9
@@ -10381,6 +10385,10 @@ ptx/kamui/hand/CoWW+alias+fence.proxy.alias,kamui,(x == 1),kamui-std-alloy,kamui
 ptx/kamui/hand/CoWW+alias+fence.proxy.alias,kamui,(x == 1),ptx-v7.5,ptx-v7.5.cat sha256:a2d5f7d98e3f,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,0.6
 ptx/kamui/hand/CoWW+alias+fence.proxy.alias,kamui,(x == 1),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,2.5
 ptx/kamui/hand/CoWW+alias+fence.proxy.alias,kamui,(x == 1),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,5.5
+ptx/kamui/hand/LB-self+alias+async-bulk,kamui,(P0:r0 == 1),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,10.2
+ptx/kamui/hand/LB-self+alias+async-bulk,kamui,(P0:r0 == 1),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,10.1
+ptx/kamui/hand/LB-self+alias+async-bulk,kamui,(P0:r0 == 1),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,2.0
+ptx/kamui/hand/LB-self+alias+async-bulk,kamui,(P0:r0 == 1),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,10.0
 ptx/kamui/hand/LB-self+surface,kamui,(P0:r0 == 1),ptx-v7.5,ptx-v7.5.cat sha256:a2d5f7d98e3f,dartagnan,4.4.1,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,0.6
 ptx/kamui/hand/LB-self+surface,kamui,(P0:r0 == 1),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,2.4
 ptx/kamui/hand/LB-self+surface,kamui,(P0:r0 == 1),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,5.9
@@ -10402,12 +10410,20 @@ ptx/kamui/hand/MP+barrier.cluster-relaxed+same-cluster,kamui,(P1:r0 == 0),manual
 ptx/kamui/hand/MP+barrier.cluster-relaxed+same-cluster,kamui,(P1:r0 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
 +dirty",--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,3.3
 ptx/kamui/hand/MP+barrier.cluster-relaxed+same-cluster,kamui,(P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,8.9
+ptx/kamui/hand/MP+barrier.cluster-relaxed+strong-store,kamui,(P1:r0 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,6.9
+ptx/kamui/hand/MP+barrier.cluster-relaxed+strong-store,kamui,(P1:r0 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,6.8
+ptx/kamui/hand/MP+barrier.cluster-relaxed+strong-store,kamui,(P1:r0 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,1.8
+ptx/kamui/hand/MP+barrier.cluster-relaxed+strong-store,kamui,(P1:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,6.9
 ptx/kamui/hand/MP+fence-rel+mbarrier-rel-acq.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.5
 ptx/kamui/hand/MP+fence-rel+mbarrier-rel-acq.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.1
 ptx/kamui/hand/MP+fence-rel+mbarrier-rel-acq.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0),manual-reasoning,PTX ISA 8.7,manual,,,forbidden,
 ptx/kamui/hand/MP+fence-rel+mbarrier-rel-acq.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
 +dirty",--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,3.2
 ptx/kamui/hand/MP+fence-rel+mbarrier-rel-acq.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,6.7
+ptx/kamui/hand/MP+fence.release.sync_restrict+two-stores,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,5.4
+ptx/kamui/hand/MP+fence.release.sync_restrict+two-stores,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,5.4
+ptx/kamui/hand/MP+fence.release.sync_restrict+two-stores,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.9
+ptx/kamui/hand/MP+fence.release.sync_restrict+two-stores,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,5.5
 ptx/kamui/hand/MP+mbarrier-rel-acq+fence-acq.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.8
 ptx/kamui/hand/MP+mbarrier-rel-acq+fence-acq.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,8.4
 ptx/kamui/hand/MP+mbarrier-rel-acq+fence-acq.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0),manual-reasoning,PTX ISA 8.7,manual,,,forbidden,
@@ -10444,6 +10460,10 @@ ptx/kamui/hand/MP+mbarrier-relaxed.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0)
 ptx/kamui/hand/MP+mbarrier-relaxed.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
 +dirty",--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,3.4
 ptx/kamui/hand/MP+mbarrier-relaxed.cta+same-cta,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,6.8
+ptx/kamui/hand/MP+release-sequence+mixed-size,kamui,(P1:r0[0] == 2 /\ P1:r0[1] == 2 /\ P1:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,6.9
+ptx/kamui/hand/MP+release-sequence+mixed-size,kamui,(P1:r0[0] == 2 /\ P1:r0[1] == 2 /\ P1:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.0
+ptx/kamui/hand/MP+release-sequence+mixed-size,kamui,(P1:r0[0] == 2 /\ P1:r0[1] == 2 /\ P1:r1 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.8
+ptx/kamui/hand/MP+release-sequence+mixed-size,kamui,(P1:r0[0] == 2 /\ P1:r0[1] == 2 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.0
 ptx/kamui/hand/MP+volatile+diff-cluster,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,8.6
 ptx/kamui/hand/MP+volatile+diff-cluster,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,9.4
 ptx/kamui/hand/MP+volatile+diff-cluster,kamui,(P1:r0 == 1 /\ P1:r1 == 0),manual-reasoning,PTX ISA 8.7,manual,,,allowed,
@@ -10455,6 +10475,18 @@ ptx/kamui/hand/RMW-atomicity+alias,kamui,(P0:r0 == 2 /\ P1:r0 == 0 /\ x == 2),ka
 ptx/kamui/hand/RMW-atomicity+alias,kamui,(P0:r0 == 2 /\ P1:r0 == 0 /\ x == 2),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,5.5
 ptx/kamui/hand/RMW-atomicity+alias,kamui,(P0:r0 == 2 /\ P1:r0 == 0 /\ x == 2),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,1.8
 ptx/kamui/hand/RMW-atomicity+alias,kamui,(P0:r0 == 2 /\ P1:r0 == 0 /\ x == 2),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,5.6
+ptx/kamui/hand/mixed-size+reads-only,kamui,(P0:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,6.7
+ptx/kamui/hand/mixed-size+reads-only,kamui,(P0:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,6.2
+ptx/kamui/hand/mixed-size+reads-only,kamui,(P0:r1 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,1.8
+ptx/kamui/hand/mixed-size+reads-only,kamui,(P0:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,6.4
+ptx/kamui/hand/tensormap+fence.release+acquire-fence,kamui,(P0:r2 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,12.9
+ptx/kamui/hand/tensormap+fence.release+acquire-fence,kamui,(P0:r2 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,12.9
+ptx/kamui/hand/tensormap+fence.release+acquire-fence,kamui,(P0:r2 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,1.9
+ptx/kamui/hand/tensormap+fence.release+acquire-fence,kamui,(P0:r2 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,13.2
+ptx/kamui/hand/tensormap+release-fences-only,kamui,(P0:r2 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,12.4
+ptx/kamui/hand/tensormap+release-fences-only,kamui,(P0:r2 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,12.4
+ptx/kamui/hand/tensormap+release-fences-only,kamui,(P0:r2 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,1.9
+ptx/kamui/hand/tensormap+release-fences-only,kamui,(P0:r2 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,12.8
 ptx/kamui/idioms/cccl-bulk-copy-then-expect-tx,kamui,(P1:r0 == 1 /\ P1:r1 != 5),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,26.3
 ptx/kamui/idioms/cccl-bulk-copy-then-expect-tx,kamui,(P1:r0 == 1 /\ P1:r1 != 5),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,24.6
 ptx/kamui/idioms/cccl-bulk-copy-then-expect-tx,kamui,(P1:r0 == 1 /\ P1:r1 != 5),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970

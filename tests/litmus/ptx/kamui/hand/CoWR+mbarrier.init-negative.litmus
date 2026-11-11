@@ -1,0 +1,15 @@
+PTX CoWR+mbarrier.init-negative
+"mbarrier.init with count -1 (outside the valid range 1 to 2^20-1, 9.7.13.15.2), test_wait on it, then a store to x and a load of x. The model treats the out-of-range count as defined (a negative pending count), not as undefined behaviour, the stronger reading; SC per location (8.10.5) then forbids reading 0 after the store: forbidden."
+{
+x=0;
+b=mbarrier() @cta 0;
+P0:r0=0;
+P0:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0                ;
+ mbarrier.init.shared::cta b, -1         ;
+ mbarrier.test_wait.parity.cta r1, b, 0  ;
+ st.weak x, 1                            ;
+ ld.weak r0, x                           ;
+exists
+(P0:r0 == 0)

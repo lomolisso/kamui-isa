@@ -1,0 +1,20 @@
+KAMUI tensormap+fence.release+acquire-fence
+"Lowered from tests/litmus/ptx/kamui/hand/tensormap+fence.release+acquire-fence.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+g=5;
+d=0 @cta 0;
+b=mbarrier(1) @cta 0;
+tm=0;
+P0:r2=0;
+g in global;
+d in shared cta 0;
+b in shared cta 0;
+tm in global;
+}
+ P0@cta 0,cluster 0,gpu 0                   ;
+ kstg.weak tm, 1                            ;
+ kfence.release.gpu                         ;
+ kfence.proxy.tensormap.acquire.gpu tm, 128 ;
+ ktmaldg.1d.tile d, g, b, tm, r2            ;
+exists
+(P0:r2 == 0)

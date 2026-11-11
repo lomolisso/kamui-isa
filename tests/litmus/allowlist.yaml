@@ -118,6 +118,16 @@
   reason: *quorum
 
 - kind: models
+  test: ptx/kamui/hand/CoWR+mbarrier.init-negative
+  model: "*"
+  reason: >-
+    mbarrier.init with a count outside its valid range (1 to 2^20-1, 9.7.13.15.2). The manual says the count
+    "must be in the range" but not what happens otherwise. The ptx-v8.7-alloy model keeps the program defined (the
+    pending count is negative), so SC per location forbids the outcome. The Dartagnan fork (ptx-v8.7) packs the
+    state into one integer, finds it invalid at the test_wait and reports undefined behaviour, which allows every
+    outcome. The alloy model's reading is the stronger one.
+
+- kind: models
   test: ptx/kamui/hand/RMW-atomicity+alias
   model: "*"
   reason: >-

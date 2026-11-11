@@ -1,0 +1,14 @@
+PTX MP+release-sequence+mixed-size
+"P0 stores y, then stores x with a 32-bit release store and again with a 32-bit relaxed store; P1's 32-bit acquire load reads the second store. A release followed in program order by a strong write to the same location is a release pattern (8.8); with granules (D6) the release's other granule comes between the two operations on each granule, which does not matter. P1 synchronizes with P0 and must see y: forbidden."
+{
+y=0;
+x[0]=0;
+x[1]=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0   | P1@cta 1,cluster 0,gpu 0  ;
+ st.weak y, 1               | ld.acquire.gpu.b32 r0, x  ;
+ st.release.gpu.b32 x, 1    | ld.weak r1, y             ;
+ st.relaxed.gpu.b32 x, 2    |                           ;
+exists
+(P1:r0[0] == 2 /\ P1:r0[1] == 2 /\ P1:r1 == 0)
