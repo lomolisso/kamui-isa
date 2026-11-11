@@ -1,0 +1,14 @@
+PTX MP+release-sequence+rmw+narrow-acquire
+"P0 stores x, then a release store to f (.gpu); P1, in another CTA, increments f with a relaxed .gpu atom; P2, in P0's CTA, reads P1's value with ld.acquire.cta and then reads x. Observation order needs every step to be morally strong (8.9.3): P2's .cta scope does not include P1, so P2 does not observe P0's release through the atom and need not see x: allowed."
+{
+x=0;
+f=0;
+P1:r0=0;
+P2:r1=0;
+P2:r2=0;
+}
+ P0@cta 0,gpu 0       | P1@cta 1,gpu 0                | P2@cta 0,gpu 0        ;
+ st.weak x, 1         | atom.relaxed.gpu.add r0, f, 1 | ld.acquire.cta r1, f  ;
+ st.release.gpu f, 1  |                               | ld.weak r2, x         ;
+exists
+(P1:r0 == 1 /\ P2:r1 == 2 /\ P2:r2 == 0)

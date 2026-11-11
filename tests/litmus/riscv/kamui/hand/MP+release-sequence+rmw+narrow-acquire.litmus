@@ -1,0 +1,12 @@
+RISCV MP+release-sequence+rmw+narrow-acquire
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/hand/MP+release-sequence+rmw+narrow-acquire.litmus"
+{
+0:x5=x; 0:x6=f; 1:x5=f; 2:x5=f; 2:x6=x;
+}
+ P0          | P1                   | P2           ;
+ ori x7,x0,1 | ori x7,x0,1          | lw x11,0(x5) ;
+ sw x7,0(x5) | amoadd.w x10,x7,(x5) | fence r,rw   ;
+ fence rw,w  |                      | lw x12,0(x6) ;
+ ori x7,x0,1 |                      |              ;
+ sw x7,0(x6) |                      |              ;
+exists (1:x10=1 /\ 2:x11=2 /\ 2:x12=0)
