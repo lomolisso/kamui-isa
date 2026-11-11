@@ -12,10 +12,12 @@ the fact in both versions (fact_module).
     python3 tools/litmus/mutant_equiv.py R-cause_base-closure-386      # bounds 4 and 5, in the dev container
     python3 tools/litmus/mutant_equiv.py --bounds 4 --limit 3600 ID...
 
-Writes build/mutation/equiv/<id>.txt (one line per command: UNSAT, SAT or no result) and prints a summary. Uses
+Writes build/mutation/equiv/<id>.txt (one line per command: UNSAT, SAT or no result), records the verdict in
+models/ptx87/equiv/mutants.csv (read by mutate.py --report) and prints a summary. Uses
 models/ptx87/equiv/check.sh (kissat; counterexamples kept in build/ptx87-equiv/cex/).
 """
 import argparse
+import csv
 import os
 import re
 import subprocess
@@ -28,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[2]
 MODEL = ROOT / "models" / "ptx87" / "ptx87.als"
 EQUIV = ROOT / "models" / "ptx87" / "equiv"
 OUT = ROOT / "build" / "mutation" / "equiv"
+RESULTS = EQUIV / "mutants.csv"   # the verdict of the last full check of each mutant
 SCOPES = {4: "for 4 but 6 Scope, 3 Address, 3 Access, 4 Int", 5: "for 5 but 7 Scope, 3 Address, 3 Access, 4 Int"}
 PREDS = ("ptx_mm", "undefined", "mixed_size_race")
 
@@ -358,7 +361,22 @@ def main():
                 verdict, verdict)
         res = [l for l in res if l.startswith("eq_")] if verdict == "equivalent" else res
         print(f"{mid}: {verdict} ({'; '.join(res)})", flush=True)
+        if not a.core and verdict != "no result":
+            record(mid, verdict, bounds)
     return 0
+
+
+def record(mid, verdict, bounds):
+    """Keep the verdict of a full check in RESULTS (one row per mutant), which mutate.py --report reads."""
+    rows = {}
+    if RESULTS.exists():
+        with open(RESULTS, newline="") as f:
+            rows = {r["id"]: r for r in csv.DictReader(f)}
+    rows[mid] = {"id": mid, "verdict": verdict, "bounds": " and ".join(str(b) for b in bounds)}
+    with open(RESULTS, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["id", "verdict", "bounds"], lineterminator="\n")
+        w.writeheader()
+        w.writerows(rows[k] for k in sorted(rows))
 
 
 if __name__ == "__main__":
