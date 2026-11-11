@@ -134,8 +134,55 @@ pred emitted {
     (e in Acquire + Release iff acc.a in Acquire + Release))
   // an alias view maps each granule to one granule
   all a: Address | lone a.alias
-  // the async-proxy writes of a copy are in a unit that the completion of the copy's reads starts
-  all w: Write & proxy.Async | w.thd.start in Event.done
+  // a mixed-size access covers a whole location (the litmus syntax names a location or one granule), so two
+  // accesses that overlap cover the same physical granules
+  all a1, a2: Access | let g1 = acc.a1.address.(alias + (Address - alias.Address) <: iden),
+    g2 = acc.a2.address.(alias + (Address - alias.Address) <: iden) | some g1 & g2 => g1 = g2
+  // waits are plain reads; mbarrier.init (.shared::cta only) initializes an mbarrier of its own CTA
+  no MbarWait & rmw.Write
+  all w: MbarInit | w.address.owner = w.cta_of
+  // the async-proxy writes of a copy are in a unit that the implicit proxy fence after the copy's reads starts
+  all w: Write & proxy.Async | w.thd.start in PlainProxyFence.done - Event.issue
+  // a unit holds some memory operation, and its implicit proxy fences are generic <-> async for every state space
+  all u: AsyncUnit | some thd.u & MemoryEvent
+  all f: PlainProxyFence & thd.AsyncUnit | f.dirs = Async->Generic + Generic->Async and no f.pspace
+  // the units a copy's proxy fence starts hold the async-proxy writes (or reductions), the implicit proxy fence
+  // and the complete-tx; a unit reads shared memory of its own CTA only; dependencies in a unit go from a read
+  // to a write (cp.async)
+  all u: AsyncUnit | u.start in PlainProxyFence.done => thd.u in proxy.Async + PlainProxyFence + MbarEv
+  all r: Read & thd.AsyncUnit | r.address.space = Shared => r.address.owner = r.cta_of
+  dep & (thd.AsyncUnit -> Event) in Read -> Write
+  // completions start at a unit's implicit proxy fence or at the last write of a cp.async unit; a unit started
+  // by a completion hangs off an issued unit; a unit's proxy fences have the unit as scope
+  done.Event in thd.AsyncUnit & (PlainProxyFence + (Write & proxy.Generic))
+  all u: AsyncUnit | u.start in Event.done => (done.(u.start)).thd.start in Event.issue
+  all f: PlainProxyFence & thd.AsyncUnit | f.scope = f.thd
+  // an issued unit with a proxy fence holds the source reads of a copy or the operand reads of a wgmma (and a
+  // tensor copy's tensor-map read)
+  all u: AsyncUnit | (u.start in Event.issue and some thd.u & PlainProxyFence) =>
+    (thd.u in (Read & proxy.(Async + TensorMap)) + PlainProxyFence and some thd.u & Read & proxy.Async)
+  // a copy's writes to shared memory are by a unit in the CTA that owns it (D21); the reads of a write unit are
+  // those of reductions and of the complete-tx
+  all w: Write & proxy.Async | w.address.space = Shared => w.address.owner = w.cta_of
+  all u: AsyncUnit | u.start in PlainProxyFence.done => thd.u & Read in rmw.Write + MbarEv
+  // a unit never starts with its implicit proxy fence; a copy reads global or shared memory, and its writes to
+  // global memory are by a unit in the issuing CTA (D21)
+  no PlainProxyFence & AsyncUnit.start
+  (Read & proxy.Async & thd.AsyncUnit).address.space in Global + Shared
+  all f: PlainProxyFence, w: Write & proxy.Async | (f->w.thd.start in done and w.address.space = Global) =>
+    w.cta_of = f.cta_of
+  // a bulk copy never goes from global memory to global memory
+  all f: PlainProxyFence, w: Write & proxy.Async | f->w.thd.start in done =>
+    no (f.thd.~thd & Read & proxy.Async).address.space & w.address.space & Global
+  // a marker issues one unit, except wgmma.fence, which issues the units of the wgmma instructions after it; the
+  // write that ends a cp.async unit completes into an mbarrier arrive or a wait
+  all m: Marker | lone m.issue or thd.(m.issue.thd) in (Read & proxy.Async) + PlainProxyFence
+  done & (Write -> Event) in Write -> (MbarEv + Marker)
+  all w: Write & done.Event | some w.thd.~thd & Read & proxy.Generic
+  // only waits acquire an mbarrier
+  MbarEv & Acquire in MbarWait
+  // an access goes through one view: all its granules through a virtual alias, or none
+  all a: Access | acc.a.address in alias.Address or no acc.a.address & alias.Address
   // griddepcontrol.wait: from the last event of each thread of the previous grid to a wait of another thread
   no gdep & thd.~thd
   no (gdep.Event).po
