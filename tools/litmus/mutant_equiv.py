@@ -6,7 +6,8 @@ argument by hand, this tool asks Alloy: it writes a module that holds every `fun
 once as is and once with the mutation applied and an `_m` suffix on every name, and checks that the two versions
 of `ptx_mm`, `undefined` and `mixed_size_race` agree on every execution with at most N events that has the shape
 of a translated litmus test (`emitted` below). A counterexample is
-an execution that a new litmus test can pin. Mutants that change a fact are not handled (the facts exist once).
+an execution that a new litmus test can pin. A mutant that changes a fact is checked with the model inlined and
+the fact in both versions (fact_module).
 
     python3 tools/litmus/mutant_equiv.py R-cause_base-closure-386      # bounds 4 and 5, in the dev container
     python3 tools/litmus/mutant_equiv.py --bounds 4 --limit 3600 ID...
@@ -111,6 +112,37 @@ pred emitted {
   // operations on an mbarrier object: init, inval (phase -1), read-modify-write updates and waits
   MbarEv & Write in MbarInit + Read.rmw + { w: Write | w.ph = -1 }
   MbarEv & Read in MbarWait + rmw.Write
+  // mixed-size accesses come from the loads and stores of ordinary threads (never an mbarrier operation or a
+  // read-modify-write), and the events of one access lie on different physical locations
+  acc.Access in thd.(Thread - AsyncUnit) - MbarEv - Read.rmw - rmw.Write
+  no acc.Access.address & Mbar
+  acc.~acc & address.(iden + alias).~(address.(iden + alias)) in iden
+  // tensormap-proxy reads are made by the asynchronous units of cp.async.bulk.tensor
+  proxy.TensorMap in Read & thd.AsyncUnit
+  // restricted fences: .sync_restrict::shared::cta and .op_restrict release, .sync_restrict::shared::cluster
+  // acquires; .op_restrict is never a proxy fence
+  SyncRestrictCta + OpRestrictInit in FenceRel
+  SyncRestrictCluster in FenceAcq
+  no OpRestrictInit & ProxyFence
+  // mbarrier.init and mbarrier.inval are weak plain writes of the value 0
+  all w: (MbarEv & Write) - Read.rmw | w.val = 0
+  (MbarEv & Write) - Read.rmw in Weak - Release
+  // the events of a mixed-size access are consecutive; only the other elements of the same vector instruction
+  // (same kind, proxy, scope and order) may come between them
+  all a: Access, e: Event | (some acc.a & ^po.e and some acc.a & e.^po) => (e in MemoryEvent and
+    e.proxy = (acc.a).proxy and e.scope = (acc.a).scope and (e in Read iff acc.a in Read) and
+    (e in Acquire + Release iff acc.a in Acquire + Release))
+  // an alias view maps each granule to one granule
+  all a: Address | lone a.alias
+  // the async-proxy writes of a copy are in a unit that the completion of the copy's reads starts
+  all w: Write & proxy.Async | w.thd.start in Event.done
+  // griddepcontrol.wait: from the last event of each thread of the previous grid to a wait of another thread
+  no gdep & thd.~thd
+  no (gdep.Event).po
+  // asynchronous units never access local memory
+  no (MemoryEvent & thd.AsyncUnit).address.space & Local
+  // a unit that is neither issued nor started by a completion holds the operand reads of a wgmma
+  all u: AsyncUnit | u.start not in Event.(issue + done) => thd.u in (Read & proxy.Async) + PlainProxyFence
 }
 """
 SANITY = ["sanity_shape_tx: run { emitted and ptx_mm and some TxAnchor and some issue } for 5 but 7 Scope, "
@@ -151,7 +183,7 @@ def module(m, bounds, core=False):
     if [n for n, _ in orig_defs] != [n for n, _ in mut_defs]:
         raise SystemExit(f"{m['id']}: the mutation changes the definitions themselves")
     if sum(a != b for (_, a), (_, b) in zip(orig_defs, mut_defs)) == 0:
-        return None   # the mutation is outside every fun and pred: a fact
+        return fact_module(m, text, mutated, bounds, core)
     names = {n for n, _ in orig_defs}
     pat = re.compile(r"\b(" + "|".join(sorted(names, key=len, reverse=True)) + r")\b")
     body = [pat.sub(lambda x: x.group(1) + "_m", t) for _, t in mut_defs]
@@ -176,6 +208,38 @@ def module(m, bounds, core=False):
         for p in PREDS:
             out.append(f"cw_{p}_{b}: check {{ (emitted and co = ^co) => ({p} <=> {p}_m) }} {SCOPES[b]}")
             out.append(f"cm_{p}_{b}: check {{ (emitted and CoW.tco = ^co and {p}_m) => {p}_t }} {SCOPES[b]}")
+    return "\n".join(out) + "\n"
+
+
+def fact_module(m, text, mutated, bounds, core):
+    """A mutant that changes a fact: the module holds the model with that fact taken out, and the fact as it is
+    (fact_o) and as mutated (fact_m) as predicates. The two versions judge every execution alike if, on executions
+    of the shape `emitted`, the model's verdicts are the same under either fact."""
+    start = text.index(m["find"])
+    head = text.rfind("\nfact ", 0, start) + 1
+    if head == 0:
+        raise SystemExit(f"{m['id']}: the mutation is in no fun, pred or fact")
+    depth, end = 0, head
+    for k in range(head, len(text)):
+        depth += {"{": 1, "}": -1}.get(text[k], 0)
+        if text[k] == "}" and depth == 0:
+            end = k + 1
+            break
+    shift = len(m["replace"]) - len(m["find"])
+    block_o, block_m = text[head:end], mutated[head:end + shift]
+    if not block_m.endswith("}") or block_o.replace(m["find"], m["replace"], 1) != block_m:
+        raise SystemExit(f"{m['id']}: the mutation spans more than one fact")
+    name = re.match(r"fact\s+(\w+)", block_o).group(1)
+    model = text[:head] + text[end:]
+    model = re.sub(r"^module\s+\w+", "module mutant", model, count=1, flags=re.M)
+    body = lambda b, n: re.sub(r"^fact\s+\w+", f"pred {n}", b)
+    out = [f"// The mutant {m['id']} of ptx87.als ({m['rule']}): the model with fact {name} as two predicates,",
+           "// fact_o (as it is) and fact_m (mutated).", model, body(block_o, "fact_o"), body(block_m, "fact_m"),
+           "", SHAPE, ""] + [s.replace("{ emitted", "{ fact_o and emitted") for s in SANITY]
+    for b in bounds:
+        for p in PREDS:
+            cond = f"(emitted and {CORE})" if core else "emitted"
+            out.append(f"eq_{p}_{b}: check {{ {cond} => ((fact_o and {p}) <=> (fact_m and {p})) }} {SCOPES[b]}")
     return "\n".join(out) + "\n"
 
 
@@ -230,10 +294,6 @@ def main():
             print(f"{mid}: not an Alloy mutant")
             continue
         src = module(m, bounds, a.core)
-        if src is None:
-            print(f"{mid}: changes a fact (not handled)")
-            (OUT / f"{mid}.txt").write_text("fact\n")
-            continue
         tag = "_core" if a.core else ""
         path = OUT / f"mut_{re.sub(r'[^A-Za-z0-9_]', '_', mid)}{tag}.als"
         path.write_text(src)
