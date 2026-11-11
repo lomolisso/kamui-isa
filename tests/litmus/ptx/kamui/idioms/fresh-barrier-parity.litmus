@@ -1,0 +1,10 @@
+PTX fresh-barrier-parity
+"A producer's first wait on an empty-stage mbarrier uses parity 1, the phase before the current one, which counts as complete on a fresh barrier (CUTLASS sm90_pipeline.hpp:254-260, producer start phase 1); test_wait must return True. Expected: forbidden."
+{
+e=mbarrier(1) @cta 0;
+P0:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0                       ;
+ mbarrier.test_wait.parity.acquire.cta r0, e, 1 ;
+exists
+(P0:r0 == 0)

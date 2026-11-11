@@ -1,0 +1,23 @@
+PTX tma-pipeline-war+wgmma+wait_group-1
+"TMA mainloop with one wgmma batch in flight: the consumer issues the wgmma of stage 0 and of stage 1, waits with wgmma.wait_group 1 (only the older batch done) and releases stage 0; the producer refills stage 0 (CUTLASS sm90_mma_tma_gmma_ss_warpspecialized.hpp:264 K_PIPE_MMAS = 1, 544-551). The wgmma of stage 0 must not see the refill. Expected: forbidden."
+{
+g=7;
+d0=5 @cta 0;
+d1=5 @cta 0;
+c=0 @cta 0;
+e=mbarrier(1) @cta 0;
+f=mbarrier(1) @cta 0;
+P0:r0=0;
+P1:r1=0;
+P1:r2=0;
+}
+ P0@cta 0,cluster 0,gpu 0                                                   | P1@cta 0,cluster 0,gpu 0               ;
+ mbarrier.try_wait.parity.acquire.cta r0, e, 0                              | wgmma.fence.sync.aligned               ;
+ mbarrier.arrive.expect_tx.release.cta f, 1                                 | wgmma.mma_async.sync.aligned r1, d0, c ;
+ cp.async.bulk.shared::cluster.global.mbarrier::complete_tx::bytes d0, g, f | wgmma.commit_group.sync.aligned        ;
+                                                                            | wgmma.mma_async.sync.aligned r2, d1, c ;
+                                                                            | wgmma.commit_group.sync.aligned        ;
+                                                                            | wgmma.wait_group.sync.aligned 1        ;
+                                                                            | mbarrier.arrive.release.cta e          ;
+exists
+(P0:r0 == 1 /\ P1:r1 == 7)

@@ -1,0 +1,13 @@
+RISCV last-block-retirement
+"Naive RVWMO lowering (scopes erased) of tests/litmus/ptx/kamui/idioms/last-block-retirement.litmus"
+{
+0:x5=p0; 0:x6=n; 1:x5=p1; 1:x6=n; 1:x28=p0;
+}
+ P0                   | P1                   ;
+ ori x7,x0,1          | ori x7,x0,1          ;
+ sw x7,0(x5)          | sw x7,0(x5)          ;
+ fence rw,rw          | fence rw,rw          ;
+ ori x7,x0,1          | ori x7,x0,1          ;
+ amoadd.w x10,x7,(x6) | amoadd.w x10,x7,(x6) ;
+                      | lw x11,0(x28)        ;
+exists (1:x10=1 /\ 1:x11=0)

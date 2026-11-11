@@ -10508,6 +10508,14 @@ ptx/kamui/idioms/cluster-init+remote-tma+no-fence,kamui,(P0:r0 == 1 /\ P0:r1 != 
 ptx/kamui/idioms/cluster-init+remote-tma+no-fence,kamui,(P0:r0 == 1 /\ P0:r1 != 5),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
 +dirty",--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec (undefined behaviour),allowed,1.9
 ptx/kamui/idioms/cluster-init+remote-tma+no-fence,kamui,(P0:r0 == 1 /\ P0:r1 != 5),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,26.2
+ptx/kamui/idioms/cpasync-mbarrier+wgmma,kamui,(P1:r0 == 1 /\ P1:r1 != 5),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,16.3
+ptx/kamui/idioms/cpasync-mbarrier+wgmma,kamui,(P1:r0 == 1 /\ P1:r1 != 5),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,14.1
+ptx/kamui/idioms/cpasync-mbarrier+wgmma,kamui,(P1:r0 == 1 /\ P1:r1 != 5),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,1.9
+ptx/kamui/idioms/cpasync-mbarrier+wgmma,kamui,(P1:r0 == 1 /\ P1:r1 != 5),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,17.5
+ptx/kamui/idioms/cta-init+tma,kamui,(P1:r1 == 1 /\ P1:r2 != 5),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,27.7
+ptx/kamui/idioms/cta-init+tma,kamui,(P1:r1 == 1 /\ P1:r2 != 5),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,25.7
+ptx/kamui/idioms/cta-init+tma,kamui,(P1:r1 == 1 /\ P1:r2 != 5),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,3.2
+ptx/kamui/idioms/cta-init+tma,kamui,(P1:r1 == 1 /\ P1:r2 != 5),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,27.4
 ptx/kamui/idioms/cub-lookback,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,8.5
 ptx/kamui/idioms/cub-lookback,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.9
 ptx/kamui/idioms/cub-lookback,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-2019-alloy,ptx.als sha256:e11cd668dbe8,alloy,4.2 (artifact jar),-n 1 test,forbidden,0.3
@@ -10522,6 +10530,10 @@ ptx/kamui/idioms/cub-lookback+no-fence,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7
 +dirty",--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,3.2
 ptx/kamui/idioms/cub-lookback+no-fence,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,8.2
 ptx/kamui/idioms/cub-lookback+no-fence,kamui,(P1:r0 == 1 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,allowed,0.0
+ptx/kamui/idioms/cub-lookback-packed,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,11.7
+ptx/kamui/idioms/cub-lookback-packed,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,11.6
+ptx/kamui/idioms/cub-lookback-packed,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,1.8
+ptx/kamui/idioms/cub-lookback-packed,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,11.5
 ptx/kamui/idioms/dsmem-st.async+remote-mbarrier,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,9.3
 ptx/kamui/idioms/dsmem-st.async+remote-mbarrier,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,9.0
 ptx/kamui/idioms/dsmem-st.async+remote-mbarrier,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
@@ -10532,6 +10544,15 @@ ptx/kamui/idioms/epilogue-c-load-war+fence,kamui,(P0:r0 == 1 /\ P1:r1 == 7),kamu
 ptx/kamui/idioms/epilogue-c-load-war+fence,kamui,(P0:r0 == 1 /\ P1:r1 == 7),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
 +dirty",--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,3.4
 ptx/kamui/idioms/epilogue-c-load-war+fence,kamui,(P0:r0 == 1 /\ P1:r1 == 7),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,22.0
+ptx/kamui/idioms/fresh-barrier-parity,kamui,(P0:r0 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,8.4
+ptx/kamui/idioms/fresh-barrier-parity,kamui,(P0:r0 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,9.9
+ptx/kamui/idioms/fresh-barrier-parity,kamui,(P0:r0 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,10.8
+ptx/kamui/idioms/fresh-barrier-parity,kamui,(P0:r0 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.9
+ptx/kamui/idioms/last-block-retirement,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,14.5
+ptx/kamui/idioms/last-block-retirement,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,11.4
+ptx/kamui/idioms/last-block-retirement,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,2.0
+ptx/kamui/idioms/last-block-retirement,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,13.2
+ptx/kamui/idioms/last-block-retirement,kamui,(P1:r0 == 1 /\ P1:r1 == 0),rvwmo,riscv.cat sha256:7a579ee7cf4c,herd7,7.58,-model riscv.cat,allowed,0.1
 ptx/kamui/idioms/pdl-early-trigger+no-wait,kamui,(P1:r0 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,7.3
 ptx/kamui/idioms/pdl-early-trigger+no-wait,kamui,(P1:r0 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,7.3
 ptx/kamui/idioms/pdl-early-trigger+no-wait,kamui,(P1:r0 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
@@ -10547,6 +10568,14 @@ ptx/kamui/idioms/pdl-early-trigger+war,kamui,(P0:r0 == 1),kamui-std-alloy,kamui.
 ptx/kamui/idioms/pdl-early-trigger+war,kamui,(P0:r0 == 1),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
 +dirty",--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,3.1
 ptx/kamui/idioms/pdl-early-trigger+war,kamui,(P0:r0 == 1),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,6.3
+ptx/kamui/idioms/pdl-wait+tma-load,kamui,(P1:r1 == 1 /\ P1:r2 != 5),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,24.8
+ptx/kamui/idioms/pdl-wait+tma-load,kamui,(P1:r1 == 1 /\ P1:r2 != 5),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,24.7
+ptx/kamui/idioms/pdl-wait+tma-load,kamui,(P1:r1 == 1 /\ P1:r2 != 5),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,8.5
+ptx/kamui/idioms/pdl-wait+tma-load,kamui,(P1:r1 == 1 /\ P1:r2 != 5),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,25.5
+ptx/kamui/idioms/pingpong-epi-handoff,kamui,(P1:r0 == 1 /\ g == 2),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,10.8
+ptx/kamui/idioms/pingpong-epi-handoff,kamui,(P1:r0 == 1 /\ g == 2),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,10.2
+ptx/kamui/idioms/pingpong-epi-handoff,kamui,(P1:r0 == 1 /\ g == 2),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,3.0
+ptx/kamui/idioms/pingpong-epi-handoff,kamui,(P1:r0 == 1 /\ g == 2),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,11.4
 ptx/kamui/idioms/pipeline-async-smem-handoff,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,7.0
 ptx/kamui/idioms/pipeline-async-smem-handoff,kamui,(P1:r0 == 1 /\ P1:r1 == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,8.1
 ptx/kamui/idioms/pipeline-async-smem-handoff,kamui,(P1:r0 == 1 /\ P1:r1 == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
@@ -10617,6 +10646,14 @@ ptx/kamui/idioms/tma-pipeline-war+wgmma+no-wait_group,kamui,(P0:r0 == 1 /\ P1:r1
 ptx/kamui/idioms/tma-pipeline-war+wgmma+no-wait_group,kamui,(P0:r0 == 1 /\ P1:r1 == 7),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970
 +dirty",--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,3.6
 ptx/kamui/idioms/tma-pipeline-war+wgmma+no-wait_group,kamui,(P0:r0 == 1 /\ P1:r1 == 7),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,28.7
+ptx/kamui/idioms/tma-pipeline-war+wgmma+wait_group-1,kamui,(P0:r0 == 1 /\ P1:r1 == 7),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,32.4
+ptx/kamui/idioms/tma-pipeline-war+wgmma+wait_group-1,kamui,(P0:r0 == 1 /\ P1:r1 == 7),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,30.8
+ptx/kamui/idioms/tma-pipeline-war+wgmma+wait_group-1,kamui,(P0:r0 == 1 /\ P1:r1 == 7),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,forbidden,2.0
+ptx/kamui/idioms/tma-pipeline-war+wgmma+wait_group-1,kamui,(P0:r0 == 1 /\ P1:r1 == 7),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,31.8
+ptx/kamui/idioms/tma-pipeline-war+wgmma+wait_group-1+newer-stage,kamui,(P0:r0 == 1 /\ P1:r2 == 7),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,32.2
+ptx/kamui/idioms/tma-pipeline-war+wgmma+wait_group-1+newer-stage,kamui,(P0:r0 == 1 /\ P1:r2 == 7),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,28.7
+ptx/kamui/idioms/tma-pipeline-war+wgmma+wait_group-1+newer-stage,kamui,(P0:r0 == 1 /\ P1:r2 == 7),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,fork 93ef615a3c9b,--target=ptx --method=eager --bound=1 --solver=z3 --property=program_spec,allowed,2.0
+ptx/kamui/idioms/tma-pipeline-war+wgmma+wait_group-1+newer-stage,kamui,(P0:r0 == 1 /\ P1:r2 == 7),ptx-v8.7-alloy,ptx87.als+util.als sha256:a22c867b1192,alloy,6.2.0 (glucose),exec -n -s glucose -c *,allowed,29.5
 ptx/kamui/idioms/tma-store-epilogue,kamui,(g == 0),kamui-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,15.3
 ptx/kamui/idioms/tma-store-epilogue,kamui,(g == 0),kamui-std-alloy,kamui.als+util.als sha256:a536192509f8,alloy,6.2.0 (glucose),exec -n -s glucose -c *,forbidden,15.2
 ptx/kamui/idioms/tma-store-epilogue,kamui,(g == 0),ptx-v8.7,ptx-v8.7-common.cat+ptx-v8.7-noaxioms.cat+ptx-v8.7.cat sha256:899ad8620472,dartagnan,"fork 38e45f14d970

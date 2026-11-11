@@ -1,0 +1,18 @@
+PTX cpasync-mbarrier+wgmma
+"cp.async main loop: the producer copies with cp.async and cp.async.mbarrier.arrive.noinc; the consumer waits on the mbarrier, then wgmma.fence and wgmma read the stage, with no fence.proxy.async in the kernel (CUTLASS sm90_mma_multistage_gmma_ss_warpspecialized.hpp:296-316, 455-478). cp.async writes through the generic proxy (D22) and wgmma reads through the async proxy, which needs a proxy fence (33443): allowed by the manual's reading, although the code relies on it being forbidden; pending a decision. Expected: allowed."
+{
+g=5;
+d=0 @cta 0;
+c=0 @cta 0;
+b=mbarrier(1) @cta 0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0                | P1@cta 0,cluster 0,gpu 0                       ;
+ cp.async.cg.shared.global d, g          | mbarrier.try_wait.parity.acquire.cta r0, b, 0  ;
+ cp.async.mbarrier.arrive.noinc.shared b | wgmma.fence.sync.aligned                       ;
+                                         | wgmma.mma_async.sync.aligned r1, d, c          ;
+                                         | wgmma.commit_group.sync.aligned                ;
+                                         | wgmma.wait_group.sync.aligned 0                ;
+exists
+(P1:r0 == 1 /\ P1:r1 != 5)

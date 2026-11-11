@@ -1,0 +1,18 @@
+KAMUI last-block-retirement
+"Lowered from tests/litmus/ptx/kamui/idioms/last-block-retirement.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+p0=0;
+p1=0;
+n=0;
+P1:r0=0;
+P1:r1=0;
+p0 in global;
+p1 in global;
+}
+ P0@cta 0,gpu 0                 | P1@cta 1,gpu 0                 ;
+ kstg.weak p0, 1                | kstg.weak p1, 1                ;
+ kfence.sc.gpu                  | kfence.sc.gpu                  ;
+ katom.relaxed.gpu.add r0, n, 1 | katom.relaxed.gpu.add r0, n, 1 ;
+                                | kldg.weak r1, p0               ;
+exists
+(P1:r0 == 1 /\ P1:r1 == 0)

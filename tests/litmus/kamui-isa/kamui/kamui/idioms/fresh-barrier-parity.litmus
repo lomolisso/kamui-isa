@@ -1,0 +1,11 @@
+KAMUI fresh-barrier-parity
+"Lowered from tests/litmus/ptx/kamui/idioms/fresh-barrier-parity.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+e=mbarrier(1) @cta 0;
+P0:r0=0;
+e in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0               ;
+ kmbar.test.parity.acquire.cta r0, e, 1 ;
+exists
+(P0:r0 == 0)

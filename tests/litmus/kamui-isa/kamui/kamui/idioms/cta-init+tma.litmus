@@ -1,0 +1,20 @@
+KAMUI cta-init+tma
+"Lowered from tests/litmus/ptx/kamui/idioms/cta-init+tma.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+g=5;
+d=0 @cta 0;
+f=mbarrier() @cta 0;
+P1:r1=0;
+P1:r2=0;
+g in global;
+d in shared cta 0;
+f in shared cta 0;
+}
+ P0@cta 0,cluster 0,gpu 0                      | P1@cta 0,cluster 0,gpu 0              ;
+ kmbar.init f, 1                               | kbar.sync 0                           ;
+ kfence.restrict.mbarrier_init.release.cluster | kmbar.arv.expect_tx.release.cta f, 1  ;
+ kbar.sync 0                                   | kblkcp.s.g d, g, f                    ;
+                                               | kmbar.try.parity.acquire.cta r1, f, 0 ;
+                                               | klds.weak r2, d                       ;
+exists
+(P1:r1 == 1 /\ P1:r2 != 5)

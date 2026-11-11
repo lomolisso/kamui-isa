@@ -1,0 +1,15 @@
+PTX pingpong-epi-handoff
+"Pingpong epilogue handoff between math warpgroups: warpgroup 0 stores its smem tile with a bulk copy, waits with cp.async.bulk.wait_group.read 0 and arrives on the order barrier (an mbarrier, .release.cta); warpgroup 1 waits on it and writes the same buffer (CUTLASS sm90_gemm_tma_warpspecialized_pingpong.hpp:905-920, sm90_pipeline.hpp OrderedSequenceBarrier). The copy must not store the new value 2. Expected: forbidden."
+{
+s=1 @cta 0;
+g=0;
+m=mbarrier(1) @cta 0;
+P1:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0                          | P1@cta 0,cluster 0,gpu 0                      ;
+ cp.async.bulk.global.shared::cta.bulk_group g, s  | mbarrier.try_wait.parity.acquire.cta r0, m, 0 ;
+ cp.async.bulk.commit_group                        | st.weak.shared::cta s, 2                      ;
+ cp.async.bulk.wait_group.read 0                   |                                               ;
+ mbarrier.arrive.release.cta m                     |                                               ;
+exists
+(P1:r0 == 1 /\ g == 2)
