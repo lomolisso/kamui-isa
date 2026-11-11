@@ -74,3 +74,14 @@ store. The mixed-proxy model treats the two as morally strong, so the store sync
 load cannot read it. Its causality order, though, relates operations on aliases only through an alias fence (the
 `same_location` clauses of `proxy_preserved_cause_base`), as ptx87 does: only its morally strong ignores the
 address. The stronger reading is a candidate for the Kamui contract (decided with the other unsure readings).
+
+### What these checks cannot see: final values
+
+The checks compare executions. A litmus test also has a condition, and a condition on the final value of a
+location (`x == 3`) needs a last write. Coherence order is partial (8.9.6): two writes that are not morally strong,
+for example a weak surface write and a generic write, need not be ordered. Our queries read `x == 3` as "the write
+of 3 follows every other write to x" (`final_cmp` in `tools/litmus/to_alloy87.py`). Dartagnan reads it as "no
+write follows the write of 3", which also holds when the writes are unordered. The two models can then give
+different verdicts on the same test while agreeing on every execution. In the suite this happens for two tests,
+`CoWR+3writes+surface` and `RMW-atomicity+alias`; all other tests with a final-value condition get the same
+verdict under both readings.

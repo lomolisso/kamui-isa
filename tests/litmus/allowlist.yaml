@@ -117,6 +117,17 @@
   model: "*"
   reason: *quorum
 
+- kind: models
+  test: ptx/kamui/hand/CoWR+3writes+surface
+  model: "*"
+  reason: >-
+    The models agree on every execution; they read the final-value condition `x == 3` differently. Coherence
+    order is partial (8.9.6): the weak surface write of 3 need not be ordered after P0's write of 1. The
+    ptx-v8.7-alloy query reads `x == 3` as "the write of 3 follows every other write to x", so P0's write is
+    before it and P1's surface read cannot read 1. Dartagnan (ptx-v7.5) reads it as "no write follows the write
+    of 3", which also holds when the two writes are unordered; then the read may read 1. With that reading the
+    ptx-v8.7-alloy model allows the outcome too (models/ptx87/equiv/README.md).
+
 - kind: no-execution
   test: ptx/imported/dat3m/Barrier/quorum1-hang
   model: ptx-v8.7-alloy
