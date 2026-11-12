@@ -1,0 +1,97 @@
+LoweringRel =
+forall EP EK S A C : Type,
+Exec EP S A C -> Exec EK S A C -> Map EP EK -> Prop
+     : Type
+correct_for =
+fun L : LoweringRel =>
+forall (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+  (M : Map EP EK),
+wf_prog P ->
+L EP EK S A C P K M ->
+kamui_wf K ->
+wf_exec P /\
+(kamui_consistent K -> consistent P) /\
+(kamui_undefined K -> undefined P) /\
+(kamui_mixed_size_race K -> mixed_size_race P)
+     : LoweringRel -> Prop
+
+Arguments correct_for L
+execution_level_statement =
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   lowering P K M)
+     : Prop
+allowed =
+fun (E S A C : Type) (prog out : Exec E S A C -> Prop) =>
+(exists X : Exec E S A C,
+   prog X /\ wf X /\ consistent X /\ (out X \/ undefined X)) \/
+(exists X : Exec E S A C, prog X /\ wf X /\ consistent X /\ mixed_size_race X) /\
+(exists X : Exec E S A C, prog X /\ wf X /\ out X)
+     : forall {E S A C : Type},
+       (Exec E S A C -> Prop) -> (Exec E S A C -> Prop) -> Prop
+
+Arguments allowed {E S A C}%_type_scope (prog out)%_function_scope
+program_level_statement =
+forall (EP EK S A C : Type) (progP outP : Exec EP S A C -> Prop)
+  (progK outK : Exec EK S A C -> Prop),
+(forall P : Exec EP S A C, progP P -> wf_prog P) ->
+(forall K : Exec EK S A C,
+ progK K ->
+ kamui_wf K ->
+ exists (P : Exec EP S A C) (M : Map EP EK),
+   progP P /\ lowering P K M /\ (outK K -> outP P)) ->
+allowed progK outK -> allowed progP outP
+     : Prop
+broken_lowerings_fail =
+~
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   broken_drop_acquire P K M) /\
+~
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   broken_narrow_fence P K M) /\
+~
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   broken_std_weak_load P K M) /\
+~
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   broken_mbar_relaxed P K M) /\
+~
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   broken_copy_unordered P K M) /\
+~
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   broken_drop_restrict P K M) /\
+~
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   broken_drop_proxy_fence P K M) /\
+~
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   broken_relax_nc P K M) /\
+~
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   broken_cluster_relaxed P K M) /\
+~
+correct_for
+  (fun (EP EK S A C : Type) (P : Exec EP S A C) (K : Exec EK S A C)
+     (M : Map EP EK) =>
+   broken_drop_tensormap_release P K M)
+     : Prop

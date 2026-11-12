@@ -1,7 +1,7 @@
 # kamui-isa development image.
 # Everything a contributor needs to build and check Kamui (no GPU required):
 # clang 20 (NVPTX + RISC-V), the CUDA 12.8 toolkit for ptxas/nvdisasm/cuobjdump,
-# the RISC-V GNU toolchain, Spike + pk, Sail, herdtools7, Alloy, Dartagnan,
+# the RISC-V GNU toolchain, Spike + pk, Sail, herdtools7, Alloy, Dartagnan, Rocq, Kissat,
 # CMake/Ninja/g++-14, and a Python 3.12 venv for tools/.
 # Versions are pinned here and documented in docs/tools/devcontainer.md.
 
@@ -102,13 +102,31 @@ RUN python3 -m venv /opt/venv && /opt/venv/bin/pip install --no-cache-dir -r /tm
 RUN apt-get update && apt-get install -y --no-install-recommends maven \
     && rm -rf /var/lib/apt/lists/*
 
+# Rocq, for the proofs in proofs/rocq, in an opam switch of its own (`rocq`, system OCaml) so that the herdtools7
+# switch above is not rebuilt. The relation library hahn is a submodule (deps/hahn), built by proofs/rocq/Makefile.
+# The versions are those of the official rocq/rocq-prover:9.2.0 image, which CI uses.
+ARG ROCQ_VERSION=9.2.0
+ARG ROCQ_STDLIB_VERSION=9.1.0
+RUN opam switch create rocq ocaml-system \
+    && opam install --switch=rocq rocq-runtime.${ROCQ_VERSION} rocq-core.${ROCQ_VERSION} rocq-stdlib.${ROCQ_STDLIB_VERSION} \
+    && opam clean -a -c -s --logs \
+    && chmod -R a+rX /opt/opam
+
+# Kissat, the SAT solver of the slowest bounded lowering checks (models/kamui/check_lowering.sh, ALLOY6_SOLVER=kissat).
+ARG KISSAT_TAG=rel-4.0.1
+RUN git clone --depth 1 -b ${KISSAT_TAG} https://github.com/arminbiere/kissat /src/kissat \
+    && cd /src/kissat && ./configure && make -j"$(nproc)" \
+    && install -m 755 build/kissat /usr/local/bin/kissat \
+    && cd / && rm -rf /src/kissat
+
 COPY bin/ /usr/local/bin/
 RUN chmod +x /usr/local/bin/*
 
 ENV CUDA_HOME=/usr/local/cuda \
     DAT3M_HOME=/opt/dat3m \
     DAT3M_OUTPUT=/tmp/dat3m-output \
-    PATH=/opt/venv/bin:/opt/sail/bin:/opt/opam/default/bin:/opt/riscv/bin:/usr/lib/llvm-20/bin:/usr/local/cuda/bin:${PATH}
+    KISSAT=/usr/local/bin/kissat \
+    PATH=/opt/venv/bin:/opt/sail/bin:/opt/opam/default/bin:/opt/opam/rocq/bin:/opt/riscv/bin:/usr/lib/llvm-20/bin:/usr/local/cuda/bin:${PATH}
 
 # Non-root user. The Ubuntu base image ships a "ubuntu" user at UID 1000; replace it.
 RUN (userdel -r ubuntu 2>/dev/null || true) \

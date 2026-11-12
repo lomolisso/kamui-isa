@@ -1,0 +1,174 @@
+instance broken_drop_tensormap_release-p 0
+size 4 7 3 0
+skind 0 AsyncUnit
+skind 1 Cta
+skind 2 Cta
+skind 3 Node
+skind 4 Thread
+skind 5 Thread
+skind 6 Thread
+kind 0 Acquire
+kind 1 Acquire
+kind 2 FenceRel
+kind 3 Release
+subscope 1 0
+subscope 1 2
+subscope 1 5
+subscope 1 6
+subscope 2 3
+subscope 2 4
+start 0 3
+start 4 1
+start 5 0
+start 6 2
+space 0 Local
+space 1 Shared
+space 2 Local
+owner 0 4
+owner 1 2
+owner 2 5
+init 0 7
+init 1 7
+init 2 7
+scope 0 1
+scope 1 1
+scope 2 1
+scope 3 1
+issue 0 0
+issue 1 1
+gdep 1 2
+gdep 2 0
+gdep 3 0
+address 0 0
+address 1 0
+address 3 0
+proxy 0 Async
+proxy 1 TensorMap
+proxy 3 TensorMap
+val 0 7
+val 1 5
+val 3 5
+rf 3 1
+ProxyFence 0
+ProxyFence 1
+ProxyFence 2
+dirs 0 Generic Generic
+dirs 0 Generic Async
+dirs 0 Generic TensorMap
+dirs 0 Async Generic
+dirs 0 TensorMap Generic
+dirs 1 Generic Generic
+dirs 1 Generic Async
+dirs 2 Generic Generic
+dirs 2 Generic TensorMap
+dirs 2 Async Generic
+dirs 2 TensorMap Generic
+paddr 0 0
+Mbar 2
+iph 2 1
+ipend 2 -3
+iexp 2 -3
+itx 2 -8
+TxAnchor 3
+txops 3 1
+txops 3 2
+txops 3 3
+alloy coherence 1
+alloy fence_sc 1
+alloy atomicity 1
+alloy no_thin_air 1
+alloy sc_per_location 1
+alloy causality 0
+alloy ptx_mm 0
+alloy mb_undefined 0
+alloy undefined 0
+alloy mixed_size_race 0
+end
+instance broken_drop_tensormap_release-k 0
+size 4 7 3 0
+skind 0 AsyncUnit
+skind 1 Cta
+skind 2 Cta
+skind 3 Node
+skind 4 Thread
+skind 5 Thread
+skind 6 Thread
+kind 0 Acquire
+kind 1 Acquire
+kind 2 FenceRel
+kind 3 Release
+subscope 1 0
+subscope 1 2
+subscope 1 5
+subscope 1 6
+subscope 2 3
+subscope 2 4
+start 0 3
+start 4 1
+start 5 0
+start 6 2
+space 0 Local
+space 1 Shared
+space 2 Local
+owner 0 4
+owner 1 2
+owner 2 5
+init 0 7
+init 1 7
+init 2 7
+scope 0 1
+scope 1 1
+scope 2 1
+scope 3 1
+issue 0 0
+issue 1 1
+gdep 1 2
+gdep 2 0
+gdep 3 0
+address 0 0
+address 1 0
+address 3 0
+proxy 0 Async
+proxy 1 TensorMap
+proxy 3 TensorMap
+val 0 7
+val 1 5
+val 3 5
+rf 3 1
+ProxyFence 0
+ProxyFence 1
+dirs 0 Generic Generic
+dirs 0 Generic Async
+dirs 0 Generic TensorMap
+dirs 0 Async Generic
+dirs 0 TensorMap Generic
+dirs 1 Generic Generic
+dirs 1 Generic Async
+paddr 0 0
+Mbar 2
+iph 2 1
+ipend 2 -3
+iexp 2 -3
+itx 2 -8
+TxAnchor 3
+txops 3 1
+txops 3 2
+txops 3 3
+alloy coherence 1
+alloy fence_sc 1
+alloy atomicity 1
+alloy no_thin_air 1
+alloy sc_per_location 1
+alloy causality 1
+alloy ptx_mm 1
+alloy mb_undefined 0
+alloy undefined 0
+alloy mixed_size_race 0
+end
+map broken_drop_tensormap_release 0
+ev 0 0
+ev 1 1
+ev 2 2
+ev 3 3
+witness $broken_drop_tensormap_release_f 2
+end

@@ -18,3 +18,8 @@
 	url = https://github.com/lomolisso/Dat3M
 	branch = ptx-v8.7
 	shallow = true
+[submodule "deps/hahn"]
+	path = deps/hahn
+	url = https://github.com/vafeiadis/hahn
+	branch = master
+	shallow = true

@@ -73,7 +73,7 @@ jobs:
           fi
 
       - name: Shell scripts pass shellcheck
-        run: shellcheck tools/*.sh tools/tests/*.sh tools/catalog/*.sh jobs/*.sh .devcontainer/*.sh .devcontainer/bin/*
+        run: shellcheck tools/*.sh tools/tests/*.sh tools/catalog/*.sh tools/proofs/*.sh proofs/rocq/als/*.sh proofs/rocq/extract/*.sh jobs/*.sh .devcontainer/*.sh .devcontainer/bin/*
 
   test:
     runs-on: ubuntu-24.04
@@ -132,3 +132,24 @@ jobs:
           python tools/litmus/scorecard.py --check
           python tools/litmus/mutate.py --check
           python tools/litmus/mutate.py --report-check
+          python proofs/rocq/extract/to_rocq.py --check
+
+      # The Rocq proof of the PTX 8.7 to Kamui lowering (proofs/rocq), in the official Rocq image (the versions of
+      # the dev image's Rocq switch). The built relation library (deps/hahn) is cached between runs.
+      - name: Relation library for the Rocq proof
+        run: git submodule update --init --depth 1 deps/hahn
+
+      - name: Cache the built relation library
+        uses: actions/cache@v4
+        with:
+          path: build/rocq/hahn
+          key: rocq-9.2.0-hahn-${{ hashFiles('deps/hahn/*.v', 'deps/hahn/_CoqProject') }}
+
+      - name: Rocq proof builds and passes its checks
+        env:
+          ROCQ_IMAGE: rocq/rocq-prover:9.2.0@sha256:33926fb3757b2b560c3844157bd64173a26b6d338a256be1ae5eec8df2019025
+        run: |
+          docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
+            -e PATH=/home/rocq/.opam/4.14.2+flambda/bin:/usr/local/bin:/usr/bin:/bin \
+            --entrypoint bash -v "$PWD:/w" -w /w "$ROCQ_IMAGE" \
+            -c 'time make -C proofs/rocq JOBS=4 && tools/proofs/check.sh'

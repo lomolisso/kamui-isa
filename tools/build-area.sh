@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Look after the kamui-isa build area, /scratch/$USER/kamui-isa on the build host (see docs/development.md).
 #
-#   tools/build-area.sh status            sizes against the budget, free disk, load of iacoma231 and 232,
+#   tools/build-area.sh status            sizes against the budget, free disk, load of iacoma227, 231 and 232,
 #                                         our running dev containers
 #   tools/build-area.sh clean [<name>]    delete build/<name>; default: the checkout this script is in
 #   tools/build-area.sh prune             delete build/<name> of every worktree that no longer exists

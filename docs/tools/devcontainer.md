@@ -29,10 +29,10 @@ iacoma231 is the same disk as `/scratch`. From the repository root on iacoma227:
 ssh iacoma231 df -h /srv/docker          # the image is about 16 GB; keep at least 100 GB free
 ssh iacoma231 "cd $PWD && docker build \
   --build-arg USER_UID=$(id -u) --build-arg USER_GID=$(id -g) \
-  -t kamui-isa-dev:0.3 .devcontainer"
+  -t kamui-isa-dev:0.4 .devcontainer"
 ```
 
-A clean build takes about 30 to 40 minutes (Spike, Dartagnan and herdtools7 are built from source).
+A clean build takes about 50 minutes (Spike, Dartagnan, herdtools7, Rocq and Kissat are built from source).
 The UID arguments make the files you create in the container belong to you on the host. `$PWD`
 works on iacoma231 because the NFS home directory has the same path on both machines. To use the
 image on another host, stream it there instead of rebuilding (see
@@ -59,7 +59,7 @@ Use `tools/dev.sh` for everything. A plain `docker run` (for debugging the wrapp
 iacoma231, and it gets no build-area mount:
 
 ```bash
-ssh iacoma231 "docker run --rm -v $PWD:/workspaces/kamui-isa -w /workspaces/kamui-isa kamui-isa-dev:0.3 \
+ssh iacoma231 "docker run --rm -v $PWD:/workspaces/kamui-isa -w /workspaces/kamui-isa kamui-isa-dev:0.4 \
   bash -lc 'clang --version'"
 ```
 
@@ -84,11 +84,14 @@ build area, so run builds and tests through `tools/dev.sh` in a terminal.
 | Java | OpenJDK 17 | Ubuntu package |
 | Alloy | 6.2.0 | GitHub release, `/opt/alloy` |
 | Dartagnan (Dat3M) | 4.4.1 | built from source with Maven, `/opt/dat3m` |
+| Rocq | 9.2.0 (`rocq-runtime`, `rocq-core`), Stdlib 9.1.0, the versions of the official `rocq/rocq-prover:9.2.0` image that CI uses | opam, system OCaml, switch `rocq` in `/opt/opam` (`/opt/opam/rocq/bin` on the `PATH`) |
+| Kissat | 4.0.1 (tag `rel-4.0.1`) | built from source, `/usr/local/bin/kissat` (`KISSAT` points to it) |
 | CMake, Ninja, g++ | 3.28.3, 1.11.1, g++-14 14.2.0 | Ubuntu packages |
 | Python | 3.12.3, venv `/opt/venv` with `requirements.txt` | Ubuntu package + pip |
 
 Environment variables set in the image: `CUDA_HOME=/usr/local/cuda`, `DAT3M_HOME=/opt/dat3m`,
-`DAT3M_OUTPUT=/tmp/dat3m-output` (inside the container), and `PATH` with all the tools above.
+`DAT3M_OUTPUT=/tmp/dat3m-output` (inside the container), `KISSAT=/usr/local/bin/kissat`, and `PATH` with all the
+tools above.
 `clang` on the `PATH` is clang 20.
 
 Tool pages: [sail.md](sail.md), [spike.md](spike.md), [riscv-opcodes.md](riscv-opcodes.md),
@@ -100,7 +103,7 @@ Tool pages: [sail.md](sail.md), [spike.md](spike.md), [riscv-opcodes.md](riscv-o
 tools/dev.sh .devcontainer/check-tools.sh
 ```
 
-Output (2026-10-29):
+Output (2026-11-08, image `0.4`):
 
 ```text
 clang-20                   Ubuntu clang version 20.1.8 (++20250804090239+87f0227cb601-1~exp1~20250804210352.139)
@@ -123,6 +126,10 @@ diy7                       7.58
 java                       openjdk version "17.0.20.1" 2026-08-18
 alloy                      alloy-6.2.0
 dartagnan                  /opt/dat3m/dartagnan/target/dartagnan.jar
+rocq                       The Rocq Prover, version 9.2
+rocqchk                    The Rocq Proof Checker, version 9.2
+kissat                     4.0.1
+maven                      Apache Maven 3.8.7
 cmake                      cmake version 3.28.3
 ninja                      1.11.1
 g++-14                     g++-14 (Ubuntu 14.2.0-4ubuntu2~24.04.1) 14.2.0
@@ -133,7 +140,7 @@ pandas                     2.2.3
 ## Changing the image
 
 1. Edit `.devcontainer/Dockerfile` (change the `ARG` pin) or `requirements.txt`.
-2. Rebuild on iacoma231 with a new tag (for example `kamui-isa-dev:0.3`) and run `check-tools.sh`.
+2. Rebuild on iacoma231 with a new tag (for example `kamui-isa-dev:0.5`) and run `check-tools.sh`.
    Then update the table above, the history below, and every reference to the tag
    (`grep -rl 'kamui-isa-dev:0' --exclude-dir=deps .`, including `tools/dev.sh`).
 3. Remove the old tag on every host that has it: `ssh iacoma231 docker image rm kamui-isa-dev:<old>`.
@@ -146,6 +153,7 @@ Image history:
 | `0.1` | First image. |
 | `0.2` | Removed Jupyter (`jupyterlab`, `nbconvert`, `nbformat`, `ipykernel`): the project writes Markdown, not notebooks. Built on iacoma227, streamed to iacoma231 on 2026-10-31 and removed from iacoma227. |
 | `0.3` | Added Maven, to build the Dartagnan fork in `deps/dat3m` (`tools/dat3m/build.sh`). Built on iacoma231 on 2026-11-03 and streamed to iacoma227 and iacoma232. |
+| `0.4` | Added Rocq 9.2.0 (for `proofs/rocq`) in an opam switch of its own, and Kissat 4.0.1 (for the slowest bounded lowering checks). Built on iacoma231 on 2026-11-08. |
 
 ## Gotchas
 
