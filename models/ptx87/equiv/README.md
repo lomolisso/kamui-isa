@@ -86,7 +86,16 @@ Without a `fence.proxy.alias`, ptx87 orders nothing between the two addresses, s
 store. The mixed-proxy model treats the two as morally strong, so the store synchronizes with the load and the
 load cannot read it. Its causality order, though, relates operations on aliases only through an alias fence (the
 `same_location` clauses of `proxy_preserved_cause_base`), as ptx87 does: only its morally strong ignores the
-address. The stronger reading is a candidate for the Kamui contract (decided with the other unsure readings).
+address. The model takes that stronger reading (decision D48): aliases of one location can be morally strong.
+
+### Fence-SC restores sequential consistency (`fence_sc.als`)
+
+Not a comparison but a property the manual states (8.10.2): in a program whose memory operations are generic,
+strong at the system scope and on one virtual address per location, with a `fence.sc` between any two memory
+operations of a thread, every allowed execution is sequentially consistent (program order and communication have
+no cycle). `fence_sc.als` looks for a counterexample: there is none with up to 6 events (23 s), 7 events
+(5 minutes) or 8 events, which holds IRIW (47 minutes). Two sanity runs show the check is not vacuous: without the fences, store buffering is allowed. The
+same claim is proved in Rocq for executions of any size (`proofs/rocq/proof/FenceSC.v`).
 
 ### What these checks cannot see: final values
 
