@@ -1,0 +1,14 @@
+KAMUI LB-self+alias+fence.sc
+"Lowered from tests/litmus/ptx/kamui/hand/LB-self+alias+fence.sc.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y @ generic aliases x;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0        ;
+ kld.relaxed.sys r0, y ;
+ kfence.sc.sys         ;
+ kfence.sc.sys         ;
+ kst.relaxed.sys x, 1  ;
+exists
+(P0:r0 == 1)

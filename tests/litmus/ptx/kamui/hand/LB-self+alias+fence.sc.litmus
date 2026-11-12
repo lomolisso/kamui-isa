@@ -1,0 +1,14 @@
+PTX LB-self+alias+fence.sc
+"One thread loads global x through its alias y, then runs two fence.sc, then stores 1 to x, all relaxed at .sys. If the load read the later store, the second fence.sc would synchronize with the first (it releases the store; the load observes it, aliases being morally strong (D48), and the first fence.sc acquires it), while the first precedes the second in program order: the Fence-SC order (8.10.2) would hold both directions: forbidden. Only the Fence-SC axiom forbids it: causality and coherence relate operations on one virtual address only."
+{
+x=0;
+y @ generic aliases x;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0              ;
+ ld.relaxed.sys r0, y        ;
+ fence.sc.sys                ;
+ fence.sc.sys                ;
+ st.relaxed.sys x, 1         ;
+exists
+(P0:r0 == 1)

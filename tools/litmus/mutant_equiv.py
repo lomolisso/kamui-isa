@@ -248,10 +248,15 @@ def module(m, bounds, core=False):
     body = [pat.sub(lambda x: x.group(1) + "_m", t) for _, t in mut_defs]
     # the mutant again, with the coherence order read from CoW.tco instead of co (suffix _t)
     body_t = [re.sub(r"\bco\b", "(CoW.tco)", pat.sub(lambda x: x.group(1) + "_t", t)) for _, t in mut_defs]
+    # the model (not mutated) with the Fence-SC order read from ScW.tsc instead of sc (suffix _s), for the
+    # mutants marked `witness: sc`
+    body_s = [re.sub(r"\bsc\b", "(ScW.tsc)", pat.sub(lambda x: x.group(1) + "_s", t)) for _, t in orig_defs] \
+        if m.get("witness") == "sc" else []
     out = [f"// The mutant {m['id']} of ptx87.als ({m['rule']}): every fun and pred, renamed with _m, and again",
            "// with co read from CoW.tco, renamed with _t.",
-           "module mutant", "open ptx87", "", SHAPE, "one sig CoW { tco: Write -> Write }", ""] + \
-        body + [""] + body_t + [""] + SANITY
+           "module mutant", "open ptx87", "", SHAPE, "one sig CoW { tco: Write -> Write }"] + \
+        (["one sig ScW { tsc: FenceSC -> FenceSC }"] if body_s else []) + [""] + \
+        body + [""] + body_t + [""] + body_s + [""] + SANITY
     for b in bounds:
         for p in PREDS:
             cond = f"(emitted and {CORE})" if core else "emitted"
@@ -267,6 +272,18 @@ def module(m, bounds, core=False):
         for p in PREDS:
             out.append(f"cw_{p}_{b}: check {{ (emitted and co = ^co) => ({p} <=> {p}_m) }} {SCOPES[b]}")
             out.append(f"cm_{p}_{b}: check {{ (emitted and CoW.tco = ^co and {p}_m) => {p}_t }} {SCOPES[b]}")
+    # Fence-SC order is a witness too: the solver picks sc among the total orders of the morally strong fence.sc
+    # pairs. With at most two fence.sc there are two such orders, sc and ~sc, so the mutant judges every such
+    # program as the model does if, whenever it accepts an execution (alone, or with a mixed-size race), the model
+    # accepts the same execution with sc or with ~sc.
+    if m.get("witness") == "sc":
+        for b in bounds:
+            for p in ("ptx_mm", "ptx_mm and mixed_size_race"):
+                q, o = (re.sub(r"\b(?!and\b)(\w+)", r"\1" + sfx, p) for sfx in ("_m", "_s"))
+                o = "(" + p + ") or (" + o + ")"
+                name = p.replace(" and ", "_")
+                out.append(f"sm_{name}_{b}: check {{ (emitted and #FenceSC =< 2 and ScW.tsc = ~sc and {q}) => "
+                           f"({o}) }} {SCOPES[b]}")
     return "\n".join(out) + "\n"
 
 
@@ -358,13 +375,14 @@ def main():
         path.write_text(src)
         env = dict(os.environ, LIMIT=a.limit, JOBS=a.jobs)
         r = subprocess.run([str(EQUIV / "check.sh"), str(path)], capture_output=True, text=True, env=env)
-        res = [l for l in r.stdout.splitlines() if l[:3] in ("eq_", "cw_", "cm_")]
+        res = [l for l in r.stdout.splitlines() if l[:3] in ("eq_", "cw_", "cm_", "sm_")]
         (OUT / f"{mid}{tag.replace('_', '.')}.txt").write_text("\n".join(res) + "\n")
         ok = lambda k: all("UNSAT" in l for l in res if l.startswith(k)) and any(l.startswith(k) for l in res)
         bad = [l for l in r.stdout.splitlines() if l.startswith("sanity_") and "WRONG" in l]
         verdict = "no result" if bad or any("no result" in l for l in res if l.startswith("eq_")) else \
             "equivalent" if ok("eq_") else \
-            "equivalent up to the coherence witness" if ok("cw_") and ok("cm_") else "differs"
+            "equivalent up to the coherence witness" if ok("cw_") and ok("cm_") else \
+            "equivalent up to the Fence-SC witness, with at most two fence.sc" if ok("sm_") else "differs"
         if a.core:   # agreement on the core fragment proves nothing about the whole model
             verdict = {"equivalent": "agrees on the core fragment", "differs": "differs on the core fragment"}.get(
                 verdict, verdict)

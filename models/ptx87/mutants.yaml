@@ -8,6 +8,8 @@
 #
 # model: alloy (models/ptx87/ptx87.als) or dartagnan (deps/dat3m/cat/, file relative to that folder)
 # rule: the rule the mutant breaks, in plain words (used by the scorecard)
+# witness: sc makes tools/litmus/mutant_equiv.py also compare the mutant with the model under the reverse Fence-SC
+#   order (the only other one with two fence.sc), as it does for the coherence order
 
 # ---------------------------------------------------------------------------------------------------- Alloy
 - id: A-coherence
@@ -22,7 +24,7 @@
   kind: weaken
   find: "fence_sc and atomicity and"
   replace: "atomicity and"
-  equivalent: "Fence-SC order is part of synchronizes-with, so it only adds causality edges: an execution whose Fence-SC order contradicts base causality stays consistent when Fence-SC order is replaced by one that follows base causality without the Fence-SC edges (acyclic on fences, or Causality fails), since that removes causality edges and adds none; the outcome sets are the same"
+  witness: sc
 - id: A-single-copy-atomicity
   model: alloy
   rule: single-copy atomicity across granules (8.10.3, D6)
