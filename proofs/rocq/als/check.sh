@@ -47,9 +47,12 @@ run_one() {
   start=$(date +%s)
   s="$solver"; case "$c" in sanity_*|broken_*) s=glucose ;; esac
   solve() {
-    (cd "$w" && JAVA_TOOL_OPTIONS="-XX:ActiveProcessorCount=1" timeout "$limit" \
-      java -Djava.io.tmpdir="$w" -Djava.library.path="$alloy_home/lib/runtime/lib" \
-      -jar "$jar" exec -n -s "$1" -f -c "$c" -o "$w/out" extra.als 2>&1 || true)
+    (
+      cd "$w" || exit 0
+      JAVA_TOOL_OPTIONS="-XX:ActiveProcessorCount=1" timeout "$limit" \
+        java -Djava.io.tmpdir="$w" -Djava.library.path="$alloy_home/lib/runtime/lib" \
+        -jar "$jar" exec -n -s "$1" -f -c "$c" -o "$w/out" extra.als 2>&1 || true
+    )
   }
   if [ "$s" = kissat ]; then   # Alloy writes the CNF, kissat solves it; a counterexample is found again with glucose
     solve CNF > /dev/null
