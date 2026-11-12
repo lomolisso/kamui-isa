@@ -158,6 +158,11 @@ Proof. rewrite (sr_acc LR); split; [intros [e' [E H]]; apply ev_inj in E; subst;
 Lemma acc_image k c : acc K k c -> exists e, ev e = k.
 Proof. rewrite (sr_acc LR); intros [e [E _]]; exists e; exact E. Qed.
 
+Lemma vacc_ev e c : vacc K (ev e) c <-> vacc P e c.
+Proof. rewrite (sr_vacc LR); split; [intros [e' [E H]]; apply ev_inj in E; subst; exact H | intros H; exists e; auto]. Qed.
+Lemma vacc_image k c : vacc K k c -> exists e, ev e = k.
+Proof. rewrite (sr_vacc LR); intros [e [E _]]; exists e; exact E. Qed.
+
 Lemma proxy_ev e p : proxy K (ev e) p <-> proxy P e p.
 Proof.
   split; intros H.
@@ -233,6 +238,16 @@ Lemma MbarEv_ev e : MbarEv K (ev e) <-> MbarEv P e.
 Proof.
   rewrite (mbarrier_state_1 WFKp), (mbarrier_state_1 WFP).
   split; intros [a [Ha Hm]]; exists a; split; try (apply address_ev; exact Ha); apply (sl_Mbar LL); exact Hm.
+Qed.
+
+Lemma MbarOps_ev e : MbarOps K (ev e) <-> MbarOps P e.
+Proof.
+  unfold MbarOps; rewrite MbarEv_ev, Write_ev.
+  assert (R : (exists r, Read K r /\ rmw K r (ev e)) <-> (exists r, Read P r /\ rmw P r e)).
+  { split.
+    - intros [k [Hk1 Hk2]]; destruct (Read_image Hk1) as [r <-]; exists r; rewrite <- Read_ev, <- rmw_ev; auto.
+    - intros [r [Hr1 Hr2]]; exists (ev r); rewrite Read_ev, rmw_ev; auto. }
+  rewrite R; reflexivity.
 Qed.
 
 Lemma ph_ev e : MbarEv P e -> ph K (ev e) = ph P e.
@@ -343,6 +358,9 @@ Qed.
 Lemma same_acc_ev x y : same_acc K (ev x) (ev y) <-> same_acc P x y.
 Proof. unfold same_acc; split; intros [c [H1 H2]]; exists c; rewrite ?acc_ev in *; auto. Qed.
 
+Lemma same_vacc_ev x y : same_vacc K (ev x) (ev y) <-> same_vacc P x y.
+Proof. unfold same_vacc; split; intros [c [H1 H2]]; exists c; rewrite ?vacc_ev in *; auto. Qed.
+
 Lemma footprint_ev x a : footprint K (ev x) a <-> footprint P x a.
 Proof.
   unfold footprint; split.
@@ -353,16 +371,20 @@ Proof.
     destruct He as [He | ->]; [left; apply same_acc_ev, He | right; reflexivity].
 Qed.
 
+Lemma footprint_aliases_ev x a :
+  (exists a', footprint K (ev x) a' /\ aliases K a' a) <-> (exists a', footprint P x a' /\ aliases P a' a).
+Proof. split; intros [a' [H1 H2]]; exists a'; rewrite ?footprint_ev, ?aliases_same in *; auto. Qed.
+
 Lemma full_overlap_r_ev x y : full_overlap_r K (ev x) (ev y) <-> full_overlap_r P x y.
 Proof.
   unfold full_overlap_r; rewrite !MemoryEvent_ev.
   split; intros [H1 [H2 H3]].
-  - split; [exact H1 |]; split; [exact H2 |]; intros a; rewrite <- !footprint_ev; apply H3.
-  - split; [exact H1 |]; split; [exact H2 |]; intros a; rewrite !footprint_ev; apply H3.
+  - split; [exact H1 |]; split; [exact H2 |]; intros a; rewrite <- !footprint_aliases_ev; apply H3.
+  - split; [exact H1 |]; split; [exact H2 |]; intros a; rewrite !footprint_aliases_ev; apply H3.
 Qed.
 
 Lemma overlap_ok_r_ev x y : overlap_ok_r K (ev x) (ev y) <-> overlap_ok_r P x y.
-Proof. unfold overlap_ok_r; rewrite !MemoryEvent_ev, same_alias_r_ev, full_overlap_r_ev; reflexivity. Qed.
+Proof. unfold overlap_ok_r; rewrite !MemoryEvent_ev, same_location_r_ev, full_overlap_r_ev; reflexivity. Qed.
 
 Lemma proxy_of_ev x p : proxy_of K (ev x) p <-> proxy_of P x p.
 Proof. unfold proxy_of; rewrite MemoryEvent_ev, proxy_ev; reflexivity. Qed.
@@ -478,19 +500,30 @@ Qed.
 
 Lemma ms_r_mono x y : ms_r P x y -> ms_r K (ev x) (ev y).
 Proof.
-  intros [H1 [[p [Hp1 Hp2]] [H3 H4]]]; split; [apply scope_incl_r_mono, H1 |].
+  intros [H1 [[p [Hp1 Hp2]] [H3 H4]]]; split.
+  { destruct H1 as [H1 | [Hm1 Hm2]]; [left; apply scope_incl_r_mono, H1 | right; rewrite !MbarOps_ev; auto]. }
   split; [exists p; rewrite !proxy_of_ev; auto |].
   split; [apply overlap_ok_r_ev, H3 | intros E; apply H4, ev_inj, E].
 Qed.
 
 End Embedding.
 
+Lemma aliases_sym {E S A C} (X : Exec E S A C) a b : aliases X a b -> aliases X b a.
+Proof.
+  unfold aliases; intros H; induction H as [x y H | x | x y z _ IH1 _ IH2].
+  - apply rt_step; destruct H as [H | H]; [right | left]; exact H.
+  - apply rt_refl.
+  - eapply rt_trans; eauto.
+Qed.
+
 Lemma ms_r_sym {E S A C} (X : Exec E S A C) x y : ms_r X x y -> ms_r X y x.
 Proof.
-  intros [[H1 H2] [[p [Hp1 Hp2]] [H3 H4]]]; split; [split; assumption |].
+  intros [H1 [[p [Hp1 Hp2]] [H3 H4]]]; split.
+  { destruct H1 as [[Ha Hb] | [Hm1 Hm2]]; [left; split; assumption | right; split; assumption]. }
   split; [exists p; auto |]; split; [| intros Heq; apply H4; congruence].
-  unfold overlap_ok_r, full_overlap_r, same_alias_r in *.
-  destruct H3 as [[Hm1 [Hm2 [[a [Ha1 Ha2]] [_ [_ Hf]]]]] | H3]; [left | right; tauto].
-  split; [tauto |]; split; [tauto |]; split; [exists a; auto |]; split; [tauto |]; split; [tauto |].
-  intros b; rewrite Hf; reflexivity.
+  unfold overlap_ok_r, full_overlap_r, same_location_r in *.
+  destruct H3 as [[Hm1 [Hm2 [[a1 [a2 [Ha1 [Ha2 Ha3]]]] [_ [_ Hf]]]]] | H3]; [left | right; tauto].
+  split; [tauto |]; split; [tauto |].
+  split; [exists a2, a1; split; [exact Ha3 |]; split; [apply aliases_sym, Ha2 | exact Ha1] |].
+  split; [tauto |]; split; [tauto |]; intros b; rewrite Hf; reflexivity.
 Qed.

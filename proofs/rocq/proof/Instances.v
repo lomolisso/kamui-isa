@@ -25,9 +25,9 @@ Proof.
   split.
   { destruct Kd as [k1 k2 k3 k4 k5 k6 k7 k8 k9 k10]; constructor; intros; eauto. }
   split.
-  { destruct R as [r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 r12 r13 r14 r15]; constructor; auto.
+  { destruct R as [r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 r12 r13 r14 r15 r16]; constructor; auto.
     - assert (E : set_compl d ≡₁ set_compl d') by (split; intros e He H; apply He, Hd, H).
-      rewrite r5, E; reflexivity. }
+      rewrite r6, E; reflexivity. }
   split; [exact Px |]; split.
   { destruct Sc as [s1 s2 s3]; constructor; intros; eauto. }
   split; [exact I | exact Rb].
@@ -65,7 +65,7 @@ Definition mp : FExec := {|
   f_start := [(4, 0); (5, 2)]; f_alias := []; f_space := [SGlobal; SGlobal]; f_owner := []; f_init := [0; 0]%Z;
   f_kind := [KWrite; KRelease; KAcquire; KRead]; f_po := [(0, 1); (2, 3)]; f_scope := [1; 1; 1; 1];
   f_issue := []; f_done := []; f_gdep := []; f_address := [(0, 0); (1, 1); (2, 1); (3, 0)];
-  f_proxy := [(0, Generic); (1, Generic); (2, Generic); (3, Generic)]; f_val := [1; 1; 1; 1]%Z; f_acc := [];
+  f_proxy := [(0, Generic); (1, Generic); (2, Generic); (3, Generic)]; f_val := [1; 1; 1; 1]%Z; f_acc := []; f_vacc := [];
   f_rmw := []; f_dep := []; f_rf := [(1, 2); (0, 3)]; f_co := []; f_sc := [];
   f_SyncRestrictCta := []; f_SyncRestrictCluster := []; f_OpRestrictInit := []; f_ProxyFence := []; f_dirs := [];
   f_pspace := []; f_paddr := []; f_bid := []; f_bcount := []; f_bwait := []; f_bgen := []; f_synchronizes := [];
@@ -80,7 +80,7 @@ Definition mp_sys : FExec := {|
   f_start := [(4, 0); (5, 2)]; f_alias := []; f_space := [SGlobal; SGlobal]; f_owner := []; f_init := [0; 0]%Z;
   f_kind := [KWrite; KRelease; KAcquire; KRead]; f_po := [(0, 1); (2, 3)]; f_scope := [1; 0; 0; 1];
   f_issue := []; f_done := []; f_gdep := []; f_address := [(0, 0); (1, 1); (2, 1); (3, 0)];
-  f_proxy := [(0, Generic); (1, Generic); (2, Generic); (3, Generic)]; f_val := [1; 1; 1; 1]%Z; f_acc := [];
+  f_proxy := [(0, Generic); (1, Generic); (2, Generic); (3, Generic)]; f_val := [1; 1; 1; 1]%Z; f_acc := []; f_vacc := [];
   f_rmw := []; f_dep := []; f_rf := [(1, 2); (0, 3)]; f_co := []; f_sc := [];
   f_SyncRestrictCta := []; f_SyncRestrictCluster := []; f_OpRestrictInit := []; f_ProxyFence := []; f_dirs := [];
   f_pspace := []; f_paddr := []; f_bid := []; f_bcount := []; f_bwait := []; f_bgen := []; f_synchronizes := [];
@@ -99,7 +99,7 @@ Definition aqrl : FExec := {|
   f_alias := []; f_space := [SGlobal]; f_owner := []; f_init := [0]%Z;
   f_kind := [KAcquire; KRelease]; f_po := [(0, 1)]; f_scope := [1; 1];
   f_issue := []; f_done := []; f_gdep := []; f_address := [(0, 0); (1, 0)];
-  f_proxy := [(0, Generic); (1, Generic)]; f_val := [0; 1]%Z; f_acc := [];
+  f_proxy := [(0, Generic); (1, Generic)]; f_val := [0; 1]%Z; f_acc := []; f_vacc := [];
   f_rmw := [(0, 1)]; f_dep := [(0, 1)]; f_rf := []; f_co := []; f_sc := [];
   f_SyncRestrictCta := []; f_SyncRestrictCluster := []; f_OpRestrictInit := []; f_ProxyFence := []; f_dirs := [];
   f_pspace := []; f_paddr := []; f_bid := []; f_bcount := []; f_bwait := []; f_bgen := []; f_synchronizes := [];
@@ -113,7 +113,7 @@ Definition aqrl_kamui : FExec := {|
   f_alias := []; f_space := [SGlobal]; f_owner := []; f_init := [0]%Z;
   f_kind := [KFenceSC; KAcquire; KRelease]; f_po := [(0, 1); (1, 2)]; f_scope := [0; 1; 1];
   f_issue := []; f_done := []; f_gdep := []; f_address := [(1, 0); (2, 0)];
-  f_proxy := [(1, Generic); (2, Generic)]; f_val := [0; 0; 1]%Z; f_acc := [];
+  f_proxy := [(1, Generic); (2, Generic)]; f_val := [0; 0; 1]%Z; f_acc := []; f_vacc := [];
   f_rmw := [(1, 2)]; f_dep := [(1, 2)]; f_rf := []; f_co := []; f_sc := [];
   f_SyncRestrictCta := []; f_SyncRestrictCluster := []; f_OpRestrictInit := []; f_ProxyFence := []; f_dirs := [];
   f_pspace := []; f_paddr := []; f_bid := []; f_bcount := []; f_bwait := []; f_bgen := []; f_synchronizes := [];

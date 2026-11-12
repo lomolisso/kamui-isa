@@ -86,6 +86,7 @@ Record FExec := {
   f_kind : list Kind; f_po : list (nat * nat); f_scope : list nat;
   f_issue : list (nat * nat); f_done : list (nat * nat); f_gdep : list (nat * nat);
   f_address : list (nat * nat); f_proxy : list (nat * Proxy); f_val : list Z; f_acc : list (nat * nat);
+  f_vacc : list (nat * nat);
   f_rmw : list (nat * nat); f_dep : list (nat * nat); f_rf : list (nat * nat); f_co : list (nat * nat);
   f_sc : list (nat * nat);
   f_SyncRestrictCta : list nat; f_SyncRestrictCluster : list nat; f_OpRestrictInit : list nat;
@@ -142,6 +143,7 @@ Definition denote (F : FExec) (V : valid F = true) : Exec (Fin (ne F)) (Fin (ns 
   proxy := fun e p => memp (f_proxy F) (fin_val e) p = true;
   val := fun e => zat (f_val F) (fin_val e);
   acc := fun e c => mem2 (f_acc F) (fin_val e) (fin_val c) = true;
+  vacc := fun e c => mem2 (f_vacc F) (fin_val e) (fin_val c) = true;
   rmw := fun e e' => mem2 (f_rmw F) (fin_val e) (fin_val e') = true;
   dep := fun e e' => mem2 (f_dep F) (fin_val e) (fin_val e') = true;
   rf := fun e e' => mem2 (f_rf F) (fin_val e) (fin_val e') = true;

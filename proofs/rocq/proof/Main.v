@@ -196,6 +196,10 @@ Proof.
     apply (co_strong_2 WK c1 c2); split.
     + exists (ev w1), (ev w2); rewrite !(acc_ev HL); split; [exact H1 |]; split; [apply (m_co_plus HL), H2 | exact H3].
     + exists (ev w3), (ev w4); rewrite !(acc_ev HL); split; [exact H4 |]; split; [apply (m_co_plus HL), H5 | exact H6].
+  - (* co_strong_3 *) intros c1 c2 [[w1 [w2 [H1 [H2 H3]]]] [w3 [w4 [H4 [H5 H6]]]]].
+    apply (co_strong_3 WK c1 c2); split.
+    + exists (ev w1), (ev w2); rewrite !(vacc_ev HL); split; [exact H1 |]; split; [apply (m_co_plus HL), H2 | exact H3].
+    + exists (ev w3), (ev w4); rewrite !(vacc_ev HL); split; [exact H4 |]; split; [apply (m_co_plus HL), H5 | exact H6].
   - (* fence_sc_order_1 *) intros f1 f2 H1 H2 Hne Hms.
     assert (HK : sc K (ev f1) (ev f2) \/ sc K (ev f2) (ev f1)).
     { apply (fence_sc_order_1 WK); [apply (FenceSC_ev HL), H1 | apply (FenceSC_ev HL), H2 | | apply (m_ms_r HL), Hms].

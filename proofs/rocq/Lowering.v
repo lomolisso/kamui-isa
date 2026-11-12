@@ -14,8 +14,8 @@
     - The two programs share their scopes, addresses and accesses (types [S], [A], [C]). Alloy's bijections [sm]
       and [ad] between them become the identity: any pair of programs related by bijections is isomorphic to one
       that shares them.
-    - Mixed-size accesses are allowed: the access of each image is the access of its PTX event (Alloy has
-      [no p/Access and no k/Access]).
+    - Mixed-size accesses and atomic vector accesses are allowed: the access and vector access of each image are
+      those of its PTX event (Alloy has [no p/Access and no k/Access], [no p/VecAccess and no k/VecAccess]).
     - [synchronizes] is read back too (in Alloy it follows from the facts of the PTX side, which Alloy assumes and
       this proof has to show).
     - [widen] may move any strong event to any enclosing scope, which covers every scope widening of
@@ -98,10 +98,11 @@ Record kinds (x : EP -> Prop) : Prop := {
 }.
 
 (** [pred same_relations[x: set p/Event, dropped: set p/Event]]: the program relations of each event carry over
-    ([dropped]: issue edges a broken lowering drops); the access of each event too. *)
+    ([dropped]: issue edges a broken lowering drops); the access and the vector access of each event too. *)
 Record same_relations (x dropped : EP -> Prop) : Prop := {
   sr_address : forall k a, address K k a <-> exists e, ev e = k /\ address P e a;
   sr_acc : forall k c, acc K k c <-> exists e, ev e = k /\ acc P e c;
+  sr_vacc : forall k c, vacc K k c <-> exists e, ev e = k /\ vacc P e c;
   sr_rmw : rmw K ≡ ev ↑ rmw P;
   sr_dep : dep K ≡ ev ↑ dep P;
   sr_issue : issue K ≡ ev ↑ (⦗set_compl dropped⦘ ⨾ issue P);

@@ -279,6 +279,7 @@ Proof. apply exact_mono, (same_location_r_ev HL). Qed.
 Lemma m_same_alias_r : mono ev (same_alias_r P) (same_alias_r K). Proof. apply exact_mono, (same_alias_r_ev HL). Qed.
 Lemma m_same_cta_r : mono ev (same_cta_r P) (same_cta_r K). Proof. apply exact_mono, (same_cta_r_ev HL). Qed.
 Lemma m_same_acc : mono ev (same_acc P) (same_acc K). Proof. apply exact_mono, (same_acc_ev HL). Qed.
+Lemma m_same_vacc : mono ev (same_vacc P) (same_vacc K). Proof. apply exact_mono, (same_vacc_ev HL). Qed.
 Lemma m_scope_incl_r : mono ev (scope_incl_r P) (scope_incl_r K). Proof. exact (scope_incl_r_mono HL). Qed.
 Lemma m_ms_r : mono ev (ms_r P) (ms_r K). Proof. exact (ms_r_mono HL). Qed.
 Lemma m_po_plus : mono ev (po P)⁺ (po K)⁺. Proof. exact (po_plus_ev HL). Qed.
@@ -294,7 +295,7 @@ Proof.
 Qed.
 
 #[local] Hint Resolve m_rf m_co m_rmw m_dep m_issue m_done m_gdep m_cwait m_txops m_cgen m_synchronizes m_sc
-  m_same_location_r m_same_alias_r m_same_cta_r m_same_acc m_scope_incl_r m_ms_r m_po_plus m_same_proxy
+  m_same_location_r m_same_alias_r m_same_cta_r m_same_acc m_same_vacc m_scope_incl_r m_ms_r m_po_plus m_same_proxy
   r_codom_rf : mono.
 
 (** ** The derived relations, in the order of [Ptx87.v] *)

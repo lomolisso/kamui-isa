@@ -1,130 +1,122 @@
 instance broken_relax_nc-p 0
-size 4 3 4 0
-skind 0 Cta
+size 4 4 4 0
+skind 0 Node
 skind 1 Node
 skind 2 Thread
-kind 0 AliasFence
+skind 3 Thread
+kind 0 Read
 kind 1 Read
-kind 2 Write
+kind 2 Read
 kind 3 Write
-subscope 0 1
-subscope 0 2
-start 2 2
-alias 0 0
-alias 0 3
+subscope 0 3
+subscope 1 0
+subscope 1 2
+start 2 0
+start 3 1
 alias 1 1
-alias 1 2
-alias 2 1
-alias 2 2
-alias 2 3
-alias 3 2
+alias 2 0
+alias 3 0
 alias 3 3
-space 0 Shared
+space 0 Global
 space 1 Const
-space 2 Shared
-space 3 Local
-owner 0 0
-owner 2 0
-owner 3 2
-init 0 7
+space 2 Local
+space 3 Global
+owner 2 3
+init 0 6
 init 1 7
-init 2 7
-init 3 7
+init 2 6
+init 3 6
 po 1 3
-po 2 1
-po 3 0
-scope 0 2
-scope 1 2
-scope 2 0
+po 3 2
+scope 0 1
+scope 1 3
+scope 2 3
 scope 3 0
+address 0 3
 address 1 2
-address 2 2
-address 3 2
+address 2 3
+address 3 3
+proxy 0 Surface
 proxy 1 Texture
-proxy 2 Surface
+proxy 2 Texture
 proxy 3 Texture
-val 1 7
-val 2 -8
-val 3 7
-rf 3 1
-co 3 2
-ProxyFence 1
+val 0 6
+val 1 6
+val 2 6
+val 3 6
+dep 1 3
+rf 3 0
 ProxyFence 3
-dirs 1 Generic Constant
-dirs 3 Generic TensorMap
 dirs 3 Generic Texture
-dirs 3 Texture Generic
-pspace 1 Global
-paddr 1 2
-alloy coherence 0
+pspace 3 Global
+pspace 3 Local
+paddr 3 2
+paddr 3 3
+alloy coherence 1
 alloy fence_sc 1
 alloy atomicity 1
 alloy no_thin_air 1
 alloy sc_per_location 0
-alloy causality 0
+alloy causality 1
 alloy ptx_mm 0
 alloy mb_undefined 0
 alloy undefined 0
 alloy mixed_size_race 0
 end
 instance broken_relax_nc-k 0
-size 4 3 4 0
-skind 0 Cta
+size 4 4 4 0
+skind 0 Node
 skind 1 Node
 skind 2 Thread
-kind 0 AliasFence
+skind 3 Thread
+kind 0 Read
 kind 1 Read
-kind 2 Write
+kind 2 Read
 kind 3 Write
-subscope 0 1
-subscope 0 2
-start 2 2
-alias 0 0
-alias 0 3
+subscope 0 3
+subscope 1 0
+subscope 1 2
+start 2 1
+start 3 0
 alias 1 1
-alias 1 2
-alias 2 1
-alias 2 2
-alias 2 3
-alias 3 2
+alias 2 0
+alias 3 0
 alias 3 3
-space 0 Shared
+space 0 Global
 space 1 Const
-space 2 Shared
-space 3 Local
-owner 0 0
-owner 2 0
-owner 3 2
-init 0 7
+space 2 Local
+space 3 Global
+owner 2 3
+init 0 6
 init 1 7
-init 2 7
-init 3 7
-po 1 3
-po 2 1
-po 3 0
-scope 0 2
-scope 1 2
-scope 2 0
+init 2 6
+init 3 6
+po 0 3
+po 3 2
+scope 0 3
+scope 1 1
+scope 2 3
 scope 3 0
-address 1 2
-address 2 2
-address 3 2
-proxy 1 Generic
-proxy 2 Surface
+address 0 2
+address 1 3
+address 2 3
+address 3 3
+proxy 0 Texture
+proxy 1 Surface
+proxy 2 Generic
 proxy 3 Texture
-val 1 7
-val 2 -8
-val 3 7
+val 0 6
+val 1 6
+val 2 6
+val 3 6
+dep 0 3
 rf 3 1
-co 3 2
-ProxyFence 1
 ProxyFence 3
-dirs 1 Generic Constant
-dirs 3 Generic TensorMap
 dirs 3 Generic Texture
-dirs 3 Texture Generic
-pspace 1 Global
-paddr 1 2
+pspace 3 Global
+pspace 3 Local
+paddr 3 2
+paddr 3 3
 alloy coherence 1
 alloy fence_sc 1
 alloy atomicity 1
@@ -137,9 +129,9 @@ alloy undefined 0
 alloy mixed_size_race 0
 end
 map broken_relax_nc 0
-ev 0 0
-ev 1 1
+ev 0 1
+ev 1 0
 ev 2 2
 ev 3 3
-relax 1
+relax 2
 end

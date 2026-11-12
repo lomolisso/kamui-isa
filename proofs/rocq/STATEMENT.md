@@ -134,8 +134,9 @@ order, with the Alloy text quoted above it. The exceptions, all of them names on
 
 - **Shared scopes and addresses.** The two programs have the same scope and address types; Alloy's bijections
   `sm` and `ad` become the identity. Any pair of programs related by bijections is isomorphic to such a pair.
-- **Mixed-size accesses.** Allowed: each image has the access of its PTX event (`sr_acc`). The Alloy check has
-  `no p/Access and no k/Access`.
+- **Mixed-size and atomic vector accesses.** Allowed: each image has the access and the vector access of its PTX
+  event (`sr_acc`, `sr_vacc`). The Alloy check has `no p/Access and no k/Access` and
+  `no p/VecAccess and no k/VecAccess`.
 - **`synchronizes` read back** (`rb_synchronizes`). In Alloy it follows from the PTX side's facts, which Alloy
   assumes; here the PTX side's facts are proved.
 - **Scope widening.** `widen` may move any strong event to any enclosing scope, which covers every widening of
@@ -168,4 +169,18 @@ axiom is declared in hahn or in this proof, and only the four above in `Print As
 The trusted files were reviewed and frozen on 2026-11-08 (`trusted.sha256`). A later change needs its own review
 and a dated entry here that says what changed and why.
 
-None yet.
+**2026-11-12: the stronger readings.** The model took the stronger reading of the manual in nine places
+(`models/ptx87/decisions.md`, D43 to D51). Five of them change only which events an instruction makes, so the
+trusted files do not see them (D44, D45, D46, D50, D51). The other four change definitions, each with its new
+Alloy text quoted above it:
+
+- `Ptx87.v`, D43: a new field `vacc` (the elements of one atomic vector access), its declaration facts in
+  `wf_prog`, `same_vacc` in `acc_lift`, and a third `co_strong` conjunct in `wf_exec`. `Access` and `VecAccess`
+  atoms share the carrier `C`.
+- `Ptx87.v`, D47: `MbarOps`, and `ms_r` relates two mbarrier operations whatever their scopes.
+- `Ptx87.v`, D48: `full_overlap_r` compares the aliases of the footprints, and `overlap_ok_r` uses
+  `same_location_r`.
+- `Ptx87.v`, D49: the D40 clause of `ppbco_with` ends at a write in any proxy.
+- `Lowering.v`: `sr_vacc`, the vector access of each image is that of its PTX event.
+
+`Kamui.v` and `Theorem.v` do not change.

@@ -1,78 +1,104 @@
 instance broken_drop_tensormap_release-p 0
 size 4 7 3 0
-skind 0 AsyncUnit
+skind 0 Cta
 skind 1 Cta
-skind 2 Cta
+skind 2 Node
 skind 3 Node
 skind 4 Thread
 skind 5 Thread
 skind 6 Thread
-kind 0 Acquire
-kind 1 Acquire
-kind 2 FenceRel
-kind 3 Release
-subscope 1 0
-subscope 1 2
+kind 0 FenceRel
+kind 1 Read
+kind 2 Read
+kind 3 Write
+subscope 0 3
+subscope 0 6
 subscope 1 5
-subscope 1 6
-subscope 2 3
-subscope 2 4
-start 0 3
-start 4 1
-start 5 0
-start 6 2
-space 0 Local
+subscope 2 0
+subscope 2 1
+subscope 3 4
+start 4 0
+start 5 1
+start 6 3
+space 0 Shared
 space 1 Shared
-space 2 Local
-owner 0 4
-owner 1 2
-owner 2 5
-init 0 7
-init 1 7
-init 2 7
-scope 0 1
-scope 1 1
-scope 2 1
-scope 3 1
+space 2 Shared
+owner 0 1
+owner 1 0
+owner 2 1
+init 0 -5
+init 1 -4
+init 2 -8
+po 0 2
+scope 0 3
+scope 1 2
+scope 2 3
+scope 3 6
 issue 0 0
-issue 1 1
-gdep 1 2
-gdep 2 0
-gdep 3 0
-address 0 0
-address 1 0
+issue 0 3
+issue 2 1
+done 0 1
+done 0 2
+done 1 0
+address 1 2
+address 2 0
 address 3 0
-proxy 0 Async
-proxy 1 TensorMap
-proxy 3 TensorMap
-val 0 7
-val 1 5
-val 3 5
-rf 3 1
+proxy 1 Generic
+proxy 2 TensorMap
+proxy 3 Async
+val 1 -8
+val 2 4
+val 3 4
+rf 3 2
+SyncRestrictCta 0
 ProxyFence 0
 ProxyFence 1
 ProxyFence 2
+ProxyFence 3
 dirs 0 Generic Generic
-dirs 0 Generic Async
 dirs 0 Generic TensorMap
-dirs 0 Async Generic
 dirs 0 TensorMap Generic
 dirs 1 Generic Generic
 dirs 1 Generic Async
+dirs 1 Async Generic
 dirs 2 Generic Generic
-dirs 2 Generic TensorMap
-dirs 2 Async Generic
-dirs 2 TensorMap Generic
+dirs 2 Generic Async
+pspace 1 Shared
+pspace 2 Shared
 paddr 0 0
+paddr 1 0
+paddr 1 2
+paddr 2 0
+Mbar 0
+Mbar 1
 Mbar 2
-iph 2 1
-ipend 2 -3
-iexp 2 -3
-itx 2 -8
-TxAnchor 3
-txops 3 1
-txops 3 2
-txops 3 3
+iph 0 6
+iph 1 -8
+iph 2 4
+ipend 0 0
+ipend 1 -5
+ipend 2 -1
+iexp 0 6
+iexp 1 0
+iexp 2 -4
+itx 0 0
+itx 1 -8
+itx 2 0
+MbarEv 1
+MbarEv 2
+MbarEv 3
+ph 1 4
+ph 2 6
+ph 3 6
+pend 1 -1
+pend 2 1
+pend 3 1
+expc 1 -4
+expc 2 6
+expc 3 6
+tx 1 0
+tx 2 0
+tx 3 0
 alloy coherence 1
 alloy fence_sc 1
 alloy atomicity 1
@@ -86,74 +112,99 @@ alloy mixed_size_race 0
 end
 instance broken_drop_tensormap_release-k 0
 size 4 7 3 0
-skind 0 AsyncUnit
+skind 0 Cta
 skind 1 Cta
-skind 2 Cta
+skind 2 Node
 skind 3 Node
 skind 4 Thread
 skind 5 Thread
 skind 6 Thread
-kind 0 Acquire
-kind 1 Acquire
-kind 2 FenceRel
-kind 3 Release
-subscope 1 0
-subscope 1 2
+kind 0 FenceRel
+kind 1 Read
+kind 2 Read
+kind 3 Write
+subscope 0 3
+subscope 0 6
 subscope 1 5
-subscope 1 6
-subscope 2 3
-subscope 2 4
-start 0 3
-start 4 1
-start 5 0
-start 6 2
-space 0 Local
+subscope 2 0
+subscope 2 1
+subscope 3 4
+start 4 0
+start 5 1
+start 6 3
+space 0 Shared
 space 1 Shared
-space 2 Local
-owner 0 4
-owner 1 2
-owner 2 5
-init 0 7
-init 1 7
-init 2 7
-scope 0 1
-scope 1 1
-scope 2 1
-scope 3 1
+space 2 Shared
+owner 0 1
+owner 1 0
+owner 2 1
+init 0 -5
+init 1 -4
+init 2 -8
+po 0 2
+scope 0 3
+scope 1 2
+scope 2 3
+scope 3 6
 issue 0 0
-issue 1 1
-gdep 1 2
-gdep 2 0
-gdep 3 0
-address 0 0
-address 1 0
+issue 0 3
+issue 2 1
+done 0 1
+done 0 2
+done 1 0
+address 1 2
+address 2 0
 address 3 0
-proxy 0 Async
-proxy 1 TensorMap
-proxy 3 TensorMap
-val 0 7
-val 1 5
-val 3 5
-rf 3 1
-ProxyFence 0
+proxy 1 Generic
+proxy 2 TensorMap
+proxy 3 Async
+val 1 -8
+val 2 4
+val 3 4
+rf 3 2
 ProxyFence 1
-dirs 0 Generic Generic
-dirs 0 Generic Async
-dirs 0 Generic TensorMap
-dirs 0 Async Generic
-dirs 0 TensorMap Generic
+ProxyFence 2
+ProxyFence 3
 dirs 1 Generic Generic
 dirs 1 Generic Async
-paddr 0 0
+dirs 1 Async Generic
+dirs 2 Generic Generic
+dirs 2 Generic Async
+pspace 1 Shared
+pspace 2 Shared
+paddr 1 0
+paddr 1 2
+paddr 2 0
+Mbar 0
+Mbar 1
 Mbar 2
-iph 2 1
-ipend 2 -3
-iexp 2 -3
-itx 2 -8
-TxAnchor 3
-txops 3 1
-txops 3 2
-txops 3 3
+iph 0 6
+iph 1 -8
+iph 2 4
+ipend 0 0
+ipend 1 -5
+ipend 2 -1
+iexp 0 6
+iexp 1 0
+iexp 2 -4
+itx 0 0
+itx 1 -8
+itx 2 0
+MbarEv 1
+MbarEv 2
+MbarEv 3
+ph 1 4
+ph 2 6
+ph 3 6
+pend 1 -1
+pend 2 1
+pend 3 1
+expc 1 -4
+expc 2 6
+expc 3 6
+tx 1 0
+tx 2 0
+tx 3 0
 alloy coherence 1
 alloy fence_sc 1
 alloy atomicity 1
@@ -170,5 +221,5 @@ ev 0 0
 ev 1 1
 ev 2 2
 ev 3 3
-witness $broken_drop_tensormap_release_f 2
+witness $broken_drop_tensormap_release_f 0
 end

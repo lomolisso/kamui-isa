@@ -15,8 +15,7 @@ undefined behaviour nor a mixed-size race, so its verdict only needs the executi
 `unconstrained` command: the facts and the outcome); its verdict is `allowed` exactly when one of them satisfies the
 model. Any other test needs all executions (the facts alone, `--all`), and its verdict follows run_formal.py's rule:
 some execution satisfies the model and has the outcome or undefined behaviour, or some execution satisfies the model
-and has a mixed-size race and some execution has the outcome (decision D38). A test whose query states undefined behaviour of the program
-itself (`run test { ptx_mm }`, decision D39) is allowed exactly when some execution satisfies the model.
+and has a mixed-size race and some execution has the outcome (decision D38).
 
 A test with more than --max executions of the facts is enumerated again, with only the executions that have the
 outcome, undefined behaviour or a mixed-size race (a copy of the query with that run command, in
@@ -82,8 +81,8 @@ def parse(text, prefix):
     return out
 
 
-def verdict(answers, alloy, outcome_mode, static_ub):
-    if outcome_mode or static_ub:
+def verdict(answers, alloy, outcome_mode):
+    if outcome_mode:
         return "allowed" if any(a[0]["ptx_mm"] for a in answers.values()) else "forbidden"
     sat = lambda f: any(f(a[0], alloy[k][0]) for k, a in answers.items())  # noqa: E731
     test = sat(lambda r, al: r["ptx_mm"] and (al["outcome"] or r["undefined"]))
@@ -97,14 +96,13 @@ def run(tid, model, expected, args):
     if q is None or not q.exists():
         return dict(test=tid, model=model, status="no query")
     text = q.read_text()
-    static_ub = bool(re.search(r"^run test \{ ptx_mm \}", text, re.M))
-    outcome_mode = not static_ub and bool(re.search(r"^\s*Mbar = none", text, re.M)
-                                          and re.search(r"^\s*Access = none", text, re.M))
+    outcome_mode = bool(re.search(r"^\s*Mbar = none", text, re.M)
+                        and re.search(r"^\s*Access = none", text, re.M))
     cmd = [str(HERE / "dump.sh"), "--max", str(args.max)] + (["--cmd", "unconstrained"] if outcome_mode else ["--all"])
     t0 = time.time()
     d = subprocess.run(cmd + [str(q)], capture_output=True, text=True)
     mode = "outcome" if outcome_mode else "all"
-    if d.returncode == 3 and not outcome_mode and not static_ub:
+    if d.returncode == 3 and not outcome_mode:
         scope = re.search(r"^run unconstrained \{ outcome \} (for .*?)\s*(//.*)?$", text, re.M).group(1)
         cq = OUT / "queries" / model / (tid.replace("/", "__") + ".als")
         cq.parent.mkdir(parents=True, exist_ok=True)
@@ -128,7 +126,7 @@ def run(tid, model, expected, args):
         diff = at ^ rt
         if diff:
             bad.append(f"{k}: {len(diff)} tuples differ, e.g. {sorted(diff)[:3]}")
-    v = verdict(rocq, alloy, outcome_mode, static_ub)
+    v = verdict(rocq, alloy, outcome_mode)
     status = "ok"
     if bad:
         status = "disagree"

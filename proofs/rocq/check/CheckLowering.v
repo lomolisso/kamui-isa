@@ -23,7 +23,7 @@ Definition align (FK FP : FExec) : FExec := {|
   f_skind := f_skind FK; f_subscope := f_subscope FK; f_start := f_start FK; f_alias := f_alias FK;
   f_space := f_space FK; f_owner := f_owner FK; f_init := f_init FK; f_kind := f_kind FK; f_po := f_po FK;
   f_scope := f_scope FK; f_issue := f_issue FK; f_done := f_done FK; f_gdep := f_gdep FK;
-  f_address := f_address FK; f_proxy := f_proxy FK; f_val := f_val FK; f_acc := f_acc FK; f_rmw := f_rmw FK;
+  f_address := f_address FK; f_proxy := f_proxy FK; f_val := f_val FK; f_acc := f_acc FK; f_vacc := f_vacc FK; f_rmw := f_rmw FK;
   f_dep := f_dep FK; f_rf := f_rf FK; f_co := f_co FK; f_sc := f_sc FK;
   f_SyncRestrictCta := f_SyncRestrictCta FK; f_SyncRestrictCluster := f_SyncRestrictCluster FK;
   f_OpRestrictInit := f_OpRestrictInit FK; f_ProxyFence := f_ProxyFence FK; f_dirs := f_dirs FK;
@@ -287,6 +287,9 @@ Definition b_sr_address : bool :=
 Definition b_sr_acc : bool :=
   let m0 := (d_acc FK) in let m1 := (d_acc FP) in 
   forallb (fun k => forallb (fun c => Bool.eqb (get m0 k c) (existsb (fun e => Nat.eqb (ev_at FM e) k && get m1 e c) (List.seq 0 nP))) (List.seq 0 nC)) (List.seq 0 nK).
+Definition b_sr_vacc : bool :=
+  let m0 := (d_vacc FK) in let m1 := (d_vacc FP) in 
+  forallb (fun k => forallb (fun c => Bool.eqb (get m0 k c) (existsb (fun e => Nat.eqb (ev_at FM e) k && get m1 e c) (List.seq 0 nP))) (List.seq 0 nC)) (List.seq 0 nK).
 Definition b_sr_rmw : bool := bsubset nK nK (d_rmw FK) (d_collect FP FK0 FM (d_rmw FP)) && bsubset nK nK (d_collect FP FK0 FM (d_rmw FP)) (d_rmw FK).
 Definition b_sr_dep : bool := bsubset nK nK (d_dep FK) (d_collect FP FK0 FM (d_dep FP)) && bsubset nK nK (d_collect FP FK0 FM (d_dep FP)) (d_dep FK).
 Definition b_sr_issue : bool := bsubset nK nK (d_issue FK) (d_collect FP FK0 FM (mseq nP nP nP (mdiag nP (vcompl nP (v_set ld nP))) (d_issue FP))) && bsubset nK nK (d_collect FP FK0 FM (mseq nP nP nP (mdiag nP (vcompl nP (v_set ld nP))) (d_issue FP))) (d_issue FK).
@@ -310,7 +313,7 @@ Definition b_sr_txops : bool := bsubset nK nK (d_txops FK) (d_collect FP FK0 FM 
 Definition b_sr_proxy_fence : bool :=
   let m0 := (d_ProxyFence FP) in let m1 := (d_paddr FK) in let m2 := (d_paddr FP) in 
   forallb (fun e => implb (vget m0 e) (implb (negb (mem1 lx e)) (forallb (fun p => forallb (fun q => Bool.eqb (memd (f_dirs FK) (ev_at FM e) p q) (memd (f_dirs FP) e p q)) all_proxies) all_proxies && (forallb (fun s => Bool.eqb (mems (f_pspace FK) (ev_at FM e) s) (mems (f_pspace FP) e s)) all_spaces && forallb (fun a => Bool.eqb (get m1 (ev_at FM e) a) (get m2 e a)) (List.seq 0 nA))))) (List.seq 0 nP).
-Definition b_same_relations : bool := b_sr_address && (b_sr_acc && (b_sr_rmw && (b_sr_dep && (b_sr_issue && (b_sr_done && (b_sr_gdep && (b_sr_bid && (b_sr_bcount && (b_sr_bwait && (b_sr_cwait && (b_sr_wpar && (b_sr_wtok && (b_sr_txops && (b_sr_proxy_fence)))))))))))))).
+Definition b_same_relations : bool := b_sr_address && (b_sr_acc && (b_sr_vacc && (b_sr_rmw && (b_sr_dep && (b_sr_issue && (b_sr_done && (b_sr_gdep && (b_sr_bid && (b_sr_bcount && (b_sr_bwait && (b_sr_cwait && (b_sr_wpar && (b_sr_wtok && (b_sr_txops && (b_sr_proxy_fence))))))))))))))).
 Definition b_px_same : bool :=
   let m0 := (d_MemoryEvent FP) in 
   forallb (fun e => implb (vget m0 e) (implb (negb (mem1 (m_relax FM) e)) (forallb (fun p => Bool.eqb (memp (f_proxy FK) (ev_at FM e) p) (memp (f_proxy FP) e p)) all_proxies))) (List.seq 0 nP).
@@ -454,6 +457,7 @@ Ltac leaf := first [
   | exact (d_owner_spec FK VK)
   | exact (d_address_spec FK VK)
   | exact (d_acc_spec FK VK)
+  | exact (d_vacc_spec FK VK)
   | exact (d_paddr_spec FK VK)
   | exact (d_System_spec FK VK)
   | exact (d_aliases_spec FK VK)
@@ -476,9 +480,11 @@ Ltac leaf := first [
   | exact (d_scope_incl0_spec FK VK)
   | exact (d_scope_incl_r_spec FK VK)
   | exact (d_same_acc_spec FK VK)
+  | exact (d_same_vacc_spec FK VK)
   | exact (d_footprint_spec FK VK)
   | exact (d_full_overlap_r_spec FK VK)
   | exact (d_overlap_ok_r_spec FK VK)
+  | exact (d_MbarOps_spec FK VK)
   | exact (d_ms_r_spec FK VK)
   | exact (d_FalseWaits_spec FK VK)
   | exact (d_RelFences_spec FK VK)
@@ -500,7 +506,6 @@ Ltac leaf := first [
   | exact (d_sw_restricted_spec FK VK)
   | exact (d_cause_base_spec FK VK)
   | exact (d_GenericM_spec FK VK)
-  | exact (d_AsyncW_spec FK VK)
   | exact (d_pf_space_ok_spec FK VK)
   | exact (d_pf_src0_spec FK VK)
   | exact (d_pf_dst0_spec FK VK)
@@ -572,6 +577,7 @@ Ltac leaf := first [
   | exact (d_owner_spec FP VP)
   | exact (d_address_spec FP VP)
   | exact (d_acc_spec FP VP)
+  | exact (d_vacc_spec FP VP)
   | exact (d_paddr_spec FP VP)
   | exact (d_System_spec FP VP)
   | exact (d_aliases_spec FP VP)
@@ -594,9 +600,11 @@ Ltac leaf := first [
   | exact (d_scope_incl0_spec FP VP)
   | exact (d_scope_incl_r_spec FP VP)
   | exact (d_same_acc_spec FP VP)
+  | exact (d_same_vacc_spec FP VP)
   | exact (d_footprint_spec FP VP)
   | exact (d_full_overlap_r_spec FP VP)
   | exact (d_overlap_ok_r_spec FP VP)
+  | exact (d_MbarOps_spec FP VP)
   | exact (d_ms_r_spec FP VP)
   | exact (d_FalseWaits_spec FP VP)
   | exact (d_RelFences_spec FP VP)
@@ -618,7 +626,6 @@ Ltac leaf := first [
   | exact (d_sw_restricted_spec FP VP)
   | exact (d_cause_base_spec FP VP)
   | exact (d_GenericM_spec FP VP)
-  | exact (d_AsyncW_spec FP VP)
   | exact (d_pf_space_ok_spec FP VP)
   | exact (d_pf_src0_spec FP VP)
   | exact (d_pf_dst0_spec FP VP)
@@ -828,26 +835,29 @@ Proof.
     apply andb_prop in Hb; destruct Hb as [H11 Hb].
     apply andb_prop in Hb; destruct Hb as [H12 Hb].
     apply andb_prop in Hb; destruct Hb as [H13 Hb].
-    rename Hb into H14.
+    apply andb_prop in Hb; destruct Hb as [H14 Hb].
+    rename Hb into H15.
     constructor.
     + luse b_sr_address H0.
     + luse b_sr_acc H1.
-    + luse b_sr_rmw H2.
-    + luse b_sr_dep H3.
-    + luse b_sr_issue H4.
-    + luse b_sr_done H5.
-    + luse b_sr_gdep H6.
-    + luseZ b_sr_bid H7.
-    + luseO b_sr_bcount H8.
-    + luse b_sr_bwait H9.
-    + luse b_sr_cwait H10.
-    + luseO b_sr_wpar H11.
-    + luseO b_sr_wtok H12.
-    + luse b_sr_txops H13.
-    + luse b_sr_proxy_fence H14.
+    + luse b_sr_vacc H2.
+    + luse b_sr_rmw H3.
+    + luse b_sr_dep H4.
+    + luse b_sr_issue H5.
+    + luse b_sr_done H6.
+    + luse b_sr_gdep H7.
+    + luseZ b_sr_bid H8.
+    + luseO b_sr_bcount H9.
+    + luse b_sr_bwait H10.
+    + luse b_sr_cwait H11.
+    + luseO b_sr_wpar H12.
+    + luseO b_sr_wtok H13.
+    + luse b_sr_txops H14.
+    + luse b_sr_proxy_fence H15.
   - intros H; unfold b_same_relations.
     apply andb_true_iff; split; [lback b_sr_address (sr_address H) |].
     apply andb_true_iff; split; [lback b_sr_acc (sr_acc H) |].
+    apply andb_true_iff; split; [lback b_sr_vacc (sr_vacc H) |].
     apply andb_true_iff; split; [lback b_sr_rmw (sr_rmw H) |].
     apply andb_true_iff; split; [lback b_sr_dep (sr_dep H) |].
     apply andb_true_iff; split; [lback b_sr_issue (sr_issue H) |].

@@ -27,14 +27,14 @@ BROKEN = [("broken_drop_acquire", "w", ""), ("broken_narrow_fence", "w", ""), ("
 
 SK = {"Node": "SNode", "Cta": "SCta", "Cluster": "SCluster", "Thread": "SThread", "AsyncUnit": "SAsyncUnit"}
 SP = {"Global": "SGlobal", "Shared": "SShared", "Local": "SLocal", "Const": "SConst", "Param": "SParam"}
-RELS = ["subscope", "start", "alias", "owner", "po", "issue", "done", "gdep", "address", "acc", "rmw", "dep", "rf",
+RELS = ["subscope", "start", "alias", "owner", "po", "issue", "done", "gdep", "address", "acc", "vacc", "rmw", "dep", "rf",
         "co", "sc", "paddr", "bwait", "bgen", "synchronizes", "cwait", "cgen", "txops"]
 SETS = ["SyncRestrictCta", "SyncRestrictCluster", "OpRestrictInit", "ProxyFence", "ClusterArriveRelaxed", "Mbar",
         "MbarEv", "MbarInit", "MbarWait", "TxAnchor"]
 INTS = {"init": 2, "iph": 2, "ipend": 2, "iexp": 2, "itx": 2, "val": 0, "bid": 0, "ph": 0, "pend": 0, "expc": 0, "tx": 0}
 OPTS = ["bcount", "wpar", "wtok"]
 FIELDS = ["skind", "subscope", "start", "alias", "space", "owner", "init", "kind", "po", "scope", "issue", "done",
-          "gdep", "address", "proxy", "val", "acc", "rmw", "dep", "rf", "co", "sc", "SyncRestrictCta",
+          "gdep", "address", "proxy", "val", "acc", "vacc", "rmw", "dep", "rf", "co", "sc", "SyncRestrictCta",
           "SyncRestrictCluster", "OpRestrictInit", "ProxyFence", "dirs", "pspace", "paddr", "bid", "bcount", "bwait",
           "bgen", "synchronizes", "cwait", "cgen", "ClusterArriveRelaxed", "Mbar", "iph", "ipend", "iexp", "itx",
           "MbarEv", "ph", "pend", "expc", "tx", "MbarInit", "MbarWait", "wpar", "wtok", "TxAnchor", "txops"]

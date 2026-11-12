@@ -63,11 +63,13 @@ Record Exec (E S A C : Type) := {
   issue : relation E;
   done : relation E;
   gdep : relation E;
-  (* abstract sig MemoryEvent { address: one Address, proxy: one Proxy, val: one Int, acc: lone Access } *)
+  (* abstract sig MemoryEvent { address: one Address, proxy: one Proxy, val: one Int, acc: lone Access,
+     vacc: lone VecAccess }; the atoms of Access and VecAccess share the carrier C (D43) *)
   address : E -> A -> Prop;
   proxy : E -> Proxy -> Prop;
   val : E -> Z;
   acc : E -> C -> Prop;
+  vacc : E -> C -> Prop;
   (* sig Read { rmw: lone Write, dep: set Event }; sig Write { rf: set Read, co: set Write } *)
   rmw : relation E;
   dep : relation E;
@@ -147,6 +149,7 @@ Local Abbreviation address := (address X).
 Local Abbreviation proxy := (proxy X).
 Local Abbreviation val := (val X).
 Local Abbreviation acc := (acc X).
+Local Abbreviation vacc := (vacc X).
 Local Abbreviation rmw := (rmw X).
 Local Abbreviation dep := (dep X).
 Local Abbreviation rf := (rf X).
@@ -267,17 +270,23 @@ Definition scope_incl_r : relation E :=
 (** [fun footprint : Event->Address { (acc.~acc + iden).address }] (D6) *)
 Definition same_acc : relation E := fun e1 e2 => exists c, acc e1 c /\ acc e2 c.
 Definition footprint (e : E) (a : A) : Prop := exists e', (same_acc e e' \/ e = e') /\ address e' a.
-(** [fun full_overlap_r : MemoryEvent->MemoryEvent { { e1, e2: MemoryEvent | e1.footprint = e2.footprint } }] *)
+(** [fun full_overlap_r : MemoryEvent->MemoryEvent {
+      { e1, e2: MemoryEvent | e1.footprint.aliases = e2.footprint.aliases } }] (D48) *)
 Definition full_overlap_r : relation E :=
-  fun e1 e2 => MemoryEvent e1 /\ MemoryEvent e2 /\ (forall a, footprint e1 a <-> footprint e2 a).
-(** [fun overlap_ok_r : Event->Event { (MemoryEvent->MemoryEvent & same_alias_r & full_overlap_r)
-                                       + (Event->Event - MemoryEvent->MemoryEvent) }] *)
+  fun e1 e2 => MemoryEvent e1 /\ MemoryEvent e2 /\
+    (forall a, (exists a', footprint e1 a' /\ aliases a' a) <-> (exists a', footprint e2 a' /\ aliases a' a)).
+(** [fun overlap_ok_r : Event->Event { (MemoryEvent->MemoryEvent & same_location_r & full_overlap_r)
+                                       + (Event->Event - MemoryEvent->MemoryEvent) }] (D48) *)
 Definition overlap_ok_r : relation E :=
-  fun e1 e2 => (MemoryEvent e1 /\ MemoryEvent e2 /\ same_alias_r e1 e2 /\ full_overlap_r e1 e2)
+  fun e1 e2 => (MemoryEvent e1 /\ MemoryEvent e2 /\ same_location_r e1 e2 /\ full_overlap_r e1 e2)
                \/ ~ (MemoryEvent e1 /\ MemoryEvent e2).
-(** [fun ms_r : Event->Event { (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden }] *)
+(** [fun MbarOps : MemoryEvent { MbarEv - (Write - Read.rmw) }] (D47) *)
+Definition MbarOps (e : E) : Prop := MbarEv e /\ ~ (Write e /\ ~ (exists r, Read r /\ rmw r e)).
+(** [fun ms_r : Event->Event { ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden }]
+    (D47) *)
 Definition ms_r : relation E :=
-  fun e1 e2 => scope_incl_r e1 e2 /\ (exists p, proxy_of e1 p /\ proxy_of e2 p) /\ overlap_ok_r e1 e2 /\ e1 <> e2.
+  fun e1 e2 => (scope_incl_r e1 e2 \/ (MbarOps e1 /\ MbarOps e2)) /\ (exists p, proxy_of e1 p /\ proxy_of e2 p)
+               /\ overlap_ok_r e1 e2 /\ e1 <> e2.
 (** [fun strong[r: Event->Event] : Event->Event { r & ms_r }] *)
 Definition strong (r : relation E) : relation E := r ∩ ms_r.
 
@@ -436,8 +445,8 @@ Definition ppbco_with (cb : relation E) : relation E :=
   (* no proxy fence or alias fence *)
   same_alias (⦗GenericM⦘ ⨾ cb ⨾ ⦗GenericM⦘)
   ∪ same_alias ((⦗MemoryEvent⦘ ⨾ cb ⨾ ⦗MemoryEvent⦘) ∩ same_cta_r ∩ (fun e1 e2 => exists p, proxy e1 p /\ proxy e2 p))
-  (* a generic read before an async-proxy write (D40) *)
-  ∪ same_alias (⦗GenericM ∩₁ Read⦘ ⨾ cb ⨾ ⦗fun e => proxy e Async /\ Write e⦘)
+  (* a generic read before a write of the same address in any proxy (D40, D49) *)
+  ∪ same_alias (⦗GenericM ∩₁ Read⦘ ⨾ cb ⨾ ⦗Write⦘)
   (* proxy fence for the source, for the destination, for both *)
   ∪ same_alias ((cb ∩ pf_src) ⨾ cb ⨾ ⦗GenericM⦘)
   ∪ same_alias (⦗GenericM⦘ ⨾ cb ⨾ pf_dst_with cb)
@@ -462,8 +471,10 @@ Definition coherence : Prop := same_location (⦗Write⦘ ⨾ cause ⨾ ⦗Write
 (** [pred fence_sc { (FenceSC <: cause_base :> FenceSC) & ms_r in sc }] (8.10.2, D3, D41) *)
 Definition fence_sc : Prop := (⦗FenceSC⦘ ⨾ cause_base ⨾ ⦗FenceSC⦘) ∩ ms_r ⊆ sc.
 
-(** [fun acc_lift[r: Event->Event] : Event->Event { (acc.~acc + iden).r.(acc.~acc + iden) }] *)
-Definition acc_lift (r : relation E) : relation E := same_acc^? ⨾ r ⨾ same_acc^?.
+(** [fun acc_lift[r: Event->Event] : Event->Event {
+      (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden) }] (D43) *)
+Definition same_vacc : relation E := fun e1 e2 => exists c, vacc e1 c /\ vacc e2 c.
+Definition acc_lift (r : relation E) : relation E := (same_acc ∪ same_vacc)^? ⨾ r ⨾ (same_acc ∪ same_vacc)^?.
 (** [fun AtomicR : Read { rmw.Write }]; [fun Atomics : MemoryEvent { AtomicR + AtomicR.rmw }] *)
 Definition AtomicR (e : E) : Prop := exists w, rmw e w /\ Write w.
 Definition Atomics (e : E) : Prop := AtomicR e \/ exists r, AtomicR r /\ rmw r e.
@@ -522,6 +533,8 @@ Record wf_prog : Prop := {
   decl_proxy_one : forall e, MemoryEvent e -> exists p, proxy e p /\ forall p', proxy e p' -> p' = p;
   decl_acc : forall e c, acc e c -> MemoryEvent e;
   decl_acc_lone : forall e c1 c2, acc e c1 -> acc e c2 -> c1 = c2;
+  decl_vacc : forall e c, vacc e c -> MemoryEvent e;
+  decl_vacc_lone : forall e c1 c2, vacc e c1 -> vacc e c2 -> c1 = c2;
   decl_rmw : forall r w, rmw r w -> Read r /\ Write w;
   decl_rmw_lone : forall r w1 w2, rmw r w1 -> rmw r w2 -> w1 = w2;
   decl_dep : forall r e, dep r e -> Read r;
@@ -607,10 +620,12 @@ Record wf_exec : Prop := {
     ((exists w, rf w r) -> forall w, rf w r -> val r = val w)
     /\ (~ (exists w, rf w r) -> forall a, address r a -> val r = init a);
   communication_4 : acyclic co;
-  (* fact co_strong (D6) *)
+  (* fact co_strong (D6, D43) *)
   co_strong_1 : ⦗Write⦘ ⨾ ms_r ⨾ ⦗Write⦘ ⊆ co⁺ ∪ co⁻¹⁺;
   co_strong_2 : forall c1 c2,
     ~ ((exists w1 w2, acc w1 c1 /\ co⁺ w1 w2 /\ acc w2 c2) /\ (exists w1 w2, acc w1 c2 /\ co⁺ w1 w2 /\ acc w2 c1));
+  co_strong_3 : forall c1 c2,
+    ~ ((exists w1 w2, vacc w1 c1 /\ co⁺ w1 w2 /\ vacc w2 c2) /\ (exists w1 w2, vacc w1 c2 /\ co⁺ w1 w2 /\ vacc w2 c1));
   (* fact fence_sc_order *)
   fence_sc_order_1 : forall f1 f2, FenceSC f1 -> FenceSC f2 -> f1 <> f2 -> ms_r f1 f2 -> sc f1 f2 \/ sc f2 f1;
   fence_sc_order_2 : sc ⊆ ms_r;
