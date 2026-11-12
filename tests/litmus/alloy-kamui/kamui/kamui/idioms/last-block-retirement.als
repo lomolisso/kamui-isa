@@ -14,7 +14,7 @@ open kamui
 //  P0@cta 0,gpu 0                | P1@cta 1,gpu 0                ;
 //  st.global.weak p0, 1          | st.global.weak p1, 1          ;
 //  fence.sc.gpu                  | fence.sc.gpu                  ;
-//  atom.relaxed.gpu.add r0, n, 1 | atom.relaxed.gpu.add r0, n, 1 ;
+//  atom.acquire.gpu.add r0, n, 1 | atom.acquire.gpu.add r0, n, 1 ;
 //                                | ld.global.weak r1, p0         ;
 // exists
 // (P1:r0 == 1 /\ P1:r1 == 0)
@@ -25,7 +25,8 @@ one sig T0, T1 extends Thread {}
 one sig L_p0, L_p1, L_n extends Address {}
 one sig E0, E3, E4, E7 extends Write {}
 one sig E1, E5 extends FenceSC {}
-one sig E2, E6, E8 extends Read {}
+one sig E2, E6 extends Acquire {}
+one sig E8 extends Read {}
 
 fact shape {
   Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8
@@ -33,6 +34,8 @@ fact shape {
   Address = L_p0 + L_p1 + L_n
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Gpu0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1
   start = T0->E0 + T1->E4
   po = E0->E1 + E1->E2 + E2->E3 + E4->E5 + E5->E6 + E6->E7 + E7->E8

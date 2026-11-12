@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_mbarrier_MP_mbarrier_remote_arrive_wait_cta
 open ptx87
 
 // PTX MP+mbarrier-remote-arrive+wait.cta
-// "As MP+mbarrier-remote-arrive.cluster with the wait at .cta scope: the remote arrival is outside the wait's scope, so they are not morally strong and do not synchronize (D16). Expected: allowed."
+// "As MP+mbarrier-remote-arrive.cluster with the wait at .cta scope. The remote arrival is outside the wait's scope, but the waits and updates of one mbarrier object are morally strong whatever their scopes (D47, which replaces D16), so they synchronize. Expected: forbidden."
 // {
 // b=mbarrier(1) @cta 1;
 // x=0;
@@ -32,6 +32,8 @@ fact shape {
   Address = L_b + L_x
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cl0_0_0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1
   start = T0->E0 + T1->E3
   po = E0->E1 + E1->E2 + E3->E4

@@ -39,6 +39,8 @@ fact shape {
   Address = L_a + L_c + L_o
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->T1 + Cta0_0_0->U0
   start = T0->E0 + T1->E4 + U0->E6
   po = E0->E1 + E1->E2 + E2->E3 + E4->E5 + E5->E9 + E6->E7 + E7->E8

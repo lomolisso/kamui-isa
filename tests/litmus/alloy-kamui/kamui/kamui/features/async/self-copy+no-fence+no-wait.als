@@ -36,6 +36,8 @@ fact shape {
   Address = L_s + L_d + L_b
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->U0 + Cta0_0_0->U1
   start = T0->E0 + U0->E3 + U1->E6
   po = E0->E1 + E1->E2 + E2->E5 + E5->E10 + E3->E4 + E6->E7 + E7->E8 + E8->E9
@@ -82,7 +84,7 @@ fact shape {
 
 pred outcome { (E10.val != 5) }
 
-run test { ptx_mm } for 11 but 6 Int  // undefined behaviour: a copy from .shared::cta into the issuing CTA's own shared memory (D39), so every outcome
+run test { ptx_mm and (outcome or undefined) } for 11 but 6 Int
 run consistent { ptx_mm } for 11 but 6 Int  // the program has an execution: the test is not vacuous
 run racy { ptx_mm and mixed_size_race } for 11 but 6 Int  // a mixed-size data race (D38)
 run unconstrained { outcome } for 11 but 6 Int  // the outcome without the axioms (D38)

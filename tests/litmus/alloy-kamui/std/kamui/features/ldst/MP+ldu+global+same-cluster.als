@@ -12,7 +12,7 @@ open kamui
 // }
 //  P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
 //  st.weak x, 1             | ld.acquire.sys r0, f     ;
-//  st.release.sys f, 1      | ld.global.nc r1, x       ;
+//  st.release.sys f, 1      | ld.global.weak r1, x     ;
 // exists
 // (P1:r0 == 1 /\ P1:r1 == 0)
 
@@ -32,11 +32,13 @@ fact shape {
   Address = L_x + L_f
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cl0_0_0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1
   start = T0->E0 + T1->E2
   po = E0->E1 + E2->E3
   address = E0->L_x + E1->L_f + E2->L_f + E3->L_x
-  proxy = E0->Generic + E1->Generic + E2->Generic + E3->Texture
+  proxy = E0->Generic + E1->Generic + E2->Generic + E3->Generic
   scope = E0->T0 + E1->Sys + E2->Sys + E3->T1
   rmw = none->none
   dep = none->none

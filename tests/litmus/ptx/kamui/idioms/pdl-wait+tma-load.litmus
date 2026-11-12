@@ -1,5 +1,5 @@
 PTX pdl-wait+tma-load
-"Programmatic dependent launch with a TMA main loop: the primary grid writes global memory; the dependent grid's producer runs griddepcontrol.wait, then loads with a TMA copy (CUTLASS sm90_gemm_tma_warpspecialized_pingpong.hpp:622-626). griddepcontrol.wait orders the grids (D32), but the copy reads through the async proxy and nothing crosses the proxies: allowed by the manual's reading, although the code relies on it being forbidden; pending a decision. Expected: allowed."
+"Programmatic dependent launch with a TMA main loop: the primary grid writes global memory; the dependent grid's producer runs griddepcontrol.wait, then loads with a TMA copy (CUTLASS sm90_gemm_tma_warpspecialized_pingpong.hpp:622-626). griddepcontrol.wait orders the grids (D32) and makes the earlier grids' writes visible to every proxy (D46). Expected: forbidden."
 {
 g=0;
 d=0 @cta 1;

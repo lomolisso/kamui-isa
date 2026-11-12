@@ -3,7 +3,7 @@ module ptx_kamui_idioms_last_block_retirement
 open ptx87
 
 // PTX last-block-retirement
-// "Last-block retirement: every CTA writes its partial result, __threadfence (fence.sc.gpu), then increments a counter with a relaxed atom; the CTA that sees the count of all others reads every partial (CUTLASS sm90_visitor_store_tma_warpspecialized.hpp:1095-1107, CCCL cub/agent/agent_topk.cuh:555-569). The reader has no acquire after its atom, so nothing orders its loads after the others' writes (8.8): allowed by the manual's reading, although the code relies on it being forbidden; pending a decision. Expected: allowed."
+// "Last-block retirement: every CTA writes its partial result, __threadfence (fence.sc.gpu), then increments a counter with a relaxed atom; the CTA that sees the count of all others reads every partial (CUTLASS sm90_visitor_store_tma_warpspecialized.hpp:1095-1107, CCCL cub/agent/agent_topk.cuh:555-569). The manual gives the reader no acquire, but a relaxed atom after a fence.sc of its thread acquires (D44). Expected: forbidden."
 // {
 // p0=0;
 // p1=0;
@@ -25,7 +25,8 @@ one sig T0, T1 extends Thread {}
 one sig L_p0, L_p1, L_n extends Address {}
 one sig E0, E3, E4, E7 extends Write {}
 one sig E1, E5 extends FenceSC {}
-one sig E2, E6, E8 extends Read {}
+one sig E2, E6 extends Acquire {}
+one sig E8 extends Read {}
 
 fact shape {
   Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8
@@ -33,6 +34,8 @@ fact shape {
   Address = L_p0 + L_p1 + L_n
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Gpu0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1
   start = T0->E0 + T1->E4
   po = E0->E1 + E1->E2 + E2->E3 + E4->E5 + E5->E6 + E6->E7 + E7->E8

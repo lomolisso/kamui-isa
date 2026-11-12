@@ -31,26 +31,29 @@ one sig Cta0_0_0 extends CtaScope {}
 one sig T0 extends Thread {}
 one sig U0, U1 extends AsyncUnit {}
 one sig L_d, L_e, L_g, L_h extends Address {}
-one sig E0, E1, E3, E6 extends Write {}
-one sig E2, E5, E9, E10 extends Read {}
-one sig E4, E7, E8 extends Marker {}
+one sig E0, E1, E3, E7 extends Write {}
+one sig E2, E6, E11, E12 extends Read {}
+one sig E4, E8 extends PlainProxyFence {}
+one sig E5, E9, E10 extends Marker {}
 
 fact shape {
-  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8 + E9 + E10
+  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8 + E9 + E10 + E11 + E12
   Scope = Sys + Gpu0 + Cl0_0_0 + Cta0_0_0 + T0 + U0 + U1
   Address = L_d + L_e + L_g + L_h
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->U0 + Cta0_0_0->U1
-  start = T0->E0 + U0->E2 + U1->E5
-  po = E0->E1 + E1->E4 + E4->E7 + E7->E8 + E8->E9 + E9->E10 + E2->E3 + E5->E6
-  address = E0->L_g + E1->L_h + E2->L_g + E3->L_d + E5->L_h + E6->L_e + E9->L_d + E10->L_e
-  proxy = E0->Generic + E1->Generic + E2->Generic + E3->Generic + E5->Generic + E6->Generic + E9->Generic + E10->Generic
-  scope = E0->T0 + E1->T0 + E2->U0 + E3->U0 + E4->T0 + E5->U1 + E6->U1 + E7->T0 + E8->T0 + E9->T0 + E10->T0
+  start = T0->E0 + U0->E2 + U1->E6
+  po = E0->E1 + E1->E5 + E5->E9 + E9->E10 + E10->E11 + E11->E12 + E2->E3 + E3->E4 + E6->E7 + E7->E8
+  address = E0->L_g + E1->L_h + E2->L_g + E3->L_d + E6->L_h + E7->L_e + E11->L_d + E12->L_e
+  proxy = E0->Generic + E1->Generic + E2->Generic + E3->Generic + E6->Generic + E7->Generic + E11->Generic + E12->Generic
+  scope = E0->T0 + E1->T0 + E2->U0 + E3->U0 + E4->U0 + E5->T0 + E6->U1 + E7->U1 + E8->U1 + E9->T0 + E10->T0 + E11->T0 + E12->T0
   rmw = none->none
-  dep = E2->E3 + E5->E6
-  issue = E4->E2 + E7->E5
-  done = E3->E8 + E6->E8
+  dep = E2->E3 + E6->E7
+  issue = E5->E2 + E9->E6
+  done = E4->E10 + E8->E10
   gdep = none->none
   bwait = none->none
   cwait = none->none
@@ -69,16 +72,22 @@ fact shape {
   OpRestrictInit = none
   ClusterArriveRelaxed = none
   TxAnchor = none
-  ProxyFence = none
+  ProxyFence = E4 + E8
+  E4.dirs = Async->Generic + Generic->Async
+  E4.pspace = none
+  E4.paddr = none
+  E8.dirs = Async->Generic + Generic->Async
+  E8.pspace = none
+  E8.paddr = none
   E0.val = 1
   E1.val = 1
   E3.val = E2.val
-  E6.val = E5.val
+  E7.val = E6.val
 }
 
-pred outcome { ((E9.val = 0) or (E10.val = 0)) }
+pred outcome { ((E11.val = 0) or (E12.val = 0)) }
 
-run test { ptx_mm and (outcome or undefined) } for 11 but 5 Int
-run consistent { ptx_mm } for 11 but 5 Int  // the program has an execution: the test is not vacuous
-run racy { ptx_mm and mixed_size_race } for 11 but 5 Int  // a mixed-size data race (D38)
-run unconstrained { outcome } for 11 but 5 Int  // the outcome without the axioms (D38)
+run test { ptx_mm and (outcome or undefined) } for 13 but 5 Int
+run consistent { ptx_mm } for 13 but 5 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 13 but 5 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 13 but 5 Int  // the outcome without the axioms (D38)

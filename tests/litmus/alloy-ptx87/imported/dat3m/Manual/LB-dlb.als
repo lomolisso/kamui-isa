@@ -22,10 +22,11 @@ one sig Sys, Gpu0 extends Scope {}
 one sig Cta0_0_0, Cta0_0_1 extends CtaScope {}
 one sig T0, T1 extends Thread {}
 one sig L_t, L_h extends Address {}
-one sig E0, E4, E6 extends Read {}
+one sig E0, E4 extends Read {}
 lone sig E1, E7 extends Write {}
 one sig E2, E5 extends FenceSC {}
 one sig E3 extends Write {}
+one sig E6 extends Acquire {}
 
 fact shape {
   Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7
@@ -33,6 +34,8 @@ fact shape {
   Address = L_t + L_h
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Gpu0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1
   start = T0->E0 + T1->E4
   po = E2->E3 + E4->E5 + E5->E6 + (some E1 => E0->E1 + E1->E2 else E0->E2) + E6->E7

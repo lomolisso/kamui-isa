@@ -10,8 +10,8 @@ open kamui
 // P1:r0=0;
 // P1:r1=0;
 // }
-//  P0@cta 0,gpu 0                | P1@cta 1,gpu 0                 ;
-//  st.relaxed.gpu.v2 s, v, 1, 42 | ld.relaxed.gpu.v2 r0, r1, s, v ;
+//  P0@cta 0,gpu 0                    | P1@cta 1,gpu 0                     ;
+//  st.relaxed.gpu.v2.u64 s, v, 1, 42 | ld.relaxed.gpu.v2.u64 r0, r1, s, v ;
 // exists
 // (P1:r0 == 1 /\ P1:r1 == 0)
 
@@ -19,6 +19,7 @@ one sig Sys, Gpu0 extends Scope {}
 one sig Cta0_0_0, Cta0_0_1 extends CtaScope {}
 one sig T0, T1 extends Thread {}
 one sig L_s, L_v extends Address {}
+one sig V0, V1 extends VecAccess {}
 one sig E0, E3 extends Marker {}
 one sig E1, E2 extends Write {}
 one sig E4, E5 extends Read {}
@@ -29,6 +30,8 @@ fact shape {
   Address = L_s + L_v
   Access = none
   acc = none->none
+  VecAccess = V0 + V1
+  vacc = E1->V0 + E2->V0 + E4->V1 + E5->V1
   subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Gpu0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1
   start = T0->E0 + T1->E3
   ((po = none->none + E0->E1 + E1->E2 + E3->E4 + E4->E5) or (po = none->none + E0->E1 + E1->E2 + E3->E5 + E5->E4) or (po = none->none + E0->E2 + E2->E1 + E3->E4 + E4->E5) or (po = none->none + E0->E2 + E2->E1 + E3->E5 + E5->E4))

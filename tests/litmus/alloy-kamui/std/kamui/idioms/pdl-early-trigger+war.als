@@ -20,20 +20,25 @@ one sig T0, T1 extends Thread {}
 one sig L_x extends Address {}
 one sig E0 extends Read {}
 one sig E1 extends Marker {}
-one sig E2 extends Write {}
+one sig E2 extends PlainProxyFence {}
+one sig E3 extends FenceRel {}
+one sig E4 extends FenceAcq {}
+one sig E5 extends Write {}
 
 fact shape {
-  Event = E0 + E1 + E2
+  Event = E0 + E1 + E2 + E3 + E4 + E5
   Scope = Sys + Gpu0 + Cta0_0_0 + Cta0_1_0 + T0 + T1
   Address = L_x
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Gpu0->Cta0_1_0 + Cta0_0_0->T0 + Cta0_1_0->T1
   start = T0->E0 + T1->E1
-  po = E1->E2
-  address = E0->L_x + E2->L_x
-  proxy = E0->Generic + E2->Generic
-  scope = E0->T0 + E1->T1 + E2->T1
+  po = E1->E2 + E2->E3 + E3->E4 + E4->E5
+  address = E0->L_x + E5->L_x
+  proxy = E0->Generic + E5->Generic
+  scope = E0->T0 + E1->T1 + E2->T1 + E3->Gpu0 + E4->Gpu0 + E5->T1
   rmw = none->none
   dep = none->none
   issue = none->none
@@ -53,13 +58,22 @@ fact shape {
   OpRestrictInit = none
   ClusterArriveRelaxed = none
   TxAnchor = none
-  ProxyFence = none
-  E2.val = 1
+  ProxyFence = E2 + E3 + E4
+  E2.dirs = Generic->Async + Generic->Texture + Generic->Surface + Generic->Constant
+  E2.pspace = none
+  E2.paddr = none
+  E3.dirs = Generic->TensorMap
+  E3.pspace = none
+  E3.paddr = none
+  E4.dirs = Generic->TensorMap
+  E4.pspace = none
+  E4.paddr = none
+  E5.val = 1
 }
 
 pred outcome { (E0.val = 1) }
 
-run test { ptx_mm and (outcome or undefined) } for 6 but 4 Int
-run consistent { ptx_mm } for 6 but 4 Int  // the program has an execution: the test is not vacuous
-run racy { ptx_mm and mixed_size_race } for 6 but 4 Int  // a mixed-size data race (D38)
-run unconstrained { outcome } for 6 but 4 Int  // the outcome without the axioms (D38)
+run test { ptx_mm and (outcome or undefined) } for 6 but 5 Int
+run consistent { ptx_mm } for 6 but 5 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 6 but 5 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 6 but 5 Int  // the outcome without the axioms (D38)

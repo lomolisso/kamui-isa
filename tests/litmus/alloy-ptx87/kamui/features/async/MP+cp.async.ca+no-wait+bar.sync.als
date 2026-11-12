@@ -21,30 +21,33 @@ one sig Cta0_0_0 extends CtaScope {}
 one sig T0, T1 extends Thread {}
 one sig U0 extends AsyncUnit {}
 one sig L_g, L_d extends Address {}
-one sig E0, E7 extends Read {}
+one sig E0, E8 extends Read {}
 one sig E1 extends Write {}
-one sig E2 extends Marker {}
-one sig E3, E5 extends BarrierArrive {}
-one sig E4, E6 extends BarrierWait {}
+one sig E2 extends PlainProxyFence {}
+one sig E3 extends Marker {}
+one sig E4, E6 extends BarrierArrive {}
+one sig E5, E7 extends BarrierWait {}
 
 fact shape {
-  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7
+  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8
   Scope = Sys + Gpu0 + Cl0_0_0 + Cta0_0_0 + T0 + T1 + U0
   Address = L_g + L_d
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->T1 + Cta0_0_0->U0
-  start = U0->E0 + T0->E2 + T1->E5
-  po = E0->E1 + E2->E3 + E3->E4 + E5->E6 + E6->E7
-  address = E0->L_g + E1->L_d + E7->L_d
-  proxy = E0->Generic + E1->Generic + E7->Generic
-  scope = E0->U0 + E1->U0 + E2->T0 + E3->Cta0_0_0 + E4->Cta0_0_0 + E5->Cta0_0_0 + E6->Cta0_0_0 + E7->T1
+  start = U0->E0 + T0->E3 + T1->E6
+  po = E0->E1 + E1->E2 + E3->E4 + E4->E5 + E6->E7 + E7->E8
+  address = E0->L_g + E1->L_d + E8->L_d
+  proxy = E0->Generic + E1->Generic + E8->Generic
+  scope = E0->U0 + E1->U0 + E2->U0 + E3->T0 + E4->Cta0_0_0 + E5->Cta0_0_0 + E6->Cta0_0_0 + E7->Cta0_0_0 + E8->T1
   rmw = none->none
   dep = E0->E1
-  issue = E2->E0
+  issue = E3->E0
   done = none->none
   gdep = none->none
-  bwait = E3->E4 + E5->E6
+  bwait = E4->E5 + E6->E7
   cwait = none->none
   L_g.init = 5
   L_d.init = 0
@@ -59,17 +62,20 @@ fact shape {
   OpRestrictInit = none
   ClusterArriveRelaxed = none
   TxAnchor = none
-  ProxyFence = none
+  ProxyFence = E2
+  E2.dirs = Async->Generic + Generic->Async
+  E2.pspace = none
+  E2.paddr = none
   E1.val = E0.val
-  E3.bid = 0
-  no E3.bcount
-  E5.bid = 0
-  no E5.bcount
+  E4.bid = 0
+  no E4.bcount
+  E6.bid = 0
+  no E6.bcount
 }
 
-pred outcome { (E7.val != 5) }
+pred outcome { (E8.val != 5) }
 
-run test { ptx_mm and (outcome or undefined) } for 8 but 5 Int
-run consistent { ptx_mm } for 8 but 5 Int  // the program has an execution: the test is not vacuous
-run racy { ptx_mm and mixed_size_race } for 8 but 5 Int  // a mixed-size data race (D38)
-run unconstrained { outcome } for 8 but 5 Int  // the outcome without the axioms (D38)
+run test { ptx_mm and (outcome or undefined) } for 9 but 5 Int
+run consistent { ptx_mm } for 9 but 5 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 9 but 5 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 9 but 5 Int  // the outcome without the axioms (D38)

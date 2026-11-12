@@ -24,28 +24,31 @@ one sig Cta0_0_0 extends CtaScope {}
 one sig T0, T1 extends Thread {}
 one sig U0, U1 extends AsyncUnit {}
 one sig L_g, L_d, L_b extends Address {}
-one sig E0, E3, E5, E8, E11 extends Read {}
-one sig E1, E4 extends Write {}
-one sig E2, E7 extends Marker {}
-one sig E6, E9 extends Release {}
-one sig E10 extends Acquire {}
+one sig E0, E4, E6, E9, E12 extends Read {}
+one sig E1, E5 extends Write {}
+one sig E2 extends PlainProxyFence {}
+one sig E3, E8 extends Marker {}
+one sig E7, E10 extends Release {}
+one sig E11 extends Acquire {}
 
 fact shape {
-  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8 + E9 + E10 + E11
+  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8 + E9 + E10 + E11 + E12
   Scope = Sys + Gpu0 + Cl0_0_0 + Cta0_0_0 + T0 + T1 + U0 + U1
   Address = L_g + L_d + L_b
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->T1 + Cta0_0_0->U0 + Cta0_0_0->U1
-  start = U0->E0 + T0->E2 + U1->E5 + T1->E10
-  po = E0->E1 + E2->E3 + E3->E4 + E4->E7 + E7->E8 + E8->E9 + E5->E6 + E10->E11
-  address = E0->L_g + E1->L_d + E3->L_b + E4->L_b + E5->L_b + E6->L_b + E8->L_b + E9->L_b + E10->L_b + E11->L_d
-  proxy = E0->Generic + E1->Generic + E3->Generic + E4->Generic + E5->Generic + E6->Generic + E8->Generic + E9->Generic + E10->Generic + E11->Generic
-  scope = E0->U0 + E1->U0 + E2->T0 + E3->Cta0_0_0 + E4->Cta0_0_0 + E5->Cta0_0_0 + E6->Cta0_0_0 + E7->T0 + E8->Cta0_0_0 + E9->Cta0_0_0 + E10->Cta0_0_0 + E11->T1
-  rmw = E3->E4 + E5->E6 + E8->E9
-  dep = E0->E1 + E3->E4 + E5->E6 + E8->E9
-  issue = E2->E0 + E7->E5
-  done = E1->E5
+  start = U0->E0 + T0->E3 + U1->E6 + T1->E11
+  po = E0->E1 + E1->E2 + E3->E4 + E4->E5 + E5->E8 + E8->E9 + E9->E10 + E6->E7 + E11->E12
+  address = E0->L_g + E1->L_d + E4->L_b + E5->L_b + E6->L_b + E7->L_b + E9->L_b + E10->L_b + E11->L_b + E12->L_d
+  proxy = E0->Generic + E1->Generic + E4->Generic + E5->Generic + E6->Generic + E7->Generic + E9->Generic + E10->Generic + E11->Generic + E12->Generic
+  scope = E0->U0 + E1->U0 + E2->U0 + E3->T0 + E4->Cta0_0_0 + E5->Cta0_0_0 + E6->Cta0_0_0 + E7->Cta0_0_0 + E8->T0 + E9->Cta0_0_0 + E10->Cta0_0_0 + E11->Cta0_0_0 + E12->T1
+  rmw = E4->E5 + E6->E7 + E9->E10
+  dep = E0->E1 + E4->E5 + E6->E7 + E9->E10
+  issue = E3->E0 + E8->E6
+  done = E2->E6
   gdep = none->none
   bwait = none->none
   cwait = none->none
@@ -58,27 +61,30 @@ fact shape {
   Mbar = L_b
   L_b.iph = 0 and L_b.ipend = 2 and L_b.iexp = 2 and L_b.itx = 0
   MbarInit = none
-  MbarWait = E10
+  MbarWait = E11
   SyncRestrictCta = none
   SyncRestrictCluster = none
   OpRestrictInit = none
   ClusterArriveRelaxed = none
-  TxAnchor = E6
-  ProxyFence = none
-  E6.txops = E0 + E1
+  TxAnchor = E7
+  ProxyFence = E2
+  E2.dirs = Async->Generic + Generic->Async
+  E2.pspace = none
+  E2.paddr = none
+  E7.txops = E0 + E1 + E2
   E1.val = E0.val
-  mb_next[E3, E4, -1, 0, 0]
-  E4.val = 0
-  mb_next[E5, E6, 1, 0, 0]
-  E6.val = 0
-  mb_next[E8, E9, 1, 0, 0]
-  E9.val = 0
-  E10.wpar = 0 and no E10.wtok
+  mb_next[E4, E5, -1, 0, 0]
+  E5.val = 0
+  mb_next[E6, E7, 1, 0, 0]
+  E7.val = 0
+  mb_next[E9, E10, 1, 0, 0]
+  E10.val = 0
+  E11.wpar = 0 and no E11.wtok
 }
 
-pred outcome { (((wait_true[E10] => 1 else 0) = 1) and (E11.val != 5)) }
+pred outcome { (((wait_true[E11] => 1 else 0) = 1) and (E12.val != 5)) }
 
-run test { ptx_mm and (outcome or undefined) } for 12 but 6 Int
-run consistent { ptx_mm } for 12 but 6 Int  // the program has an execution: the test is not vacuous
-run racy { ptx_mm and mixed_size_race } for 12 but 6 Int  // a mixed-size data race (D38)
-run unconstrained { outcome } for 12 but 6 Int  // the outcome without the axioms (D38)
+run test { ptx_mm and (outcome or undefined) } for 13 but 6 Int
+run consistent { ptx_mm } for 13 but 6 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 13 but 6 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 13 but 6 Int  // the outcome without the axioms (D38)

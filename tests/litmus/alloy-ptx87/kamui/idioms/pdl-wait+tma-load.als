@@ -3,7 +3,7 @@ module ptx_kamui_idioms_pdl_wait_tma_load
 open ptx87
 
 // PTX pdl-wait+tma-load
-// "Programmatic dependent launch with a TMA main loop: the primary grid writes global memory; the dependent grid's producer runs griddepcontrol.wait, then loads with a TMA copy (CUTLASS sm90_gemm_tma_warpspecialized_pingpong.hpp:622-626). griddepcontrol.wait orders the grids (D32), but the copy reads through the async proxy and nothing crosses the proxies: allowed by the manual's reading, although the code relies on it being forbidden; pending a decision. Expected: allowed."
+// "Programmatic dependent launch with a TMA main loop: the primary grid writes global memory; the dependent grid's producer runs griddepcontrol.wait, then loads with a TMA copy (CUTLASS sm90_gemm_tma_warpspecialized_pingpong.hpp:622-626). griddepcontrol.wait orders the grids (D32) and makes the earlier grids' writes visible to every proxy (D46). Expected: forbidden."
 // {
 // g=0;
 // d=0 @cta 1;
@@ -26,29 +26,33 @@ one sig Cta0_0_0, Cta0_1_1 extends CtaScope {}
 one sig T0, T1 extends Thread {}
 one sig U0, U1 extends AsyncUnit {}
 one sig L_g, L_d, L_f extends Address {}
-one sig E0, E7 extends Write {}
-one sig E1, E6 extends Marker {}
-one sig E2, E4, E9, E12 extends Read {}
-one sig E3, E10 extends Release {}
-one sig E5, E8 extends PlainProxyFence {}
-one sig E11 extends Acquire {}
+one sig E0, E10 extends Write {}
+one sig E1, E9 extends Marker {}
+one sig E2, E8, E11 extends PlainProxyFence {}
+one sig E3 extends FenceRel {}
+one sig E4 extends FenceAcq {}
+one sig E5, E7, E12, E15 extends Read {}
+one sig E6, E13 extends Release {}
+one sig E14 extends Acquire {}
 
 fact shape {
-  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8 + E9 + E10 + E11 + E12
+  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8 + E9 + E10 + E11 + E12 + E13 + E14 + E15
   Scope = Sys + Gpu0 + Cl0_0_0 + Cta0_0_0 + Cl0_1_1 + Cta0_1_1 + T0 + T1 + U0 + U1
   Address = L_g + L_d + L_f
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Gpu0->Cl0_1_1 + Cl0_1_1->Cta0_1_1 + Cta0_0_0->T0 + Cta0_1_1->T1 + Cta0_1_1->U0 + Cta0_1_1->U1
-  start = T0->E0 + T1->E1 + U0->E4 + U1->E7
-  po = E1->E2 + E2->E3 + E3->E6 + E6->E11 + E11->E12 + E4->E5 + E7->E8 + E8->E9 + E9->E10
-  address = E0->L_g + E2->L_f + E3->L_f + E4->L_g + E7->L_d + E9->L_f + E10->L_f + E11->L_f + E12->L_d
-  proxy = E0->Generic + E2->Generic + E3->Generic + E4->Async + E7->Async + E9->Generic + E10->Generic + E11->Generic + E12->Generic
-  scope = E0->T0 + E1->T1 + E2->Cta0_1_1 + E3->Cta0_1_1 + E4->U0 + E5->U0 + E6->T1 + E7->U1 + E8->U1 + E9->Cl0_1_1 + E10->Cl0_1_1 + E11->Cta0_1_1 + E12->T1
-  rmw = E2->E3 + E9->E10
-  dep = E2->E3 + E9->E10
-  issue = E6->E4
-  done = E5->E7
+  start = T0->E0 + T1->E1 + U0->E7 + U1->E10
+  po = E1->E2 + E2->E3 + E3->E4 + E4->E5 + E5->E6 + E6->E9 + E9->E14 + E14->E15 + E7->E8 + E10->E11 + E11->E12 + E12->E13
+  address = E0->L_g + E5->L_f + E6->L_f + E7->L_g + E10->L_d + E12->L_f + E13->L_f + E14->L_f + E15->L_d
+  proxy = E0->Generic + E5->Generic + E6->Generic + E7->Async + E10->Async + E12->Generic + E13->Generic + E14->Generic + E15->Generic
+  scope = E0->T0 + E1->T1 + E2->T1 + E3->Gpu0 + E4->Gpu0 + E5->Cta0_1_1 + E6->Cta0_1_1 + E7->U0 + E8->U0 + E9->T1 + E10->U1 + E11->U1 + E12->Cl0_1_1 + E13->Cl0_1_1 + E14->Cta0_1_1 + E15->T1
+  rmw = E5->E6 + E12->E13
+  dep = E5->E6 + E12->E13
+  issue = E9->E7
+  done = E8->E10
   gdep = E0->E1
   bwait = none->none
   cwait = none->none
@@ -61,32 +65,41 @@ fact shape {
   Mbar = L_f
   L_f.iph = 0 and L_f.ipend = 1 and L_f.iexp = 1 and L_f.itx = 0
   MbarInit = none
-  MbarWait = E11
+  MbarWait = E14
   SyncRestrictCta = none
   SyncRestrictCluster = none
   OpRestrictInit = none
   ClusterArriveRelaxed = none
-  TxAnchor = E10
-  ProxyFence = E5 + E8
-  E5.dirs = Async->Generic + Generic->Async
-  E5.pspace = none
-  E5.paddr = none
+  TxAnchor = E13
+  ProxyFence = E2 + E3 + E4 + E8 + E11
+  E2.dirs = Generic->Async + Generic->Texture + Generic->Surface + Generic->Constant
+  E2.pspace = none
+  E2.paddr = none
+  E3.dirs = Generic->TensorMap
+  E3.pspace = none
+  E3.paddr = none
+  E4.dirs = Generic->TensorMap
+  E4.pspace = none
+  E4.paddr = none
   E8.dirs = Async->Generic + Generic->Async
   E8.pspace = none
   E8.paddr = none
-  E10.txops = E4 + E5 + E7 + E8
+  E11.dirs = Async->Generic + Generic->Async
+  E11.pspace = none
+  E11.paddr = none
+  E13.txops = E7 + E8 + E10 + E11
   E0.val = 5
-  mb_next[E2, E3, 1, 0, 1]
-  E3.val = 0
-  E7.val = E4.val
-  mb_next[E9, E10, 0, 0, minus[0, 1]]
-  E10.val = 0
-  E11.wpar = 0 and no E11.wtok
+  mb_next[E5, E6, 1, 0, 1]
+  E6.val = 0
+  E10.val = E7.val
+  mb_next[E12, E13, 0, 0, minus[0, 1]]
+  E13.val = 0
+  E14.wpar = 0 and no E14.wtok
 }
 
-pred outcome { (((wait_true[E11] => 1 else 0) = 1) and (E12.val != 5)) }
+pred outcome { (((wait_true[E14] => 1 else 0) = 1) and (E15.val != 5)) }
 
-run test { ptx_mm and (outcome or undefined) } for 13 but 6 Int
-run consistent { ptx_mm } for 13 but 6 Int  // the program has an execution: the test is not vacuous
-run racy { ptx_mm and mixed_size_race } for 13 but 6 Int  // a mixed-size data race (D38)
-run unconstrained { outcome } for 13 but 6 Int  // the outcome without the axioms (D38)
+run test { ptx_mm and (outcome or undefined) } for 16 but 6 Int
+run consistent { ptx_mm } for 16 but 6 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 16 but 6 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 16 but 6 Int  // the outcome without the axioms (D38)

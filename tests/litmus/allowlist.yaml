@@ -118,26 +118,6 @@
   reason: *quorum
 
 - kind: models
-  test: ptx/kamui/hand/CoWR+mbarrier.init-negative
-  model: "*"
-  reason: >-
-    mbarrier.init with a count outside its valid range (1 to 2^20-1, 9.7.13.15.2). The manual says the count
-    "must be in the range" but not what happens otherwise. The ptx-v8.7-alloy model keeps the program defined (the
-    pending count is negative), so SC per location forbids the outcome. The Dartagnan fork (ptx-v8.7) packs the
-    state into one integer, finds it invalid at the test_wait and reports undefined behaviour, which allows every
-    outcome. The alloy model's reading is the stronger one.
-
-- kind: models
-  test: ptx/kamui/hand/RMW-atomicity+alias
-  model: "*"
-  reason: >-
-    The models agree on every execution; they read the final-value condition `x == 2` differently. The two
-    exchanges use different virtual addresses of one location, so they are not morally strong and coherence order
-    need not relate their writes (8.9.6). The ptx-v8.7-alloy query reads `x == 2` as "P1's write follows P0's",
-    which with the values read breaks RMW atomicity; Dartagnan (ptx-v8.7) reads it as "no write follows P1's",
-    which also holds when the two writes are unordered (models/ptx87/equiv/README.md).
-
-- kind: models
   test: ptx/kamui/hand/CoWR+3writes+surface
   model: "*"
   reason: >-
@@ -808,3 +788,141 @@
   test: ptx/kamui/ptx87/async-bulk/TMA-multicast
   model: stress
   reason: *mbarrier_gap_features
+
+# ---- H100 observations of outcomes that the stronger readings of 2026-11-11 forbid
+
+- kind: h100
+  test: ptx/kamui/features/async/self-copy+fence+wait
+  model: plain
+  reason: &d51_self_copy >-
+    The contract takes the stronger reading of D51 (2026-11-11): a cp.async.bulk from .shared::cta into the issuing
+    CTA's own shared memory is an ordinary copy. The manual says the destination "has to be" another CTA
+    (19067-19068) without stating the consequence, and the H100 does not behave as an ordinary copy here; Kamui's
+    contract is stronger than the H100, which the hardware tasks must cover.
+
+- kind: h100
+  test: ptx/kamui/features/async/self-copy+fence+wait
+  model: shuffle
+  reason: *d51_self_copy
+
+- kind: h100
+  test: ptx/kamui/features/async/self-copy+fence+wait
+  model: spread
+  reason: *d51_self_copy
+
+- kind: h100
+  test: ptx/kamui/features/async/self-copy+fence+wait
+  model: stress
+  reason: *d51_self_copy
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.arrive_drop.cta+remote
+  model: plain
+  reason: &d47_remote_arrive >-
+    The contract takes the stronger reading of D47 (2026-11-11): the waits and updates of one mbarrier object are
+    morally strong whatever their scopes, so a remote arrive synchronizes with a .cta wait. The H100 does not give
+    this ordering (it does not give it even within one CTA at .cta scope, see mbarrier_cta above); Kamui's contract
+    is stronger than the H100 here, and a Kamui implementation built like the H100 must add the ordering (K11).
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.arrive_drop.cta+remote
+  model: shuffle
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.arrive_drop.cta+remote
+  model: spread
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.arrive_drop.cta+remote
+  model: stress
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.release.test_wait.acquire.cta+remote
+  model: plain
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.release.test_wait.acquire.cta+remote
+  model: shuffle
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.release.test_wait.acquire.cta+remote
+  model: spread
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.release.test_wait.acquire.cta+remote
+  model: stress
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.release.try_wait.acquire.cta+remote
+  model: plain
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.release.try_wait.acquire.cta+remote
+  model: shuffle
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.release.try_wait.acquire.cta+remote
+  model: spread
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.release.try_wait.acquire.cta+remote
+  model: stress
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.token.acquire.cta+remote
+  model: plain
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.token.acquire.cta+remote
+  model: shuffle
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.token.acquire.cta+remote
+  model: spread
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/features/mbarrier/MP+mbarrier.token.acquire.cta+remote
+  model: stress
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive+wait.cta
+  model: plain
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta
+  model: shuffle
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta
+  model: spread
+  reason: *d47_remote_arrive
+
+- kind: h100
+  test: ptx/kamui/ptx87/mbarrier/MP+mbarrier-remote-arrive.cta
+  model: stress
+  reason: *d47_remote_arrive
+
+- kind: models
+  test: ptx/kamui/hand/LB-self+surface
+  model: "*"
+  reason: >-
+    The contract takes the stronger reading of D49 (2026-11-11): a generic read is ordered before a later write of
+    the same address in any proxy. NVIDIA's mixed-proxy model (ptx-v7.5) needs a proxy fence between a generic read
+    and a surface write, so it allows the load to return the later store's value.

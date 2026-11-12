@@ -25,25 +25,28 @@ one sig T0 extends Thread {}
 one sig U0 extends AsyncUnit {}
 one sig L_g, L_d extends Address {}
 one sig E0, E2 extends Write {}
-one sig E1, E5 extends Read {}
-one sig E3, E4 extends Marker {}
+one sig E1, E6 extends Read {}
+one sig E3 extends PlainProxyFence {}
+one sig E4, E5 extends Marker {}
 
 fact shape {
-  Event = E0 + E1 + E2 + E3 + E4 + E5
+  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6
   Scope = Sys + Gpu0 + Cl0_0_0 + Cta0_0_0 + T0 + U0
   Address = L_g + L_d
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->U0
   start = T0->E0 + U0->E1
-  po = E0->E3 + E3->E4 + E4->E5 + E1->E2
-  address = E0->L_g + E1->L_g + E2->L_d + E5->L_d
-  proxy = E0->Generic + E1->Generic + E2->Generic + E5->Generic
-  scope = E0->T0 + E1->U0 + E2->U0 + E3->T0 + E4->T0 + E5->T0
+  po = E0->E4 + E4->E5 + E5->E6 + E1->E2 + E2->E3
+  address = E0->L_g + E1->L_g + E2->L_d + E6->L_d
+  proxy = E0->Generic + E1->Generic + E2->Generic + E6->Generic
+  scope = E0->T0 + E1->U0 + E2->U0 + E3->U0 + E4->T0 + E5->T0 + E6->T0
   rmw = none->none
   dep = E1->E2
-  issue = E3->E1
-  done = E2->E4
+  issue = E4->E1
+  done = E3->E5
   gdep = none->none
   bwait = none->none
   cwait = none->none
@@ -60,14 +63,17 @@ fact shape {
   OpRestrictInit = none
   ClusterArriveRelaxed = none
   TxAnchor = none
-  ProxyFence = none
+  ProxyFence = E3
+  E3.dirs = Async->Generic + Generic->Async
+  E3.pspace = none
+  E3.paddr = none
   E0.val = 1
   E2.val = E1.val
 }
 
-pred outcome { (E5.val = 0) }
+pred outcome { (E6.val = 0) }
 
-run test { ptx_mm and (outcome or undefined) } for 6 but 5 Int
-run consistent { ptx_mm } for 6 but 5 Int  // the program has an execution: the test is not vacuous
-run racy { ptx_mm and mixed_size_race } for 6 but 5 Int  // a mixed-size data race (D38)
-run unconstrained { outcome } for 6 but 5 Int  // the outcome without the axioms (D38)
+run test { ptx_mm and (outcome or undefined) } for 7 but 5 Int
+run consistent { ptx_mm } for 7 but 5 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 7 but 5 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 7 but 5 Int  // the outcome without the axioms (D38)

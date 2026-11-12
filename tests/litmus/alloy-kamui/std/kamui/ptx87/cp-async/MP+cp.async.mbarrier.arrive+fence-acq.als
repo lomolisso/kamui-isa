@@ -24,29 +24,32 @@ one sig Cta0_0_0 extends CtaScope {}
 one sig T0, T1 extends Thread {}
 one sig U0, U1 extends AsyncUnit {}
 one sig L_g, L_d, L_b extends Address {}
-one sig E0, E3, E8 extends Read {}
+one sig E0, E4, E9 extends Read {}
 one sig E1 extends Write {}
-one sig E2, E5 extends Marker {}
-one sig E4 extends Release {}
-one sig E6 extends Acquire {}
-one sig E7 extends FenceAcqRel {}
+one sig E2 extends PlainProxyFence {}
+one sig E3, E6 extends Marker {}
+one sig E5 extends Release {}
+one sig E7 extends Acquire {}
+one sig E8 extends FenceAcqRel {}
 
 fact shape {
-  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8
+  Event = E0 + E1 + E2 + E3 + E4 + E5 + E6 + E7 + E8 + E9
   Scope = Sys + Gpu0 + Cl0_0_0 + Cta0_0_0 + T0 + T1 + U0 + U1
   Address = L_g + L_d + L_b
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cta0_0_0->T0 + Cta0_0_0->T1 + Cta0_0_0->U0 + Cta0_0_0->U1
-  start = U0->E0 + T0->E2 + U1->E3 + T1->E6
-  po = E0->E1 + E2->E5 + E3->E4 + E6->E7 + E7->E8
-  address = E0->L_g + E1->L_d + E3->L_b + E4->L_b + E6->L_b + E8->L_d
-  proxy = E0->Generic + E1->Generic + E3->Generic + E4->Generic + E6->Generic + E8->Generic
-  scope = E0->U0 + E1->U0 + E2->T0 + E3->Cta0_0_0 + E4->Cta0_0_0 + E5->T0 + E6->Cta0_0_0 + E7->Sys + E8->T1
-  rmw = E3->E4
-  dep = E0->E1 + E3->E4
-  issue = E2->E0 + E5->E3
-  done = E1->E3
+  start = U0->E0 + T0->E3 + U1->E4 + T1->E7
+  po = E0->E1 + E1->E2 + E3->E6 + E4->E5 + E7->E8 + E8->E9
+  address = E0->L_g + E1->L_d + E4->L_b + E5->L_b + E7->L_b + E9->L_d
+  proxy = E0->Generic + E1->Generic + E4->Generic + E5->Generic + E7->Generic + E9->Generic
+  scope = E0->U0 + E1->U0 + E2->U0 + E3->T0 + E4->Cta0_0_0 + E5->Cta0_0_0 + E6->T0 + E7->Cta0_0_0 + E8->Sys + E9->T1
+  rmw = E4->E5
+  dep = E0->E1 + E4->E5
+  issue = E3->E0 + E6->E4
+  done = E2->E4
   gdep = none->none
   bwait = none->none
   cwait = none->none
@@ -59,23 +62,26 @@ fact shape {
   Mbar = L_b
   L_b.iph = 0 and L_b.ipend = 1 and L_b.iexp = 1 and L_b.itx = 0
   MbarInit = none
-  MbarWait = E6
+  MbarWait = E7
   SyncRestrictCta = none
   SyncRestrictCluster = none
   OpRestrictInit = none
   ClusterArriveRelaxed = none
-  TxAnchor = E4
-  ProxyFence = none
-  E4.txops = E0 + E1
+  TxAnchor = E5
+  ProxyFence = E2
+  E2.dirs = Async->Generic + Generic->Async
+  E2.pspace = none
+  E2.paddr = none
+  E5.txops = E0 + E1 + E2
   E1.val = E0.val
-  mb_next[E3, E4, 1, 0, 0]
-  E4.val = 0
-  E6.wpar = 0 and no E6.wtok
+  mb_next[E4, E5, 1, 0, 0]
+  E5.val = 0
+  E7.wpar = 0 and no E7.wtok
 }
 
-pred outcome { (((wait_true[E6] => 1 else 0) = 1) and (E8.val = 0)) }
+pred outcome { (((wait_true[E7] => 1 else 0) = 1) and (E9.val = 0)) }
 
-run test { ptx_mm and (outcome or undefined) } for 9 but 5 Int
-run consistent { ptx_mm } for 9 but 5 Int  // the program has an execution: the test is not vacuous
-run racy { ptx_mm and mixed_size_race } for 9 but 5 Int  // a mixed-size data race (D38)
-run unconstrained { outcome } for 9 but 5 Int  // the outcome without the axioms (D38)
+run test { ptx_mm and (outcome or undefined) } for 10 but 5 Int
+run consistent { ptx_mm } for 10 but 5 Int  // the program has an execution: the test is not vacuous
+run racy { ptx_mm and mixed_size_race } for 10 but 5 Int  // a mixed-size data race (D38)
+run unconstrained { outcome } for 10 but 5 Int  // the outcome without the axioms (D38)

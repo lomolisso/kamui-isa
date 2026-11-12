@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_sizes_MP_vector_release
 open ptx87
 
 // PTX MP+vector-release
-// "A vector store is a set of scalar stores in an unspecified order (6569): with .release, the element on y need not follow the element on x, so y = 1 does not imply x = 1. Expected: allowed."
+// "A vector store is a set of scalar stores in an unspecified order (6569): with .release, the element on y need not follow the element on x, so y = 1 does not imply x = 1. D43 makes a strong vector of at most 16 bytes single-copy atomic, which constrains a vector read of the elements, not two scalar reads. Expected: allowed."
 // {
 // x=0;
 // y=0;
@@ -20,6 +20,7 @@ one sig Sys, Gpu0 extends Scope {}
 one sig Cta0_0_0, Cta0_0_1 extends CtaScope {}
 one sig T0, T1 extends Thread {}
 one sig L_x, L_y extends Address {}
+one sig V0 extends VecAccess {}
 one sig E0 extends Marker {}
 one sig E1, E2 extends Release {}
 one sig E3 extends Acquire {}
@@ -31,6 +32,8 @@ fact shape {
   Address = L_x + L_y
   Access = none
   acc = none->none
+  VecAccess = V0
+  vacc = E1->V0 + E2->V0
   subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Gpu0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1
   start = T0->E0 + T1->E3
   ((po = E3->E4 + E0->E1 + E1->E2) or (po = E3->E4 + E0->E2 + E2->E1))

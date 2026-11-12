@@ -3,7 +3,7 @@ module ptx_kamui_idioms_tma_multicast_war_remote_arrive
 open ptx87
 
 // PTX tma-multicast-war+remote-arrive
-// "Multicast mainloop, cross-CTA buffer reuse. The consumer in CTA 1 finishes its wgmma on the stage and releases it with a remote arrive on CTA 0's empty barrier, mapa + mbarrier.arrive.shared::cluster with the default .release.cta (CUTLASS sm90_pipeline.hpp:628-630, barrier.h:490-494); CTA 0's producer waits (default .acquire.cta, barrier.h:420) and multicasts the next tile into both CTAs (copy_sm90_tma.hpp:642). The wgmma in CTA 1 must not see it. Expected: allowed by the manual, since a .cta-scope arrive and wait do not synchronize threads of two CTAs (8.5, 8.7); CUTLASS relies on it being forbidden, so it depends on more than PTX documents."
+// "Multicast mainloop, cross-CTA buffer reuse. The consumer in CTA 1 finishes its wgmma on the stage and releases it with a remote arrive on CTA 0's empty barrier, mapa + mbarrier.arrive.shared::cluster with the default .release.cta (CUTLASS sm90_pipeline.hpp:628-630, barrier.h:490-494); CTA 0's producer waits (default .acquire.cta, barrier.h:420) and multicasts the next tile into both CTAs (copy_sm90_tma.hpp:642). The wgmma in CTA 1 must not see it. The manual's scopes alone would allow it (8.5, 8.7); the mbarrier operations of one object synchronize whatever their scopes (D47). Expected: forbidden."
 // {
 // g=7;
 // d0=5 @cta 0;
@@ -43,6 +43,8 @@ fact shape {
   Address = L_g + L_d0 + L_d1 + L_c1 + L_e0 + L_f0 + L_f1
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cl0_0_0 + Cl0_0_0->Cta0_0_0 + Cl0_0_0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1 + Cta0_0_1->T2 + Cta0_0_0->U0 + Cta0_0_0->U1 + Cta0_0_1->U2 + Cta0_0_1->U3
   start = T0->E0 + U0->E3 + U1->E6 + U2->E10 + T1->E14 + U3->E15 + T2->E21
   po = E0->E1 + E1->E2 + E2->E5 + E3->E4 + E6->E7 + E7->E8 + E8->E9 + E10->E11 + E11->E12 + E12->E13 + E14->E18 + E18->E19 + E19->E20 + E15->E16 + E16->E17 + E21->E22

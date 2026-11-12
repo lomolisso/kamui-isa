@@ -3,7 +3,7 @@ module ptx_kamui_ptx87_ld_st_MP_ldu
 open ptx87
 
 // PTX MP+ldu
-// "ldu loads read-only data like ld.global.nc (9.7.9.10, D29). Expected: allowed."
+// "ldu loads read-only data (9.7.9.10) as an ordinary weak generic load (D50): after the acquire it sees the data. Expected: forbidden."
 // {
 // x=0;
 // f=0;
@@ -31,11 +31,13 @@ fact shape {
   Address = L_x + L_f
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Gpu0->Cta0_0_1 + Cta0_0_0->T0 + Cta0_0_1->T1
   start = T0->E0 + T1->E2
   po = E0->E1 + E2->E3
   address = E0->L_x + E1->L_f + E2->L_f + E3->L_x
-  proxy = E0->Generic + E1->Generic + E2->Generic + E3->Texture
+  proxy = E0->Generic + E1->Generic + E2->Generic + E3->Generic
   scope = E0->T0 + E1->Gpu0 + E2->Gpu0 + E3->T1
   rmw = none->none
   dep = none->none

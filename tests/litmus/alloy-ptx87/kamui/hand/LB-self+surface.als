@@ -3,7 +3,7 @@ module ptx_kamui_hand_LB_self_surface
 open ptx87
 
 // PTX LB-self+surface
-// "One thread loads x through the generic proxy, then stores x through the surface proxy, with no proxy fence. Operations of different proxies on one location are not ordered without a proxy fence (8.6), so the load may return the value of the later store."
+// "One thread loads x through the generic proxy, then stores x through the surface proxy, with no proxy fence. A generic read is ordered before a later write of the same address in any proxy (D49, widening D40), so the load cannot return the value of the later store: forbidden."
 // {
 // x = 0;
 // }
@@ -26,6 +26,8 @@ fact shape {
   Address = L_x
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Cta0_0_0->T0
   start = T0->E0
   po = E0->E1

@@ -3,7 +3,7 @@ module ptx_kamui_hand_MP_self_alias_acquire_release
 open ptx87
 
 // PTX MP-self+alias+acquire-release
-// "One thread loads x with ld.acquire.gpu and then stores its alias y with st.release.gpu. Different virtual addresses behave as if in different proxies (8.6), so the load may read the later store: allowed. (The mixed-proxy model of NVIDIA forbids it: its morally strong ignores addresses, models/ptx87/equiv/README.md.)"
+// "One thread loads x with ld.acquire.gpu and then stores its alias y with st.release.gpu. Operations on aliases of one location are morally strong (D48, as in NVIDIA's mixed-proxy model), so the acquire load and the release store are ordered and the load cannot read the later store: forbidden."
 // {
 // x=0 @cta 0;
 // y @ generic aliases x;
@@ -28,6 +28,8 @@ fact shape {
   Address = L_x + L_y
   Access = none
   acc = none->none
+  VecAccess = none
+  vacc = none->none
   subscope = Sys->Gpu0 + Gpu0->Cta0_0_0 + Cta0_0_0->T0
   start = T0->E0
   po = E0->E1

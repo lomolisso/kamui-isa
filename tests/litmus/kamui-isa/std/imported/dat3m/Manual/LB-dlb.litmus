@@ -5,9 +5,9 @@ t=0;
 h=0;
 P1:r3=0;
 }
- P0@cta 0,gpu 0       | P1@cta 1,gpu 0       ;
- amocas.w r0, h, 0, 1 | lw r1, t             ;
- fence rw, rw         | fence rw, rw         ;
- sw t, 1              | amocas.w r3, h, 0, 1 ;
+ P0@cta 0,gpu 0       | P1@cta 1,gpu 0          ;
+ amocas.w r0, h, 0, 1 | lw r1, t                ;
+ fence rw, rw         | fence rw, rw            ;
+ sw t, 1              | amocas.w.aq r3, h, 0, 1 ;
 exists
 (P0:r0 == 1 /\ P1:r1 == 1)
