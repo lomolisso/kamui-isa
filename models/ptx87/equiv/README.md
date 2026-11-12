@@ -47,17 +47,30 @@ Each check takes seconds (kissat 4.0.1, dev image 0.4). Counterexamples are kept
 | `nv_causality` | 4 | counterexample | axiom by axiom only: a `fence.sc` cycle that the 2019 causality axiom forbids through `optional`, and ptx87 by its Fence-SC axiom (D3, D4) |
 | other axioms, both ways | 4 | UNSAT | |
 
-**Against the mixed-proxy model: ptx87 is weaker in exactly one way, virtual aliases.**
+**Against the mixed-proxy model: since D48, ptx87 is weaker in exactly one way: program order between virtual
+aliases.**
 
 | Check | Bound | Result | Meaning |
 |---|---|---|---|
 | `wf_mp` | 4 | UNSAT | our facts accept no execution the mixed-proxy facts reject |
 | `mp_ptx_mm` | 4, 5 | counterexample | ptx87 allows executions the mixed-proxy model forbids, all through virtual aliases (below) |
+| `mp_ptx_mm_real` | 4, 5 | counterexample | the same with real program shapes (only generic operations strong, one target per alias) |
+| `mp_ptx_mm_real_nopo` | 4, 5 | UNSAT | with no program order between different aliases of one location, ptx87 is never weaker |
 | `mp_ptx_mm_noalias` | 4, 5 | UNSAT | without aliases, ptx87 is never weaker |
-| `mq_ptx_mm` | 4, 5 | UNSAT | the mixed-proxy model with morally strong limited to the same virtual address is never stronger than ptx87: aliases are the only difference in this direction |
+| `mq_ptx_mm` | 4, 5 | UNSAT | the mixed-proxy model with morally strong limited to the same virtual address is never stronger than ptx87 |
 | `ours_ptx_mm`, `ours_fence_sc` | 4 | counterexample | D3: the mixed-proxy Fence-SC axiom relates only memory operations, so it never applies to fences (empty); ptx87 uses base causality. Also D1: in the mixed-proxy model fences have no proxy, so a release or acquire pattern that starts or ends with a fence never synchronizes |
 
 ### The alias difference
+
+Since D48 (2026-11-11) morally strong compares memory, not virtual addresses, as in the mixed-proxy model: the
+example below is forbidden (`hand/MP-self+alias+acquire-release`). One difference remains: the mixed-proxy model
+also orders generic operations on two aliases of one location by program order alone, while ptx87 keeps the
+manual's rule that aliases "require a proxy fence to establish memory ordering" (8.6, 6779). Example the
+mixed-proxy model forbids and ptx87 allows: one thread loads `y` with `ld.acquire.cta`, stores to its alias `x`,
+and the load returns that later store. With no program order between aliases (`mp_ptx_mm_real_nopo`) ptx87 is
+never weaker.
+
+The text below describes the state before D48.
 
 Two operations on different virtual addresses of the same memory (aliases) are never morally strong in ptx87:
 morally strong needs the same proxy, and "using distinct virtual addresses behaves as if using different proxies"

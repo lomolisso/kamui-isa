@@ -305,3 +305,14 @@ mq_ptx_mm_5: check { (both_wf and ptx_mm) => mq_ptx_mm } for 5 but 8 Scope, 3 Ad
 
 sanity_mp_proxy: run { both_wf and ptx_mm and mp_ptx_mm and some ProxyFence and some proxy.Texture } for 4 but 7 Scope, 3 Address, 0 Access, 3 Int
 sanity_mp_alias: run { both_wf and ptx_mm and mp_ptx_mm and some AliasFence and some alias } for 4 but 7 Scope, 3 Address, 0 Access, 3 Int
+
+// real programs: only generic operations are strong; an alias maps a virtual address to another address
+pred real_mp { MemoryEvent - Weak in proxy.Generic and no alias & iden and no alias.alias and (all a: Address | lone a.alias) }
+mp_ptx_mm_real_4: check { (both_wf and real_mp and ptx_mm) => mp_ptx_mm } for 4 but 7 Scope, 3 Address, 0 Access, 3 Int
+mp_ptx_mm_real_5: check { (both_wf and real_mp and ptx_mm) => mp_ptx_mm } for 5 but 8 Scope, 3 Address, 0 Access, 3 Int
+sanity_mp_real_alias: run { both_wf and real_mp and ptx_mm and some alias and some rf } for 4 but 7 Scope, 3 Address, 0 Access, 3 Int
+// no program order between operations on different virtual addresses of one location
+pred no_alias_po { no (^po & same_location_r) - same_alias_r }
+mp_ptx_mm_real_nopo_4: check { (both_wf and real_mp and no_alias_po and ptx_mm) => mp_ptx_mm } for 4 but 7 Scope, 3 Address, 0 Access, 3 Int
+mp_ptx_mm_real_nopo_5: check { (both_wf and real_mp and no_alias_po and ptx_mm) => mp_ptx_mm } for 5 but 8 Scope, 3 Address, 0 Access, 3 Int
+sanity_mp_real_nopo: run { both_wf and real_mp and no_alias_po and ptx_mm and some alias and some rf & thd.~thd } for 4 but 7 Scope, 3 Address, 0 Access, 3 Int

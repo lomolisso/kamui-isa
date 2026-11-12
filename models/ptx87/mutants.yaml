@@ -613,6 +613,7 @@
   kind: weaken
   find: "              | ([AOP & MBAR]; vloc; [MBAR]) | ([MBAR]; vloc; [AOP & MBAR])\n"
   replace: "\n"
+  equivalent: "since M60 the waits and read-modify-write updates of one mbarrier object, the complete-tx among them, are morally strong whatever their scopes, which contains this rule"
 - id: D-ms-proxy
   model: dartagnan
   file: ptx-v8.7-common.cat

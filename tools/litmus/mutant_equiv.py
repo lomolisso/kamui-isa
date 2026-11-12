@@ -187,6 +187,10 @@ pred emitted {
   // atomic vector accesses: the weak-free loads or stores of one ordinary thread, at least two events (D43)
   vacc.VecAccess in thd.(Thread - AsyncUnit) - Weak - MbarEv - Read.rmw - rmw.Write
   all v: VecAccess | lone vacc.v.thd and not lone vacc.v and (vacc.v in Read or vacc.v in Write)
+  // its events are generic, consecutive in program order and on different memory
+  vacc.VecAccess in proxy.Generic
+  all v: VecAccess, e: Event | (some vacc.v & ^po.e and some vacc.v & e.^po) => e in vacc.v
+  vacc.~vacc & address.(iden + alias).~(address.(iden + alias)) in iden
   // only waits acquire an mbarrier
   MbarEv & Acquire in MbarWait
   // an access goes through one view: all its granules through a virtual alias, or none
