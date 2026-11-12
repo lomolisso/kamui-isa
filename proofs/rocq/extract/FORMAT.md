@@ -20,9 +20,10 @@ from 0. Each block is a different execution: two solutions of Alloy that print t
 
 **Atoms are numbers.** Each carrier (events, scopes, addresses, accesses) is numbered from 0, in the order of the
 atoms' names as Alloy prints them, with every run of digits compared as a number: `E2$0` before `E10$0`, and
-`Cta0_0_1$0` before `Gpu0$0` before `Sys$0` before `T0$0`. An access is Alloy's `Access` atom. The lines of one
-field (or one `alloyrel` or `alloyset` function) are sorted by their arguments: numbers in increasing order,
-proxies and spaces in the order of the table below.
+`Cta0_0_1$0` before `Gpu0$0` before `Sys$0` before `T0$0`. An access is Alloy's `Access` or `VecAccess` atom: the
+two share one carrier, numbered together, as in `Ptx87.v`. The lines of one field (or one `alloyrel` or `alloyset`
+function) are sorted by their arguments: numbers in increasing order, proxies and spaces in the order of the table
+below.
 
 **Fields** are the fields of the record `Exec` in `Ptx87.v`, with the same names:
 
@@ -39,7 +40,7 @@ proxies and spaces in the order of the table below.
 | `pspace e P` | a space of a proxy fence | as for `space` |
 | `dirs e P Q` | a direction `P -> Q` of a proxy fence | proxies |
 | `<set> x` | `x` is in the set | `SyncRestrictCta`, `SyncRestrictCluster`, `OpRestrictInit`, `ProxyFence`, `ClusterArriveRelaxed`, `MbarEv`, `MbarInit`, `MbarWait`, `TxAnchor` (events) and `Mbar` (addresses) |
-| `<relation> x y` | `x -> y` is in the relation | `subscope` (scopes), `start` (thread, event), `alias` (addresses), `owner` (address, scope), `po`, `issue`, `done`, `gdep`, `rmw`, `dep`, `rf`, `co`, `sc`, `bwait`, `bgen`, `synchronizes`, `cwait`, `cgen`, `txops` (events), `address` (event, address), `acc` (event, access), `paddr` (event, address) |
+| `<relation> x y` | `x -> y` is in the relation | `subscope` (scopes), `start` (thread, event), `alias` (addresses), `owner` (address, scope), `po`, `issue`, `done`, `gdep`, `rmw`, `dep`, `rf`, `co`, `sc`, `bwait`, `bgen`, `synchronizes`, `cwait`, `cgen`, `txops` (events), `address` (event, address), `acc` and `vacc` (event, access), `paddr` (event, address) |
 
 An integer field that has no line is 0. Alloy gives every event of a signature a value for that signature's
 integer fields; only those are written (for example `val` only for memory events, `ph` only for `MbarEv`), so a
@@ -89,3 +90,26 @@ end
 - `witness` lines give the PTX events that Alloy chose for a run's top-level `some x: ...` (the event the broken
   lowering changes): one line for each skolem relation of the solution whose atoms are PTX events, named as Alloy
   names it (for example `$broken_drop_acquire_a`).
+
+## Mutants
+
+`dump.sh --all --mutate N` (used by `diff.sh`) prints, for each execution of a query, the execution itself and
+then executions with one field changed, each as a block of the form above with a single `alloy` line:
+
+```
+instance <name>.<field>.<change><i> <number>
+size ...
+...
+alloy wf <0|1>
+end
+```
+
+- `<change>` is `del` (a tuple removed), `add` (a tuple added) or `rep` (the last atom of a tuple replaced); at
+  most `N` of each per field, chosen at random (`--seed`) among the tuples of the field's Alloy type whose atoms
+  are in the execution. A field that `Ptx87.v` holds as a total function (`scope`, `space`, the integer fields)
+  is only replaced, and an optional integer (`bcount`, `wpar`, `wtok`) is added only to an atom that has none, since
+  `Ptx87.v` cannot hold two values there; the fields that are signatures (`SyncRestrictCta`, `Mbar`, ...) and the kinds are not changed.
+- The execution itself is the block named `<name>`, with `alloy wf 1`.
+- `alloy wf` is Kodkod's answer to whether the block satisfies the model's facts, its field declarations
+  (`all this: S | this.f in <declared type>`) and its signature facts; the query's own facts, which pin the
+  program, are left out. The checker's `rocq wf` must be the same.

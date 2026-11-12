@@ -34,6 +34,7 @@ tools/dev.sh 'tools/proofs/check.sh'                  # rocqchk, axioms, stateme
 tools/dev.sh 'proofs/rocq/als/check.sh'               # the Alloy checks of als/ (hours; see the script)
 tools/dev.sh 'make -C proofs/rocq checker'            # the extracted checker, build/rocq/src/checker
 tools/dev.sh 'proofs/rocq/extract/litmus.py --jobs 24'   # the checker against Alloy on the litmus tests
+tools/dev.sh 'proofs/rocq/extract/diff.sh --jobs 24'     # ... and on executions that are not well formed
 ```
 
 The theorems use one axiom, excluded middle (`classic`); `assumptions.txt` holds what Rocq prints. A clean build
@@ -53,6 +54,14 @@ Result (November 2026, `litmus.py --report`): of the 5236 test runs (1665 to 189
 transaction counts, asynchronous copies with mbarrier completion, `rmw-ops+values`,
 `2+cp.reduce.async.bulk`); the checker agrees with Alloy on their first 3000 executions, but their verdicts are
 checked by Alloy alone. A full run takes about 3 hours on 40 cores.
+
+The litmus tests only show that the checker accepts the executions Alloy accepts. `extract/diff.sh` checks the
+other direction, so that a fact of the model missing from `Ptx87.v` would be seen: it changes one field of
+executions that Alloy finds (a tuple removed, added or replaced; `FORMAT.md`, "Mutants"), asks Alloy whether the
+result still satisfies the model's facts, and compares with the checker's well-formedness (`wf_prog` and
+`wf_exec`). Result (November 2026), on 93 tests (every 40th test, and every test with mixed-size or vector
+accesses, and every 10th with an mbarrier), 185 executions and 14575 mutants of them over 42 fields: the two agree
+on every mutant (Alloy rejects 10716 of them). It takes about 2 minutes on 12 cores.
 
 Rocq 9.2.0 with its standard library 9.1.0, as in the dev image and in CI (the official `rocq/rocq-prover:9.2.0`
 image). The relation library is [hahn](https://github.com/vafeiadis/hahn) (MIT licence), a submodule at

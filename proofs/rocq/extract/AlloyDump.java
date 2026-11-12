@@ -13,6 +13,10 @@
 //   --solver S  the SAT solver (default glucose; it needs -Djava.library.path=<Alloy's native lib dir>)
 //   --out FILE  write the instances to FILE instead of stdout (the native solvers print to stdout themselves)
 //   --check     also evaluate everything with A4Solution.eval (slow) and fail if the answers differ (see Eval)
+//   --mutate N  print, for each instance, mutants of it instead: the instance with one field changed (at most N
+//               removed, N added and N replaced tuples per field), each with Alloy's answer to whether it
+//               satisfies the model's facts (FORMAT.md, "Mutants")
+//   --seed S    the seed of the mutants' random choice (default 1)
 //
 // The run uses noOverflow (like `alloy exec -n`). Exit status: 0 done, 2 error (message on stderr), 3 truncated.
 // dump.sh, next to this file, compiles and runs this program in the build area.
@@ -22,7 +26,10 @@ import edu.mit.csail.sdg.alloy4.Err;
 import edu.mit.csail.sdg.alloy4.Pair;
 import edu.mit.csail.sdg.ast.Command;
 import edu.mit.csail.sdg.ast.Expr;
+import edu.mit.csail.sdg.ast.ExprConstant;
+import edu.mit.csail.sdg.ast.ExprHasName;
 import edu.mit.csail.sdg.ast.ExprVar;
+import edu.mit.csail.sdg.ast.Sig;
 import edu.mit.csail.sdg.parser.CompModule;
 import edu.mit.csail.sdg.parser.CompUtil;
 import edu.mit.csail.sdg.translator.A4Options;
@@ -64,6 +71,7 @@ import kodkod.engine.Evaluator;
 import kodkod.engine.satlab.SATFactory;
 import kodkod.instance.Instance;
 import kodkod.instance.TemporalInstance;
+import kodkod.instance.Tuple;
 import kodkod.instance.TupleSet;
 
 import java.io.BufferedWriter;
@@ -83,12 +91,14 @@ import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -105,7 +115,7 @@ public final class AlloyDump {
     "subscope", "start",
     "alias", "space", "owner", "init",
     "po", "scope", "issue", "done", "gdep",
-    "address", "proxy", "val", "acc",
+    "address", "proxy", "val", "acc", "vacc",
     "rmw", "dep", "rf", "co", "sc",
     "SyncRestrictCta", "SyncRestrictCluster", "OpRestrictInit",
     "ProxyFence", "dirs", "pspace", "paddr",
@@ -129,7 +139,7 @@ public final class AlloyDump {
   static {
     String[][] owners = {
       {"Scope", "subscope"}, {"Thread", "start"}, {"Address", "alias", "space", "owner", "init"},
-      {"Event", "po", "scope", "issue", "done", "gdep"}, {"MemoryEvent", "address", "proxy", "val", "acc"},
+      {"Event", "po", "scope", "issue", "done", "gdep"}, {"MemoryEvent", "address", "proxy", "val", "acc", "vacc"},
       {"Read", "rmw", "dep"}, {"Write", "rf", "co"}, {"FenceSC", "sc"}, {"ProxyFence", "dirs", "pspace", "paddr"},
       {"BarrierArrive", "bid", "bcount", "bwait", "bgen", "synchronizes"}, {"ClusterArrive", "cwait", "cgen"},
       {"Mbar", "iph", "ipend", "iexp", "itx"}, {"MbarEv", "ph", "pend", "expc", "tx"},
@@ -137,6 +147,22 @@ public final class AlloyDump {
     };
     for (String[] o : owners) for (int i = 1; i < o.length; i++) OWNER.put(o[i], o[0]);
   }
+
+  // --mutate: how each field may change. 'R', a relation in Ptx87.v: a tuple is removed, added, or its last atom
+  // replaced. 'F', a total function in Ptx87.v (scope, space, the integer fields): its value is replaced only,
+  // since the record Exec cannot hold an atom without one. 'O', an optional integer: all three. The fields that
+  // are signatures (SyncRestrictCta, Mbar, ...) are not changed.
+  static final Map<String, Character> MUTABLE = new java.util.LinkedHashMap<>();
+  static {
+    for (String f : FIELDS) if (OWNER.containsKey(f)) MUTABLE.put(f, 'R');
+    for (String f : new String[]{"space", "init", "scope", "val", "bid", "iph", "ipend", "iexp", "itx", "ph", "pend",
+                                 "expc", "tx"}) MUTABLE.put(f, 'F');
+    for (String f : new String[]{"bcount", "wpar", "wtok"}) MUTABLE.put(f, 'O');
+  }
+
+  // The modules of the model: their facts, field declarations and signature facts are the well-formedness that a
+  // mutant is checked against (the query's own facts, which pin the program, are not).
+  static final Set<String> MODEL_MODULES = Set.of("ptx87", "kamui", "util");
 
   static final String[] RELS = {
     "thd", "aliases", "same_location_r", "fr", "com", "po_loc", "cta_of", "cluster_of", "scope_incl_r",
@@ -168,8 +194,9 @@ public final class AlloyDump {
   static final List<String> NAMED = List.of("Generic", "Async", "TensorMap", "Texture", "Surface", "Constant",
                                             "Global", "Shared", "Local", "Const", "Param");
 
-  // The carriers, in the order of the `size` line.
-  static final String[] CARRIERS = {"Event", "Scope", "Address", "Access"};
+  // The carriers, in the order of the `size` line. The atoms of Access and VecAccess share the last one, as in the
+  // record Exec of Ptx87.v (the fields acc and vacc).
+  static final String[] CARRIERS = {"Event", "Scope", "Address", "Access + VecAccess"};
 
   final CompModule world;
   final String modelModule;              // ptx87 or kamui (compile_ptx87_kamui in a pair run): see expr
@@ -237,8 +264,11 @@ public final class AlloyDump {
   static final class Eval {
     final A4Solution sol;
     final boolean check;
-    final Instance inst;              // state 0 of the solution, plus the relations added for subexpressions
+    final Instance orig;              // the instance evaluated: state 0 of the solution, or a mutant of it
+    final Instance inst;              // orig, plus the relations added for subexpressions
+    final Evaluator base;             // the solution's evaluator, for its options
     final Evaluator kk;
+    final Map<Expr, Object> trans;    // Kodkod translations, shared with the mutants (they use the same relations)
     final Map<Node, Node> memo = new HashMap<>();   // shared by all expressions of this instance
     int fresh = 0;
 
@@ -262,18 +292,37 @@ public final class AlloyDump {
         throw new Fail("cannot reach the evaluator of the solution: " + e);
       }
       if (base == null) throw new Fail("the solution has no evaluator");
+      this.base = base;
       Instance i = base.instance();
       if (i instanceof TemporalInstance) i = ((TemporalInstance) i).state(0);
-      inst = i.clone();
+      orig = i.clone();
+      inst = orig.clone();
       kk = new Evaluator(inst, base.options());
+      trans = new HashMap<>();
+    }
+
+    /** The instance of `from` with relation `r` set to `ts` (a mutant). */
+    Eval(Eval from, Relation r, TupleSet ts) {
+      sol = from.sol;
+      check = false;
+      base = from.base;
+      orig = from.orig.clone();
+      orig.add(r, ts);
+      inst = orig.clone();
+      kk = new Evaluator(inst, base.options());
+      trans = from.trans;
     }
 
     Object kodkod(Expr e, String what) {
+      Object k = trans.get(e);
+      if (k != null) return k;
       try {
-        return TranslateAlloyToKodkod.alloy2kodkod(sol, e);
+        k = TranslateAlloyToKodkod.alloy2kodkod(sol, e);
       } catch (Err err) {
         throw new Fail("cannot translate " + what + ": " + err.getMessage());
       }
+      trans.put(e, k);
+      return k;
     }
 
     A4TupleSet tuples(Expr e, String what) {
@@ -456,17 +505,153 @@ public final class AlloyDump {
     }
   }
 
-  /** One instance of a litmus query: the block from its `size` line to its `end` line. */
-  String litmus(Eval sol) {
-    Map<String, Integer> num = new HashMap<>();
+  /** The atoms of each carrier of a litmus instance, in number order; `num` gets their numbers. */
+  List<List<String>> carriers(Eval sol, Map<String, Integer> num) {
     List<List<String>> carrier = new ArrayList<>();
     for (String c : CARRIERS) {
       List<String> a = atoms(sol, c);
       number(a, num);
       carrier.add(a);
     }
+    return carrier;
+  }
+
+  /** One instance of a litmus query: the block from its `size` line to its `end` line. */
+  String litmus(Eval sol) {
+    Map<String, Integer> num = new HashMap<>();
+    List<List<String>> carrier = carriers(sol, num);
     return execution(sol, "", num, carrier.get(0), carrier.get(1), carrier.get(2).size(), carrier.get(3).size(),
                      PREDS, true);
+  }
+
+  /** The well-formedness of the model as one formula: the facts of its modules, every field declaration
+   *  (`all this: S | this.f in <declared type>`) and every signature fact. */
+  Expr modelWf() {
+    Expr wf = ExprConstant.TRUE;
+    try {
+      for (CompModule m : world.getAllReachableModules()) {
+        if (!MODEL_MODULES.contains(m.getModuleName())) continue;
+        for (Pair<String, Expr> f : m.getAllFacts()) wf = wf.and(f.b);
+        for (Sig s : m.getAllSigs()) {
+          for (edu.mit.csail.sdg.ast.Decl d : s.getFieldDecls())
+            for (ExprHasName n : d.names) wf = wf.and(s.decl.get().join(n).in(d.expr).forAll(s.decl));
+          for (Expr f : s.getFacts()) wf = wf.and(f.forAll(s.decl));
+        }
+      }
+    } catch (Err e) {
+      throw new Fail("cannot build the well-formedness formula: " + e.getMessage());
+    }
+    return wf;
+  }
+
+  /**
+   * The mutants of one litmus instance (--mutate): the instance itself, then for each field of MUTABLE at most
+   * `per` mutants of each kind, chosen at random among the tuples of the field's Alloy type in the instance (and,
+   * for an added tuple, whose first atom is in the field's signature). Each block ends with
+   * `alloy wf 1` or `alloy wf 0`: whether Kodkod finds the mutant satisfies `wf`.
+   */
+  String mutants(Eval sol, String name, long k, Expr wf, int per, long seed) {
+    Map<String, Integer> num = new HashMap<>();
+    List<List<String>> carrier = carriers(sol, num);
+    Random rnd = new Random(seed * 1000003L + name.hashCode() * 31L + k);
+    StringBuilder out = new StringBuilder();
+    if (!sol.truth(wf, "the well-formedness formula"))
+      throw new Fail("instance " + k + " of " + name + ": Kodkod says the instance itself is not well formed");
+    out.append("instance ").append(name).append(' ').append(k).append('\n')
+       .append(block(sol, num, carrier, true));
+    for (Map.Entry<String, Character> m : MUTABLE.entrySet()) {
+      String f = m.getKey();
+      Expr fe = expr(f).deNOP();
+      if (!(fe instanceof Sig.Field)) throw new Fail(f + " is not a field");
+      Object kf = sol.kodkod(fe, f);
+      if (!(kf instanceof Relation)) throw new Fail("field " + f + " is not a relation of the solution");
+      Relation r = (Relation) kf;
+      TupleSet cur = sol.orig.tuples(r);
+      Object kt = sol.kodkod(fe.type().toExpr(), "the type of " + f);
+      if (!(kt instanceof Expression)) throw new Fail("the type of " + f + " is not a relation");
+      TupleSet up = sol.kk.evaluate((Expression) kt);
+      Set<Object> domain = new HashSet<>();
+      for (A4Tuple t : sol.tuples(expr(OWNER.get(f)), OWNER.get(f))) domain.add(t.atom(0));
+      List<Tuple> removes = new ArrayList<>(), adds = new ArrayList<>(), replaces = new ArrayList<>();
+      List<Tuple> replaced = new ArrayList<>();
+      for (Tuple t : up) {
+        if (!known(t, num)) continue;
+        if (cur.contains(t)) {
+          removes.add(t);
+          continue;
+        }
+        // an optional value is added only to an atom that has none: Ptx87.v holds it as an option, which cannot
+        // hold two (so the reader of the checker rejects such a block)
+        boolean has = false;
+        if (m.getValue() == 'O') for (Tuple c : cur) has |= c.atom(0).equals(t.atom(0));
+        if (domain.contains(t.atom(0).toString()) && !has) adds.add(t);
+        for (Tuple c : cur) {
+          boolean prefix = true;
+          for (int i = 0; i + 1 < t.arity(); i++) prefix &= c.atom(i).equals(t.atom(i));
+          if (prefix) {
+            replaces.add(t);
+            replaced.add(c);
+          }
+        }
+      }
+      char how = m.getValue();
+      List<TupleSet> ms = new ArrayList<>();
+      List<String> tags = new ArrayList<>();
+      if (how != 'F') {
+        for (Tuple t : pick(removes, per, rnd)) {
+          TupleSet ts = cur.clone();
+          ts.remove(t);
+          ms.add(ts);
+          tags.add("del");
+        }
+        for (Tuple t : pick(adds, per, rnd)) {
+          TupleSet ts = cur.clone();
+          ts.add(t);
+          ms.add(ts);
+          tags.add("add");
+        }
+      }
+      List<Integer> idx = new ArrayList<>();
+      for (int i = 0; i < replaces.size(); i++) idx.add(i);
+      for (int i : pick(idx, per, rnd)) {
+        TupleSet ts = cur.clone();
+        ts.remove(replaced.get(i));
+        ts.add(replaces.get(i));
+        ms.add(ts);
+        tags.add("rep");
+      }
+      for (int i = 0; i < ms.size(); i++) {
+        Eval e = new Eval(sol, r, ms.get(i));
+        boolean ok = e.truth(wf, "the well-formedness formula");
+        out.append("instance ").append(name).append('.').append(f).append('.').append(tags.get(i)).append(i)
+           .append(' ').append(k).append('\n').append(block(e, num, carrier, ok));
+      }
+    }
+    return out.toString();
+  }
+
+  /** Whether every atom of a tuple can be printed: an atom of the instance, an integer, a proxy or a space. */
+  static boolean known(Tuple t, Map<String, Integer> num) {
+    for (int i = 0; i < t.arity(); i++) {
+      Object a = t.atom(i);
+      if (a instanceof Integer || a.toString().matches("-?[0-9]+") || num.containsKey(a.toString())) continue;
+      String base = a.toString().replaceFirst("\\$[0-9]+$", "").replaceFirst("^.*/", "");
+      if (!NAMED.contains(base)) return false;
+    }
+    return true;
+  }
+
+  static <T> List<T> pick(List<T> from, int n, Random rnd) {
+    List<T> l = new ArrayList<>(from);
+    Collections.shuffle(l, rnd);
+    return l.subList(0, Math.min(n, l.size()));
+  }
+
+  /** The block of a mutant: the fields, then `alloy wf`. */
+  String block(Eval sol, Map<String, Integer> num, List<List<String>> carrier, boolean wf) {
+    String b = execution(sol, "", num, carrier.get(0), carrier.get(1), carrier.get(2).size(), carrier.get(3).size(),
+                         new String[0], false);
+    return b.substring(0, b.length() - "end\n".length()) + "alloy wf " + (wf ? 1 : 0) + "\nend\n";
   }
 
   /** The block of one execution, from its `size` line to its `end` line. `num` numbers its atoms; `events` and
@@ -499,7 +684,7 @@ public final class AlloyDump {
    * image of (Map.sm, Map.ad); the Kamui events are numbered on their own.
    */
   String[] pair(Eval sol) {
-    for (String a : new String[]{"p/Access", "k/Access"}) {
+    for (String a : new String[]{"p/Access", "k/Access", "p/VecAccess", "k/VecAccess"}) {
       if (!atoms(sol, a).isEmpty()) throw new Fail("a pair run with " + a + " atoms");
     }
     Map<String, Integer> pn = new HashMap<>(), kn = new HashMap<>();
@@ -624,13 +809,14 @@ public final class AlloyDump {
 
   static void usage() {
     throw new Fail("usage: AlloyDump [--cmd NAME | --all] [--max N] [--solver S] [--out FILE] [--check] [--pair] "
-                   + "QUERY.als");
+                   + "[--mutate N] [--seed S] QUERY.als");
   }
 
   static int run(String[] args) throws Err, IOException {
     String cmdName = "unconstrained", solver = "glucose", file = null, outFile = null;
     boolean all = false, cmdGiven = false, check = false, pair = false;
-    long max = -1;
+    long max = -1, seed = 1;
+    int mutate = 0;
     for (int i = 0; i < args.length; i++) {
       switch (args[i]) {
         case "--cmd": if (++i >= args.length) usage(); cmdName = args[i]; cmdGiven = true; break;
@@ -647,13 +833,26 @@ public final class AlloyDump {
           if (max < 0) usage();
           break;
         case "--solver": if (++i >= args.length) usage(); solver = args[i]; break;
+        case "--mutate":
+        case "--seed":
+          if (i + 1 >= args.length) usage();
+          try {
+            long v = Long.parseLong(args[i + 1]);
+            if (v < 0) usage();
+            if (args[i].equals("--seed")) seed = v;
+            else mutate = (int) Math.min(v, 1000);
+          } catch (NumberFormatException x) {
+            usage();
+          }
+          i++;
+          break;
         case "--out": if (++i >= args.length) usage(); outFile = args[i]; break;
         default:
           if (args[i].startsWith("-") || file != null) usage();
           file = args[i];
       }
     }
-    if (file == null || (all && cmdGiven) || (pair && !cmdGiven)) usage();
+    if (file == null || (all && cmdGiven) || (pair && !cmdGiven) || (pair && mutate > 0)) usage();
 
     CompModule world = CompUtil.parseEverything_fromFile(A4Reporter.NOP, null, file);
     AlloyDump d = new AlloyDump(world, pair);
@@ -689,12 +888,13 @@ public final class AlloyDump {
     try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
              outFile == null ? new FileOutputStream(FileDescriptor.out) : new FileOutputStream(outFile),
              StandardCharsets.UTF_8), 1 << 16))) {
-      return enumerate(world, d, cmd, want, opt, max, check, pair, file, out);
+      return enumerate(world, d, cmd, want, opt, max, check, pair, mutate, seed, file, out);
     }
   }
 
   static int enumerate(CompModule world, AlloyDump d, Command cmd, String want, A4Options opt, long max,
-                       boolean check, boolean pair, String file, PrintWriter out) throws Err {
+                       boolean check, boolean pair, int mutate, long seed, String file, PrintWriter out)
+      throws Err {
     String name = pair ? want : new File(file).getName().replaceFirst("\\.als$", "");
     String[] heads = pair ? new String[]{"instance " + want + "-p", "instance " + want + "-k", "map " + want}
                           : new String[]{"instance " + name};
@@ -702,6 +902,7 @@ public final class AlloyDump {
     // evaluator and the solver disagree (for example on integer overflow) and the dump cannot be trusted.
     Expr facts = world.getAllReachableFacts();
     Expr formula = cmd.formula;
+    Expr wf = mutate > 0 ? d.modelWf() : null;
 
     A4Solution sol = TranslateAlloyToKodkod.execute_command(A4Reporter.NOP, world.getAllReachableSigs(), cmd, opt);
     // Two solutions may differ only in relations the dump does not show; such a copy of a printed execution is
@@ -737,7 +938,8 @@ public final class AlloyDump {
         System.err.println("truncated");
         return 3;
       }
-      for (int i = 0; i < heads.length; i++) out.print(heads[i] + " " + k + "\n" + bodies[i]);
+      if (mutate > 0) out.print(d.mutants(ev, name, k, wf, mutate, seed));
+      else for (int i = 0; i < heads.length; i++) out.print(heads[i] + " " + k + "\n" + bodies[i]);
       k++;
     }
     out.flush();

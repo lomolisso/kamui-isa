@@ -33,7 +33,7 @@ opts=()
 queries=()
 while [ $# -gt 0 ]; do
   case "$1" in
-    --cmd|--max|--solver) [ $# -ge 2 ] || { echo "dump.sh: $1 needs a value" >&2; exit 2; }
+    --cmd|--max|--solver|--mutate|--seed) [ $# -ge 2 ] || { echo "dump.sh: $1 needs a value" >&2; exit 2; }
                           opts+=("$1" "$2"); shift 2 ;;
     --all|--check|--pair) opts+=("$1"); shift ;;
     -*) echo "dump.sh: unknown option $1" >&2; exit 2 ;;
@@ -53,7 +53,7 @@ classes="$base/classes/$sum"
 if [ ! -d "$classes" ]; then
   mkdir -p "$base/classes"
   tmp="$(mktemp -d -p "$base/classes" new.XXXXXX)"
-  javac -nowarn -cp "$jar" -d "$tmp" "$here/AlloyDump.java"
+  javac -J-XX:-UsePerfData -nowarn -cp "$jar" -d "$tmp" "$here/AlloyDump.java" >&2
   mv -T "$tmp" "$classes" 2>/dev/null || rm -rf "$tmp"   # another run was faster
   # Older versions stay (a few kilobytes each): a run that started earlier may still load classes from them.
 fi
@@ -71,7 +71,7 @@ for q in "${queries[@]}"; do
   rc=0
   # The native solvers print to stdout, so the dump goes to a file first and Java's stdout to stderr.
   (cd "$w" && JAVA_TOOL_OPTIONS="-XX:ActiveProcessorCount=1" \
-    java -Djava.io.tmpdir="$w" -Djava.library.path="$native" -Dorg.slf4j.simpleLogger.defaultLogLevel=warn \
+    java -XX:-UsePerfData -Djava.io.tmpdir="$w" -Djava.library.path="$native" -Dorg.slf4j.simpleLogger.defaultLogLevel=warn \
     -cp "$jar:$classes" AlloyDump "${opts[@]}" --out "$w/dump.txt" "$(basename "$q")" >&2) || rc=$?
   echo "$q: $(( $(date +%s) - start )) s" >&2
   case "$rc" in 0|3) cat "$w/dump.txt" ;; esac

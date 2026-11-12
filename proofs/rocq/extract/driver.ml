@@ -4,6 +4,7 @@
 
      make -C proofs/rocq checker                  # build/rocq/src/checker
      build/rocq/src/checker < dump.txt > answers.txt
+     build/rocq/src/checker --wf < mutants.txt > answers.txt      # only wf, wf_prog and wf_exec (diff.sh)
 
    Exit status 2 on a malformed block (an unknown field, an atom out of range, an event with no kind). *)
 
@@ -38,7 +39,7 @@ let rels = [ "subscope", ('S', 'S'); "start", ('S', 'E'); "alias", ('A', 'A'); "
              "po", ('E', 'E'); "issue", ('E', 'E'); "done", ('E', 'E'); "gdep", ('E', 'E'); "rmw", ('E', 'E');
              "dep", ('E', 'E'); "rf", ('E', 'E'); "co", ('E', 'E'); "sc", ('E', 'E'); "bwait", ('E', 'E');
              "bgen", ('E', 'E'); "synchronizes", ('E', 'E'); "cwait", ('E', 'E'); "cgen", ('E', 'E');
-             "txops", ('E', 'E'); "address", ('E', 'A'); "acc", ('E', 'C'); "paddr", ('E', 'A') ]
+             "txops", ('E', 'E'); "address", ('E', 'A'); "acc", ('E', 'C'); "vacc", ('E', 'C'); "paddr", ('E', 'A') ]
 let sets = [ "SyncRestrictCta", 'E'; "SyncRestrictCluster", 'E'; "OpRestrictInit", 'E'; "ProxyFence", 'E';
              "ClusterArriveRelaxed", 'E'; "MbarEv", 'E'; "MbarInit", 'E'; "MbarWait", 'E'; "TxAnchor", 'E';
              "Mbar", 'A' ]
@@ -47,6 +48,8 @@ let ints = [ "init", 'A'; "iph", 'A'; "ipend", 'A'; "iexp", 'A'; "itx", 'A'; "va
 let opts = [ "bcount", 'E'; "wpar", 'E'; "wtok", 'E' ]
 
 type block = { name : string; mutable size : int array; lines : (string * string list) list ref }
+
+let wf_only = Array.exists (fun a -> a = "--wf") Sys.argv
 
 let process b =
   let sz c = match c with 'E' -> b.size.(0) | 'S' -> b.size.(1) | 'A' -> b.size.(2) | _ -> b.size.(3) in
@@ -61,7 +64,10 @@ let process b =
     List.map (function [x] -> nat_of_int (atom c x) | _ -> fail "%s: bad %s line" b.name f) (all f) in
   let arr f c default conv =
     let a = Array.make (sz c) None in
-    List.iter (function [x; v] -> a.(atom c x) <- Some (conv v) | _ -> fail "%s: bad %s line" b.name f) (all f);
+    List.iter (function [x; v] -> let i = atom c x in
+                 if a.(i) <> None then fail "%s: two %s lines for atom %d" b.name f i;
+                 a.(i) <- Some (conv v)
+               | _ -> fail "%s: bad %s line" b.name f) (all f);
     Array.to_list (Array.map (function Some v -> v | None -> default ()) a) in
   let need f () = fail "%s: an atom has no %s line" b.name f in
   let int f = arr f (List.assoc f ints) (fun () -> Z0) (fun v -> z_of_int (int_of_string v)) in
@@ -74,7 +80,7 @@ let process b =
     f_init = int "init"; f_kind = arr "kind" 'E' (need "kind") event_kind; f_po = rel "po";
     f_scope = arr "scope" 'E' (need "scope") (fun v -> nat_of_int (atom 'S' v));
     f_issue = rel "issue"; f_done = rel "done"; f_gdep = rel "gdep"; f_address = rel "address";
-    f_proxy = pairs "proxy" proxy_of; f_val = int "val"; f_acc = rel "acc"; f_rmw = rel "rmw"; f_dep = rel "dep";
+    f_proxy = pairs "proxy" proxy_of; f_val = int "val"; f_acc = rel "acc"; f_vacc = rel "vacc"; f_rmw = rel "rmw"; f_dep = rel "dep";
     f_rf = rel "rf"; f_co = rel "co"; f_sc = rel "sc";
     f_SyncRestrictCta = set "SyncRestrictCta"; f_SyncRestrictCluster = set "SyncRestrictCluster";
     f_OpRestrictInit = set "OpRestrictInit"; f_ProxyFence = set "ProxyFence";
@@ -96,6 +102,7 @@ let process b =
   let pb name v = Printf.printf "rocq %s %d\n" name (if v then 1 else 0) in
   let wp = b_wf_prog fx and we = b_wf_exec fx in
   pb "wf" (wp && we); pb "wf_prog" wp; pb "wf_exec" we;
+  if wf_only then print_endline "end" else begin
   pb "coherence" (b_coherence fx); pb "fence_sc" (b_fence_sc fx); pb "atomicity" (b_atomicity fx);
   pb "no_thin_air" (b_no_thin_air fx); pb "sc_per_location" (b_sc_per_location fx);
   pb "causality" (b_causality fx); pb "ptx_mm" (b_consistent fx); pb "mb_undefined" (b_mb_undefined fx);
@@ -119,7 +126,7 @@ let process b =
   List.iter (fun (name, c, f) -> pset name c (f fx)) [
     "System", 'S', d_System; "Weak", 'E', d_Weak; "FalseWaits", 'E', d_FalseWaits; "AcqReads", 'E', d_AcqReads;
     "Atomics", 'E', d_Atomics ];
-  print_endline "end"
+  print_endline "end" end
 
 let () =
   let cur = ref None in
