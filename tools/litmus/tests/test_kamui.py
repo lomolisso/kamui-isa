@@ -73,11 +73,11 @@ def test_kamui_instruction_meanings():
     assert e.instr(p("kldg.nc r0, x")) == ["ld.global.nc r0, x"]
 
 
-def test_ldu_keeps_the_non_coherent_path():
+def test_ldu_is_an_ordinary_weak_load():
     t = litmus.parse(MP.replace("ld.weak r1, x", "ldu.global r1, x"))
     for variant in to_kamui.VARIANTS:
         text, _ = to_kamui.lower(t, variant)
-        assert "kldg.nc r1, x" in text
+        assert "kldg.weak r1, x" in text
 
 
 def test_query_opens_the_kamui_model():

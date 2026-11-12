@@ -32,1287 +32,1317 @@
   rule: "aliases (line 58): or-to-and"
   find: "fun aliases : Address->Address { Address <: *(alias + ~alias) }\n"
   replace: "fun aliases : Address->Address { Address <: *(alias & ~alias) }\n"
-- id: R-mb_undefined-and-to-or-207
+- id: R-mb_undefined-and-to-or-211
   model: alloy
   kind: reword
-  rule: "mb_undefined (line 207): and-to-or"
+  rule: "mb_undefined (line 211): and-to-or"
   find: "  (some r: Read & MbarEv | r.ph < 0)\n"
   replace: "  (some r: Read + MbarEv | r.ph < 0)\n"
-- id: R-mb_undefined-and-to-or-208
+- id: R-mb_undefined-and-to-or-212
   model: alloy
   kind: reword
-  rule: "mb_undefined (line 208): and-to-or"
+  rule: "mb_undefined (line 212): and-to-or"
   find: "  or (some w: (Write & MbarEv) - MbarInit | w.pend < 0)\n"
   replace: "  or (some w: (Write + MbarEv) - MbarInit | w.pend < 0)\n"
-- id: R-mb_undefined-minus-208
+- id: R-mb_undefined-minus-212
   model: alloy
   kind: reword
-  rule: "mb_undefined (line 208): minus"
+  rule: "mb_undefined (line 212): minus"
   find: "  or (some w: (Write & MbarEv) - MbarInit | w.pend < 0)\n"
   replace: "  or (some w: (Write & MbarEv) | w.pend < 0)\n"
-- id: R-thd-refl-closure-224
+- id: R-thd-refl-closure-228
   model: alloy
   kind: reword
-  rule: "thd (line 224): refl-closure"
+  rule: "thd (line 228): refl-closure"
   find: "fun thd : Event->Thread { *~po.~start }\n"
   replace: "fun thd : Event->Thread { ~po.~start }\n"
-- id: R-thd-transpose-224
+- id: R-thd-transpose-228
   model: alloy
   kind: reword
-  rule: "thd (line 224): transpose"
+  rule: "thd (line 228): transpose"
   find: "fun thd : Event->Thread { *~po.~start }\n"
   replace: "fun thd : Event->Thread { *po.~start }\n"
-- id: R-thd-transpose-224-2
+- id: R-thd-transpose-228-2
   model: alloy
   kind: reword
-  rule: "thd (line 224): transpose"
+  rule: "thd (line 228): transpose"
   find: "fun thd : Event->Thread { *~po.~start }\n"
   replace: "fun thd : Event->Thread { *~po.start }\n"
-- id: R-same_alias_r-transpose-231
+- id: R-same_alias_r-transpose-235
   model: alloy
   kind: reword
-  rule: "same_alias_r (line 231): transpose"
+  rule: "same_alias_r (line 235): transpose"
   find: "fun same_alias_r : Event->Event { address.~address }           // same virtual address\n"
   replace: "fun same_alias_r : Event->Event { address.address }           // same virtual address\n"
-- id: R-same_location_r-transpose-232
+- id: R-same_location_r-transpose-236
   model: alloy
   kind: reword
-  rule: "same_location_r (line 232): transpose"
+  rule: "same_location_r (line 236): transpose"
   find: "fun same_location_r : Event->Event { address.aliases.~address } // same memory (virtual aliases included)\n"
   replace: "fun same_location_r : Event->Event { address.aliases.address } // same memory (virtual aliases included)\n"
-- id: R-same_alias-and-to-or-233
+- id: R-same_alias-and-to-or-237
   model: alloy
   kind: reword
-  rule: "same_alias (line 233): and-to-or"
+  rule: "same_alias (line 237): and-to-or"
   find: "fun same_alias[r: Event->Event] : Event->Event { r & same_alias_r }\n"
   replace: "fun same_alias[r: Event->Event] : Event->Event { r + same_alias_r }\n"
-- id: R-same_location-and-to-or-234
+- id: R-same_location-and-to-or-238
   model: alloy
   kind: reword
-  rule: "same_location (line 234): and-to-or"
+  rule: "same_location (line 238): and-to-or"
   find: "fun same_location[r: Event->Event] : Event->Event { r & same_location_r }\n"
   replace: "fun same_location[r: Event->Event] : Event->Event { r + same_location_r }\n"
-- id: R-cta_of-refl-closure-236
+- id: R-cta_of-refl-closure-240
   model: alloy
   kind: reword
-  rule: "cta_of (line 236): refl-closure"
+  rule: "cta_of (line 240): refl-closure"
   find: "fun cta_of : Event->CtaScope { thd.*~subscope :> CtaScope }\n"
   replace: "fun cta_of : Event->CtaScope { thd.~subscope :> CtaScope }\n"
-- id: R-cta_of-transpose-236
+- id: R-cta_of-transpose-240
   model: alloy
   kind: reword
-  rule: "cta_of (line 236): transpose"
+  rule: "cta_of (line 240): transpose"
   find: "fun cta_of : Event->CtaScope { thd.*~subscope :> CtaScope }\n"
   replace: "fun cta_of : Event->CtaScope { thd.*subscope :> CtaScope }\n"
-- id: R-cta_of-range-236
+- id: R-cta_of-range-240
   model: alloy
   kind: reword
-  rule: "cta_of (line 236): range"
+  rule: "cta_of (line 240): range"
   find: "fun cta_of : Event->CtaScope { thd.*~subscope :> CtaScope }\n"
   replace: "fun cta_of : Event->CtaScope { thd.*~subscope }\n"
-- id: R-same_cta_r-transpose-237
+- id: R-same_cta_r-transpose-241
   model: alloy
   kind: reword
-  rule: "same_cta_r (line 237): transpose"
+  rule: "same_cta_r (line 241): transpose"
   find: "fun same_cta_r : Event->Event { cta_of.~cta_of }\n"
   replace: "fun same_cta_r : Event->Event { cta_of.cta_of }\n"
-- id: R-cluster_of-refl-closure-238
+- id: R-cluster_of-refl-closure-242
   model: alloy
   kind: reword
-  rule: "cluster_of (line 238): refl-closure"
+  rule: "cluster_of (line 242): refl-closure"
   find: "fun cluster_of : Event->ClusterScope { thd.*~subscope :> ClusterScope }\n"
   replace: "fun cluster_of : Event->ClusterScope { thd.~subscope :> ClusterScope }\n"
-- id: R-cluster_of-transpose-238
+- id: R-cluster_of-transpose-242
   model: alloy
   kind: reword
-  rule: "cluster_of (line 238): transpose"
+  rule: "cluster_of (line 242): transpose"
   find: "fun cluster_of : Event->ClusterScope { thd.*~subscope :> ClusterScope }\n"
   replace: "fun cluster_of : Event->ClusterScope { thd.*subscope :> ClusterScope }\n"
-- id: R-cluster_of-range-238
+- id: R-cluster_of-range-242
   model: alloy
   kind: reword
-  rule: "cluster_of (line 238): range"
+  rule: "cluster_of (line 242): range"
   find: "fun cluster_of : Event->ClusterScope { thd.*~subscope :> ClusterScope }\n"
   replace: "fun cluster_of : Event->ClusterScope { thd.*~subscope }\n"
-- id: R-po_loc-closure-241
+- id: R-po_loc-closure-245
   model: alloy
   kind: reword
-  rule: "po_loc (line 241): closure"
+  rule: "po_loc (line 245): closure"
   find: "fun po_loc : Event->Event { same_alias[^po] }\n"
   replace: "fun po_loc : Event->Event { same_alias[po] }\n"
-- id: R-po_loc-alias-to-location-241
+- id: R-po_loc-alias-to-location-245
   model: alloy
   kind: reword
-  rule: "po_loc (line 241): alias-to-location"
+  rule: "po_loc (line 245): alias-to-location"
   find: "fun po_loc : Event->Event { same_alias[^po] }\n"
   replace: "fun po_loc : Event->Event { same_location[^po] }\n"
-- id: R-fr-closure-244
+- id: R-fr-closure-248
   model: alloy
   kind: reword
-  rule: "fr (line 244): closure"
+  rule: "fr (line 248): closure"
   find: "  ~rf.^co\n"
   replace: "  ~rf.co\n"
-- id: R-fr-transpose-244
+- id: R-fr-transpose-248
   model: alloy
   kind: reword
-  rule: "fr (line 244): transpose"
+  rule: "fr (line 248): transpose"
   find: "  ~rf.^co\n"
   replace: "  rf.^co\n"
-- id: R-fr-domain-245
+- id: R-fr-domain-249
   model: alloy
   kind: reword
-  rule: "fr (line 245): domain"
+  rule: "fr (line 249): domain"
   find: "  + ((Read - Write.rf) <: same_location_r :> Write)  // reads of the initial value\n"
   replace: "  + (same_location_r :> Write)  // reads of the initial value\n"
-- id: R-fr-range-245
+- id: R-fr-range-249
   model: alloy
   kind: reword
-  rule: "fr (line 245): range"
+  rule: "fr (line 249): range"
   find: "  + ((Read - Write.rf) <: same_location_r :> Write)  // reads of the initial value\n"
   replace: "  + ((Read - Write.rf) <: same_location_r)  // reads of the initial value\n"
-- id: R-fr-or-to-and-245
+- id: R-fr-or-to-and-249
   model: alloy
   kind: reword
-  rule: "fr (line 245): or-to-and"
+  rule: "fr (line 249): or-to-and"
   find: "  + ((Read - Write.rf) <: same_location_r :> Write)  // reads of the initial value\n"
   replace: "  & ((Read - Write.rf) <: same_location_r :> Write)  // reads of the initial value\n"
-- id: R-fr-minus-245
+- id: R-fr-minus-249
   model: alloy
   kind: reword
-  rule: "fr (line 245): minus"
+  rule: "fr (line 249): minus"
   find: "  + ((Read - Write.rf) <: same_location_r :> Write)  // reads of the initial value\n"
   replace: "  + ((Read) <: same_location_r :> Write)  // reads of the initial value\n"
-- id: R-com-closure-247
+- id: R-com-closure-251
   model: alloy
   kind: reword
-  rule: "com (line 247): closure"
+  rule: "com (line 251): closure"
   find: "fun com : MemoryEvent->MemoryEvent { rf + ^co + fr }\n"
   replace: "fun com : MemoryEvent->MemoryEvent { rf + co + fr }\n"
-- id: R-com-or-to-and-247
+- id: R-com-or-to-and-251
   model: alloy
   kind: reword
-  rule: "com (line 247): or-to-and"
+  rule: "com (line 251): or-to-and"
   find: "fun com : MemoryEvent->MemoryEvent { rf + ^co + fr }\n"
   replace: "fun com : MemoryEvent->MemoryEvent { rf & ^co + fr }\n"
-- id: R-com-or-to-and-247-2
+- id: R-com-or-to-and-251-2
   model: alloy
   kind: reword
-  rule: "com (line 247): or-to-and"
+  rule: "com (line 251): or-to-and"
   find: "fun com : MemoryEvent->MemoryEvent { rf + ^co + fr }\n"
   replace: "fun com : MemoryEvent->MemoryEvent { rf + ^co & fr }\n"
-- id: R-Weak-range-265
+- id: R-Weak-range-269
   model: alloy
   kind: reword
-  rule: "Weak (line 265): range"
+  rule: "Weak (line 269): range"
   find: "fun Weak : Event { (scope :> Thread).Thread }\n"
   replace: "fun Weak : Event { (scope).Thread }\n"
-- id: R-StrongW-minus-266
+- id: R-StrongW-minus-270
   model: alloy
   kind: reword
-  rule: "StrongW (line 266): minus"
+  rule: "StrongW (line 270): minus"
   find: "fun StrongW : Write { Write - Weak }\n"
   replace: "fun StrongW : Write { Write }\n"
-- id: R-StrongR-minus-267
+- id: R-StrongR-minus-271
   model: alloy
   kind: reword
-  rule: "StrongR (line 267): minus"
+  rule: "StrongR (line 271): minus"
   find: "fun StrongR : Read { Read - Weak }\n"
   replace: "fun StrongR : Read { Read }\n"
-- id: R-proxy_of-domain-269
+- id: R-proxy_of-domain-273
   model: alloy
   kind: reword
-  rule: "proxy_of (line 269): domain"
+  rule: "proxy_of (line 273): domain"
   find: "fun proxy_of : Event->Proxy { MemoryEvent <: proxy + (Event - MemoryEvent) -> Generic } // D1\n"
   replace: "fun proxy_of : Event->Proxy { proxy + (Event - MemoryEvent) -> Generic } // D1\n"
-- id: R-proxy_of-or-to-and-269
+- id: R-proxy_of-or-to-and-273
   model: alloy
   kind: reword
-  rule: "proxy_of (line 269): or-to-and"
+  rule: "proxy_of (line 273): or-to-and"
   find: "fun proxy_of : Event->Proxy { MemoryEvent <: proxy + (Event - MemoryEvent) -> Generic } // D1\n"
   replace: "fun proxy_of : Event->Proxy { MemoryEvent <: proxy & (Event - MemoryEvent) -> Generic } // D1\n"
-- id: R-proxy_of-minus-269
+- id: R-proxy_of-minus-273
   model: alloy
   kind: reword
-  rule: "proxy_of (line 269): minus"
+  rule: "proxy_of (line 273): minus"
   find: "fun proxy_of : Event->Proxy { MemoryEvent <: proxy + (Event - MemoryEvent) -> Generic } // D1\n"
   replace: "fun proxy_of : Event->Proxy { MemoryEvent <: proxy + (Event) -> Generic } // D1\n"
-- id: R-scope_incl_r-refl-closure-272
+- id: R-scope_incl_r-refl-closure-276
   model: alloy
   kind: reword
-  rule: "scope_incl_r (line 272): refl-closure"
+  rule: "scope_incl_r (line 276): refl-closure"
   find: "fun scope_incl_r : Event->Event { symmetric[scope.*subscope.~thd] }\n"
   replace: "fun scope_incl_r : Event->Event { symmetric[scope.subscope.~thd] }\n"
-- id: R-scope_incl_r-transpose-272
+- id: R-scope_incl_r-transpose-276
   model: alloy
   kind: reword
-  rule: "scope_incl_r (line 272): transpose"
+  rule: "scope_incl_r (line 276): transpose"
   find: "fun scope_incl_r : Event->Event { symmetric[scope.*subscope.~thd] }\n"
   replace: "fun scope_incl_r : Event->Event { symmetric[scope.*subscope.thd] }\n"
-- id: R-footprint-transpose-275
+- id: R-footprint-transpose-279
   model: alloy
   kind: reword
-  rule: "footprint (line 275): transpose"
+  rule: "footprint (line 279): transpose"
   find: "fun footprint : Event->Address { (acc.~acc + iden).address }\n"
   replace: "fun footprint : Event->Address { (acc.acc + iden).address }\n"
-- id: R-footprint-or-to-and-275
+- id: R-footprint-or-to-and-279
   model: alloy
   kind: reword
-  rule: "footprint (line 275): or-to-and"
+  rule: "footprint (line 279): or-to-and"
   find: "fun footprint : Event->Address { (acc.~acc + iden).address }\n"
   replace: "fun footprint : Event->Address { (acc.~acc & iden).address }\n"
-- id: R-overlap_ok_r-and-to-or-280
+- id: R-overlap_ok_r-and-to-or-285
   model: alloy
   kind: reword
-  rule: "overlap_ok_r (line 280): and-to-or"
-  find: "  (MemoryEvent->MemoryEvent & same_alias_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)\n"
-  replace: "  (MemoryEvent->MemoryEvent + same_alias_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)\n"
-- id: R-overlap_ok_r-and-to-or-280-2
+  rule: "overlap_ok_r (line 285): and-to-or"
+  find: "  (MemoryEvent->MemoryEvent & same_location_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)\n"
+  replace: "  (MemoryEvent->MemoryEvent + same_location_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)\n"
+- id: R-overlap_ok_r-and-to-or-285-2
   model: alloy
   kind: reword
-  rule: "overlap_ok_r (line 280): and-to-or"
-  find: "  (MemoryEvent->MemoryEvent & same_alias_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)\n"
-  replace: "  (MemoryEvent->MemoryEvent & same_alias_r + full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)\n"
-- id: R-overlap_ok_r-or-to-and-280
+  rule: "overlap_ok_r (line 285): and-to-or"
+  find: "  (MemoryEvent->MemoryEvent & same_location_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)\n"
+  replace: "  (MemoryEvent->MemoryEvent & same_location_r + full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)\n"
+- id: R-overlap_ok_r-or-to-and-285
   model: alloy
   kind: reword
-  rule: "overlap_ok_r (line 280): or-to-and"
-  find: "  (MemoryEvent->MemoryEvent & same_alias_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)\n"
-  replace: "  (MemoryEvent->MemoryEvent & same_alias_r & full_overlap_r) & (Event->Event - MemoryEvent->MemoryEvent)\n"
-- id: R-ms_r-transpose-283
+  rule: "overlap_ok_r (line 285): or-to-and"
+  find: "  (MemoryEvent->MemoryEvent & same_location_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)\n"
+  replace: "  (MemoryEvent->MemoryEvent & same_location_r & full_overlap_r) & (Event->Event - MemoryEvent->MemoryEvent)\n"
+- id: R-MbarOps-minus-289
   model: alloy
   kind: reword
-  rule: "ms_r (line 283): transpose"
-  find: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden\n"
-  replace: "  (scope_incl_r & proxy_of.proxy_of & overlap_ok_r) - iden\n"
-- id: R-ms_r-and-to-or-283
+  rule: "MbarOps (line 289): minus"
+  find: "fun MbarOps : MemoryEvent { MbarEv - (Write - Read.rmw) }\n"
+  replace: "fun MbarOps : MemoryEvent { MbarEv }\n"
+- id: R-ms_r-transpose-291
   model: alloy
   kind: reword
-  rule: "ms_r (line 283): and-to-or"
-  find: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden\n"
-  replace: "  (scope_incl_r + proxy_of.~proxy_of & overlap_ok_r) - iden\n"
-- id: R-ms_r-and-to-or-283-2
+  rule: "ms_r (line 291): transpose"
+  find: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden\n"
+  replace: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.proxy_of & overlap_ok_r) - iden\n"
+- id: R-ms_r-and-to-or-291
   model: alloy
   kind: reword
-  rule: "ms_r (line 283): and-to-or"
-  find: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden\n"
-  replace: "  (scope_incl_r & proxy_of.~proxy_of + overlap_ok_r) - iden\n"
-- id: R-ms_r-minus-283
+  rule: "ms_r (line 291): and-to-or"
+  find: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden\n"
+  replace: "  ((scope_incl_r + MbarOps->MbarOps) + proxy_of.~proxy_of & overlap_ok_r) - iden\n"
+- id: R-ms_r-and-to-or-291-2
   model: alloy
   kind: reword
-  rule: "ms_r (line 283): minus"
-  find: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden\n"
-  replace: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r)\n"
-- id: R-strong-and-to-or-285
+  rule: "ms_r (line 291): and-to-or"
+  find: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden\n"
+  replace: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of + overlap_ok_r) - iden\n"
+- id: R-ms_r-or-to-and-291
   model: alloy
   kind: reword
-  rule: "strong (line 285): and-to-or"
+  rule: "ms_r (line 291): or-to-and"
+  find: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden\n"
+  replace: "  ((scope_incl_r & MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden\n"
+- id: R-ms_r-minus-291
+  model: alloy
+  kind: reword
+  rule: "ms_r (line 291): minus"
+  find: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden\n"
+  replace: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r)\n"
+- id: R-strong-and-to-or-293
+  model: alloy
+  kind: reword
+  rule: "strong (line 293): and-to-or"
   find: "fun strong[r: Event->Event] : Event->Event { r & ms_r }\n"
   replace: "fun strong[r: Event->Event] : Event->Event { r + ms_r }\n"
-- id: R-inside-refl-closure-288
+- id: R-inside-refl-closure-296
   model: alloy
   kind: reword
-  rule: "inside (line 288): refl-closure"
+  rule: "inside (line 296): refl-closure"
   find: "fun inside[s: Scope] : Event { s.*subscope.~thd }\n"
   replace: "fun inside[s: Scope] : Event { s.subscope.~thd }\n"
-- id: R-inside-transpose-288
+- id: R-inside-transpose-296
   model: alloy
   kind: reword
-  rule: "inside (line 288): transpose"
+  rule: "inside (line 296): transpose"
   find: "fun inside[s: Scope] : Event { s.*subscope.~thd }\n"
   replace: "fun inside[s: Scope] : Event { s.*subscope.thd }\n"
-- id: R-scoped-refl-closure-289
+- id: R-scoped-refl-closure-297
   model: alloy
   kind: reword
-  rule: "scoped (line 289): refl-closure"
+  rule: "scoped (line 297): refl-closure"
   find: "fun scoped[s: Scope] : Event { s.*~subscope.~scope }\n"
   replace: "fun scoped[s: Scope] : Event { s.~subscope.~scope }\n"
-- id: R-scoped-transpose-289
+- id: R-scoped-transpose-297
   model: alloy
   kind: reword
-  rule: "scoped (line 289): transpose"
+  rule: "scoped (line 297): transpose"
   find: "fun scoped[s: Scope] : Event { s.*~subscope.~scope }\n"
   replace: "fun scoped[s: Scope] : Event { s.*subscope.~scope }\n"
-- id: R-scoped-transpose-289-2
+- id: R-scoped-transpose-297-2
   model: alloy
   kind: reword
-  rule: "scoped (line 289): transpose"
+  rule: "scoped (line 297): transpose"
   find: "fun scoped[s: Scope] : Event { s.*~subscope.~scope }\n"
   replace: "fun scoped[s: Scope] : Event { s.*~subscope.scope }\n"
-- id: R-RelFences-or-to-and-313
+- id: R-RelFences-or-to-and-323
   model: alloy
   kind: reword
-  rule: "RelFences (line 313): or-to-and"
+  rule: "RelFences (line 323): or-to-and"
   find: "fun RelFences : Event { FenceRel + FenceAcqRel + BarrierWait }\n"
   replace: "fun RelFences : Event { FenceRel & FenceAcqRel + BarrierWait }\n"
-- id: R-RelFences-or-to-and-313-2
+- id: R-RelFences-or-to-and-323-2
   model: alloy
   kind: reword
-  rule: "RelFences (line 313): or-to-and"
+  rule: "RelFences (line 323): or-to-and"
   find: "fun RelFences : Event { FenceRel + FenceAcqRel + BarrierWait }\n"
   replace: "fun RelFences : Event { FenceRel + FenceAcqRel & BarrierWait }\n"
-- id: R-AcqFences-or-to-and-314
+- id: R-AcqFences-or-to-and-324
   model: alloy
   kind: reword
-  rule: "AcqFences (line 314): or-to-and"
+  rule: "AcqFences (line 324): or-to-and"
   find: "fun AcqFences : Event { FenceAcq + FenceAcqRel + BarrierWait }\n"
   replace: "fun AcqFences : Event { FenceAcq & FenceAcqRel + BarrierWait }\n"
-- id: R-AcqFences-or-to-and-314-2
+- id: R-AcqFences-or-to-and-324-2
   model: alloy
   kind: reword
-  rule: "AcqFences (line 314): or-to-and"
+  rule: "AcqFences (line 324): or-to-and"
   find: "fun AcqFences : Event { FenceAcq + FenceAcqRel + BarrierWait }\n"
   replace: "fun AcqFences : Event { FenceAcq + FenceAcqRel & BarrierWait }\n"
-- id: R-AcqReads-minus-315
+- id: R-AcqReads-minus-325
   model: alloy
   kind: reword
-  rule: "AcqReads (line 315): minus"
+  rule: "AcqReads (line 325): minus"
   find: "fun AcqReads : Read { Acquire - FalseWaits }\n"
   replace: "fun AcqReads : Read { Acquire }\n"
-- id: R-rel_pattern-domain-319
+- id: R-rel_pattern-domain-329
   model: alloy
   kind: reword
-  rule: "rel_pattern (line 319): domain"
+  rule: "rel_pattern (line 329): domain"
   find: "  (Release <: optional[po_loc] :> StrongW)\n"
   replace: "  (optional[po_loc] :> StrongW)\n"
-- id: R-rel_pattern-range-319
+- id: R-rel_pattern-range-329
   model: alloy
   kind: reword
-  rule: "rel_pattern (line 319): range"
+  rule: "rel_pattern (line 329): range"
   find: "  (Release <: optional[po_loc] :> StrongW)\n"
   replace: "  (Release <: optional[po_loc])\n"
-- id: R-rel_pattern-optional-319
+- id: R-rel_pattern-optional-329
   model: alloy
   kind: reword
-  rule: "rel_pattern (line 319): optional"
+  rule: "rel_pattern (line 329): optional"
   find: "  (Release <: optional[po_loc] :> StrongW)\n"
   replace: "  (Release <: (po_loc) :> StrongW)\n"
-- id: R-rel_pattern-closure-320
+- id: R-rel_pattern-closure-330
   model: alloy
   kind: reword
-  rule: "rel_pattern (line 320): closure"
+  rule: "rel_pattern (line 330): closure"
   find: "  + (RelFences <: ^po :> StrongW)\n"
   replace: "  + (RelFences <: po :> StrongW)\n"
-- id: R-rel_pattern-domain-320
+- id: R-rel_pattern-domain-330
   model: alloy
   kind: reword
-  rule: "rel_pattern (line 320): domain"
+  rule: "rel_pattern (line 330): domain"
   find: "  + (RelFences <: ^po :> StrongW)\n"
   replace: "  + (^po :> StrongW)\n"
-- id: R-rel_pattern-range-320
+- id: R-rel_pattern-range-330
   model: alloy
   kind: reword
-  rule: "rel_pattern (line 320): range"
+  rule: "rel_pattern (line 330): range"
   find: "  + (RelFences <: ^po :> StrongW)\n"
   replace: "  + (RelFences <: ^po)\n"
-- id: R-rel_pattern-or-to-and-320
+- id: R-rel_pattern-or-to-and-330
   model: alloy
   kind: reword
-  rule: "rel_pattern (line 320): or-to-and"
+  rule: "rel_pattern (line 330): or-to-and"
   find: "  + (RelFences <: ^po :> StrongW)\n"
   replace: "  & (RelFences <: ^po :> StrongW)\n"
-- id: R-acq_pattern-domain-324
+- id: R-acq_pattern-domain-334
   model: alloy
   kind: reword
-  rule: "acq_pattern (line 324): domain"
+  rule: "acq_pattern (line 334): domain"
   find: "  (StrongR <: optional[po_loc] :> AcqReads)\n"
   replace: "  (optional[po_loc] :> AcqReads)\n"
-- id: R-acq_pattern-range-324
+- id: R-acq_pattern-range-334
   model: alloy
   kind: reword
-  rule: "acq_pattern (line 324): range"
+  rule: "acq_pattern (line 334): range"
   find: "  (StrongR <: optional[po_loc] :> AcqReads)\n"
   replace: "  (StrongR <: optional[po_loc])\n"
-- id: R-acq_pattern-optional-324
+- id: R-acq_pattern-optional-334
   model: alloy
   kind: reword
-  rule: "acq_pattern (line 324): optional"
+  rule: "acq_pattern (line 334): optional"
   find: "  (StrongR <: optional[po_loc] :> AcqReads)\n"
   replace: "  (StrongR <: (po_loc) :> AcqReads)\n"
-- id: R-acq_pattern-closure-325
+- id: R-acq_pattern-closure-335
   model: alloy
   kind: reword
-  rule: "acq_pattern (line 325): closure"
+  rule: "acq_pattern (line 335): closure"
   find: "  + (StrongR <: ^po :> AcqFences)\n"
   replace: "  + (StrongR <: po :> AcqFences)\n"
-- id: R-acq_pattern-domain-325
+- id: R-acq_pattern-domain-335
   model: alloy
   kind: reword
-  rule: "acq_pattern (line 325): domain"
+  rule: "acq_pattern (line 335): domain"
   find: "  + (StrongR <: ^po :> AcqFences)\n"
   replace: "  + (^po :> AcqFences)\n"
-- id: R-acq_pattern-range-325
+- id: R-acq_pattern-range-335
   model: alloy
   kind: reword
-  rule: "acq_pattern (line 325): range"
+  rule: "acq_pattern (line 335): range"
   find: "  + (StrongR <: ^po :> AcqFences)\n"
   replace: "  + (StrongR <: ^po)\n"
-- id: R-acq_pattern-or-to-and-325
+- id: R-acq_pattern-or-to-and-335
   model: alloy
   kind: reword
-  rule: "acq_pattern (line 325): or-to-and"
+  rule: "acq_pattern (line 335): or-to-and"
   find: "  + (StrongR <: ^po :> AcqFences)\n"
   replace: "  & (StrongR <: ^po :> AcqFences)\n"
-- id: R-obs-refl-closure-329
+- id: R-obs-refl-closure-339
   model: alloy
   kind: reword
-  rule: "obs (line 329): refl-closure"
+  rule: "obs (line 339): refl-closure"
   find: "fun obs : Write->Read { strong[rf].*(rmw.(strong[rf])) }\n"
   replace: "fun obs : Write->Read { strong[rf].(rmw.(strong[rf])) }\n"
-- id: R-obs-strong-329
+- id: R-obs-strong-339
   model: alloy
   kind: reword
-  rule: "obs (line 329): strong"
+  rule: "obs (line 339): strong"
   find: "fun obs : Write->Read { strong[rf].*(rmw.(strong[rf])) }\n"
   replace: "fun obs : Write->Read { (rf).*(rmw.(strong[rf])) }\n"
-- id: R-obs-strong-329-2
+- id: R-obs-strong-339-2
   model: alloy
   kind: reword
-  rule: "obs (line 329): strong"
+  rule: "obs (line 339): strong"
   find: "fun obs : Write->Read { strong[rf].*(rmw.(strong[rf])) }\n"
   replace: "fun obs : Write->Read { strong[rf].*(rmw.((rf))) }\n"
-- id: R-sync_pattern-strong-336
+- id: R-sync_pattern-strong-346
   model: alloy
   kind: reword
-  rule: "sync_pattern (line 336): strong"
+  rule: "sync_pattern (line 346): strong"
   find: "fun sync_pattern : Event->Event { strong[rel_pattern.obs.acq_pattern] }\n"
   replace: "fun sync_pattern : Event->Event { (rel_pattern.obs.acq_pattern) }\n"
-- id: R-cluster_sync-domain-342
+- id: R-cluster_sync-domain-352
   model: alloy
   kind: reword
-  rule: "cluster_sync (line 342): domain"
+  rule: "cluster_sync (line 352): domain"
   find: "  ((ClusterArrive - ClusterArriveRelaxed) <: cgen.cwait)\n"
   replace: "  (cgen.cwait)\n"
-- id: R-cluster_sync-minus-342
+- id: R-cluster_sync-minus-352
   model: alloy
   kind: reword
-  rule: "cluster_sync (line 342): minus"
+  rule: "cluster_sync (line 352): minus"
   find: "  ((ClusterArrive - ClusterArriveRelaxed) <: cgen.cwait)\n"
   replace: "  ((ClusterArrive) <: cgen.cwait)\n"
-- id: R-cluster_sync-closure-343
+- id: R-cluster_sync-closure-353
   model: alloy
   kind: reword
-  rule: "cluster_sync (line 343): closure"
+  rule: "cluster_sync (line 353): closure"
   find: "  + strong[(RelFences <: ^po :> ClusterArriveRelaxed).cgen.cwait]\n"
   replace: "  + strong[(RelFences <: po :> ClusterArriveRelaxed).cgen.cwait]\n"
-- id: R-cluster_sync-domain-343
+- id: R-cluster_sync-domain-353
   model: alloy
   kind: reword
-  rule: "cluster_sync (line 343): domain"
+  rule: "cluster_sync (line 353): domain"
   find: "  + strong[(RelFences <: ^po :> ClusterArriveRelaxed).cgen.cwait]\n"
   replace: "  + strong[(^po :> ClusterArriveRelaxed).cgen.cwait]\n"
-- id: R-cluster_sync-range-343
+- id: R-cluster_sync-range-353
   model: alloy
   kind: reword
-  rule: "cluster_sync (line 343): range"
+  rule: "cluster_sync (line 353): range"
   find: "  + strong[(RelFences <: ^po :> ClusterArriveRelaxed).cgen.cwait]\n"
   replace: "  + strong[(RelFences <: ^po).cgen.cwait]\n"
-- id: R-cluster_sync-or-to-and-343
+- id: R-cluster_sync-or-to-and-353
   model: alloy
   kind: reword
-  rule: "cluster_sync (line 343): or-to-and"
+  rule: "cluster_sync (line 353): or-to-and"
   find: "  + strong[(RelFences <: ^po :> ClusterArriveRelaxed).cgen.cwait]\n"
   replace: "  & strong[(RelFences <: ^po :> ClusterArriveRelaxed).cgen.cwait]\n"
-- id: R-cluster_sync-strong-343
+- id: R-cluster_sync-strong-353
   model: alloy
   kind: reword
-  rule: "cluster_sync (line 343): strong"
+  rule: "cluster_sync (line 353): strong"
   find: "  + strong[(RelFences <: ^po :> ClusterArriveRelaxed).cgen.cwait]\n"
   replace: "  + ((RelFences <: ^po :> ClusterArriveRelaxed).cgen.cwait)\n"
-- id: R-sw-or-to-and-348
+- id: R-sw-or-to-and-358
   model: alloy
   kind: reword
-  rule: "sw (line 348): or-to-and"
+  rule: "sw (line 358): or-to-and"
   find: "  + synchronizes    // bar.sync, bar.red, bar.arrive, bar.warp.sync\n"
   replace: "  & synchronizes    // bar.sync, bar.red, bar.arrive, bar.warp.sync\n"
-- id: R-sw-or-to-and-349
+- id: R-sw-or-to-and-359
   model: alloy
   kind: reword
-  rule: "sw (line 349): or-to-and"
+  rule: "sw (line 359): or-to-and"
   find: "  + cluster_sync    // barrier.cluster\n"
   replace: "  & cluster_sync    // barrier.cluster\n"
-- id: R-sw-or-to-and-350
+- id: R-sw-or-to-and-360
   model: alloy
   kind: reword
-  rule: "sw (line 350): or-to-and"
+  rule: "sw (line 360): or-to-and"
   find: "  + sync_pattern    // release and acquire patterns (incl. mbarrier arrive and test_wait)\n"
   replace: "  & sync_pattern    // release and acquire patterns (incl. mbarrier arrive and test_wait)\n"
-- id: R-RRel-or-to-and-365
+- id: R-RRel-or-to-and-375
   model: alloy
   kind: reword
-  rule: "RRel (line 365): or-to-and"
+  rule: "RRel (line 375): or-to-and"
   find: "fun RRel : Event { SyncRestrictCta + OpRestrictInit + TxAnchor }\n"
   replace: "fun RRel : Event { SyncRestrictCta & OpRestrictInit + TxAnchor }\n"
-- id: R-RRel-or-to-and-365-2
+- id: R-RRel-or-to-and-375-2
   model: alloy
   kind: reword
-  rule: "RRel (line 365): or-to-and"
+  rule: "RRel (line 375): or-to-and"
   find: "fun RRel : Event { SyncRestrictCta + OpRestrictInit + TxAnchor }\n"
   replace: "fun RRel : Event { SyncRestrictCta + OpRestrictInit & TxAnchor }\n"
-- id: R-rleft-closure-371
+- id: R-rleft-closure-381
   model: alloy
   kind: reword
-  rule: "rleft (line 371): closure"
+  rule: "rleft (line 381): closure"
   find: "     & ^po)\n"
   replace: "     & po)\n"
-- id: R-rleft-and-to-or-371
+- id: R-rleft-and-to-or-381
   model: alloy
   kind: reword
-  rule: "rleft (line 371): and-to-or"
+  rule: "rleft (line 381): and-to-or"
   find: "     & ^po)\n"
   replace: "     + ^po)\n"
-- id: R-rleft-closure-372
+- id: R-rleft-closure-382
   model: alloy
   kind: reword
-  rule: "rleft (line 372): closure"
+  rule: "rleft (line 382): closure"
   find: "  + (MbarInit <: ^po :> OpRestrictInit)\n"
   replace: "  + (MbarInit <: po :> OpRestrictInit)\n"
-- id: R-rleft-domain-372
+- id: R-rleft-domain-382
   model: alloy
   kind: reword
-  rule: "rleft (line 372): domain"
+  rule: "rleft (line 382): domain"
   find: "  + (MbarInit <: ^po :> OpRestrictInit)\n"
   replace: "  + (^po :> OpRestrictInit)\n"
-- id: R-rleft-range-372
+- id: R-rleft-range-382
   model: alloy
   kind: reword
-  rule: "rleft (line 372): range"
+  rule: "rleft (line 382): range"
   find: "  + (MbarInit <: ^po :> OpRestrictInit)\n"
   replace: "  + (MbarInit <: ^po)\n"
-- id: R-rleft-or-to-and-372
+- id: R-rleft-or-to-and-382
   model: alloy
   kind: reword
-  rule: "rleft (line 372): or-to-and"
+  rule: "rleft (line 382): or-to-and"
   find: "  + (MbarInit <: ^po :> OpRestrictInit)\n"
   replace: "  & (MbarInit <: ^po :> OpRestrictInit)\n"
-- id: R-rleft-transpose-373
+- id: R-rleft-transpose-383
   model: alloy
   kind: reword
-  rule: "rleft (line 373): transpose"
+  rule: "rleft (line 383): transpose"
   find: "  + ~(TxAnchor <: txops)\n"
   replace: "  + (TxAnchor <: txops)\n"
-- id: R-rleft-domain-373
+- id: R-rleft-domain-383
   model: alloy
   kind: reword
-  rule: "rleft (line 373): domain"
+  rule: "rleft (line 383): domain"
   find: "  + ~(TxAnchor <: txops)\n"
   replace: "  + ~(txops)\n"
-- id: R-rleft-or-to-and-373
+- id: R-rleft-or-to-and-383
   model: alloy
   kind: reword
-  rule: "rleft (line 373): or-to-and"
+  rule: "rleft (line 383): or-to-and"
   find: "  + ~(TxAnchor <: txops)\n"
   replace: "  & ~(TxAnchor <: txops)\n"
-- id: R-rright-refl-closure-377
+- id: R-rright-refl-closure-387
   model: alloy
   kind: reword
-  rule: "rright (line 377): refl-closure"
+  rule: "rright (line 387): refl-closure"
   find: "  { f: SyncRestrictCluster, y: MemoryEvent | y.address.space = Shared and y.address.owner in f.cluster_of.*subscope }\n"
   replace: "  { f: SyncRestrictCluster, y: MemoryEvent | y.address.space = Shared and y.address.owner in f.cluster_of.subscope }\n"
-- id: R-rright-closure-378
+- id: R-rright-closure-388
   model: alloy
   kind: reword
-  rule: "rright (line 378): closure"
+  rule: "rright (line 388): closure"
   find: "    & ^po\n"
   replace: "    & po\n"
-- id: R-rright-and-to-or-378
+- id: R-rright-and-to-or-388
   model: alloy
   kind: reword
-  rule: "rright (line 378): and-to-or"
+  rule: "rright (line 388): and-to-or"
   find: "    & ^po\n"
   replace: "    + ^po\n"
-- id: R-bco_plain-closure-383
+- id: R-bco_plain-closure-393
   model: alloy
   kind: reword
-  rule: "bco_plain (line 383): closure"
+  rule: "bco_plain (line 393): closure"
   find: "fun bco_plain : Event->Event { ^(po + issue + done + gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
   replace: "fun bco_plain : Event->Event { (po + issue + done + gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
-- id: R-bco_plain-domain-383
+- id: R-bco_plain-domain-393
   model: alloy
   kind: reword
-  rule: "bco_plain (line 383): domain"
+  rule: "bco_plain (line 393): domain"
   find: "fun bco_plain : Event->Event { ^(po + issue + done + gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
   replace: "fun bco_plain : Event->Event { ^(po + issue + done + gdep + (sw - sw - sw :> RAcq)) }\n"
-- id: R-bco_plain-range-383
+- id: R-bco_plain-range-393
   model: alloy
   kind: reword
-  rule: "bco_plain (line 383): range"
+  rule: "bco_plain (line 393): range"
   find: "fun bco_plain : Event->Event { ^(po + issue + done + gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
   replace: "fun bco_plain : Event->Event { ^(po + issue + done + gdep + (sw - RRel <: sw - sw)) }\n"
-- id: R-bco_plain-or-to-and-383
+- id: R-bco_plain-or-to-and-393
   model: alloy
   kind: reword
-  rule: "bco_plain (line 383): or-to-and"
+  rule: "bco_plain (line 393): or-to-and"
   find: "fun bco_plain : Event->Event { ^(po + issue + done + gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
   replace: "fun bco_plain : Event->Event { ^(po & issue + done + gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
-- id: R-bco_plain-or-to-and-383-2
+- id: R-bco_plain-or-to-and-393-2
   model: alloy
   kind: reword
-  rule: "bco_plain (line 383): or-to-and"
+  rule: "bco_plain (line 393): or-to-and"
   find: "fun bco_plain : Event->Event { ^(po + issue + done + gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
   replace: "fun bco_plain : Event->Event { ^(po + issue & done + gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
-- id: R-bco_plain-or-to-and-383-3
+- id: R-bco_plain-or-to-and-393-3
   model: alloy
   kind: reword
-  rule: "bco_plain (line 383): or-to-and"
+  rule: "bco_plain (line 393): or-to-and"
   find: "fun bco_plain : Event->Event { ^(po + issue + done + gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
   replace: "fun bco_plain : Event->Event { ^(po + issue + done & gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
-- id: R-bco_plain-or-to-and-383-4
+- id: R-bco_plain-or-to-and-393-4
   model: alloy
   kind: reword
-  rule: "bco_plain (line 383): or-to-and"
+  rule: "bco_plain (line 393): or-to-and"
   find: "fun bco_plain : Event->Event { ^(po + issue + done + gdep + (sw - RRel <: sw - sw :> RAcq)) }\n"
   replace: "fun bco_plain : Event->Event { ^(po + issue + done + gdep & (sw - RRel <: sw - sw :> RAcq)) }\n"
-- id: R-sw_restricted-domain-384
+- id: R-sw_restricted-domain-394
   model: alloy
   kind: reword
-  rule: "sw_restricted (line 384): domain"
+  rule: "sw_restricted (line 394): domain"
   find: "fun sw_restricted : Event->Event { RRel <: sw + sw :> RAcq }\n"
   replace: "fun sw_restricted : Event->Event { sw + sw :> RAcq }\n"
-- id: R-sw_restricted-range-384
+- id: R-sw_restricted-range-394
   model: alloy
   kind: reword
-  rule: "sw_restricted (line 384): range"
+  rule: "sw_restricted (line 394): range"
   find: "fun sw_restricted : Event->Event { RRel <: sw + sw :> RAcq }\n"
   replace: "fun sw_restricted : Event->Event { RRel <: sw + sw }\n"
-- id: R-sw_restricted-or-to-and-384
+- id: R-sw_restricted-or-to-and-394
   model: alloy
   kind: reword
-  rule: "sw_restricted (line 384): or-to-and"
+  rule: "sw_restricted (line 394): or-to-and"
   find: "fun sw_restricted : Event->Event { RRel <: sw + sw :> RAcq }\n"
   replace: "fun sw_restricted : Event->Event { RRel <: sw & sw :> RAcq }\n"
-- id: R-cause_base-refl-closure-386
+- id: R-cause_base-refl-closure-396
   model: alloy
   kind: reword
-  rule: "cause_base (line 386): refl-closure"
+  rule: "cause_base (line 396): refl-closure"
   find: "  let left = (rleft :> RRel) + (*bco_plain :> (Event - RRel)),\n"
   replace: "  let left = (rleft :> RRel) + (bco_plain :> (Event - RRel)),\n"
-- id: R-cause_base-range-386
+- id: R-cause_base-range-396
   model: alloy
   kind: reword
-  rule: "cause_base (line 386): range"
+  rule: "cause_base (line 396): range"
   find: "  let left = (rleft :> RRel) + (*bco_plain :> (Event - RRel)),\n"
   replace: "  let left = (rleft) + (*bco_plain :> (Event - RRel)),\n"
-- id: R-cause_base-range-386-2
+- id: R-cause_base-range-396-2
   model: alloy
   kind: reword
-  rule: "cause_base (line 386): range"
+  rule: "cause_base (line 396): range"
   find: "  let left = (rleft :> RRel) + (*bco_plain :> (Event - RRel)),\n"
   replace: "  let left = (rleft :> RRel) + (*bco_plain),\n"
-- id: R-cause_base-or-to-and-386
+- id: R-cause_base-or-to-and-396
   model: alloy
   kind: reword
-  rule: "cause_base (line 386): or-to-and"
+  rule: "cause_base (line 396): or-to-and"
   find: "  let left = (rleft :> RRel) + (*bco_plain :> (Event - RRel)),\n"
   replace: "  let left = (rleft :> RRel) & (*bco_plain :> (Event - RRel)),\n"
-- id: R-cause_base-minus-386
+- id: R-cause_base-minus-396
   model: alloy
   kind: reword
-  rule: "cause_base (line 386): minus"
+  rule: "cause_base (line 396): minus"
   find: "  let left = (rleft :> RRel) + (*bco_plain :> (Event - RRel)),\n"
   replace: "  let left = (rleft :> RRel) + (*bco_plain :> (Event)),\n"
-- id: R-cause_base-refl-closure-387
+- id: R-cause_base-refl-closure-397
   model: alloy
   kind: reword
-  rule: "cause_base (line 387): refl-closure"
+  rule: "cause_base (line 397): refl-closure"
   find: "      right = (RAcq <: rright) + ((Event - RAcq) <: *bco_plain) |\n"
   replace: "      right = (RAcq <: rright) + ((Event - RAcq) <: bco_plain) |\n"
-- id: R-cause_base-domain-387
+- id: R-cause_base-domain-397
   model: alloy
   kind: reword
-  rule: "cause_base (line 387): domain"
+  rule: "cause_base (line 397): domain"
   find: "      right = (RAcq <: rright) + ((Event - RAcq) <: *bco_plain) |\n"
   replace: "      right = (rright) + ((Event - RAcq) <: *bco_plain) |\n"
-- id: R-cause_base-domain-387-2
+- id: R-cause_base-domain-397-2
   model: alloy
   kind: reword
-  rule: "cause_base (line 387): domain"
+  rule: "cause_base (line 397): domain"
   find: "      right = (RAcq <: rright) + ((Event - RAcq) <: *bco_plain) |\n"
   replace: "      right = (RAcq <: rright) + (*bco_plain) |\n"
-- id: R-cause_base-or-to-and-387
+- id: R-cause_base-or-to-and-397
   model: alloy
   kind: reword
-  rule: "cause_base (line 387): or-to-and"
+  rule: "cause_base (line 397): or-to-and"
   find: "      right = (RAcq <: rright) + ((Event - RAcq) <: *bco_plain) |\n"
   replace: "      right = (RAcq <: rright) & ((Event - RAcq) <: *bco_plain) |\n"
-- id: R-cause_base-minus-387
+- id: R-cause_base-minus-397
   model: alloy
   kind: reword
-  rule: "cause_base (line 387): minus"
+  rule: "cause_base (line 397): minus"
   find: "      right = (RAcq <: rright) + ((Event - RAcq) <: *bco_plain) |\n"
   replace: "      right = (RAcq <: rright) + ((Event) <: *bco_plain) |\n"
-- id: R-cause_base-or-to-and-388
+- id: R-cause_base-or-to-and-398
   model: alloy
   kind: reword
-  rule: "cause_base (line 388): or-to-and"
+  rule: "cause_base (line 398): or-to-and"
   find: "    bco_plain + left.sw_restricted.right\n"
   replace: "    bco_plain & left.sw_restricted.right\n"
-- id: R-pf_src-transpose-404
+- id: R-pf_src-transpose-414
   model: alloy
   kind: reword
-  rule: "pf_src (line 404): transpose"
+  rule: "pf_src (line 414): transpose"
   find: "  { m: MemoryEvent, f: ProxyFence | m.proxy -> Generic in f.dirs } & same_cta_r & ~pf_space_ok\n"
   replace: "  { m: MemoryEvent, f: ProxyFence | m.proxy -> Generic in f.dirs } & same_cta_r & pf_space_ok\n"
-- id: R-pf_src-and-to-or-404
+- id: R-pf_src-and-to-or-414
   model: alloy
   kind: reword
-  rule: "pf_src (line 404): and-to-or"
+  rule: "pf_src (line 414): and-to-or"
   find: "  { m: MemoryEvent, f: ProxyFence | m.proxy -> Generic in f.dirs } & same_cta_r & ~pf_space_ok\n"
   replace: "  { m: MemoryEvent, f: ProxyFence | m.proxy -> Generic in f.dirs } + same_cta_r & ~pf_space_ok\n"
-- id: R-pf_src-and-to-or-404-2
+- id: R-pf_src-and-to-or-414-2
   model: alloy
   kind: reword
-  rule: "pf_src (line 404): and-to-or"
+  rule: "pf_src (line 414): and-to-or"
   find: "  { m: MemoryEvent, f: ProxyFence | m.proxy -> Generic in f.dirs } & same_cta_r & ~pf_space_ok\n"
   replace: "  { m: MemoryEvent, f: ProxyFence | m.proxy -> Generic in f.dirs } & same_cta_r + ~pf_space_ok\n"
-- id: R-pf_dst-and-to-or-407
+- id: R-pf_dst-and-to-or-417
   model: alloy
   kind: reword
-  rule: "pf_dst (line 407): and-to-or"
+  rule: "pf_dst (line 417): and-to-or"
   find: "  { f: ProxyFence, m: MemoryEvent | Generic -> m.proxy in f.dirs } & same_cta_r & pf_space_ok\n"
   replace: "  { f: ProxyFence, m: MemoryEvent | Generic -> m.proxy in f.dirs } + same_cta_r & pf_space_ok\n"
-- id: R-pf_dst-and-to-or-407-2
+- id: R-pf_dst-and-to-or-417-2
   model: alloy
   kind: reword
-  rule: "pf_dst (line 407): and-to-or"
+  rule: "pf_dst (line 417): and-to-or"
   find: "  { f: ProxyFence, m: MemoryEvent | Generic -> m.proxy in f.dirs } & same_cta_r & pf_space_ok\n"
   replace: "  { f: ProxyFence, m: MemoryEvent | Generic -> m.proxy in f.dirs } & same_cta_r + pf_space_ok\n"
-- id: R-pf_dst_with-domain-416
+- id: R-pf_dst_with-domain-426
   model: alloy
   kind: reword
-  rule: "pf_dst_with (line 416): domain"
+  rule: "pf_dst_with (line 426): domain"
   find: "  (cb & (pf_dst - (TmFence <: pf_dst)))\n"
   replace: "  (cb & (pf_dst - (pf_dst)))\n"
-- id: R-pf_dst_with-and-to-or-416
+- id: R-pf_dst_with-and-to-or-426
   model: alloy
   kind: reword
-  rule: "pf_dst_with (line 416): and-to-or"
+  rule: "pf_dst_with (line 426): and-to-or"
   find: "  (cb & (pf_dst - (TmFence <: pf_dst)))\n"
   replace: "  (cb + (pf_dst - (TmFence <: pf_dst)))\n"
-- id: R-pf_dst_with-minus-416
+- id: R-pf_dst_with-minus-426
   model: alloy
   kind: reword
-  rule: "pf_dst_with (line 416): minus"
+  rule: "pf_dst_with (line 426): minus"
   find: "  (cb & (pf_dst - (TmFence <: pf_dst)))\n"
   replace: "  (cb & (pf_dst))\n"
-- id: R-pf_dst_with-domain-417
+- id: R-pf_dst_with-domain-427
   model: alloy
   kind: reword
-  rule: "pf_dst_with (line 417): domain"
+  rule: "pf_dst_with (line 427): domain"
   find: "  + ((TmFence & FenceRel) <: (cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))\n"
   replace: "  + ((cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))\n"
-- id: R-pf_dst_with-domain-417-2
+- id: R-pf_dst_with-domain-427-2
   model: alloy
   kind: reword
-  rule: "pf_dst_with (line 417): domain"
+  rule: "pf_dst_with (line 427): domain"
   find: "  + ((TmFence & FenceRel) <: (cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))\n"
   replace: "  + ((TmFence & FenceRel) <: (cb.(cb & (pf_dst))))\n"
-- id: R-pf_dst_with-and-to-or-417
+- id: R-pf_dst_with-and-to-or-427
   model: alloy
   kind: reword
-  rule: "pf_dst_with (line 417): and-to-or"
+  rule: "pf_dst_with (line 427): and-to-or"
   find: "  + ((TmFence & FenceRel) <: (cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))\n"
   replace: "  + ((TmFence + FenceRel) <: (cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))\n"
-- id: R-pf_dst_with-and-to-or-417-2
+- id: R-pf_dst_with-and-to-or-427-2
   model: alloy
   kind: reword
-  rule: "pf_dst_with (line 417): and-to-or"
+  rule: "pf_dst_with (line 427): and-to-or"
   find: "  + ((TmFence & FenceRel) <: (cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))\n"
   replace: "  + ((TmFence & FenceRel) <: (cb.(cb + ((TmFence & FenceAcq) <: pf_dst))))\n"
-- id: R-pf_dst_with-and-to-or-417-3
+- id: R-pf_dst_with-and-to-or-427-3
   model: alloy
   kind: reword
-  rule: "pf_dst_with (line 417): and-to-or"
+  rule: "pf_dst_with (line 427): and-to-or"
   find: "  + ((TmFence & FenceRel) <: (cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))\n"
   replace: "  + ((TmFence & FenceRel) <: (cb.(cb & ((TmFence + FenceAcq) <: pf_dst))))\n"
-- id: R-pf_dst_with-or-to-and-417
+- id: R-pf_dst_with-or-to-and-427
   model: alloy
   kind: reword
-  rule: "pf_dst_with (line 417): or-to-and"
+  rule: "pf_dst_with (line 427): or-to-and"
   find: "  + ((TmFence & FenceRel) <: (cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))\n"
   replace: "  & ((TmFence & FenceRel) <: (cb.(cb & ((TmFence & FenceAcq) <: pf_dst))))\n"
-- id: R-ppbco_with-domain-422
+- id: R-ppbco_with-domain-432
   model: alloy
   kind: reword
-  rule: "ppbco_with (line 422): domain"
+  rule: "ppbco_with (line 432): domain"
   find: "  same_alias[GenericM <: cb :> GenericM]\n"
   replace: "  same_alias[cb :> GenericM]\n"
-- id: R-ppbco_with-range-422
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 422): range"
-  find: "  same_alias[GenericM <: cb :> GenericM]\n"
-  replace: "  same_alias[GenericM <: cb]\n"
-- id: R-ppbco_with-alias-to-location-422
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 422): alias-to-location"
-  find: "  same_alias[GenericM <: cb :> GenericM]\n"
-  replace: "  same_location[GenericM <: cb :> GenericM]\n"
-- id: R-ppbco_with-transpose-423
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 423): transpose"
-  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
-  replace: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.proxy]\n"
-- id: R-ppbco_with-domain-423
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 423): domain"
-  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
-  replace: "  + same_alias[(cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
-- id: R-ppbco_with-range-423
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 423): range"
-  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
-  replace: "  + same_alias[(MemoryEvent <: cb) & same_cta_r & proxy.~proxy]\n"
-- id: R-ppbco_with-and-to-or-423
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 423): and-to-or"
-  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
-  replace: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) + same_cta_r & proxy.~proxy]\n"
-- id: R-ppbco_with-and-to-or-423-2
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 423): and-to-or"
-  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
-  replace: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r + proxy.~proxy]\n"
-- id: R-ppbco_with-or-to-and-423
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 423): or-to-and"
-  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
-  replace: "  & same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
-- id: R-ppbco_with-alias-to-location-423
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 423): alias-to-location"
-  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
-  replace: "  + same_location[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
-- id: R-ppbco_with-domain-425
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 425): domain"
-  find: "  + same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]\n"
-  replace: "  + same_alias[cb :> (proxy.Async & Write)]\n"
-- id: R-ppbco_with-range-425
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 425): range"
-  find: "  + same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]\n"
-  replace: "  + same_alias[(GenericM & Read) <: cb]\n"
-- id: R-ppbco_with-and-to-or-425
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 425): and-to-or"
-  find: "  + same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]\n"
-  replace: "  + same_alias[(GenericM + Read) <: cb :> (proxy.Async & Write)]\n"
-- id: R-ppbco_with-and-to-or-425-2
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 425): and-to-or"
-  find: "  + same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]\n"
-  replace: "  + same_alias[(GenericM & Read) <: cb :> (proxy.Async + Write)]\n"
-- id: R-ppbco_with-or-to-and-425
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 425): or-to-and"
-  find: "  + same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]\n"
-  replace: "  & same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]\n"
-- id: R-ppbco_with-alias-to-location-425
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 425): alias-to-location"
-  find: "  + same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]\n"
-  replace: "  + same_location[(GenericM & Read) <: cb :> (proxy.Async & Write)]\n"
-- id: R-ppbco_with-range-427
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 427): range"
-  find: "  + same_alias[(cb & pf_src).cb :> GenericM]\n"
-  replace: "  + same_alias[(cb & pf_src).cb]\n"
-- id: R-ppbco_with-and-to-or-427
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 427): and-to-or"
-  find: "  + same_alias[(cb & pf_src).cb :> GenericM]\n"
-  replace: "  + same_alias[(cb + pf_src).cb :> GenericM]\n"
-- id: R-ppbco_with-or-to-and-427
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 427): or-to-and"
-  find: "  + same_alias[(cb & pf_src).cb :> GenericM]\n"
-  replace: "  & same_alias[(cb & pf_src).cb :> GenericM]\n"
-- id: R-ppbco_with-alias-to-location-427
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 427): alias-to-location"
-  find: "  + same_alias[(cb & pf_src).cb :> GenericM]\n"
-  replace: "  + same_location[(cb & pf_src).cb :> GenericM]\n"
-- id: R-ppbco_with-domain-428
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 428): domain"
-  find: "  + same_alias[GenericM <: cb.(pf_dst_with[cb])]\n"
-  replace: "  + same_alias[cb.(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-or-to-and-428
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 428): or-to-and"
-  find: "  + same_alias[GenericM <: cb.(pf_dst_with[cb])]\n"
-  replace: "  & same_alias[GenericM <: cb.(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-alias-to-location-428
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 428): alias-to-location"
-  find: "  + same_alias[GenericM <: cb.(pf_dst_with[cb])]\n"
-  replace: "  + same_location[GenericM <: cb.(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-and-to-or-429
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 429): and-to-or"
-  find: "  + same_alias[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
-  replace: "  + same_alias[(cb + pf_src).cb.(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-or-to-and-429
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 429): or-to-and"
-  find: "  + same_alias[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
-  replace: "  & same_alias[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-alias-to-location-429
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 429): alias-to-location"
-  find: "  + same_alias[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
-  replace: "  + same_location[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-domain-431
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 431): domain"
-  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
-  replace: "  + same_location[cb.(AliasFence <: cb) :> GenericM]\n"
-- id: R-ppbco_with-domain-431-2
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 431): domain"
-  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
-  replace: "  + same_location[GenericM <: cb.(cb) :> GenericM]\n"
-- id: R-ppbco_with-range-431
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 431): range"
-  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
-  replace: "  + same_location[GenericM <: cb.(AliasFence <: cb)]\n"
-- id: R-ppbco_with-or-to-and-431
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 431): or-to-and"
-  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
-  replace: "  & same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
-- id: R-ppbco_with-location-to-alias-431
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 431): location-to-alias"
-  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
-  replace: "  + same_alias[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
 - id: R-ppbco_with-range-432
   model: alloy
   kind: reword
   rule: "ppbco_with (line 432): range"
-  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
-  replace: "  + same_location[(cb & pf_src).(cb).cb :> GenericM]\n"
-- id: R-ppbco_with-range-432-2
+  find: "  same_alias[GenericM <: cb :> GenericM]\n"
+  replace: "  same_alias[GenericM <: cb]\n"
+- id: R-ppbco_with-alias-to-location-432
   model: alloy
   kind: reword
-  rule: "ppbco_with (line 432): range"
-  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
-  replace: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb]\n"
-- id: R-ppbco_with-and-to-or-432
+  rule: "ppbco_with (line 432): alias-to-location"
+  find: "  same_alias[GenericM <: cb :> GenericM]\n"
+  replace: "  same_location[GenericM <: cb :> GenericM]\n"
+- id: R-ppbco_with-transpose-433
   model: alloy
   kind: reword
-  rule: "ppbco_with (line 432): and-to-or"
-  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
-  replace: "  + same_location[(cb + pf_src).(cb :> AliasFence).cb :> GenericM]\n"
-- id: R-ppbco_with-or-to-and-432
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 432): or-to-and"
-  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
-  replace: "  & same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
-- id: R-ppbco_with-location-to-alias-432
-  model: alloy
-  kind: reword
-  rule: "ppbco_with (line 432): location-to-alias"
-  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
-  replace: "  + same_alias[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
+  rule: "ppbco_with (line 433): transpose"
+  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+  replace: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.proxy]\n"
 - id: R-ppbco_with-domain-433
   model: alloy
   kind: reword
   rule: "ppbco_with (line 433): domain"
-  find: "  + same_location[GenericM <: cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
-  replace: "  + same_location[cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-domain-433-2
+  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+  replace: "  + same_alias[(cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+- id: R-ppbco_with-range-433
   model: alloy
   kind: reword
-  rule: "ppbco_with (line 433): domain"
-  find: "  + same_location[GenericM <: cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
-  replace: "  + same_location[GenericM <: cb.(cb).(pf_dst_with[cb])]\n"
+  rule: "ppbco_with (line 433): range"
+  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+  replace: "  + same_alias[(MemoryEvent <: cb) & same_cta_r & proxy.~proxy]\n"
+- id: R-ppbco_with-and-to-or-433
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 433): and-to-or"
+  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+  replace: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) + same_cta_r & proxy.~proxy]\n"
+- id: R-ppbco_with-and-to-or-433-2
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 433): and-to-or"
+  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+  replace: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r + proxy.~proxy]\n"
 - id: R-ppbco_with-or-to-and-433
   model: alloy
   kind: reword
   rule: "ppbco_with (line 433): or-to-and"
+  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+  replace: "  & same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+- id: R-ppbco_with-alias-to-location-433
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 433): alias-to-location"
+  find: "  + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+  replace: "  + same_location[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]\n"
+- id: R-ppbco_with-domain-436
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 436): domain"
+  find: "  + same_alias[(GenericM & Read) <: cb :> Write]\n"
+  replace: "  + same_alias[cb :> Write]\n"
+- id: R-ppbco_with-range-436
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 436): range"
+  find: "  + same_alias[(GenericM & Read) <: cb :> Write]\n"
+  replace: "  + same_alias[(GenericM & Read) <: cb]\n"
+- id: R-ppbco_with-and-to-or-436
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 436): and-to-or"
+  find: "  + same_alias[(GenericM & Read) <: cb :> Write]\n"
+  replace: "  + same_alias[(GenericM + Read) <: cb :> Write]\n"
+- id: R-ppbco_with-or-to-and-436
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 436): or-to-and"
+  find: "  + same_alias[(GenericM & Read) <: cb :> Write]\n"
+  replace: "  & same_alias[(GenericM & Read) <: cb :> Write]\n"
+- id: R-ppbco_with-alias-to-location-436
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 436): alias-to-location"
+  find: "  + same_alias[(GenericM & Read) <: cb :> Write]\n"
+  replace: "  + same_location[(GenericM & Read) <: cb :> Write]\n"
+- id: R-ppbco_with-range-438
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 438): range"
+  find: "  + same_alias[(cb & pf_src).cb :> GenericM]\n"
+  replace: "  + same_alias[(cb & pf_src).cb]\n"
+- id: R-ppbco_with-and-to-or-438
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 438): and-to-or"
+  find: "  + same_alias[(cb & pf_src).cb :> GenericM]\n"
+  replace: "  + same_alias[(cb + pf_src).cb :> GenericM]\n"
+- id: R-ppbco_with-or-to-and-438
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 438): or-to-and"
+  find: "  + same_alias[(cb & pf_src).cb :> GenericM]\n"
+  replace: "  & same_alias[(cb & pf_src).cb :> GenericM]\n"
+- id: R-ppbco_with-alias-to-location-438
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 438): alias-to-location"
+  find: "  + same_alias[(cb & pf_src).cb :> GenericM]\n"
+  replace: "  + same_location[(cb & pf_src).cb :> GenericM]\n"
+- id: R-ppbco_with-domain-439
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 439): domain"
+  find: "  + same_alias[GenericM <: cb.(pf_dst_with[cb])]\n"
+  replace: "  + same_alias[cb.(pf_dst_with[cb])]\n"
+- id: R-ppbco_with-or-to-and-439
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 439): or-to-and"
+  find: "  + same_alias[GenericM <: cb.(pf_dst_with[cb])]\n"
+  replace: "  & same_alias[GenericM <: cb.(pf_dst_with[cb])]\n"
+- id: R-ppbco_with-alias-to-location-439
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 439): alias-to-location"
+  find: "  + same_alias[GenericM <: cb.(pf_dst_with[cb])]\n"
+  replace: "  + same_location[GenericM <: cb.(pf_dst_with[cb])]\n"
+- id: R-ppbco_with-and-to-or-440
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 440): and-to-or"
+  find: "  + same_alias[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
+  replace: "  + same_alias[(cb + pf_src).cb.(pf_dst_with[cb])]\n"
+- id: R-ppbco_with-or-to-and-440
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 440): or-to-and"
+  find: "  + same_alias[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
+  replace: "  & same_alias[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
+- id: R-ppbco_with-alias-to-location-440
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 440): alias-to-location"
+  find: "  + same_alias[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
+  replace: "  + same_location[(cb & pf_src).cb.(pf_dst_with[cb])]\n"
+- id: R-ppbco_with-domain-442
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 442): domain"
+  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
+  replace: "  + same_location[cb.(AliasFence <: cb) :> GenericM]\n"
+- id: R-ppbco_with-domain-442-2
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 442): domain"
+  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
+  replace: "  + same_location[GenericM <: cb.(cb) :> GenericM]\n"
+- id: R-ppbco_with-range-442
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 442): range"
+  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
+  replace: "  + same_location[GenericM <: cb.(AliasFence <: cb)]\n"
+- id: R-ppbco_with-or-to-and-442
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 442): or-to-and"
+  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
+  replace: "  & same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
+- id: R-ppbco_with-location-to-alias-442
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 442): location-to-alias"
+  find: "  + same_location[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
+  replace: "  + same_alias[GenericM <: cb.(AliasFence <: cb) :> GenericM]\n"
+- id: R-ppbco_with-range-443
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 443): range"
+  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
+  replace: "  + same_location[(cb & pf_src).(cb).cb :> GenericM]\n"
+- id: R-ppbco_with-range-443-2
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 443): range"
+  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
+  replace: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb]\n"
+- id: R-ppbco_with-and-to-or-443
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 443): and-to-or"
+  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
+  replace: "  + same_location[(cb + pf_src).(cb :> AliasFence).cb :> GenericM]\n"
+- id: R-ppbco_with-or-to-and-443
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 443): or-to-and"
+  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
+  replace: "  & same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
+- id: R-ppbco_with-location-to-alias-443
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 443): location-to-alias"
+  find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
+  replace: "  + same_alias[(cb & pf_src).(cb :> AliasFence).cb :> GenericM]\n"
+- id: R-ppbco_with-domain-444
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 444): domain"
+  find: "  + same_location[GenericM <: cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
+  replace: "  + same_location[cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
+- id: R-ppbco_with-domain-444-2
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 444): domain"
+  find: "  + same_location[GenericM <: cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
+  replace: "  + same_location[GenericM <: cb.(cb).(pf_dst_with[cb])]\n"
+- id: R-ppbco_with-or-to-and-444
+  model: alloy
+  kind: reword
+  rule: "ppbco_with (line 444): or-to-and"
   find: "  + same_location[GenericM <: cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
   replace: "  & same_location[GenericM <: cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-location-to-alias-433
+- id: R-ppbco_with-location-to-alias-444
   model: alloy
   kind: reword
-  rule: "ppbco_with (line 433): location-to-alias"
+  rule: "ppbco_with (line 444): location-to-alias"
   find: "  + same_location[GenericM <: cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
   replace: "  + same_alias[GenericM <: cb.(AliasFence <: cb).(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-range-434
+- id: R-ppbco_with-range-445
   model: alloy
   kind: reword
-  rule: "ppbco_with (line 434): range"
+  rule: "ppbco_with (line 445): range"
   find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb.(pf_dst_with[cb])]\n"
   replace: "  + same_location[(cb & pf_src).(cb).cb.(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-and-to-or-434
+- id: R-ppbco_with-and-to-or-445
   model: alloy
   kind: reword
-  rule: "ppbco_with (line 434): and-to-or"
+  rule: "ppbco_with (line 445): and-to-or"
   find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb.(pf_dst_with[cb])]\n"
   replace: "  + same_location[(cb + pf_src).(cb :> AliasFence).cb.(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-or-to-and-434
+- id: R-ppbco_with-or-to-and-445
   model: alloy
   kind: reword
-  rule: "ppbco_with (line 434): or-to-and"
+  rule: "ppbco_with (line 445): or-to-and"
   find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb.(pf_dst_with[cb])]\n"
   replace: "  & same_location[(cb & pf_src).(cb :> AliasFence).cb.(pf_dst_with[cb])]\n"
-- id: R-ppbco_with-location-to-alias-434
+- id: R-ppbco_with-location-to-alias-445
   model: alloy
   kind: reword
-  rule: "ppbco_with (line 434): location-to-alias"
+  rule: "ppbco_with (line 445): location-to-alias"
   find: "  + same_location[(cb & pf_src).(cb :> AliasFence).cb.(pf_dst_with[cb])]\n"
   replace: "  + same_alias[(cb & pf_src).(cb :> AliasFence).cb.(pf_dst_with[cb])]\n"
-- id: R-cause-or-to-and-440
+- id: R-cause-or-to-and-451
   model: alloy
   kind: reword
-  rule: "cause (line 440): or-to-and"
+  rule: "cause (line 451): or-to-and"
   find: "fun cause : MemoryEvent->MemoryEvent { ppbco + obs.ppbco }\n"
   replace: "fun cause : MemoryEvent->MemoryEvent { ppbco & obs.ppbco }\n"
-- id: R-coherence-closure-446
+- id: R-coherence-closure-457
   model: alloy
   kind: reword
-  rule: "coherence (line 446): closure"
+  rule: "coherence (line 457): closure"
   find: "pred coherence { same_location[Write <: cause :> Write] in ^co }\n"
   replace: "pred coherence { same_location[Write <: cause :> Write] in co }\n"
-- id: R-coherence-domain-446
+- id: R-coherence-domain-457
   model: alloy
   kind: reword
-  rule: "coherence (line 446): domain"
+  rule: "coherence (line 457): domain"
   find: "pred coherence { same_location[Write <: cause :> Write] in ^co }\n"
   replace: "pred coherence { same_location[cause :> Write] in ^co }\n"
-- id: R-coherence-range-446
+- id: R-coherence-range-457
   model: alloy
   kind: reword
-  rule: "coherence (line 446): range"
+  rule: "coherence (line 457): range"
   find: "pred coherence { same_location[Write <: cause :> Write] in ^co }\n"
   replace: "pred coherence { same_location[Write <: cause] in ^co }\n"
-- id: R-coherence-location-to-alias-446
+- id: R-coherence-location-to-alias-457
   model: alloy
   kind: reword
-  rule: "coherence (line 446): location-to-alias"
+  rule: "coherence (line 457): location-to-alias"
   find: "pred coherence { same_location[Write <: cause :> Write] in ^co }\n"
   replace: "pred coherence { same_alias[Write <: cause :> Write] in ^co }\n"
-- id: R-fence_sc-domain-451
+- id: R-fence_sc-domain-462
   model: alloy
   kind: reword
-  rule: "fence_sc (line 451): domain"
+  rule: "fence_sc (line 462): domain"
   find: "pred fence_sc { (FenceSC <: cause_base :> FenceSC) & ms_r in sc }\n"
   replace: "pred fence_sc { (cause_base :> FenceSC) & ms_r in sc }\n"
-- id: R-fence_sc-range-451
+- id: R-fence_sc-range-462
   model: alloy
   kind: reword
-  rule: "fence_sc (line 451): range"
+  rule: "fence_sc (line 462): range"
   find: "pred fence_sc { (FenceSC <: cause_base :> FenceSC) & ms_r in sc }\n"
   replace: "pred fence_sc { (FenceSC <: cause_base) & ms_r in sc }\n"
-- id: R-fence_sc-and-to-or-451
+- id: R-fence_sc-and-to-or-462
   model: alloy
   kind: reword
-  rule: "fence_sc (line 451): and-to-or"
+  rule: "fence_sc (line 462): and-to-or"
   find: "pred fence_sc { (FenceSC <: cause_base :> FenceSC) & ms_r in sc }\n"
   replace: "pred fence_sc { (FenceSC <: cause_base :> FenceSC) + ms_r in sc }\n"
-- id: R-acc_lift-transpose-456
+- id: R-acc_lift-transpose-468
   model: alloy
   kind: reword
-  rule: "acc_lift (line 456): transpose"
-  find: "fun acc_lift[r: Event->Event] : Event->Event { (acc.~acc + iden).r.(acc.~acc + iden) }\n"
-  replace: "fun acc_lift[r: Event->Event] : Event->Event { (acc.acc + iden).r.(acc.~acc + iden) }\n"
-- id: R-acc_lift-transpose-456-2
+  rule: "acc_lift (line 468): transpose"
+  find: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+  replace: "  (acc.acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+- id: R-acc_lift-transpose-468-2
   model: alloy
   kind: reword
-  rule: "acc_lift (line 456): transpose"
-  find: "fun acc_lift[r: Event->Event] : Event->Event { (acc.~acc + iden).r.(acc.~acc + iden) }\n"
-  replace: "fun acc_lift[r: Event->Event] : Event->Event { (acc.~acc + iden).r.(acc.acc + iden) }\n"
-- id: R-acc_lift-or-to-and-456
+  rule: "acc_lift (line 468): transpose"
+  find: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+  replace: "  (acc.~acc + vacc.vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+- id: R-acc_lift-transpose-468-3
   model: alloy
   kind: reword
-  rule: "acc_lift (line 456): or-to-and"
-  find: "fun acc_lift[r: Event->Event] : Event->Event { (acc.~acc + iden).r.(acc.~acc + iden) }\n"
-  replace: "fun acc_lift[r: Event->Event] : Event->Event { (acc.~acc & iden).r.(acc.~acc + iden) }\n"
-- id: R-acc_lift-or-to-and-456-2
+  rule: "acc_lift (line 468): transpose"
+  find: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+  replace: "  (acc.~acc + vacc.~vacc + iden).r.(acc.acc + vacc.~vacc + iden)\n"
+- id: R-acc_lift-transpose-468-4
   model: alloy
   kind: reword
-  rule: "acc_lift (line 456): or-to-and"
-  find: "fun acc_lift[r: Event->Event] : Event->Event { (acc.~acc + iden).r.(acc.~acc + iden) }\n"
-  replace: "fun acc_lift[r: Event->Event] : Event->Event { (acc.~acc + iden).r.(acc.~acc & iden) }\n"
-- id: R-Atomics-or-to-and-458
+  rule: "acc_lift (line 468): transpose"
+  find: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+  replace: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.vacc + iden)\n"
+- id: R-acc_lift-or-to-and-468
   model: alloy
   kind: reword
-  rule: "Atomics (line 458): or-to-and"
+  rule: "acc_lift (line 468): or-to-and"
+  find: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+  replace: "  (acc.~acc & vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+- id: R-acc_lift-or-to-and-468-2
+  model: alloy
+  kind: reword
+  rule: "acc_lift (line 468): or-to-and"
+  find: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+  replace: "  (acc.~acc + vacc.~vacc & iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+- id: R-acc_lift-or-to-and-468-3
+  model: alloy
+  kind: reword
+  rule: "acc_lift (line 468): or-to-and"
+  find: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+  replace: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc & vacc.~vacc + iden)\n"
+- id: R-acc_lift-or-to-and-468-4
+  model: alloy
+  kind: reword
+  rule: "acc_lift (line 468): or-to-and"
+  find: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)\n"
+  replace: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc & iden)\n"
+- id: R-Atomics-or-to-and-471
+  model: alloy
+  kind: reword
+  rule: "Atomics (line 471): or-to-and"
   find: "fun Atomics : MemoryEvent { AtomicR + AtomicR.rmw }\n"
   replace: "fun Atomics : MemoryEvent { AtomicR & AtomicR.rmw }\n"
-- id: R-atomic_pair_r-transpose-460
+- id: R-atomic_pair_r-transpose-473
   model: alloy
   kind: reword
-  rule: "atomic_pair_r (line 460): transpose"
+  rule: "atomic_pair_r (line 473): transpose"
   find: "  ms_r + (Atomics <: (scope_incl_r & proxy.~proxy & same_location_r) :> Atomics)\n"
   replace: "  ms_r + (Atomics <: (scope_incl_r & proxy.proxy & same_location_r) :> Atomics)\n"
-- id: R-atomic_pair_r-domain-460
+- id: R-atomic_pair_r-domain-473
   model: alloy
   kind: reword
-  rule: "atomic_pair_r (line 460): domain"
+  rule: "atomic_pair_r (line 473): domain"
   find: "  ms_r + (Atomics <: (scope_incl_r & proxy.~proxy & same_location_r) :> Atomics)\n"
   replace: "  ms_r + ((scope_incl_r & proxy.~proxy & same_location_r) :> Atomics)\n"
-- id: R-atomic_pair_r-range-460
+- id: R-atomic_pair_r-range-473
   model: alloy
   kind: reword
-  rule: "atomic_pair_r (line 460): range"
+  rule: "atomic_pair_r (line 473): range"
   find: "  ms_r + (Atomics <: (scope_incl_r & proxy.~proxy & same_location_r) :> Atomics)\n"
   replace: "  ms_r + (Atomics <: (scope_incl_r & proxy.~proxy & same_location_r))\n"
-- id: R-atomic_pair_r-and-to-or-460
+- id: R-atomic_pair_r-and-to-or-473
   model: alloy
   kind: reword
-  rule: "atomic_pair_r (line 460): and-to-or"
+  rule: "atomic_pair_r (line 473): and-to-or"
   find: "  ms_r + (Atomics <: (scope_incl_r & proxy.~proxy & same_location_r) :> Atomics)\n"
   replace: "  ms_r + (Atomics <: (scope_incl_r + proxy.~proxy & same_location_r) :> Atomics)\n"
-- id: R-atomic_pair_r-and-to-or-460-2
+- id: R-atomic_pair_r-and-to-or-473-2
   model: alloy
   kind: reword
-  rule: "atomic_pair_r (line 460): and-to-or"
+  rule: "atomic_pair_r (line 473): and-to-or"
   find: "  ms_r + (Atomics <: (scope_incl_r & proxy.~proxy & same_location_r) :> Atomics)\n"
   replace: "  ms_r + (Atomics <: (scope_incl_r & proxy.~proxy + same_location_r) :> Atomics)\n"
-- id: R-atomic_pair_r-or-to-and-460
+- id: R-atomic_pair_r-or-to-and-473
   model: alloy
   kind: reword
-  rule: "atomic_pair_r (line 460): or-to-and"
+  rule: "atomic_pair_r (line 473): or-to-and"
   find: "  ms_r + (Atomics <: (scope_incl_r & proxy.~proxy & same_location_r) :> Atomics)\n"
   replace: "  ms_r & (Atomics <: (scope_incl_r & proxy.~proxy & same_location_r) :> Atomics)\n"
-- id: R-atomicity-transpose-463
+- id: R-atomicity-transpose-476
   model: alloy
   kind: reword
-  rule: "atomicity (line 463): transpose"
+  rule: "atomicity (line 476): transpose"
   find: "  no (Read <: ms_r :> Write) & acc_lift[~rf] & acc_lift[fr]\n"
   replace: "  no (Read <: ms_r :> Write) & acc_lift[rf] & acc_lift[fr]\n"
-- id: R-atomicity-domain-463
+- id: R-atomicity-domain-476
   model: alloy
   kind: reword
-  rule: "atomicity (line 463): domain"
+  rule: "atomicity (line 476): domain"
   find: "  no (Read <: ms_r :> Write) & acc_lift[~rf] & acc_lift[fr]\n"
   replace: "  no (ms_r :> Write) & acc_lift[~rf] & acc_lift[fr]\n"
-- id: R-atomicity-range-463
+- id: R-atomicity-range-476
   model: alloy
   kind: reword
-  rule: "atomicity (line 463): range"
+  rule: "atomicity (line 476): range"
   find: "  no (Read <: ms_r :> Write) & acc_lift[~rf] & acc_lift[fr]\n"
   replace: "  no (Read <: ms_r) & acc_lift[~rf] & acc_lift[fr]\n"
-- id: R-atomicity-and-to-or-463
+- id: R-atomicity-and-to-or-476
   model: alloy
   kind: reword
-  rule: "atomicity (line 463): and-to-or"
+  rule: "atomicity (line 476): and-to-or"
   find: "  no (Read <: ms_r :> Write) & acc_lift[~rf] & acc_lift[fr]\n"
   replace: "  no (Read <: ms_r :> Write) + acc_lift[~rf] & acc_lift[fr]\n"
-- id: R-atomicity-and-to-or-463-2
+- id: R-atomicity-and-to-or-476-2
   model: alloy
   kind: reword
-  rule: "atomicity (line 463): and-to-or"
+  rule: "atomicity (line 476): and-to-or"
   find: "  no (Read <: ms_r :> Write) & acc_lift[~rf] & acc_lift[fr]\n"
   replace: "  no (Read <: ms_r :> Write) & acc_lift[~rf] + acc_lift[fr]\n"
-- id: R-atomicity-closure-464
+- id: R-atomicity-closure-477
   model: alloy
   kind: reword
-  rule: "atomicity (line 464): closure"
+  rule: "atomicity (line 477): closure"
   find: "  no (fr & atomic_pair_r).(^co & atomic_pair_r) & rmw\n"
   replace: "  no (fr & atomic_pair_r).(co & atomic_pair_r) & rmw\n"
-- id: R-atomicity-and-to-or-464
+- id: R-atomicity-and-to-or-477
   model: alloy
   kind: reword
-  rule: "atomicity (line 464): and-to-or"
+  rule: "atomicity (line 477): and-to-or"
   find: "  no (fr & atomic_pair_r).(^co & atomic_pair_r) & rmw\n"
   replace: "  no (fr + atomic_pair_r).(^co & atomic_pair_r) & rmw\n"
-- id: R-atomicity-and-to-or-464-2
+- id: R-atomicity-and-to-or-477-2
   model: alloy
   kind: reword
-  rule: "atomicity (line 464): and-to-or"
+  rule: "atomicity (line 477): and-to-or"
   find: "  no (fr & atomic_pair_r).(^co & atomic_pair_r) & rmw\n"
   replace: "  no (fr & atomic_pair_r).(^co + atomic_pair_r) & rmw\n"
-- id: R-atomicity-and-to-or-464-3
+- id: R-atomicity-and-to-or-477-3
   model: alloy
   kind: reword
-  rule: "atomicity (line 464): and-to-or"
+  rule: "atomicity (line 477): and-to-or"
   find: "  no (fr & atomic_pair_r).(^co & atomic_pair_r) & rmw\n"
   replace: "  no (fr & atomic_pair_r).(^co & atomic_pair_r) + rmw\n"
-- id: R-no_thin_air-or-to-and-468
+- id: R-no_thin_air-or-to-and-481
   model: alloy
   kind: reword
-  rule: "no_thin_air (line 468): or-to-and"
+  rule: "no_thin_air (line 481): or-to-and"
   find: "pred no_thin_air { acyclic[rf + dep] }\n"
   replace: "pred no_thin_air { acyclic[rf & dep] }\n"
-- id: R-sc_per_location-or-to-and-471
+- id: R-sc_per_location-or-to-and-484
   model: alloy
   kind: reword
-  rule: "sc_per_location (line 471): or-to-and"
+  rule: "sc_per_location (line 484): or-to-and"
   find: "pred sc_per_location { acyclic[strong[com] + po_loc] }\n"
   replace: "pred sc_per_location { acyclic[strong[com] & po_loc] }\n"
-- id: R-sc_per_location-strong-471
+- id: R-sc_per_location-strong-484
   model: alloy
   kind: reword
-  rule: "sc_per_location (line 471): strong"
+  rule: "sc_per_location (line 484): strong"
   find: "pred sc_per_location { acyclic[strong[com] + po_loc] }\n"
   replace: "pred sc_per_location { acyclic[(com) + po_loc] }\n"
-- id: R-causality-or-to-and-475
+- id: R-causality-or-to-and-488
   model: alloy
   kind: reword
-  rule: "causality (line 475): or-to-and"
+  rule: "causality (line 488): or-to-and"
   find: "pred causality { irreflexive[(rf + fr).cause] }\n"
   replace: "pred causality { irreflexive[(rf & fr).cause] }\n"
-- id: R-mixed_size_race-and-to-or-485
+- id: R-mixed_size_race-and-to-or-498
   model: alloy
   kind: reword
-  rule: "mixed_size_race (line 485): and-to-or"
+  rule: "mixed_size_race (line 498): and-to-or"
   find: "    e1->e2 in same_location_r and e1.footprint.aliases != e2.footprint.aliases and some (e1 + e2) & Write\n"
   replace: "    e1->e2 in same_location_r and e1.footprint.aliases != e2.footprint.aliases and some (e1 + e2) + Write\n"
-- id: R-mixed_size_race-or-to-and-485
+- id: R-mixed_size_race-or-to-and-498
   model: alloy
   kind: reword
-  rule: "mixed_size_race (line 485): or-to-and"
+  rule: "mixed_size_race (line 498): or-to-and"
   find: "    e1->e2 in same_location_r and e1.footprint.aliases != e2.footprint.aliases and some (e1 + e2) & Write\n"
   replace: "    e1->e2 in same_location_r and e1.footprint.aliases != e2.footprint.aliases and some (e1 & e2) & Write\n"
-- id: R-mixed_size_race-transpose-486
+- id: R-mixed_size_race-transpose-499
   model: alloy
   kind: reword
-  rule: "mixed_size_race (line 486): transpose"
+  rule: "mixed_size_race (line 499): transpose"
   find: "    and e1->e2 not in ms_r + cause + ~cause\n"
   replace: "    and e1->e2 not in ms_r + cause + cause\n"
-- id: R-mixed_size_race-or-to-and-486
+- id: R-mixed_size_race-or-to-and-499
   model: alloy
   kind: reword
-  rule: "mixed_size_race (line 486): or-to-and"
+  rule: "mixed_size_race (line 499): or-to-and"
   find: "    and e1->e2 not in ms_r + cause + ~cause\n"
   replace: "    and e1->e2 not in ms_r & cause + ~cause\n"
-- id: R-mixed_size_race-or-to-and-486-2
+- id: R-mixed_size_race-or-to-and-499-2
   model: alloy
   kind: reword
-  rule: "mixed_size_race (line 486): or-to-and"
+  rule: "mixed_size_race (line 499): or-to-and"
   find: "    and e1->e2 not in ms_r + cause + ~cause\n"
   replace: "    and e1->e2 not in ms_r + cause & ~cause\n"

@@ -41,6 +41,9 @@ All notable changes to this project are listed here. The format follows
 
 ### Changed
 
+- The PTX 8.7 model, and so the Kamui contract, takes the stronger reading on nine points where the manual is
+  unclear or NVIDIA's code relies on more (decisions D43 to D51): atomic small vectors, aliases, mbarrier scopes and
+  implicit proxy fences among them.
 - Base ISA: floating point in the integer registers (Zfinx, Zdinx, Zhinx) instead of F, D and Zfh, and more
   standard extensions (atomics, cache and hint extensions, counters).
 - PTX 8.7 Alloy model: tensormap proxy fences act only as a release/acquire pair, and a mixed-size data race

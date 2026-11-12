@@ -45,7 +45,7 @@ pred wf_map {
 // no barriers, no asynchronous operations, no mbarrier objects, no restricted or proxy fences.
 pred hw_plain {
   hw/MemoryEvent.proxy in Generic
-  no hw/Access and no acc
+  no hw/Access and no acc and no hw/VecAccess
   hw/Address.space in Global and no hw/Address.alias and no hw/Address.owner
   no ProxyFence and no AliasFence and no PlainProxyFence and no Barrier and no ClusterArrive and no ClusterWait
   no Marker and no AsyncUnit and no issue and no done and no gdep

@@ -78,6 +78,7 @@ def lower_thread(th: litmus.Thread, addr: dict[str, str]) -> list[str]:
         out.append(f"ori x7,x0,{c}")
         return "x7"
 
+    seen_sc = False  # a fence.sc earlier in the thread (D44)
     for ins in th.instrs:
         if ins.is_empty:
             continue
@@ -101,6 +102,7 @@ def lower_thread(th: litmus.Thread, addr: dict[str, str]) -> list[str]:
         elif ins.op == "fence" and o in ("sc", "acq_rel", "acquire", "release") and "proxy" not in ins.quals:
             out.append({"sc": "fence rw,rw", "acq_rel": "fence.tso", "acquire": "fence r,rw",
                         "release": "fence rw,w"}[o])
+            seen_sc = seen_sc or o == "sc"
         elif ins.op in ("atom", "red") and o in AQRL:
             opname = next((q for q in ins.quals if q in AMO), None)
             if opname is None:
@@ -110,7 +112,9 @@ def lower_thread(th: litmus.Thread, addr: dict[str, str]) -> list[str]:
                 rd = reg(rd)
             else:
                 (loc, v), rd = ins.args, "x0"
-            out.append(f"{AMO[opname]}.w{AQRL[o]} {rd},{value(v)},({addr[loc]})")
+            # a relaxed atom after a fence.sc of its thread also acquires (D44)
+            aq = ".aq" if ins.op == "atom" and o == "relaxed" and seen_sc else AQRL[o]
+            out.append(f"{AMO[opname]}.w{aq} {rd},{value(v)},({addr[loc]})")
         else:
             raise Unsupported(f"instruction {ins.text!r}")
     return out

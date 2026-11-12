@@ -59,9 +59,9 @@ rules:
     why: 'no standard alternative: a plain lw is not stronger than a non-coherent read when the thread also reads the location through the non-coherent path (K9)'
   - id: ldu
     ptx: 'ldu.global rd, [a]'
-    kamui: ['kldg.nc rd, [a]']
+    kamui: ['kldg.weak rd, [a]']
     kind: same
-    why: the PTX model reads ldu through the non-coherent path (D29); a generic read in its place is not stronger (K9)
+    why: the PTX model reads ldu as an ordinary weak generic load (D50), which kldg.weak is (K9)
   - id: ld.volatile
     ptx: 'ld.volatile{.space} rd, [a]'
     kamui: ['k<ld form of the space>.relaxed.sys rd, [a]']
@@ -118,7 +118,7 @@ rules:
     ptx: 'atom{.space}{.relaxed|.acquire|.release|.acq_rel}{.<s>}.<op>{<v>} rd, [a], b{, c}'
     kamui: ['katom{g,s,}.<op><o><s><v> rd, [a], b{, c}    (katomg for .global, katoms for .shared::cta, katom for generic and .shared::cluster)']
     kind: same
-    why: defaults .relaxed and .gpu as PTX; .shared::cluster uses the generic form as on the H100 (K7)
+    why: defaults .relaxed and .gpu as PTX; .shared::cluster uses the generic form as on the H100 (K7); a relaxed atom after a fence.sc of its thread is lowered with .acquire, which it has (D44)
     std: '<op> in add, and, or, xor, min, max, exch, cas: amo<op>.w/.d (.aq, .rl) or amocas.w/.d/.q at sys scope (exact at sys, stronger at narrower scopes); acq_rel: amo<op>.aqrl (stronger: adds fence.sc.sys)'
   - id: red
     ptx: 'red{.space}{.relaxed|.release}{.<s>}.<op>{<v>} [a], b'

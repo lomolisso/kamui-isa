@@ -224,9 +224,9 @@
   replace: "\n"
 - id: A-ppbco-war-generic-read
   model: alloy
-  rule: a generic read before an async-proxy write needs no proxy fence (D40)
+  rule: a generic read before a write of the same address needs no proxy fence (D40, D49)
   kind: weaken
-  find: "  + same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]\n"
+  find: "  + same_alias[(GenericM & Read) <: cb :> Write]\n"
   replace: ""
 - id: A-ppbco-src-fence
   model: alloy
@@ -310,20 +310,20 @@
   model: alloy
   rule: morally strong needs mutually including scopes (8.7)
   kind: strengthen
-  find: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden"
+  find: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden"
   replace: "  (proxy_of.~proxy_of & overlap_ok_r) - iden"
 - id: A-ms-proxy
   model: alloy
   rule: morally strong needs the same proxy (8.7)
   kind: strengthen
-  find: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden"
-  replace: "  (scope_incl_r & overlap_ok_r) - iden"
+  find: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden"
+  replace: "  ((scope_incl_r + MbarOps->MbarOps) & overlap_ok_r) - iden"
 - id: A-ms-overlap
   model: alloy
   rule: morally strong needs complete overlap (8.7, D6)
   kind: strengthen
-  find: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden"
-  replace: "  (scope_incl_r & proxy_of.~proxy_of) - iden"
+  find: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden"
+  replace: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of) - iden"
 - id: A-ms-weak
   model: alloy
   rule: weak operations are never morally strong with other threads (8.7)
@@ -426,6 +426,30 @@
   replace: "    and e1->e2 not in ms_r"
 
 # ------------------------------------------------------------------------------------------------ Dartagnan
+- id: A-ms-mbar
+  model: alloy
+  rule: mbarrier waits and updates of one object are morally strong whatever their scopes (D47)
+  kind: weaken
+  find: "  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden"
+  replace: "  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden"
+- id: A-ms-alias
+  model: alloy
+  rule: operations on aliases of one location can be morally strong (D48)
+  kind: weaken
+  find: "  (MemoryEvent->MemoryEvent & same_location_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)"
+  replace: "  (MemoryEvent->MemoryEvent & same_alias_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)"
+- id: A-vec-atomicity
+  model: alloy
+  rule: an atomic vector access is single-copy atomic as a whole (D43)
+  kind: weaken
+  find: "  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)"
+  replace: "  (acc.~acc + iden).r.(acc.~acc + iden)"
+- id: A-vec-co
+  model: alloy
+  rule: two atomic vector accesses are ordered the same way on all their elements (D43)
+  kind: weaken
+  find: "  no (~vacc.(^co).vacc) & ~(~vacc.(^co).vacc)\n"
+  replace: ""
 - id: D-coherence
   model: dartagnan
   file: ptx-v8.7.cat
@@ -630,15 +654,15 @@
   file: ptx-v8.7-common.cat
   rule: acquire pattern ending with an acquire read (8.8)
   kind: weaken
-  find: "let acquire-pattern = ([strong-read]; po-vloc?; [R & ACQ]) | ([strong-read]; po; [acquire-fence])"
+  find: "let acquire-pattern = ([strong-read]; po-vloc?; [(R & ACQ) | fenced-atom-read]) | ([strong-read]; po; [acquire-fence])"
   replace: "let acquire-pattern = ([strong-read]; po; [acquire-fence])"
 - id: D-acq-pattern-fence
   model: dartagnan
   file: ptx-v8.7-common.cat
   rule: acquire pattern ending with an acquire fence (8.8)
   kind: weaken
-  find: "let acquire-pattern = ([strong-read]; po-vloc?; [R & ACQ]) | ([strong-read]; po; [acquire-fence])"
-  replace: "let acquire-pattern = ([strong-read]; po-vloc?; [R & ACQ])"
+  find: "let acquire-pattern = ([strong-read]; po-vloc?; [(R & ACQ) | fenced-atom-read]) | ([strong-read]; po; [acquire-fence])"
+  replace: "let acquire-pattern = ([strong-read]; po-vloc?; [(R & ACQ) | fenced-atom-read])"
 - id: D-sync-pattern-ms-ends
   model: dartagnan
   file: ptx-v8.7-common.cat
@@ -775,9 +799,9 @@
 - id: D-ppcb-war-generic-read
   model: dartagnan
   file: ptx-v8.7-common.cat
-  rule: a generic read before an async-proxy write needs no proxy fence (M57)
+  rule: a generic read before a write of the same address needs no proxy fence (M57, M62)
   kind: weaken
-  find: "                | vloc & ([GEN & R]; cbi; [ASYNC & W])\n"
+  find: "                | vloc & ([GEN & R]; cbi; [W])\n"
   replace: "\n"
 - id: D-ppcb-src-fence
   model: dartagnan
@@ -877,3 +901,45 @@
   kind: strengthen
   find: "flag ~empty ([UB] | [UB_STATIC]) as undefined-behaviour\n"
   replace: "\n"
+- id: D-ms-mbar
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: mbarrier waits and updates of one object are morally strong whatever their scopes (M60)
+  kind: weaken
+  find: "              | ([mbar-ops]; vloc; [mbar-ops])"
+  replace: ""
+- id: D-ms-alias
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: operations on aliases of one location can be morally strong (M61)
+  kind: weaken
+  find: "let complete-overlap = loc \\ partial-overlap"
+  replace: "let complete-overlap = vloc \\ partial-overlap"
+- id: D-vec-atomicity
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: an atomic vector access is single-copy atomic as a whole (M58)
+  kind: weaken
+  find: "let granules = si & ((WHOLE * WHOLE) | (VEC * VEC))"
+  replace: "let granules = si & (WHOLE * WHOLE)"
+- id: D-fenced-atom-acquires
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: a relaxed atom after a fence.sc of its thread acquires (M59)
+  kind: weaken
+  find: "[(R & ACQ) | fenced-atom-read]) | ([strong-read]; po; [acquire-fence])"
+  replace: "[R & ACQ]) | ([strong-read]; po; [acquire-fence])"
+- id: D-cpasync-completion-fence
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: the completion of cp.async is followed by an implicit proxy fence (M63)
+  kind: weaken
+  find: "                | vloc & ([GEN]; cause-base; [COMPLETION | CPASYNC_ARRIVE]; cbi; [ASYNC])\n"
+  replace: ""
+- id: D-grid-every-proxy
+  model: dartagnan
+  file: ptx-v8.7-common.cat
+  rule: griddepcontrol.wait makes the earlier grids' writes visible to every proxy (M64)
+  kind: weaken
+  find: "                | vloc & ([GEN]; cause-base; [GRIDWAIT1 | GRIDWAIT2 | GRIDWAIT3]; cbi; [M])\n"
+  replace: ""

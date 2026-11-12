@@ -145,20 +145,16 @@ Why: 1-to-1 with the H100; the model is unaffected (D17: the windows are views o
 Choice: `red.shared` lowers to `katoms ... RZ` and `red.shared::cluster` to `katom ... RZ` (the H100 has no
 shared-memory `RED`). The events are the same (D34).
 
-## K9. ldu reads through the non-coherent path
+## K9. ldu is an ordinary weak load
 
-Choice: `ldu.global` lowers to `kldg.nc`, the same events as the PTX model's reading (D29: a read through the
-non-coherent path, like `ld.global.nc`). Neither `ldu` nor `ld.global.nc` has a standard alternative.
+Choice: `ldu.global` lowers to `kldg.weak` (the H100's plain `LDG`), the same event as the PTX model's reading
+(D50, 2026-11-11: an ordinary weak generic load). `ld.global.nc` lowers to `kldg.nc` (D29: the non-coherent path)
+and has no standard alternative.
 
-Why: the H100 compiles `ldu` to a plain `LDG` and `ld.global.nc` to `LDG.E.CONSTANT`, and an earlier version of
-this lowering copied that (`ldu` as a weak generic read), on the idea that a generic read is stronger. The bounded
-check (`proxies` group, `check_lowering.sh`) found that it is not: in the PTX model, two reads of one location by
-one thread through the same path are morally strong, so they are coherent with each other (SC per location); when
-only one of them becomes a generic read, the pair is no longer morally strong, and the later read may return an
-older value. A program that reads one location with `ldu` and then with `ld.global.nc` keeps PTX's guarantee only
-if both use the same path. The H100's choice is an implementation that may break that guarantee for such
-programs; whether PTX means to give it (6521 says the memory model does not apply to these reads at all) is an open
-question, recorded in the report.
+Why: until 2026-11-11 the PTX model read `ldu` through the non-coherent path, like `ld.global.nc`, and `ldu` had to
+lower to `kldg.nc`: the bounded check had shown that a generic read in its place broke the coherence of an `ldu`
+and an `ld.global.nc` of one location. With D50 the PTX side has that same pair (a generic read and a non-coherent
+one), so `kldg.weak` is exact.
 
 ## K10. .volatile
 
@@ -172,6 +168,11 @@ Choice: every `kmbar` instruction has the meaning of its PTX operation, includin
 arrive and the acquire semantics of a successful test or try at `.cta` scope (9.7.13.15.16). The H100 does not
 give this ordering at `.cta` scope (`evidence/litmus-h100/README.md`): a Kamui implementation built like the H100
 must add it (an order-preserving drain before the arrive, or make later accesses wait for a successful test).
+
+Since 2026-11-11 (D47) the waits and read-modify-write updates of one mbarrier object are morally strong whatever
+their scopes, so a remote `.release.cluster` arrive (`kmbar.arv.remote`) also synchronizes with a `.cta` test or
+try on its object. A Kamui implementation must order the remote arrive's earlier accesses before the waiting
+thread's later ones, as for a local arrive.
 
 ## K12. Tensor-map instructions
 
@@ -199,3 +200,40 @@ proves it equivalent. One of the few places where the ISA does not copy the H100
 Choice: `st.param` writes an argument of a device-function call, which only the calling thread can see. It lowers
 to a register move or to a store into the callee's stack frame (`kstl`). There is no PTX litmus test (the model
 treats `.param` as read-only).
+
+## K15. Strong vector loads and stores of at most 16 bytes are one access
+
+Choice: a `kld*` or `kst*` vector with `.relaxed`, `.acquire` or `.release` semantics and at most 16 bytes in all
+is single-copy atomic: no thread sees part of it (D43). Vector atomics stay one access per element. Why:
+CCCL's decoupled look-back reads a status and a value with one 16-byte load and relies on it.
+
+## K16. The completion of cp.async is a proxy fence
+
+Choice: the completion of `kldgsts` (the `cp.async` lowering), observed with `kdepbar.ldgsts` or signalled with
+`kmbar.arv.ldgsts`, acts as a generic <-> async proxy fence (D45): a `kgmma` after the wait reads the copied
+data with no `kfence.proxy.async`. Why: CUTLASS's `cp.async` main loop has no proxy fence.
+
+## K17. kacqbulk makes the earlier grids' writes visible to every proxy
+
+Choice: after `kacqbulk` (`griddepcontrol.wait`) the waiting thread's async, texture, surface, constant and
+tensor-map reads see the prerequisite grids' writes (D46). Why: CUTLASS kernels with programmatic dependent launch
+load with TMA right after the wait. The H100 evidence covers generic reads only (`evidence/litmus-h100/README.md`).
+
+## K18. Virtual aliases of one location are coherent
+
+Choice: strong operations on different virtual addresses of one physical location are morally strong with each
+other (D48): their coherence and atomicity are those of one address. A Kamui implementation keeps coherence per
+physical address (a physically tagged cache, or an alias check). Program order between aliases still needs
+`kfence.proxy.alias`. The H100 showed no weak outcome in its alias tests.
+
+## K19. A read is performed before a later write of the same address in any proxy
+
+Choice: a generic read is ordered before a later write of the same address in base causality order whatever the
+write's proxy (D49, which widens D40 from the async proxy to texture, surface and the others): the read cannot
+return the value of that write.
+
+## K20. A relaxed atomic after kfence.sc acquires
+
+Choice: an `atom` with relaxed semantics after a `fence.sc` of its thread acquires (D44). The lowering writes the
+acquire form (`katom*.acquire`, or `amo<op>.aq` in the standard form), so the Kamui instruction needs no rule of
+its own. Why: last-block retirement in CUTLASS and CCCL relies on it.

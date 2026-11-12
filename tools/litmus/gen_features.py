@@ -172,6 +172,11 @@ def gen_ldst() -> None:
                  [["st.weak.global x, 1", f"{form} r0, x"], ["st.weak.global y, 1"]], "P0:r0 == 0", [], where)
             test("ldst", f"value+{name}+{lk}", f"{form} returns only values some write committed ({what})",
                  [["st.weak.global x, 1"], [f"{form} r0, x"]], "P1:r0 == 7", [], where)
+            if name == "ldu":  # an ordinary weak load (D50): without an acquire it may miss the data
+                test("ldst", f"MP+{name}+relaxed-flag+{lk}", f"Message passing in {what}, a relaxed read of the flag, "
+                     f"the data read with {form}",
+                     [["st.weak.global x, 1", "st.release.gpu.global f, 1"], ["ld.relaxed.gpu.global r0, f", f"{form} r1, x"]],
+                     "P1:r0 == 1 /\\ P1:r1 == 0", [], where)
     # the thread-private, constant and parameter state spaces
     for s in ["weak", "relaxed.cta", "relaxed.gpu"]:
         sem = s.split(".")

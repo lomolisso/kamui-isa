@@ -14,6 +14,7 @@ translates this table one row at a time. `kamui.als` is the PTX 8.7 model (K1), 
 | `Space` and its five atoms | sigs | 4.2 state spaces | 5.1 | D17 |
 | `Address`, `aliases`, `address_facts` | sig, fun, fact | 4.2 locations, virtual aliases, owners | 8.2.2, 8.6 | D8 |
 | `Access` | sig | 4.2 granules of one operation | 8.2.1 | D6 |
+| `VecAccess` | sig | 4.3 the elements of an atomic vector access | 8.2.4 | D43 |
 | `Event` (`po`, `scope`, `issue`, `done`, `gdep`) | sig | 4.3 events | 8.4 | D20, D32 |
 | `MemoryEvent`, `Read`, `Write`, `Acquire`, `Release` | sigs | 4.3 memory operations | 8.4 | |
 | `Fence`, `FenceAcq`, `FenceRel`, `FenceAcqRel`, `FenceSC` | sigs | 4.3 fences | 8.4, 9.7.13.4 | D5 |
@@ -36,10 +37,10 @@ translates this table one row at a time. `kamui.als` is the PTX 8.7 model (K1), 
 | `Weak`, `StrongW`, `StrongR` | funs | 4.5 weak and strong operations | 8.4 | |
 | `proxy_of` | fun | 4.5 fences use the generic proxy | 8.6 | D1 |
 | `scope_incl_r` | fun | 4.5 scope inclusion | 8.7 | |
-| `footprint`, `full_overlap_r`, `overlap_ok_r` | funs | 4.5 complete overlap | 8.7, 8.2.1 | D6 |
-| `ms_r`, `strong` | funs | 4.5 morally strong | 8.7 | |
+| `footprint`, `full_overlap_r`, `overlap_ok_r` | funs | 4.5 complete overlap | 8.7, 8.2.1 | D6, D48 |
+| `MbarOps`, `ms_r`, `strong` | funs | 4.5 morally strong | 8.7 | D47 |
 | `inside`, `scoped` | funs | 4.1 helpers of the 2019 model | | |
-| `co_strong` | fact | 4.6 coherence order | 8.9.1 | D6 |
+| `co_strong` | fact | 4.6 coherence order | 8.9.1 | D6, D43 |
 | `fence_sc_order` | fact | 4.6 Fence-SC order | 8.9.2 | |
 | `RelFences`, `AcqFences`, `AcqReads` | funs | 4.7 fences and reads that start or end a pattern | 8.8 | D5, D10, D15 |
 | `rel_pattern`, `acq_pattern` | funs | 4.7 release and acquire patterns | 8.8 | |
@@ -49,11 +50,11 @@ translates this table one row at a time. `kamui.als` is the PTX 8.7 model (K1), 
 | `bco_plain`, `sw_restricted`, `cause_base` | funs | 4.10 base causality order | 8.9.5 | D19, D20, D21 |
 | `GenericM`, `pf_space_ok`, `pf_src`, `pf_dst` | funs | 4.11 proxy fences | 8.9.5 | D2 |
 | `TmFence`, `pf_dst_with` | funs | 4.11 tensormap proxy fences act as a pair | 9.7.13.4 | D37 |
-| `ppbco_with`, `ppbco` | funs | 4.11 proxy-preserved base causality order | 8.9.5 | D2, D40 |
+| `ppbco_with`, `ppbco` | funs | 4.11 proxy-preserved base causality order | 8.9.5 | D2, D40, D49 |
 | `cause` | fun | 4.12 causality order | 8.9.6 | |
 | `coherence` | pred | 4.13 axiom: coherence | 8.10.1 | |
 | `fence_sc` | pred | 4.13 axiom: Fence-SC | 8.10.2 | D3 |
-| `acc_lift`, `AtomicR`, `Atomics`, `atomic_pair_r`, `atomicity` | funs, pred | 4.13 axiom: atomicity | 8.10.3 | D6, D25, D42, K4 |
+| `acc_lift`, `AtomicR`, `Atomics`, `atomic_pair_r`, `atomicity` | funs, pred | 4.13 axiom: atomicity | 8.10.3 | D6, D25, D42, D43, K4 |
 | `no_thin_air` | pred | 4.13 axiom: no thin air | 8.10.4 | |
 | `sc_per_location` | pred | 4.13 axiom: SC per location | 8.10.5 | |
 | `causality` | pred | 4.13 axiom: causality | 8.10.6 | D4 |

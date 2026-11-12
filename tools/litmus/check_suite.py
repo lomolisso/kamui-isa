@@ -199,6 +199,7 @@ def kamui_errors(suite: Path, tests: dict, hand: dict, by_test: dict) -> list[st
 # too: their atoms are those of their subsignatures.
 NOT_CARRIED = {
     "acc": "no mixed-size accesses in the bounded check (`no p/Access`)",
+    "vacc": "no atomic vector accesses in the bounded check (`no p/VecAccess`)",
     "synchronizes": "defined by a fact of the model, `synchronizes = bgen.bwait`",
 }
 
@@ -224,6 +225,8 @@ def correspondence_errors(model: str, check: str) -> list[str]:
         errors.append("kamui: `synchronizes` is no longer defined as bgen.bwait; carry it over in the lowering check")
     if "no p/Access" not in corr:
         errors.append("kamui: the lowering check must exclude mixed-size accesses or carry over `acc`")
+    if "no p/VecAccess" not in corr:
+        errors.append("kamui: the lowering check must exclude atomic vector accesses or carry over `vacc`")
     return errors
 
 

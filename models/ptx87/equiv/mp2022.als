@@ -33,6 +33,7 @@ pred frag_mp {
   no issue + done + gdep
   MemoryEvent.proxy in Generic + Texture + Surface + Constant
   no acc
+  no vacc
   Address.space in Global
   MemoryEvent.val in 0
   Address.init in 0

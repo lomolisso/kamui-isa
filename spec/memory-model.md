@@ -104,14 +104,16 @@ its thread (PTX 8.5). A weak operation has its own thread as scope.
 
 A location is one granule of memory. It belongs to one state space (global, shared, local, constant, parameter);
 shared and local locations have an owner (a CTA, or a thread). Two virtual addresses of the same memory are
-**virtual aliases**; using both behaves as if they were different proxies and needs a proxy fence (PTX 8.2, 8.6).
+**virtual aliases**; ordering them in program order behaves as if they were different proxies and needs a proxy
+fence (PTX 8.2, 8.6), but strong operations on aliases are morally strong with each other (D48, K18).
 The shared windows of the CTAs of a cluster are views of one memory (D17).
 
 ### 4.3 Operations
 
 Reads, writes, read-modify-writes, fences, barrier operations and markers (points in program order with no memory
 effect of their own, such as the issue of an asynchronous copy), as in section 3. Bitwise atomics combine values
-bit by bit (D35).
+bit by bit (D35). A vector load or store is one operation per element, in any order (PTX 8.2.4), but a strong
+one of at most 16 bytes is single-copy atomic as a whole: no thread sees part of it (D43, K15).
 
 ### 4.4 An execution
 
@@ -122,7 +124,9 @@ order of a thread's operations.
 ### 4.5 Morally strong
 
 Two operations are **morally strong** with respect to each other when both are strong (not weak), each one's scope
-includes the other's thread, they use the same proxy, and they cover exactly the same bytes (PTX 8.7). Most rules
+includes the other's thread, they use the same proxy, and they cover exactly the same bytes of memory, through any
+virtual address (PTX 8.7; D48). The waits and read-modify-write updates of one mbarrier object are morally strong
+whatever their scopes (D47). Most rules
 apply only to morally strong pairs. Example: in `tests/litmus/ptx/kamui/families/CoRR+relaxed.gpu+diff-cta`, two
 relaxed `.gpu` loads in another CTA cannot see a newer and then an older value; with weak loads
 (`CoRR+weak`) they can.
@@ -149,7 +153,8 @@ write and the two are morally strong (8.9.4). The other ways to synchronize:
 - cluster barriers: a `barrier.cluster.arrive` synchronizes with the `barrier.cluster.wait` of its generation; a
   `.relaxed` arrive gives no ordering of its own (D11);
 - mbarrier objects (4.15): an arrive with release semantics synchronizes with a test or try that returns True with
-  acquire semantics.
+  acquire semantics, also when the arrive comes from another CTA and the wait is at `.cta` scope (D47);
+- a relaxed atomic after a `fence.sc` of its thread acquires (D44).
 
 Example: `tests/litmus/ptx/kamui/families/MP+rel-acq.gpu+diff-cta`, forbidden.
 
@@ -167,14 +172,16 @@ transitive on their restricted side (D18, D19).
 operations (cp.async, bulk and tensor copies, matrix operands) are performed outside program order, by an
 asynchronous unit, and are ordered after the instruction that started them; their completion (a wait on their
 group, or the complete-tx on an mbarrier) is ordered before the instruction that waits for it (8.9.1.1; D20, D21).
-`griddepcontrol.wait` is ordered after every operation of the prerequisite grid (D32).
+The completion of a `cp.async` is followed by an implicit generic <-> async proxy fence, as for the bulk copies
+(D45). `griddepcontrol.wait` is ordered after every operation of the prerequisite grid, and makes them visible to
+every proxy (D32, D46).
 
 ### 4.11 Proxy-preserved base causality
 
 Base causality orders two accesses of the same location only when they use the same proxy (the generic proxy, or
 one proxy within one CTA), or when a proxy fence of the right direction lies between them on the path (8.9.5;
 D2). The tensormap proxy fences act as a pair, a release fence after the write and an acquire fence before the
-use (D37). A generic read before an async-proxy write needs no fence (D40).
+use (D37). A generic read before a write of the same address in any proxy needs no fence (D40, D49).
 
 ### 4.12 Causality order
 
@@ -209,7 +216,8 @@ complete-tx are read-modify-writes of it; test and try read it (D12). A phase co
 the transaction count are both zero: the phase advances and the pending count is reset to the expected count
 (D13). A test or try returns True when the phase it names has completed (D15).
 
-Kamui gives every mbarrier operation exactly this meaning, including at `.cta` scope (K11). The H100 does not
+Kamui gives every mbarrier operation exactly this meaning, including at `.cta` scope and for arrivals from other
+CTAs (K11, D47). The H100 does not
 order the data at `.cta` scope (`evidence/litmus-h100/README.md`): a Kamui implementation built like the H100 must
 add that ordering.
 
@@ -301,9 +309,10 @@ window bases) is not shown.
 | `ld.acquire.<s>` / `st.release.<s>` | `kld*.acquire.<s>` / `kst*.release.<s>` | `lw.aq` / `sw.rl` (exact at `.sys`, stronger otherwise) | the same events |
 | `ld.shared::cluster`, `st.shared::cluster`, `atom.shared::cluster` | `kld`, `kst`, `katom` with a generic address | as above | the H100 uses generic `LD`/`ST`/`ATOM` (K7) |
 | `ld.volatile` / `st.volatile` | `kld*.relaxed.sys` / `kst*.relaxed.sys` | none | PTX defines volatile as relaxed at system scope (K10) |
-| `ld.global.nc`, `ldu.global` | `kldg.nc` | none (a plain `lw` is not stronger when the thread also reads the location through the non-coherent path) | the same events (K9) |
+| `ld.global.nc` | `kldg.nc` | none (a plain `lw` is not stronger when the thread also reads the location through the non-coherent path) | the same events (D29) |
+| `ldu.global` | `kldg.weak` | none | an ordinary weak load (D50, K9) |
 | `ld.const`, `ld.param` | `kldc.const`, `kldc.param` | none | the same events |
-| `atom.<sem>.<s>.<op>` | `katom*.<op>.<sem>.<s>` | `amo<op>` / `amocas` with the matching bits (exact at `.sys`, stronger otherwise; `acq_rel` becomes `.aqrl`, which adds `fence.sc.sys`) | the same events |
+| `atom.<sem>.<s>.<op>` (a relaxed one after a `fence.sc` of its thread lowers as `.acquire`, D44, K20) | `katom*.<op>.<sem>.<s>` | `amo<op>` / `amocas` with the matching bits (exact at `.sys`, stronger otherwise; `acq_rel` becomes `.aqrl`, which adds `fence.sc.sys`) | the same events |
 | `red.<sem>.<s>.<op>` | `kredg` / `kred`; `katoms` / `katom` with result `RZ` on shared memory | `amo<op>` with `rd = x0` | a reduction is an atomic with no result (K8, D34) |
 | `fence.<sem>.<s>`, `membar.{cta,gl,sys}` | `kfence.<sem>.<s>`, `kfence.sc.{cta,gpu,sys}` | `fence rw,rw` / `fence.tso` / `fence r,rw` / `fence rw,w` (exact at `.sys`, stronger otherwise) | membar is `fence.sc` |
 | restricted and proxy fences | `kfence.restrict.*`, `kfence.proxy.*` | none | the same events |

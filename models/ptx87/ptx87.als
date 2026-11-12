@@ -65,6 +65,9 @@ fact address_facts {
 // A scalar memory operation of the manual (8.2.1). Normally one event; an operation that covers several
 // granules of a mixed-size test has one event per granule, all with the same Access (D6).
 sig Access {}
+// A strong vector access of at most 16 bytes: its element operations, all with the same VecAccess, are
+// single-copy atomic together (D43). They stay separate operations for overlap and mixed-size races.
+sig VecAccess {}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Events (8.4 operation types). `po` is program order (immediate successor). A weak memory operation has its
@@ -85,7 +88,8 @@ abstract sig MemoryEvent extends Event {
   address: one Address,
   proxy: one Proxy,
   val: one Int,
-  acc: lone Access
+  acc: lone Access,
+  vacc: lone VecAccess
 }
 sig Read extends MemoryEvent {
   rmw: lone Write,
@@ -273,14 +277,18 @@ fun scope_incl_r : Event->Event { symmetric[scope.*subscope.~thd] }
 
 // The granules an operation covers; two memory operations overlap completely if they cover the same ones (D6).
 fun footprint : Event->Address { (acc.~acc + iden).address }
+// Virtual aliases of one location count as the same memory (D48, as in the mixed-proxy model).
 fun full_overlap_r : MemoryEvent->MemoryEvent {
-  { e1, e2: MemoryEvent | e1.footprint = e2.footprint }
+  { e1, e2: MemoryEvent | e1.footprint.aliases = e2.footprint.aliases }
 }
 fun overlap_ok_r : Event->Event {
-  (MemoryEvent->MemoryEvent & same_alias_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)
+  (MemoryEvent->MemoryEvent & same_location_r & full_overlap_r) + (Event->Event - MemoryEvent->MemoryEvent)
 }
+// The waits and read-modify-write updates of mbarrier objects: morally strong with each other on one object
+// whatever their scopes (D47).
+fun MbarOps : MemoryEvent { MbarEv - (Write - Read.rmw) }
 fun ms_r : Event->Event {
-  (scope_incl_r & proxy_of.~proxy_of & overlap_ok_r) - iden
+  ((scope_incl_r + MbarOps->MbarOps) & proxy_of.~proxy_of & overlap_ok_r) - iden
 }
 fun strong[r: Event->Event] : Event->Event { r & ms_r }
 
@@ -290,12 +298,14 @@ fun scoped[s: Scope] : Event { s.*~subscope.~scope }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 8.9.1 Coherence order: overlapping morally strong writes are ordered (and causality-ordered ones, by the
-// Coherence axiom). Morally strong already means same proxy, same virtual address and complete overlap.
-// Two operations that share several granules are ordered the same way on all of them (D6).
+// Coherence axiom). Morally strong already means same proxy, same memory and complete overlap.
+// Two operations that share several granules are ordered the same way on all of them (D6), and so are two
+// atomic vector accesses on all their elements (D43).
 
 fact co_strong {
   Write <: ms_r :> Write in ^co + ^~co
   no (~acc.(^co).acc) & ~(~acc.(^co).acc)
+  no (~vacc.(^co).vacc) & ~(~vacc.(^co).vacc)
 }
 
 // 8.9.2 Fence-SC order: an acyclic order relating every pair of morally strong fence.sc operations.
@@ -421,8 +431,9 @@ fun ppbco_with[cb: Event->Event] : MemoryEvent->MemoryEvent {
   // no proxy fence or alias fence
   same_alias[GenericM <: cb :> GenericM]
   + same_alias[(MemoryEvent <: cb :> MemoryEvent) & same_cta_r & proxy.~proxy]
-  // a generic read before an async-proxy write: the read was performed before the write is issued (D40)
-  + same_alias[(GenericM & Read) <: cb :> (proxy.Async & Write)]
+  // a generic read before a write of the same address in any proxy: the read was performed before the write
+  // (D40 for the async proxy, D49 for the others)
+  + same_alias[(GenericM & Read) <: cb :> Write]
   // proxy fence for the source, for the destination, for both
   + same_alias[(cb & pf_src).cb :> GenericM]
   + same_alias[GenericM <: cb.(pf_dst_with[cb])]
@@ -453,7 +464,9 @@ pred fence_sc { (FenceSC <: cause_base :> FenceSC) & ms_r in sc }
 // 8.10.3 Atomicity. Single-copy atomicity: a read does not take some granules from a morally strong write and
 // others from a write before it in coherence order (D6). RMW atomicity, also for atomic operations that overlap
 // only partially (8.7.2). Coherence order is transitive (8.9.6), so the write between is taken from ^co (D42).
-fun acc_lift[r: Event->Event] : Event->Event { (acc.~acc + iden).r.(acc.~acc + iden) }
+fun acc_lift[r: Event->Event] : Event->Event {
+  (acc.~acc + vacc.~vacc + iden).r.(acc.~acc + vacc.~vacc + iden)
+}
 fun AtomicR : Read { rmw.Write }
 fun Atomics : MemoryEvent { AtomicR + AtomicR.rmw }
 fun atomic_pair_r : Event->Event {

@@ -10,7 +10,7 @@ is [`spec/memory-model.md`](../../spec/memory-model.md).
 | `kamui.als` | the model: `models/ptx87/ptx87.als` below its `module` line, unchanged (`tools/litmus/check_suite.py` compares them) |
 | `instructions.yaml` | every Kamui memory instruction and standard RISC-V memory instruction, with the PTX operation whose events it produces and the H100 instruction it copies |
 | `lowering.yaml` | the lowering: one rule per PTX form (Kamui sequence, standard alternative, why), and the rules of every modelled feature of `models/ptx87/coverage.yaml` |
-| `decisions.md` | design decisions K1 to K14 |
+| `decisions.md` | design decisions K1 to K20 |
 | `definitions.md` | one row per Alloy definition: the rule of the specification it encodes, its PTX section and decision |
 | `compile_ptx87_kamui.als` | the bounded lowering check, its sanity runs and the broken lowerings |
 | `check_lowering.sh` | runs them, one Alloy process per command |
@@ -39,13 +39,13 @@ allows every outcome. The lowering it checks is the event-level content of `lowe
 image of the same kind, location, thread and place in program order, possibly stronger in one of two ways: a
 wider scope for a strong operation, or a `fence.sc.sys` before an acquire-release read-modify-write. (A third,
 a weak generic read in place of a weak non-coherent read, was dropped when the `proxies` group showed it is not
-stronger: K9.) The feature groups:
+stronger: K9; since D50 the PTX model itself reads `ldu` as a weak generic load, which `kldg.weak` is.) The feature groups:
 
 | Group | PTX programs | Lowering |
 |---|---|---|
 | `core` | loads, stores, read-modify-writes, fences, generic proxy, global memory | the Kamui instructions (identity) |
 | `core_std` | the same | the standard alternatives: wider scopes, `.aqrl` |
-| `proxies` | aliases, alias and proxy fences, the non-coherent path (`ld.global.nc`, `ldu`) | identity |
+| `proxies` | aliases, alias and proxy fences, the non-coherent path (`ld.global.nc`) | identity |
 | `barriers` | CTA and cluster barriers | identity |
 | `mbarrier` | mbarrier objects | identity |
 | `async` | asynchronous copies, groups, complete-tx, async proxy | identity (the elect loop of K6 issues each thread's own copy) |

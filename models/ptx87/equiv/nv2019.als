@@ -39,6 +39,7 @@ pred frag_core {
   MemoryEvent.proxy in Generic
   no alias
   no acc
+  no vacc
   Address.space in Global
   MemoryEvent.val in 0
   Address.init in 0
@@ -55,6 +56,7 @@ pred frag_bar {
   MemoryEvent.proxy in Generic
   no alias
   no acc
+  no vacc
   Address.space in Global
   MemoryEvent.val in 0
   Address.init in 0

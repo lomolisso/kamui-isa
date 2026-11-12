@@ -56,7 +56,7 @@ def _const(v) -> int | None:
 
 PROXY_OF_OP = {"ld": "Generic", "st": "Generic", "atom": "Generic", "red": "Generic", "tld": "Texture",
                "suld": "Surface", "sust": "Surface", "suatom": "Surface", "sured": "Surface", "cold": "Constant",
-               "ldu": "Texture", "ldmatrix": "Generic", "stmatrix": "Generic"}
+               "ldu": "Generic", "ldmatrix": "Generic", "stmatrix": "Generic"}
 LOADS = {"ld", "tld", "suld", "cold", "ldu", "ldmatrix"}
 STORES = {"st", "sust", "stmatrix"}
 RMWS = {"atom", "red", "suatom", "sured"}
@@ -114,7 +114,6 @@ class Query:
         self.bwait: list[tuple[str, str]] = []
         self.cwait: list[tuple[str, str]] = []
         self.facts: list[str] = []
-        self.static_ub: str | None = None           # undefined behaviour visible in the program text (D39)
         self.consts: list[int] = [0, 1, 2]
         self.arith = 0
         self.locs: dict[str, Loc] = {}
@@ -125,6 +124,8 @@ class Query:
         self.perms: list[list[str]] = []            # groups of consecutive events in a free order
         self.accesses: dict[str, str] = {}          # event -> access atom
         self.n_access = 0
+        self.vaccesses: dict[str, str] = {}         # event -> vector access atom (D43)
+        self.n_vaccess = 0
         self.n_units = 0
         self.scope_of: dict[tuple[int, str], str] = {}
         self.cta_of: dict[int, str] = {}
@@ -438,6 +439,13 @@ class Query:
         if op == "griddepcontrol" and q == ["wait"]:
             e = self.marker(th)
             e.subsets.add("gdwait")
+            # the earlier grids' writes are visible to every proxy of the waiting thread (D46): implicit proxy
+            # fences from the generic proxy, and a release-acquire pair for the tensormap proxy (D37)
+            self.proxy_fence(th, "PlainProxyFence", f"T{tid}",
+                             "Generic->Async + Generic->Texture + Generic->Surface + Generic->Constant")
+            gpu = self.scope_atom(th, "gpu")
+            self.proxy_fence(th, "FenceRel", gpu, "Generic->TensorMap")
+            self.proxy_fence(th, "FenceAcq", gpu, "Generic->TensorMap")
             return
         raise Unsupported(f"instruction {ins.text!r}")
 
@@ -467,6 +475,19 @@ class Query:
     def vec(self, q) -> int:
         v = [x for x in q if re.fullmatch(r"v\d", x)]
         return int(v[0][1:]) if v else 1
+
+    def vector_access(self, ins, order: str, n: int, events: list) -> None:
+        """A strong vector load or store of at most 16 bytes is single-copy atomic as a whole (D43): its events
+        share a VecAccess. The element size comes from the type qualifier (32 bits if none)."""
+        if n < 2 or order == "weak":
+            return
+        bits = [int(m.group(2)) for x in ins.quals for m in [re.fullmatch(r"([busf])(8|16|32|64|128)", x)] if m]
+        if n * (bits[0] if bits else 32) > 128:
+            return
+        a = f"V{self.n_vaccess}"
+        self.n_vaccess += 1
+        for e in events:
+            self.vaccesses[e.atom] = a
 
     def load(self, th, ins, q):
         tid = th.tid
@@ -504,6 +525,7 @@ class Query:
                     self.setreg(tid, f"{r}[{k}]", f"{e.atom}.val", {e.atom})
         if n > 1:
             self.perms.append([[e.atom] for e in elems])
+            self.vector_access(ins, order, n, elems)
 
     def new_access(self) -> str:
         a = f"A{self.n_access}"
@@ -545,6 +567,7 @@ class Query:
                 elems.append(e)
         if n > 1:
             self.perms.append([[e.atom] for e in elems])
+            self.vector_access(ins, order, n, elems)
 
     # ------------------------------------------------------------------------------------------- RMWs
 
@@ -597,6 +620,9 @@ class Query:
         proxy = PROXY_OF_OP[ins.op]
         rsig = "Acquire" if order in ("acquire", "acq_rel") else "Read"
         wsig = "Release" if order in ("release", "acq_rel") else "Write"
+        if ins.op == "atom" and order == "relaxed" and \
+                any(e.sig == "FenceSC" for e in self.events if e.node == f"T{tid}"):
+            rsig = "Acquire"  # a relaxed atom after a fence.sc of its thread also acquires (D44)
         if n > 1:
             self.head(th)
         elems = []
@@ -989,10 +1015,13 @@ class Query:
             self.dep.append((r.atom, w.atom))
             self.record_write(w)
             ops += [r, w]
+        # the completion of the copy is followed by an implicit generic <-> async proxy fence (D45)
+        pf = self.proxy_fence(th, "PlainProxyFence", u, "Async->Generic + Generic->Async", node=u)
         self.issue_unit(th, u)
         last = self.chains[u][-1]
         self.groups[tid]["cp"][0].append((last, last))
-        self.cp_ops[tid].append((u, [e.atom for e in ops], last))
+        # the fence is part of the copy's completion, so cp.async.mbarrier.arrive orders it too (D19, D45)
+        self.cp_ops[tid].append((u, [e.atom for e in ops] + [pf.atom], last))
 
     def cp_mbarrier_arrive(self, th, ins, q):
         """cp.async.mbarrier.arrive{.noinc}: an arrive-on triggered when all prior cp.async operations of the
@@ -1063,8 +1092,6 @@ class Query:
             if len(didx) != len(sidx):
                 raise Unsupported(f"instruction {ins.text!r}")
             self.note_space(th, [dsp], dloc)
-            if (dsp, ssp) == ("shared::cluster", "shared::cta") and self.dest_cta(th, dloc) == self.cta_of[tid]:
-                self.static_ub = "a copy from .shared::cta into the issuing CTA's own shared memory (D39)"
             ud = self.new_unit(th, self.dest_cta(th, dloc))  # the writes and the completion, per destination
             ws = []
             for r, di in zip(reads, didx):
@@ -1356,6 +1383,8 @@ class Query:
         lines.append(f"one sig {', '.join(addrs)} extends Address {{}}")
         if self.n_access:
             lines.append(f"one sig {', '.join(f'A{k}' for k in range(self.n_access))} extends Access {{}}")
+        if self.n_vaccess:
+            lines.append(f"one sig {', '.join(f'V{k}' for k in range(self.n_vaccess))} extends VecAccess {{}}")
         ev_sig: dict[tuple[str, str], list[str]] = {}
         for e in self.events:
             ev_sig.setdefault(("lone" if e.lone else "one", e.sig), []).append(e.atom)
@@ -1370,6 +1399,8 @@ class Query:
             f"Address = {self.setx(addrs)}",
             f"Access = {self.setx(f'A{k}' for k in range(self.n_access))}",
             f"acc = {self.rel(self.accesses.items())}",
+            f"VecAccess = {self.setx(f'V{k}' for k in range(self.n_vaccess))}",
+            f"vacc = {self.rel(self.vaccesses.items())}",
             f"subscope = {self.rel((p, c) for c, p in self.node_parent.items())}",
             f"start = {self.rel(starts)}",
             *self.po_alternatives(),
@@ -1422,12 +1453,9 @@ class Query:
         lines += ["", "fact shape {"] + [f"  {s}" for s in shape] + ["}", ""]
         lines.append(f"pred outcome {{ {cond} }}")
         lines.append("")
-        n = max(len(self.events), len(self.node_order), len(addrs), self.n_access, 6)
+        n = max(len(self.events), len(self.node_order), len(addrs), self.n_access, self.n_vaccess, 6)
         bound = f"for {n} but {self.bitwidth()} Int"
-        if self.static_ub:
-            lines.append(f"run test {{ ptx_mm }} {bound}  // undefined behaviour: {self.static_ub}, so every outcome")
-        else:
-            lines.append(f"run test {{ ptx_mm and (outcome or undefined) }} {bound}")
+        lines.append(f"run test {{ ptx_mm and (outcome or undefined) }} {bound}")
         lines.append(f"run consistent {{ ptx_mm }} {bound}  // the program has an execution: the test is not vacuous")
         lines.append(f"run racy {{ ptx_mm and mixed_size_race }} {bound}  // a mixed-size data race (D38)")
         lines.append(f"run unconstrained {{ outcome }} {bound}  // the outcome without the axioms (D38)")

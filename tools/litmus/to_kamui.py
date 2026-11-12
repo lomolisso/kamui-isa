@@ -115,6 +115,7 @@ class Lowerer:
         cols = []
         for th in t.threads:
             out = []
+            self.seen_sc = False  # a fence.sc earlier in the thread (D44)
             for ins in th.instrs:
                 if ins.is_empty:
                     continue
@@ -229,7 +230,7 @@ class Lowerer:
         sp = self.space(q)
         if ins.op == "ldu":
             self.rule("ldu")
-            return [self.k("kldg.nc", [x for x in q if TYPE.match(x)], a)]
+            return [self.k("kldg.weak", [x for x in q if TYPE.match(x)], a)]
         rest = self.strip(q)
         if "volatile" in rest:
             self.rule("ld.volatile")
@@ -295,6 +296,11 @@ class Lowerer:
 
     def atom(self, ins, q, a) -> list[str]:
         self.rule("atom")
+        if getattr(self, "seen_sc", False) and next((x for x in q if x in ORDERS), "relaxed") == "relaxed":
+            # a relaxed atom after a fence.sc of its thread also acquires (D44): lower it as an acquire
+            q = ["acquire" if x == "relaxed" else x for x in q]
+            if "acquire" not in q:
+                q = ["acquire"] + q
         sp = self.space(q)
         rest = self.strip(q)
         if self.std():
@@ -332,6 +338,7 @@ class Lowerer:
                 self.rule("fence.proxy.alias")
                 return ["kfence.proxy.alias"]
             self.rule("membar")
+            self.seen_sc = True
             s = {"gl": "gpu"}.get(q[0], q[0])
             if self.broken == "fence-scope" and s in ("gpu", "sys"):
                 s = "cta"
@@ -367,6 +374,8 @@ class Lowerer:
                     else "kfence.restrict.shared_cluster.acquire.cluster"]
         self.rule("fence")
         sem = next((x for x in q if x in ("sc", "acq_rel", "acquire", "release")), "acq_rel")
+        if sem == "sc":
+            self.seen_sc = True
         s = next(x for x in q if x in SCOPES)
         if self.broken == "fence-scope" and s in ("gpu", "sys"):
             s = "cta"

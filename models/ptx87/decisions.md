@@ -264,6 +264,8 @@ Arrivals from another CTA (`.shared::cluster`) are not "threads of the CTA". Cho
 morally-strong condition decides: a remote arrive synchronizes with a wait if each one's scope includes the other
 thread, so both need `.cluster`. Tests: `kamui/ptx87/mbarrier/MP+mbarrier-remote-*`.
 
+Replaced on 2026-11-11 by D47 (the stronger reading).
+
 ## Restricted fences
 
 ### D17. shared::cta and shared::cluster are windows onto one location
@@ -355,6 +357,8 @@ copies, wgmma and tcgen05), in an asynchronous unit of the issuing CTA. `cp.asyn
 asynchronous arrive (a restricted release, D19, covering the thread's earlier cp.async operations); without
 `.noinc` the pending count is first incremented by one (9.7.13.15.15). Tests: `kamui/ptx87/cp-async/*`.
 
+Its completion is followed by an implicit proxy fence: D45 (2026-11-11).
+
 ### D23. st.async and red.async
 
 > "The store operation is treated as a weak memory operation. The complete-tx operation on the mbarrier has
@@ -437,6 +441,8 @@ Cross-check: the Dartagnan model read `ldu` as an ordinary weak load (M11: 6521 
 `MP+ldu`. Decided for this reading: the manual says only "Load read-only data" (16927), nothing promises that
 `ldu` sees data written during the kernel, and the weaker reading promises nothing the text does not.
 
+For `ldu`, replaced on 2026-11-11 by D50; `ld.global.nc` keeps this reading.
+
 ### D30. bar.warp.sync in litmus tests
 
 > "bar.warp.sync also guarantee memory ordering among threads participating in barrier." (22448)
@@ -456,6 +462,8 @@ in a free order (as the elements of a vector, 6569); `ld_reduce` combines the va
 location. Vector loads, stores and atomics: one scalar operation per element, in a free order. Tests:
 `kamui/ptx87/multimem/*`, `kamui/ptx87/sizes/MP+vector-*`.
 
+Strong vector loads and stores of at most 16 bytes are single-copy atomic as a whole: D43 (2026-11-11).
+
 ### D32. griddepcontrol.wait
 
 > ".wait modifier causes the executing thread to wait until all prerequisite grids in flight have completed and
@@ -464,6 +472,8 @@ location. Vector loads, stores and atomics: one scalar operation per element, in
 
 Choice: in a litmus test, threads name their grid; grid `N` depends on grid `N-1`. Every operation of the
 prerequisite grid precedes `griddepcontrol.wait` in base causality order. Tests: `kamui/ptx87/griddep/*`.
+
+The waiting grid sees the earlier writes through every proxy: D46 (2026-11-11).
 
 ### D33. ldmatrix and stmatrix
 
@@ -552,6 +562,8 @@ outcome of a program that has an execution (D7). The same reading applies to an 
 arrival count below zero, outside its valid range of 0 to 2^20 - 1 (9.7.13.15.2, 23989-23993; D7). Tests:
 `kamui/features/async/self-copy+*` (allowed), `kamui/features/mbarrier/arrive-beyond-pending` (allowed).
 
+Replaced on 2026-11-11 by D51 (reading A).
+
 ### D40. Write-after-read from the generic proxy to the async proxy
 
 > "A proxy fence is required to synchronize memory operations across different proxies." (8.6, 6779) "A memory
@@ -568,6 +580,8 @@ in proxy-preserved base causality order. CUTLASS's RS main loop
 (`sm90_mma_tma_gmma_rs_warpspecialized.hpp:666-684`) relies on it: the consumer reads the stage with `ldmatrix`,
 arrives on the mbarrier, and the producer refills the stage with a TMA copy, with no proxy fence. Test:
 `kamui/idioms/rs-mainloop-war+ldmatrix` (forbidden).
+
+Widened on 2026-11-11 to writes of every proxy: D49.
 
 ### D41. The Fence-SC axiom applies to morally strong pairs only
 
@@ -605,3 +619,107 @@ edge from the strong store to the atom's write. The 2019 model and the mixed-pro
 
 Choice: RMW atomicity takes the write in between from `^co`, as the manual's transitive order says. Test:
 `kamui/ptx87/rmw/add+st+st.weak` (forbidden; allowed by the first version).
+
+## Decisions on the stronger reading (2026-11-11)
+
+Kamui's memory contract takes the stronger reading where the manual is unclear, and where NVIDIA's own code relies
+on more than the manual states. The model may then forbid what the manual allows: every PTX program still runs
+correctly, at a possible cost in hardware. Where the manual is explicit (D7, D18, D19, D24, `ld.global.nc` in D29,
+D38) the model keeps its text. Each entry below was decided on 2026-11-11.
+
+### D43. Strong vector accesses of at most 16 bytes are single-copy atomic
+
+> "Memory operations with a vector data type are modelled as a set of equivalent memory operations with a scalar
+> data type, executed in an unspecified order on the elements in the vector." (8.2.4, 6569-6571)
+
+NVIDIA's code relies on more: CCCL's decoupled look-back for 8-byte types publishes the status and the value with
+one `st.relaxed.gpu.v2.u64` and reads both with one `ld.relaxed.gpu.v2.u64`, and takes the pair as never torn
+(`cub/agent/single_pass_scan_operators.cuh`, `cub/detail/strong_load.cuh`).
+
+Choice: the elements of a strong (`.relaxed`, `.acquire`, `.release`) vector load or store of at most 16 bytes
+(width times the type size, 32 bits if there is no type) share a `VecAccess`, and single-copy atomicity and the
+order of coherence apply to them together, as to the granules of one access (D6). They stay separate operations
+for overlap, morally strong and mixed-size races, so a scalar access of one element never becomes a mixed-size
+race. Vector `atom` and `red` stay one operation per element. Tests: `kamui/idioms/cub-lookback-packed`
+(forbidden), `kamui/hand/tearing+vector.v4.u64` (32 bytes: allowed).
+
+### D44. A relaxed atom after a fence.sc of its thread also acquires
+
+An `atom` without `.sem` is `.relaxed` (9.7.13.5), and an acquire pattern ends with an acquire operation or an
+acquire fence (8.8).
+
+NVIDIA's code relies on more: in last-block retirement every CTA writes its partial result, runs
+`__threadfence()` (`fence.sc.gpu`) and a relaxed `atomicAdd`; the CTA that sees all the others' increments reads
+every partial result with no acquire after its atomic (CUTLASS `sm90_visitor_store_tma_warpspecialized.hpp`,
+CCCL `cub/agent/agent_topk.cuh`).
+
+Choice: the read of an `atom` (not `red`) with relaxed semantics, written or by default, that follows a
+`fence.sc` in its thread's program order is an acquire read. Test: `kamui/idioms/last-block-retirement`
+(forbidden).
+
+### D45. The completion of cp.async is followed by an implicit proxy fence
+
+> "The completion of a cp{.reduce}.async.bulk operation is followed by an implicit generic-async proxy fence."
+> (18763)
+
+The sentence is about the bulk copies only. `cp.async` is in the generic proxy (D22), and `wgmma` reads through
+the async proxy, which needs a proxy fence after generic writes (33443).
+
+NVIDIA's code relies on more: CUTLASS's `cp.async` main loop (`sm90_mma_multistage_gmma_ss_warpspecialized.hpp`)
+fills shared memory with `cp.async`, signals with `cp.async.mbarrier.arrive`, and the consumer's `wgmma` reads
+it with no `fence.proxy.async` in the kernel.
+
+Choice: each `cp.async` ends with an implicit generic <-> async proxy fence in its asynchronous unit, before its
+completion (as D20 does for the bulk copies), and `cp.async.mbarrier.arrive` orders the fence with the copy's
+operations (D19). Test: `kamui/idioms/cpasync-mbarrier+wgmma` (forbidden).
+
+### D46. griddepcontrol.wait makes the earlier grids' writes visible to every proxy
+
+> griddepcontrol.wait "causes the executing thread to wait until all prerequisite grids in flight have completed
+> and all the memory operations from the prerequisite grids are performed and made visible to the current grid"
+> (9.7.13.13, 23827-23829)
+
+"Made visible to the current grid" does not say which proxies; CUTLASS kernels with programmatic dependent launch
+load with TMA (async proxy) right after the wait (`sm90_gemm_tma_warpspecialized_pingpong.hpp`).
+
+Choice: after `griddepcontrol.wait`, implicit proxy fences from the generic proxy to the async, texture, surface
+and constant proxies, and a release and acquire tensormap fence pair (D37). Test: `kamui/idioms/pdl-wait+tma-load`
+(forbidden).
+
+### D47. An mbarrier arrive synchronizes with a wait whatever their scopes (replaces D16)
+
+D16 required each side's scope to include the other thread, so a remote `.release.cluster` arrive did not
+synchronize with a `.cta` wait ("the participating threads of the CTA", 24797, is unclear about remote arrivals).
+CUTLASS's multicast pipeline waits at `.cta` for remote arrivals (`kamui/idioms/tma-multicast-war+remote-arrive`).
+
+Choice: the waits and read-modify-write updates of one mbarrier object (not `init` and `inval`, which are weak
+writes, D14) are morally strong with each other whatever their scopes. Tests: `kamui/ptx87/mbarrier/MP+mbarrier-remote-*`,
+`kamui/idioms/tma-multicast-war+remote-arrive` (forbidden). The H100 already breaks the weaker same-CTA guarantee
+(see the allowlist); the contract may cost a fence in Kamui hardware.
+
+### D48. Operations on virtual aliases of one location can be morally strong
+
+> "using distinct virtual addresses behaves as if using different proxies" (8.6, 6779)
+
+The manual's sentence is about ordering through proxy fences; NVIDIA's own mixed-proxy model makes morally strong
+ignore the virtual address. Choice: morally strong compares memory, not virtual addresses: two operations on
+aliases of one location that overlap completely can be morally strong. Program order between aliases (`po_loc`,
+SC per location) and proxy-preserved causality still need the alias fence. Test:
+`kamui/hand/MP-self+alias+acquire-release` (forbidden).
+
+### D49. A generic read is ordered before a later write of the same address in any proxy
+
+D40's argument ("A memory read [...] has been performed when the value read has been transmitted from memory",
+22306) holds for any later write, not only async-proxy writes. Choice: a generic read before a write of the same
+virtual address in base causality order is in proxy-preserved base causality order, whatever the write's proxy.
+Test: `kamui/hand/LB-self+surface` (forbidden).
+
+### D50. ldu is an ordinary weak load (replaces D29 for ldu)
+
+The manual says only "Load read-only data" (16927); 6521 names `ld.global.nc`, not `ldu`. Choice: `ldu` is a weak
+load of the generic proxy. `ld.global.nc` keeps D29. Test: `kamui/ptx87/ld-st/MP+ldu` (forbidden).
+
+### D51. A shared::cta to shared::cluster copy into the issuing CTA is an ordinary copy (replaces D39)
+
+The manual states no consequence (19067-19068). Choice: reading A of D39, an ordinary copy, not undefined
+behaviour. Tests: `kamui/features/async/self-copy+*`.

@@ -27,7 +27,7 @@ kamui:
     h100: LDG
     syntax: 'kldg{.weak|.relaxed.<scope>|.acquire.<scope>}{.nc}{.mmio}{.v2|.v4}{.<type>} rd, [a]'
     events: ld.global
-    note: '.nc reads through the non-coherent path (PTX ld.global.nc and ldu, D29, K9). .mmio is relaxed at sys scope (K5).'
+    note: '.nc reads through the non-coherent path (PTX ld.global.nc, D29); ldu lowers to .weak (D50, K9). .mmio is relaxed at sys scope (K5). A strong vector of at most 16 bytes is one access (D43, K15).'
   - name: klds
     family: Xkmscope
     h100: LDS
@@ -266,7 +266,7 @@ kamui:
     h100: UBLKCP
     syntax: 'kblkcp.{s.g|s.s|g.s}{.mc} [d], [s], {[b] | bulk_group}, size{, ctamask}'
     events: cp.async.bulk
-    note: warp-uniform; performed for the thread an elect loop picked, ordered after that thread's earlier instructions only (K6). s.g = global to shared (completes on the mbarrier b), s.s = shared of this CTA to shared of a CTA of the cluster, g.s = shared to global (completes in a bulk group).
+    note: warp-uniform; performed for the thread an elect loop picked, ordered after that thread's earlier instructions only (K6). s.g = global to shared (completes on the mbarrier b), s.s = shared of this CTA to shared of a CTA of the cluster (into this CTA too, as an ordinary copy, D51), g.s = shared to global (completes in a bulk group).
   - name: kblkred
     family: Xkmasync
     h100: UBLKRED

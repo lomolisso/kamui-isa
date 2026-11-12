@@ -63,7 +63,8 @@ pred emitted {
   // proxy fences: fence.proxy.<kind> (PlainProxyFence) and fence.proxy.{tensormap,async}::generic.{release,acquire}
   ProxyFence in PlainProxyFence + FenceRel + FenceAcq
   PlainProxyFence in ProxyFence
-  all f: PlainProxyFence | some p: Proxy - Generic | f.dirs = p->Generic + Generic->p
+  all f: PlainProxyFence | (some p: Proxy - Generic | f.dirs = p->Generic + Generic->p)
+    or f.dirs = Generic->(Async + Texture + Surface + Constant)   // after griddepcontrol.wait (D46)
   all f: ProxyFence - PlainProxyFence | some p: TensorMap + Async | f.dirs = Generic->p
   pspace in PlainProxyFence -> Space
   paddr in FenceAcq -> Address
@@ -163,7 +164,8 @@ pred emitted {
   // an issued unit with a proxy fence holds the source reads of a copy or the operand reads of a wgmma (and a
   // tensor copy's tensor-map read)
   all u: AsyncUnit | (u.start in Event.issue and some thd.u & PlainProxyFence) =>
-    (thd.u in (Read & proxy.(Async + TensorMap)) + PlainProxyFence and some thd.u & Read & proxy.Async)
+    ((thd.u in (Read & proxy.(Async + TensorMap)) + PlainProxyFence and some thd.u & Read & proxy.Async)
+     or thd.u in (MemoryEvent & proxy.Generic & Weak) + PlainProxyFence)   // cp.async (D45)
   // a copy's writes to shared memory are by a unit in the CTA that owns it (D21); the reads of a write unit are
   // those of reductions and of the complete-tx
   all w: Write & proxy.Async | w.address.space = Shared => w.address.owner = w.cta_of
@@ -182,6 +184,9 @@ pred emitted {
   all m: Marker | lone m.issue or thd.(m.issue.thd) in (Read & proxy.Async) + PlainProxyFence
   done & (Write -> Event) in Write -> (MbarEv + Marker)
   all w: Write & done.Event | some w.thd.~thd & Read & proxy.Generic
+  // atomic vector accesses: the weak-free loads or stores of one ordinary thread, at least two events (D43)
+  vacc.VecAccess in thd.(Thread - AsyncUnit) - Weak - MbarEv - Read.rmw - rmw.Write
+  all v: VecAccess | lone vacc.v.thd and not lone vacc.v and (vacc.v in Read or vacc.v in Write)
   // only waits acquire an mbarrier
   MbarEv & Acquire in MbarWait
   // an access goes through one view: all its granules through a virtual alias, or none
@@ -220,7 +225,7 @@ def defs(text):
     return out
 
 
-CORE = ("no AsyncUnit and no Marker and no MbarEv and no acc and no SyncRestrictCta + SyncRestrictCluster + "
+CORE = ("no AsyncUnit and no Marker and no MbarEv and no acc and no vacc and no SyncRestrictCta + SyncRestrictCluster + "
         "OpRestrictInit and ProxyFence in PlainProxyFence and no pspace and Address.space in Global + Shared")
 
 
