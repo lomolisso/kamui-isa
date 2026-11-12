@@ -95,3 +95,46 @@ correct_for
      (M : Map EP EK) =>
    broken_drop_tensormap_release P K M)
      : Prop
+Record
+sc_fenced (E S A C : Type) (X : Exec E S A C) : Prop := Build_sc_fenced
+  { scf_generic : forall e : E, MemoryEvent X e -> proxy X e Generic;
+    scf_system : forall e : E,
+                 MemoryEvent X e \/ FenceSC X e -> System X (scope X e);
+    scf_one_address : forall a1 a2 : A, aliases X a1 a2 -> a1 = a2;
+    scf_scalar : forall (e : E) (c : C), ~ acc X e c;
+    scf_fenced : forall e1 e2 : E,
+                 MemoryEvent X e1 ->
+                 MemoryEvent X e2 ->
+                 Relation_Operators.clos_trans (po X) e1 e2 ->
+                 exists f : E,
+                   FenceSC X f /\
+                   Relation_Operators.clos_trans (po X) e1 f /\
+                   Relation_Operators.clos_trans (po X) f e2 }.
+
+Arguments sc_fenced {E S A C}%_type_scope X
+Arguments Build_sc_fenced {E S A C}%_type_scope [X]
+  (scf_generic scf_system scf_one_address scf_scalar
+   scf_fenced)%_function_scope
+Arguments scf_generic {E S A C}%_type_scope [X] s [e] _
+Arguments scf_system {E S A C}%_type_scope [X] s [e] _ _
+Arguments scf_one_address {E S A C}%_type_scope [X] s [a1 a2] _
+Arguments scf_scalar {E S A C}%_type_scope [X] s e c _
+Arguments scf_fenced {E S A C}%_type_scope [X] s [e1 e2] _ _ _
+fence_sc_restores_sc
+     : forall X : Exec ?E ?S ?A ?C,
+       wf_prog X ->
+       wf_exec X ->
+       consistent X ->
+       sc_fenced X ->
+       HahnRelationsBasic.acyclic
+         (HahnRelationsBasic.seq (HahnRelationsBasic.eqv_rel (MemoryEvent X))
+            (HahnRelationsBasic.seq
+               (Relation_Operators.union
+                  (Relation_Operators.clos_trans (po X)) 
+                  (com X))
+               (HahnRelationsBasic.eqv_rel (MemoryEvent X))))
+where
+?E : [ |- Type]
+?S : [ |- Type]
+?A : [ |- Type]
+?C : [ |- Type]

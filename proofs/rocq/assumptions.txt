@@ -3,3 +3,5 @@ Classical_Prop.classic : forall P : Prop, P \/ ~ P
 Axioms:
 Classical_Prop.classic : forall P : Prop, P \/ ~ P
 Closed under the global context
+Axioms:
+Classical_Prop.classic : forall P : Prop, P \/ ~ P

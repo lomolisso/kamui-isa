@@ -3,7 +3,7 @@
 
 From KamuiProof Require Import Ptx87 Kamui Lowering.
 Require Import KamuiProof.Theorem.
-From KamuiProof.proof Require Import Main Broken.
+From KamuiProof.proof Require Import Main Broken FenceSC.
 
 Print LoweringRel.
 Print correct_for.
@@ -11,7 +11,10 @@ Print execution_level_statement.
 Print allowed.
 Print program_level_statement.
 Print broken_lowerings_fail.
+Print sc_fenced.
+Check fence_sc_restores_sc.
 
 Print Assumptions lowering_correct.
 Print Assumptions lowering_correct_programs.
 Print Assumptions lowering_broken_fail.
+Print Assumptions fence_sc_restores_sc.
