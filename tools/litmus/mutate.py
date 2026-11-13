@@ -173,8 +173,13 @@ def report(results_dir: Path, mutants: list[dict]) -> None:
         status = r["status"] if r else "not run"
         why = ""
         c = checked.get(m["id"])
+        # a Dartagnan mutant that mirrors an Alloy mutant (`analogue`) takes that mutant's bounded check
+        a = checked.get(m.get("analogue", ""))
         if status == "survived" and c and c["verdict"].startswith("equivalent"):
             status, why = "equivalent", f"{c['verdict']}: bounded check, bounds {c['bounds']}"
+        elif status == "survived" and a and a["verdict"].startswith("equivalent"):
+            status, why = "equivalent", (f"{a['verdict']}: bounded check of the Alloy analogue {m['analogue']}, "
+                                         f"bounds {a['bounds']}")
         elif status == "survived" and m.get("equivalent"):
             status, why = "argued", m["equivalent"]
         k = r["killers"] if r else []
@@ -196,7 +201,7 @@ def markdown(rows: list[dict]) -> str:
            "*strengthen* drops a restriction. **killed**: some litmus test changes verdict; **survived**: none "
            "does (a gap in the tests); **equivalent**: survived, and a bounded check shows that it judges every "
            "execution of a translated test as the model does (`tools/litmus/mutant_equiv.py`, results in "
-           "`equiv/mutants.csv`); **argued**: survived, with only an argument by hand that it changes nothing "
+           "`equiv/mutants.csv`; for a Dartagnan mutant, the check of the Alloy mutant it mirrors); **argued**: survived, with only an argument by hand that it changes nothing "
            "(in `mutants.yaml`; an open item); **vacuous**: it only removes every execution of some test.", ""]
     for model in ("alloy", "dartagnan"):
         rs = [r for r in rows if r["model"] == model]

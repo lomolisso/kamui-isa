@@ -10,6 +10,9 @@
 # rule: the rule the mutant breaks, in plain words (used by the scorecard)
 # witness: sc makes tools/litmus/mutant_equiv.py also compare the mutant with the model under the reverse Fence-SC
 #   order (the only other one with two fence.sc), as it does for the coherence order
+# analogue: for a Dartagnan mutant, the Alloy mutant that breaks the same rule; when the bounded check of that
+#   mutant shows it equivalent, mutate.py --report counts this one as equivalent too (the two models agree on
+#   every test)
 
 # ---------------------------------------------------------------------------------------------------- Alloy
 - id: A-coherence
@@ -95,7 +98,6 @@
   kind: strengthen
   find: "fun AcqReads : Read { Acquire - FalseWaits }"
   replace: "fun AcqReads : Read { Acquire }"
-  equivalent: "a wait synchronizes only with the arrive that completes the phase; a wait that returns False has seen no completion, so its acquire has nothing to synchronize with"
 - id: A-observation-rmw-chain
   model: alloy
   rule: observation through chains of atomic operations (8.9.3)
@@ -500,6 +502,7 @@
   kind: weaken
   find: "empty (((atomic-pair & fr); [range(rmw)]; (atomic-pair & co)) & rmw) as axiom-MixedSizeAtomicity\n"
   replace: "\n"
+  analogue: A-atomic-pair-partial
   equivalent: "partially overlapping atomic operations that are not ordered by causality are a mixed-size data race, which turns the axioms off (D38); ordered ones cannot have the other write between their read and write without a Causality cycle"
 - id: D-no-thin-air
   model: dartagnan
@@ -596,7 +599,6 @@
   kind: weaken
   find: "let ms-scope = (po | po^-1) | ([strong-operation]; sr; [strong-operation])"
   replace: "let ms-scope = ([strong-operation]; sr; [strong-operation])"
-  equivalent: "two operations of one thread are always ordered by base causality (po is part of cause-normal), and Causality already orders them the way the rules that need morally strong would"
 - id: D-ms-scope
   model: dartagnan
   file: ptx-v8.7-common.cat
@@ -611,7 +613,7 @@
   kind: weaken
   find: "              | ([AOP & MBAR]; vloc; [MBAR]) | ([MBAR]; vloc; [AOP & MBAR])\n"
   replace: "\n"
-  equivalent: "since M60 the waits and read-modify-write updates of one mbarrier object, the complete-tx among them, are morally strong whatever their scopes, which contains this rule"
+  equivalent: "since M60 the waits and read-modify-write updates of one mbarrier object, the complete-tx among them, are morally strong whatever their scopes; the rule adds only pairs of a complete-tx with an mbarrier.init or mbarrier.inval of its object, which the Alloy model never makes morally strong (D47, MbarOps), and the two models agree on every test"
 - id: D-ms-proxy
   model: dartagnan
   file: ptx-v8.7-common.cat
