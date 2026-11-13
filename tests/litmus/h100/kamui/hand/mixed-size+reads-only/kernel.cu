@@ -42,7 +42,6 @@ __device__ __forceinline__ unsigned sreg_clusterid() {
 struct L {
     unsigned long long x;
     unsigned long long y;
-    unsigned long long x[0];
 };
 
 // P0: ld.weak.b32 r0, x ; st.weak y, 1 ; ld.weak r1, y
@@ -68,20 +67,20 @@ __device__ __forceinline__ void role0(L &l, unsigned *out) {
 
 // P1: ld.weak.b16 r0, x[0]
 __device__ __forceinline__ void role1(L &l, unsigned *out) {
-    unsigned long long a_x[0] = l.x[0];
+    unsigned long long a_x = l.x;
     unsigned r_r0 = 0;
     asm volatile("{\n\t"
         ".reg .u32 t;\n\t"
         ".reg .pred p;\n\t"
-        "ld.weak.global.u32 %0, [%1];\n\t"
+        "ld.weak.global.u16 %0, [%1+0];\n\t"
         "}"
         : "=r"(r_r0)
-        : "l"(a_x[0])
+        : "l"(a_x)
         : "memory");
     out[2] = r_r0;
 }
 
-#define NGLOC 3
+#define NGLOC 2
 #define NREGS 3
 #define NROLES 2
 
@@ -89,8 +88,8 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
                                                        const unsigned *assign, const unsigned *locoff,
                                                        unsigned *scratch, unsigned scratch_mask,
                                                        unsigned stress_iters, unsigned delay_mask) {
-    __shared__ __align__(16) unsigned long long mbar[256];
-    __shared__ __align__(16) unsigned sbuf[256 * 4];
+    __shared__ __align__(16) unsigned long long mbar[2 * 256];
+    __shared__ __align__(16) unsigned sbuf[4 * 256 * 4];
     unsigned slot = blockIdx.x * blockDim.x + threadIdx.x;
     unsigned a = assign[slot];
     unsigned role = a & 7, lslot = (a >> 3) & 255, inst = a >> 11;
@@ -111,7 +110,6 @@ extern "C" __global__ void __launch_bounds__(256) litmus(unsigned *mem, unsigned
     L l;
     l.x = to_global(mem + lo[0]);
     l.y = to_global(mem + lo[1]);
-    l.x[0] = to_global(mem + lo[2]);
     switch (role) {
     case 0: role0(l, out); break;
     case 1: role1(l, out); break;

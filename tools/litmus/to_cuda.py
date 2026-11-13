@@ -1218,9 +1218,12 @@ def generate_all() -> tuple[dict[Path, str], dict[str, str]]:
     for p in tests():
         tid = test_id(p)
         try:
-            gen = generate87 if tid.startswith(("ptx/kamui/ptx87/", "ptx/imported/", "ptx/kamui/features/",
-                                                "ptx/kamui/idioms/")) else generate
-            src, spec = gen(litmus.load(p), tid)
+            t = litmus.load(p)
+            # the first generator has no 16-bit granules (`x[0]`): such tests take the second
+            granular = any(re.fullmatch(r"\s*\w+\[[01]\]\s*=.*", d) for d in t.init)
+            gen = generate87 if granular or tid.startswith(("ptx/kamui/ptx87/", "ptx/imported/", "ptx/kamui/features/",
+                                                            "ptx/kamui/idioms/")) else generate
+            src, spec = gen(t, tid)
         except Unsupported as e:
             skipped[tid] = str(e)
             continue
