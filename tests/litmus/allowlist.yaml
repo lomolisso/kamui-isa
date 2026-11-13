@@ -933,6 +933,6 @@
   reason: >-
     The contract takes the stronger reading of D48 (2026-11-11): operations on aliases of one location can be
     morally strong. Then the second fence.sc would synchronize with the first through the aliased load, against
-    program order, which the Fence-SC axiom forbids. In NVIDIA's mixed-proxy model (ptx-v7.5) operations on
-    different virtual addresses are never morally strong, so nothing synchronizes and the load may return the
-    later store's value.
+    program order, which the Fence-SC axiom forbids. Dartagnan's ptx-v7.5 model requires the same virtual address
+    for morally strong (its ms3 uses vloc), so nothing synchronizes and the load may return the later store's
+    value.
