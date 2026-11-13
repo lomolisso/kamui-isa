@@ -1,0 +1,12 @@
+PTX dsmem-red+cluster-barrier
+"Cluster top-k: CTAs add counts into another CTA's shared memory with red.relaxed.cluster.shared::cluster, then barrier.cluster.arrive.release and barrier.cluster.wait.acquire; the owner CTA then reads the counts (CCCL cub/agent/agent_batched_topk_cluster.cuh:783, 814-820, 1166-1173). Expected: forbidden."
+{
+x=0 @cta 1;
+P1:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0                     | P1@cta 1,cluster 0,gpu 0       ;
+ red.relaxed.cluster.shared::cluster.add x, 1 | barrier.cluster.arrive.release ;
+ barrier.cluster.arrive.release               | barrier.cluster.wait.acquire   ;
+ barrier.cluster.wait.acquire                 | ld.weak.shared::cta r0, x      ;
+exists
+(P1:r0 == 0)

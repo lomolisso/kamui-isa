@@ -1,0 +1,16 @@
+KAMUI splitk-multi-peer-red
+"Lowered from tests/litmus/ptx/kamui/idioms/splitk-multi-peer-red.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+w=0;
+l=0;
+P2:r0=0;
+P2:r1=0;
+w in global;
+l in global;
+}
+ P0@cta 0,cluster 0,gpu 0   | P1@cta 1,cluster 0,gpu 0   | P2@cta 2,cluster 0,gpu 0 ;
+ kredg.relaxed.gpu.add w, 1 | kredg.relaxed.gpu.add w, 1 | kld.acquire.gpu r0, l    ;
+ kfence.acq_rel.gpu         | kfence.acq_rel.gpu         | kldg.weak r1, w          ;
+ kredg.relaxed.gpu.add l, 1 | kredg.relaxed.gpu.add l, 1 |                          ;
+exists
+(P2:r0 == 2 /\ P2:r1 != 2)

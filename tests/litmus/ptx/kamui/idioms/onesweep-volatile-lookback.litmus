@@ -1,0 +1,13 @@
+PTX onesweep-volatile-lookback
+"Onesweep radix sort look-back: a CTA publishes its packed flag and count in one word with st.volatile, first as an aggregate, then as an inclusive value; a later CTA spins on it with ld.volatile and __threadfence_block (fence.sc.cta) (CCCL cub/agent/agent_radix_sort_onesweep.cuh:288-289, 340-355). One location: coherence must not show the inclusive value and then the aggregate. Expected: forbidden."
+{
+x=0;
+P1:r0=0;
+P1:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0 | P1@cta 1,cluster 0,gpu 0 ;
+ st.volatile.global x, 1  | ld.volatile.global r0, x ;
+ st.volatile.global x, 2  | fence.sc.cta             ;
+                          | ld.volatile.global r1, x ;
+exists
+(P1:r0 == 2 /\ P1:r1 == 1)

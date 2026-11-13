@@ -1,0 +1,21 @@
+PTX cub-select-inplace-war+relaxed
+"As cub-select-inplace-war in the variant CUB uses when the loads go through shared memory: the tile state is published and read with relaxed accesses (CCCL cub/agent/agent_select_if.cuh:209-221, the relaxed order). The loaded items pass through shared memory into the block scan, so the published state (the count of selected items, here 0 times the item plus 1) depends on them, and the output store depends on the state read. The load buffering cycle is then made of reads-from and dependencies only, which No-Thin-Air forbids (8.10.4). Expected: forbidden."
+{
+x=1;
+f=0;
+s=0 @cta 0;
+P0:r0=0;
+P1:r3=0;
+P1:r4=0;
+P1:r5=0;
+P2:r1=0;
+P2:r2=0;
+}
+ P0@cta 0,cluster 0,gpu 0  | P1@cta 0,cluster 0,gpu 0  | P2@cta 1,cluster 0,gpu 0 ;
+ ld.weak.global r0, x      | bar.sync 1, 2             | ld.relaxed.gpu r1, f     ;
+ st.weak.shared::cta s, r0 | ld.weak.shared::cta r3, s | add r2, r1, 1            ;
+ bar.sync 1, 2             | mul r4, r3, 0             | st.weak.global x, r2     ;
+                           | add r5, r4, 1             |                          ;
+                           | st.relaxed.gpu f, r5      |                          ;
+exists
+(P0:r0 == 2 /\ P2:r1 == 1)
