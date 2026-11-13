@@ -49,7 +49,6 @@
   kind: weaken
   find: "and sc_per_location and"
   replace: "and"
-  equivalent: "implied by Coherence and Causality: program order on one location is part of causality order, so every cycle the axiom forbids is already a read or write that precedes, in causality order, the write it reads from or a write before it"
 - id: A-causality
   model: alloy
   rule: Causality axiom (8.10.6)
@@ -332,7 +331,6 @@
   kind: strengthen
   find: "fun Weak : Event { (scope :> Thread).Thread }"
   replace: "fun Weak : Event { none }"
-  equivalent: "a weak operation has the thread scope, so it is never morally strong with another thread's operation: a weak write counted as strong in a release pattern still never precedes another thread's read in observation order, which needs morally strong rf"
 - id: A-atomic-pair-partial
   model: alloy
   rule: partially overlapping atomic operations stay atomic (8.7.2, 6817)

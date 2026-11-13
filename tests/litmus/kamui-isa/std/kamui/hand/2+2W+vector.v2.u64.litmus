@@ -1,0 +1,10 @@
+KAMUI 2+2W+vector.v2.u64
+"Lowered from tests/litmus/ptx/kamui/hand/2+2W+vector.v2.u64.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+a=0;
+b=0;
+}
+ P0@cta 0,gpu 0                    | P1@cta 1,gpu 0                    ;
+ kst.relaxed.gpu.v2.u64 a, b, 1, 1 | kst.relaxed.gpu.v2.u64 a, b, 2, 2 ;
+exists
+(a == 1 /\ b == 2)

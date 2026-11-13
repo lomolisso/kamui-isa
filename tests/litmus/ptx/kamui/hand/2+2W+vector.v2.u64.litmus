@@ -1,0 +1,10 @@
+PTX 2+2W+vector.v2.u64
+"Two threads each store both elements of a 16-byte relaxed vector of two 64-bit elements, 1 and 2. A strong vector access of at most 16 bytes is single-copy atomic (D43), so coherence orders the two stores the same way on both elements: the final values come from one store, not one element from each: forbidden."
+{
+a=0;
+b=0;
+}
+ P0@cta 0,gpu 0                      | P1@cta 1,gpu 0                      ;
+ st.relaxed.gpu.v2.u64 a, b, 1, 1    | st.relaxed.gpu.v2.u64 a, b, 2, 2    ;
+exists
+(a == 1 /\ b == 2)

@@ -1,0 +1,14 @@
+PTX LB-self+alias+fence.release+fence.sc
+"One thread loads global x (relaxed, .cta), runs fence.release and fence.sc, then stores 1 to the alias y with st.release. If the load read the later store: the load and the fence.sc after it form an acquire pattern (a strong read followed in program order by an acquire fence, 8.8; the fence.release between them does not matter), the load observes the release store, morally strong through the alias (D48), so the store synchronizes with the fence.sc, which precedes it in program order: a causality cycle (8.10.6): forbidden."
+{
+x=0;
+y @ generic aliases x;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0         ;
+ ld.relaxed.cta r0, x  ;
+ fence.release.cta     ;
+ fence.sc.sys          ;
+ st.release.cta y, 1   ;
+exists
+(P0:r0 == 1)

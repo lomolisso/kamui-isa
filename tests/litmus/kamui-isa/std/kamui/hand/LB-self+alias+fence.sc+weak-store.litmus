@@ -1,0 +1,14 @@
+KAMUI LB-self+alias+fence.sc+weak-store
+"Lowered from tests/litmus/ptx/kamui/hand/LB-self+alias+fence.sc+weak-store.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y @ generic aliases x;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0        ;
+ kld.relaxed.sys r0, y ;
+ fence rw, rw          ;
+ fence rw, rw          ;
+ sw x, 1               ;
+exists
+(P0:r0 == 1)

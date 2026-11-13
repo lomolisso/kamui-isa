@@ -1,0 +1,13 @@
+KAMUI LB-self+alias+acquire+weak-store
+"Lowered from tests/litmus/ptx/kamui/hand/LB-self+alias+acquire+weak-store.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0;
+y @ generic aliases x;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0        ;
+ kld.acquire.gpu r0, y ;
+ kst.release.gpu x, 1  ;
+ kst.weak x, 2         ;
+exists
+(P0:r0 == 2 /\ x == 2)

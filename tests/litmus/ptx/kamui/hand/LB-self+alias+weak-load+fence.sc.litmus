@@ -1,0 +1,14 @@
+PTX LB-self+alias+weak-load+fence.sc
+"One thread loads global x through its alias y with a weak load, then runs two fence.sc, then stores 1 to x (relaxed, .sys). As in LB-self+alias+fence.sc, but the load is weak: an acquire pattern through a fence starts with a strong read (8.8), so the first fence.sc acquires nothing and the two fences do not synchronize; with no alias fence nothing orders the load before the store: allowed."
+{
+x=0;
+y @ generic aliases x;
+P0:r0=0;
+}
+ P0@cta 0,gpu 0              ;
+ ld.weak r0, y               ;
+ fence.sc.sys                ;
+ fence.sc.sys                ;
+ st.relaxed.sys x, 1         ;
+exists
+(P0:r0 == 1)

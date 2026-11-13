@@ -1,0 +1,16 @@
+KAMUI LB-self+alias+weak-load+acquire
+"Lowered from tests/litmus/ptx/kamui/hand/LB-self+alias+weak-load+acquire.litmus by tools/litmus/to_kamui.py (standard RISC-V instructions where allowed). Generated: do not edit."
+{
+x=0;
+y @ generic aliases x;
+z @ generic aliases x;
+P0:r0=0;
+P0:r1=0;
+}
+ P0@cta 0,gpu 0 ;
+ lw r0, y       ;
+ sw.rl y, 1     ;
+ lw.aq r1, y    ;
+ sw.rl z, 2     ;
+exists
+(P0:r0 == 2 /\ P0:r1 == 1 /\ x == 1)

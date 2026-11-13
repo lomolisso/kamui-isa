@@ -1,0 +1,16 @@
+PTX CoRW-self+alias+surface
+"One thread, y and z aliases of global x. The surface load of z reads 2 from the later surface store to y, and the generic load of y reads 1 from the later generic store to z. Generic with generic and surface with surface are morally strong (same proxy, one location, D48), so the two reads-from edges and program order on each address form a cycle: suld z, st z (same address z), ld y (reads it), sust y (same address y), suld z (reads it). SC per location (8.10.5, as NVIDIA's formal model states it: morally strong communication and program order on one address are acyclic) forbids it: forbidden. Coherence and causality alone do not: causality relates operations on aliases only through an alias fence."
+{
+x=0;
+y @ generic aliases x;
+z @ generic aliases x;
+P0:r0=0;
+P0:r1=0;
+}
+ P0@cta 0,gpu 0       ;
+ suld.weak r0, z     ;
+ ld.weak r1, y       ;
+ st.weak z, 1        ;
+ sust.weak y, 2      ;
+exists
+(P0:r0 == 2 /\ P0:r1 == 1)

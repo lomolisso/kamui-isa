@@ -27,10 +27,10 @@ Total: 148 of 148 features meet the bar; 32 register-only features are exempt.
 
 | Feature | Tests | Both | A/F | Scopes | Spaces | Placements | H100 (weak) | x-check | NVIDIA | Decisions | Mutants | Bar |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `applypriority` | 9 | 9 | 3/6 | default | global | diff-cluster same-cluster same-cta | 9 (2) | 0 | 0 | D27 | 32 |  |
+| `applypriority` | 9 | 9 | 3/6 | default | global | diff-cluster same-cluster same-cta | 9 (2) | 0 | 0 | D27 | 9 |  |
 | `atom.b128` | 21 | 21 | 4/17 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 21 (0) | 0 | 0 |  | 1 |  |
-| `atom.generic.add` | 65 | 58 | 22/42 | cluster cta gpu sys | global shared::cta | diff-cluster multi-gpu same-cluster same-cta | 55 (4) | 0 | 51 |  | 14 |  |
-| `atom.global.add` | 112 | 105 | 42/69 | cluster cta gpu sys | global | diff-cluster multi-gpu same-cluster same-cta | 102 (4) | 0 | 51 |  | 6 |  |
+| `atom.generic.add` | 65 | 58 | 22/42 | cluster cta gpu sys | global shared::cta | diff-cluster multi-gpu same-cluster same-cta | 55 (4) | 0 | 51 |  | 51 |  |
+| `atom.global.add` | 112 | 105 | 42/69 | cluster cta gpu sys | global | diff-cluster multi-gpu same-cluster same-cta | 102 (4) | 0 | 51 |  | 44 |  |
 | `atom.global.and` | 16 | 16 | 4/12 | cluster cta gpu sys | global | diff-cluster same-cluster same-cta | 16 (0) | 0 | 3 |  | 0 |  |
 | `atom.global.cas` | 43 | 37 | 13/29 | cluster cta gpu sys | global | diff-cluster same-cluster same-cta | 37 (0) | 0 | 13 |  | 1 |  |
 | `atom.global.dec` | 16 | 16 | 4/12 | cluster cta gpu sys | global | diff-cluster same-cluster same-cta | 16 (0) | 0 | 0 |  | 0 |  |
@@ -43,94 +43,94 @@ Total: 148 of 148 features meet the bar; 32 register-only features are exempt.
 | `atom.half` | 16 | 16 | 3/13 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 16 (0) | 0 | 0 |  | 0 |  |
 | `atom.scope.cluster` | 78 | 78 | 20/58 | cluster | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 78 (0) | 0 | 0 |  | 1 |  |
 | `atom.scope.cta` | 62 | 62 | 42/20 | cta | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 62 (4) | 0 | 11 |  | 0 |  |
-| `atom.scope.gpu` | 123 | 112 | 26/96 | gpu | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 108 (1) | 0 | 54 |  | 18 |  |
+| `atom.scope.gpu` | 123 | 112 | 26/96 | gpu | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 108 (1) | 0 | 54 |  | 53 |  |
 | `atom.scope.sys` | 62 | 62 | 3/59 | sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 62 (0) | 0 | 11 |  | 0 |  |
 | `atom.sem.acq_rel` | 25 | 25 | 6/19 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 25 (2) | 0 | 18 |  | 0 |  |
 | `atom.sem.acquire` | 32 | 27 | 6/26 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 27 (1) | 0 | 21 |  | 0 |  |
-| `atom.sem.relaxed` | 228 | 220 | 74/153 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 216 (1) | 0 | 24 |  | 18 |  |
+| `atom.sem.relaxed` | 228 | 220 | 74/153 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 216 (1) | 0 | 24 |  | 53 |  |
 | `atom.sem.release` | 47 | 42 | 9/38 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 42 (1) | 0 | 20 |  | 0 |  |
 | `atom.shared.add` | 20 | 20 | 3/17 | cluster cta gpu sys | shared::cta | same-cluster same-cta | 20 (0) | 0 | 0 |  | 8 |  |
 | `atom.shared::cluster.add` | 19 | 19 | 2/17 | cluster cta gpu sys | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 19 (0) | 0 | 0 |  | 0 |  |
 | `atom.vector` | 24 | 24 | 15/9 | cluster cta gpu sys | global | diff-cluster same-cluster same-cta | 24 (0) | 0 | 0 |  | 0 |  |
 | `bar.arrive` | 14 | 14 | 7/7 | cta default |  | same-cta | 14 (7) | 0 | 1 | D9 D10 | 18 |  |
 | `bar.red` | 0 | 0 | 0/0 |  |  |  | 0 (0) | 0 | 0 | D9 | 0 |  |
-| `bar.sync` | 93 | 90 | 32/61 | cta default |  | diff-cluster same-cluster same-cta | 77 (17) | 0 | 39 | D9 D10 | 38 |  |
+| `bar.sync` | 93 | 90 | 32/61 | cta default |  | diff-cluster same-cluster same-cta | 77 (17) | 0 | 39 | D9 D10 | 66 |  |
 | `bar.sync.named` | 71 | 68 | 24/47 | cta default |  | diff-cluster same-cluster same-cta | 57 (14) | 0 | 34 | D9 D10 | 22 |  |
 | `bar.warp.sync` | 10 | 10 | 5/5 | default |  | same-cta | 0 (0) | 0 | 0 | D30 | 19 |  |
-| `barrier.cluster` | 41 | 41 | 14/27 | cluster |  | same-cluster same-cta | 38 (9) | 1 | 0 | D11 | 64 |  |
+| `barrier.cluster` | 41 | 41 | 14/27 | cluster |  | same-cluster same-cta | 38 (9) | 1 | 0 | D11 | 51 |  |
 | `barrier.sync` | 31 | 31 | 8/23 | default |  | same-cta | 31 (6) | 0 | 0 | D9 D10 | 2 |  |
-| `cp.async` | 29 | 29 | 10/19 | default | shared::cta | same-cluster same-cta | 28 (13) | 0 | 0 | D22 | 55 |  |
-| `cp.async.bulk.commit_group` | 61 | 61 | 35/26 | default |  | same-cluster same-cta | 58 (7) | 0 | 0 | D20 | 62 |  |
-| `cp.async.bulk.global_to_shared` | 48 | 48 | 20/28 | default | shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 42 (24) | 0 | 0 | D20 D21 | 97 |  |
-| `cp.async.bulk.multicast` | 8 | 8 | 1/7 | default | shared::cluster-local | same-cluster | 6 (4) | 0 | 0 | D20 D21 | 46 |  |
-| `cp.async.bulk.prefetch` | 9 | 9 | 3/6 | default | global | diff-cluster same-cluster same-cta | 9 (2) | 0 | 0 | D27 | 32 |  |
+| `cp.async` | 29 | 29 | 10/19 | default | shared::cta | same-cluster same-cta | 28 (13) | 0 | 0 | D22 | 56 |  |
+| `cp.async.bulk.commit_group` | 61 | 61 | 35/26 | default |  | same-cluster same-cta | 58 (7) | 0 | 0 | D20 | 66 |  |
+| `cp.async.bulk.global_to_shared` | 48 | 48 | 20/28 | default | shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 42 (24) | 0 | 0 | D20 D21 | 104 |  |
+| `cp.async.bulk.multicast` | 8 | 8 | 1/7 | default | shared::cluster-local | same-cluster | 6 (4) | 0 | 0 | D20 D21 | 58 |  |
+| `cp.async.bulk.prefetch` | 9 | 9 | 3/6 | default | global | diff-cluster same-cluster same-cta | 9 (2) | 0 | 0 | D27 | 0 |  |
 | `cp.async.bulk.prefetch.tensor` | 8 | 8 | 3/5 | default | global | diff-cluster same-cluster same-cta | 8 (2) | 0 | 0 | D27 | 0 |  |
 | `cp.async.bulk.shared_to_cluster` | 8 | 8 | 6/2 | default | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 8 (7) | 0 | 0 | D20 D21 | 0 |  |
-| `cp.async.bulk.shared_to_global` | 38 | 38 | 17/21 | default | shared::cta | same-cluster same-cta | 36 (4) | 0 | 0 | D20 D21 | 53 |  |
+| `cp.async.bulk.shared_to_global` | 38 | 38 | 17/21 | default | shared::cta | same-cluster same-cta | 36 (4) | 0 | 0 | D20 D21 | 57 |  |
 | `cp.async.bulk.tensor.im2col` | 8 | 8 | 4/4 | default | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 0 (0) | 0 | 0 | D21 | 0 |  |
 | `cp.async.bulk.tensor.multicast` | 8 | 8 | 4/4 | default | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 8 (2) | 0 | 0 | D21 | 0 |  |
 | `cp.async.bulk.tensor.store` | 69 | 69 | 41/28 | default | shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 45 (5) | 1 | 0 | D21 | 11 |  |
 | `cp.async.bulk.tensor.tile` | 61 | 61 | 37/24 | default | shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 45 (5) | 1 | 0 | D21 | 11 |  |
-| `cp.async.bulk.wait_group` | 52 | 52 | 26/26 | default |  | same-cluster same-cta | 49 (6) | 0 | 0 | D20 | 62 |  |
-| `cp.async.commit_group` | 8 | 8 | 4/4 | default |  | same-cta | 8 (4) | 0 | 0 | D20 | 15 |  |
-| `cp.async.mbarrier.arrive` | 9 | 9 | 1/8 | default | shared::cta | same-cta | 8 (4) | 0 | 0 | D19 D22 | 49 |  |
-| `cp.async.wait_group` | 15 | 15 | 4/11 | default |  | same-cluster same-cta | 15 (4) | 0 | 0 | D20 | 18 |  |
+| `cp.async.bulk.wait_group` | 52 | 52 | 26/26 | default |  | same-cluster same-cta | 49 (6) | 0 | 0 | D20 | 66 |  |
+| `cp.async.commit_group` | 8 | 8 | 4/4 | default |  | same-cta | 8 (4) | 0 | 0 | D20 | 10 |  |
+| `cp.async.mbarrier.arrive` | 9 | 9 | 1/8 | default | shared::cta | same-cta | 8 (4) | 0 | 0 | D19 D22 | 53 |  |
+| `cp.async.wait_group` | 15 | 15 | 4/11 | default |  | same-cluster same-cta | 15 (4) | 0 | 0 | D20 | 12 |  |
 | `cp.reduce.async.bulk` | 8 | 8 | 5/3 | default | shared::cta | same-cluster same-cta | 8 (1) | 0 | 0 | D25 | 38 |  |
 | `cp.reduce.async.bulk.tensor` | 8 | 8 | 7/1 | default | shared::cta | same-cluster | 8 (1) | 0 | 0 | D25 | 0 |  |
 | `createpolicy` | 8 | 8 | 3/5 | default |  | diff-cluster same-cluster same-cta | 8 (2) | 0 | 0 | D27 | 0 |  |
 | `discard` | 10 | 10 | 4/6 | default | global | diff-cluster same-cluster same-cta | 10 (0) | 0 | 0 |  | 0 |  |
-| `fence.op_restrict` | 10 | 10 | 1/9 | cluster |  | same-cluster same-cta | 8 (2) | 0 | 0 | D18 D19 | 14 |  |
+| `fence.op_restrict` | 10 | 10 | 1/9 | cluster |  | same-cluster same-cta | 8 (2) | 0 | 0 | D18 D19 | 59 |  |
 | `fence.proxy.alias` | 82 | 82 | 40/42 | default |  | diff-cluster same-cta | 9 (0) | 0 | 82 | D2 | 33 |  |
-| `fence.proxy.async` | 62 | 62 | 23/39 | cluster default | global shared::cluster-local shared::cta | same-cluster same-cta | 62 (9) | 0 | 0 | D2 | 70 |  |
+| `fence.proxy.async` | 62 | 62 | 23/39 | cluster default | global shared::cluster-local shared::cta | same-cluster same-cta | 62 (9) | 0 | 0 | D2 | 71 |  |
 | `fence.proxy.tensormap` | 31 | 31 | 11/20 | cluster cta gpu sys | shared::cta | diff-cluster same-cluster same-cta | 19 (0) | 1 | 0 | D2 | 11 |  |
-| `fence.scope.cluster` | 78 | 78 | 25/53 | cluster |  | diff-cluster same-cluster same-cta | 75 (3) | 0 | 0 |  | 82 |  |
-| `fence.scope.cta` | 84 | 82 | 54/30 | cta |  | diff-cluster same-cluster same-cta | 82 (26) | 0 | 66 |  | 50 |  |
-| `fence.scope.gpu` | 91 | 82 | 37/53 | gpu |  | diff-cluster same-cluster same-cta | 80 (11) | 1 | 75 |  | 8 |  |
-| `fence.scope.sys` | 56 | 56 | 6/50 | sys |  | diff-cluster multi-gpu same-cluster same-cta | 54 (0) | 0 | 42 |  | 1 |  |
-| `fence.sem.acq_rel` | 98 | 98 | 41/57 | cluster cta gpu sys |  | diff-cluster same-cluster same-cta | 98 (4) | 1 | 52 |  | 64 |  |
+| `fence.scope.cluster` | 78 | 78 | 25/53 | cluster |  | diff-cluster same-cluster same-cta | 75 (3) | 0 | 0 |  | 99 |  |
+| `fence.scope.cta` | 85 | 83 | 54/31 | cta |  | diff-cluster same-cluster same-cta | 82 (26) | 0 | 66 |  | 43 |  |
+| `fence.scope.gpu` | 91 | 82 | 37/53 | gpu |  | diff-cluster same-cluster same-cta | 80 (11) | 1 | 75 |  | 45 |  |
+| `fence.scope.sys` | 59 | 59 | 8/51 | sys |  | diff-cluster multi-gpu same-cluster same-cta | 54 (0) | 0 | 44 |  | 8 |  |
+| `fence.sem.acq_rel` | 98 | 98 | 41/57 | cluster cta gpu sys |  | diff-cluster same-cluster same-cta | 98 (4) | 1 | 52 |  | 48 |  |
 | `fence.sem.acquire` | 16 | 16 | 7/9 | cluster cta gpu sys |  | diff-cluster same-cluster same-cta | 16 (2) | 0 | 0 | D5 | 1 |  |
-| `fence.sem.release` | 31 | 31 | 9/22 | cluster cta gpu sys |  | diff-cluster same-cluster same-cta | 28 (5) | 0 | 0 | D5 | 16 |  |
-| `fence.sem.sc` | 139 | 129 | 47/91 | cluster cta gpu sys |  | diff-cluster multi-gpu same-cluster same-cta | 126 (20) | 0 | 103 |  | 3 |  |
-| `fence.sync_restrict` | 17 | 17 | 8/9 | cluster |  | same-cluster same-cta | 16 (1) | 0 | 0 | D18 D19 | 69 |  |
-| `griddepcontrol` | 14 | 14 | 4/10 | default |  | diff-cluster same-cta | 13 (4) | 0 | 0 | D32 | 17 |  |
-| `ld.cache_hint` | 14 | 14 | 5/9 | default | global | diff-cluster same-cluster | 14 (6) | 0 | 0 | D27 | 32 |  |
-| `ld.cache_op` | 19 | 19 | 5/14 | default | global | diff-cluster same-cluster | 19 (6) | 0 | 16 | D27 | 32 |  |
+| `fence.sem.release` | 32 | 32 | 9/23 | cluster cta gpu sys |  | diff-cluster same-cluster same-cta | 28 (5) | 0 | 0 | D5 | 68 |  |
+| `fence.sem.sc` | 142 | 132 | 49/92 | cluster cta gpu sys |  | diff-cluster multi-gpu same-cluster same-cta | 126 (20) | 0 | 105 |  | 43 |  |
+| `fence.sync_restrict` | 17 | 17 | 8/9 | cluster |  | same-cluster same-cta | 16 (1) | 0 | 0 | D18 D19 | 64 |  |
+| `griddepcontrol` | 14 | 14 | 4/10 | default |  | diff-cluster same-cta | 13 (4) | 0 | 0 | D32 | 54 |  |
+| `ld.cache_hint` | 14 | 14 | 5/9 | default | global | diff-cluster same-cluster | 14 (6) | 0 | 0 | D27 | 14 |  |
+| `ld.cache_op` | 19 | 19 | 5/14 | default | global | diff-cluster same-cluster | 19 (6) | 0 | 16 | D27 | 0 |  |
 | `ld.const` | 9 | 9 | 3/6 | default | const | diff-cluster same-cluster same-cta | 9 (3) | 0 | 0 |  | 0 |  |
-| `ld.generic` | 1079 | 1061 | 558/521 | cluster cta default gpu sys | global shared::cta | diff-cluster multi-gpu same-cluster same-cta | 800 (173) | 4 | 643 |  | 185 |  |
-| `ld.global` | 1224 | 1206 | 627/597 | cluster cta default gpu sys | global | diff-cluster multi-gpu same-cluster same-cta | 936 (211) | 4 | 699 |  | 213 |  |
-| `ld.global.nc` | 11 | 11 | 8/3 | default | global | diff-cluster same-cluster same-cta | 11 (4) | 0 | 0 | D29 | 5 |  |
+| `ld.generic` | 1086 | 1068 | 563/523 | cluster cta default gpu sys | global shared::cta | diff-cluster multi-gpu same-cluster same-cta | 800 (173) | 4 | 649 |  | 188 |  |
+| `ld.global` | 1231 | 1213 | 632/599 | cluster cta default gpu sys | global | diff-cluster multi-gpu same-cluster same-cta | 936 (211) | 4 | 705 |  | 216 |  |
+| `ld.global.nc` | 11 | 11 | 8/3 | default | global | diff-cluster same-cluster same-cta | 11 (4) | 0 | 0 | D29 | 2 |  |
 | `ld.local` | 10 | 10 | 3/7 | cta default gpu | local | same-cta | 10 (3) | 0 | 7 |  | 0 |  |
 | `ld.mmio` | 11 | 11 | 4/7 | sys | global | diff-cluster same-cluster same-cta | 11 (3) | 0 | 11 | D28 | 0 |  |
 | `ld.param` | 8 | 8 | 3/5 | default | param | diff-cluster same-cluster same-cta | 8 (3) | 0 | 0 |  | 0 |  |
-| `ld.scope.cluster` | 131 | 131 | 61/70 | cluster | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 128 (10) | 0 | 0 |  | 29 |  |
-| `ld.scope.cta` | 284 | 284 | 194/90 | cta | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 156 (32) | 0 | 218 |  | 28 |  |
-| `ld.scope.gpu` | 454 | 445 | 220/234 | gpu | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 341 (55) | 4 | 243 |  | 117 |  |
-| `ld.scope.sys` | 156 | 154 | 50/106 | sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 147 (13) | 0 | 107 |  | 4 |  |
-| `ld.sem.acquire` | 585 | 579 | 272/313 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 349 (14) | 2 | 363 |  | 104 |  |
-| `ld.sem.relaxed` | 458 | 451 | 261/197 | cluster cta gpu sys | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 437 (96) | 2 | 218 |  | 46 |  |
-| `ld.shared` | 281 | 281 | 108/173 | cluster cta default gpu sys | shared::cta | diff-cluster same-cluster same-cta | 265 (65) | 0 | 0 |  | 99 |  |
-| `ld.shared::cluster` | 79 | 79 | 28/51 | cluster cta default gpu sys | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 79 (0) | 0 | 0 |  | 47 |  |
+| `ld.scope.cluster` | 131 | 131 | 61/70 | cluster | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 128 (10) | 0 | 0 |  | 54 |  |
+| `ld.scope.cta` | 285 | 285 | 194/91 | cta | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 156 (32) | 0 | 218 |  | 56 |  |
+| `ld.scope.gpu` | 456 | 447 | 222/234 | gpu | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 341 (55) | 4 | 245 |  | 125 |  |
+| `ld.scope.sys` | 157 | 155 | 51/106 | sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 147 (13) | 0 | 108 |  | 8 |  |
+| `ld.sem.acquire` | 587 | 581 | 274/313 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 349 (14) | 2 | 365 |  | 120 |  |
+| `ld.sem.relaxed` | 460 | 453 | 262/198 | cluster cta gpu sys | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 437 (96) | 2 | 219 |  | 71 |  |
+| `ld.shared` | 281 | 281 | 108/173 | cluster cta default gpu sys | shared::cta | diff-cluster same-cluster same-cta | 265 (65) | 0 | 0 |  | 119 |  |
+| `ld.shared::cluster` | 79 | 79 | 28/51 | cluster cta default gpu sys | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 79 (0) | 0 | 0 |  | 21 |  |
 | `ld.volatile` | 23 | 23 | 8/15 | default | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 23 (3) | 0 | 0 | D28 | 0 |  |
-| `ldmatrix` | 10 | 10 | 2/8 | default | shared::cta | same-cta | 10 (2) | 0 | 0 | D33 | 7 |  |
-| `ldu` | 13 | 13 | 3/10 | default | global | diff-cluster same-cluster same-cta | 10 (0) | 1 | 0 | D29 | 2 |  |
-| `mbarrier.arrive` | 113 | 113 | 49/64 | cluster cta | shared::cluster-local shared::cluster-remote shared::cta | same-cluster same-cta | 101 (50) | 2 | 0 | D12 D16 | 42 |  |
-| `mbarrier.arrive.expect_tx` | 76 | 76 | 25/51 | cluster cta | shared::cta | diff-cluster same-cluster same-cta | 66 (39) | 0 | 0 | D12 D16 | 83 |  |
-| `mbarrier.arrive.shared::cluster` | 44 | 44 | 20/24 | cluster cta | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 40 (22) | 1 | 0 | D12 D16 | 28 |  |
-| `mbarrier.arrive_drop` | 9 | 9 | 4/5 | cluster cta | shared::cluster-remote shared::cta | same-cluster same-cta | 9 (6) | 0 | 0 | D12 D16 | 1 |  |
-| `mbarrier.complete_tx` | 9 | 9 | 4/5 | cluster cta | shared::cluster-remote shared::cta | same-cluster same-cta | 9 (4) | 0 | 0 | D12 D16 | 3 |  |
-| `mbarrier.expect_tx` | 9 | 9 | 4/5 | cluster cta | shared::cluster-remote shared::cta | same-cluster same-cta | 9 (5) | 0 | 0 | D12 D16 | 4 |  |
-| `mbarrier.init` | 20 | 20 | 4/16 | default | shared::cta | same-cluster same-cta | 16 (3) | 1 | 0 | D12 D16 | 19 |  |
+| `ldmatrix` | 10 | 10 | 2/8 | default | shared::cta | same-cta | 10 (2) | 0 | 0 | D33 | 0 |  |
+| `ldu` | 13 | 13 | 3/10 | default | global | diff-cluster same-cluster same-cta | 10 (0) | 1 | 0 | D29 | 37 |  |
+| `mbarrier.arrive` | 113 | 113 | 49/64 | cluster cta | shared::cluster-local shared::cluster-remote shared::cta | same-cluster same-cta | 101 (50) | 2 | 0 | D12 D16 | 76 |  |
+| `mbarrier.arrive.expect_tx` | 76 | 76 | 25/51 | cluster cta | shared::cta | diff-cluster same-cluster same-cta | 66 (39) | 0 | 0 | D12 D16 | 96 |  |
+| `mbarrier.arrive.shared::cluster` | 44 | 44 | 20/24 | cluster cta | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 40 (22) | 1 | 0 | D12 D16 | 64 |  |
+| `mbarrier.arrive_drop` | 9 | 9 | 4/5 | cluster cta | shared::cluster-remote shared::cta | same-cluster same-cta | 9 (6) | 0 | 0 | D12 D16 | 0 |  |
+| `mbarrier.complete_tx` | 9 | 9 | 4/5 | cluster cta | shared::cluster-remote shared::cta | same-cluster same-cta | 9 (4) | 0 | 0 | D12 D16 | 0 |  |
+| `mbarrier.expect_tx` | 9 | 9 | 4/5 | cluster cta | shared::cluster-remote shared::cta | same-cluster same-cta | 9 (5) | 0 | 0 | D12 D16 | 1 |  |
+| `mbarrier.init` | 20 | 20 | 4/16 | default | shared::cta | same-cluster same-cta | 16 (3) | 1 | 0 | D12 D16 | 64 |  |
 | `mbarrier.inval` | 9 | 9 | 3/6 | default | shared::cta | same-cluster same-cta | 5 (0) | 1 | 0 | D12 D16 | 3 |  |
 | `mbarrier.pending_count` | 0 | 0 | 0/0 |  |  |  | 0 (0) | 0 | 0 |  | 0 |  |
-| `mbarrier.scope.cluster` | 68 | 68 | 30/38 | cluster | shared::cluster-local shared::cluster-remote shared::cta | same-cluster same-cta | 63 (20) | 1 | 0 | D12 D16 | 25 |  |
-| `mbarrier.test_wait` | 104 | 104 | 39/65 | cluster cta | shared::cta | same-cluster same-cta | 102 (54) | 0 | 0 | D12 D16 | 93 |  |
-| `mbarrier.try_wait` | 81 | 81 | 28/53 | cluster cta | shared::cta | diff-cluster same-cluster same-cta | 69 (38) | 0 | 0 | D12 D16 | 32 |  |
-| `mbarrier.wait.parity` | 176 | 176 | 63/113 | cluster cta | shared::cta | diff-cluster same-cluster same-cta | 162 (86) | 0 | 0 | D12 D16 | 115 |  |
+| `mbarrier.scope.cluster` | 68 | 68 | 30/38 | cluster | shared::cluster-local shared::cluster-remote shared::cta | same-cluster same-cta | 63 (20) | 1 | 0 | D12 D16 | 51 |  |
+| `mbarrier.test_wait` | 104 | 104 | 39/65 | cluster cta | shared::cta | same-cluster same-cta | 102 (54) | 0 | 0 | D12 D16 | 87 |  |
+| `mbarrier.try_wait` | 81 | 81 | 28/53 | cluster cta | shared::cta | diff-cluster same-cluster same-cta | 69 (38) | 0 | 0 | D12 D16 | 91 |  |
+| `mbarrier.wait.parity` | 176 | 176 | 63/113 | cluster cta | shared::cta | diff-cluster same-cluster same-cta | 162 (86) | 0 | 0 | D12 D16 | 119 |  |
 | `membar` | 18 | 18 | 4/14 | cta default sys |  | diff-cluster same-cluster same-cta | 18 (4) | 0 | 0 |  | 3 |  |
 | `multimem` | 13 | 13 | 3/10 | default sys | global | multi-gpu same-cta | 0 (0) | 0 | 0 | D31 | 0 |  |
-| `prefetch` | 23 | 23 | 7/16 | default | global | diff-cluster same-cluster same-cta | 23 (6) | 0 | 0 | D27 | 12 |  |
+| `prefetch` | 23 | 23 | 7/16 | default | global | diff-cluster same-cluster same-cta | 23 (6) | 0 | 0 | D27 | 0 |  |
 | `prefetch.tensormap` | 8 | 8 | 3/5 | default | global | diff-cluster same-cluster same-cta | 8 (2) | 0 | 0 | D27 | 0 |  |
-| `prefetchu` | 9 | 9 | 3/6 | default | global | diff-cluster same-cluster same-cta | 9 (2) | 0 | 0 | D27 | 7 |  |
+| `prefetchu` | 9 | 9 | 3/6 | default | global | diff-cluster same-cluster same-cta | 9 (2) | 0 | 0 | D27 | 0 |  |
 | `red.async` | 8 | 8 | 2/6 | cluster | shared::cluster-remote | same-cluster | 8 (2) | 0 | 0 | D23 | 0 |  |
 | `red.generic` | 31 | 31 | 8/23 | cluster cta gpu sys | global | diff-cluster same-cluster same-cta | 28 (1) | 0 | 14 | D34 | 3 |  |
 | `red.global` | 47 | 47 | 20/27 | cluster cta gpu sys | global | diff-cluster same-cluster same-cta | 44 (1) | 0 | 14 | D34 | 3 |  |
@@ -141,40 +141,40 @@ Total: 148 of 148 features meet the bar; 32 register-only features are exempt.
 | `red.shared::cluster` | 20 | 20 | 3/17 | cluster cta gpu sys | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 20 (0) | 0 | 0 | D34 | 0 |  |
 | `red.vector` | 16 | 16 | 12/4 | cluster cta gpu sys | global | diff-cluster same-cluster same-cta | 16 (0) | 0 | 0 | D34 | 0 |  |
 | `space.const` | 9 | 9 | 3/6 | default | const | diff-cluster same-cluster same-cta | 9 (3) | 0 | 0 |  | 0 |  |
-| `space.global` | 1493 | 1473 | 715/777 | cluster cta default gpu sys | global | diff-cluster multi-gpu same-cluster same-cta | 1169 (224) | 4 | 757 |  | 228 |  |
+| `space.global` | 1501 | 1481 | 720/780 | cluster cta default gpu sys | global | diff-cluster multi-gpu same-cluster same-cta | 1169 (224) | 4 | 763 |  | 240 |  |
 | `space.local` | 10 | 10 | 3/7 | cta default gpu | local | same-cta | 10 (3) | 0 | 7 |  | 0 |  |
 | `space.param` | 8 | 8 | 3/5 | default | param | diff-cluster same-cluster same-cta | 8 (3) | 0 | 0 |  | 0 |  |
-| `space.shared` | 549 | 549 | 226/323 | cluster cta default gpu sys | shared::cta | diff-cluster same-cluster same-cta | 498 (135) | 3 | 0 | D17 | 174 |  |
-| `space.shared::cluster` | 318 | 318 | 125/193 | cluster cta default gpu sys | shared::cluster-local shared::cluster-remote | diff-cluster same-cluster same-cta | 284 (70) | 2 | 0 | D17 | 141 |  |
+| `space.shared` | 549 | 549 | 226/323 | cluster cta default gpu sys | shared::cta | diff-cluster same-cluster same-cta | 498 (135) | 3 | 0 | D17 | 183 |  |
+| `space.shared::cluster` | 318 | 318 | 125/193 | cluster cta default gpu sys | shared::cluster-local shared::cluster-remote | diff-cluster same-cluster same-cta | 284 (70) | 2 | 0 | D17 | 142 |  |
 | `st.async` | 9 | 9 | 3/6 | default gpu | global shared::cluster-remote | same-cluster | 8 (4) | 0 | 1 | D23 | 0 |  |
-| `st.cache_op` | 11 | 11 | 4/7 | default | global | diff-cluster same-cluster | 11 (5) | 0 | 11 | D27 | 7 |  |
-| `st.generic` | 1108 | 1090 | 574/534 | cluster cta default gpu sys | global shared::cta | diff-cluster multi-gpu same-cluster same-cta | 828 (185) | 4 | 668 |  | 185 |  |
-| `st.global` | 1249 | 1231 | 643/606 | cluster cta default gpu sys | global | diff-cluster multi-gpu same-cluster same-cta | 959 (223) | 4 | 725 |  | 217 |  |
+| `st.cache_op` | 11 | 11 | 4/7 | default | global | diff-cluster same-cluster | 11 (5) | 0 | 11 | D27 | 0 |  |
+| `st.generic` | 1116 | 1098 | 579/537 | cluster cta default gpu sys | global shared::cta | diff-cluster multi-gpu same-cluster same-cta | 828 (185) | 4 | 674 |  | 194 |  |
+| `st.global` | 1257 | 1239 | 648/609 | cluster cta default gpu sys | global | diff-cluster multi-gpu same-cluster same-cta | 959 (223) | 4 | 731 |  | 230 |  |
 | `st.local` | 10 | 10 | 3/7 | cta default gpu | local | same-cta | 10 (3) | 0 | 7 |  | 0 |  |
 | `st.mmio` | 11 | 11 | 4/7 | sys | global | diff-cluster same-cluster same-cta | 11 (3) | 0 | 11 | D28 | 0 |  |
 | `st.param` | 0 | 0 | 0/0 |  |  |  | 0 (0) | 0 | 0 |  | 0 |  |
-| `st.scope.cluster` | 128 | 128 | 64/64 | cluster | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 125 (12) | 0 | 0 |  | 29 |  |
-| `st.scope.cta` | 275 | 275 | 190/85 | cta | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 150 (36) | 0 | 220 |  | 23 |  |
-| `st.scope.gpu` | 434 | 430 | 211/223 | gpu | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 321 (56) | 4 | 240 |  | 120 |  |
-| `st.scope.sys` | 144 | 142 | 50/94 | sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 138 (15) | 0 | 109 |  | 4 |  |
-| `st.sem.relaxed` | 470 | 464 | 262/208 | cluster cta gpu sys | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 450 (103) | 2 | 233 |  | 57 |  |
-| `st.sem.release` | 525 | 524 | 255/270 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 296 (15) | 2 | 346 |  | 98 |  |
-| `st.shared` | 243 | 243 | 109/134 | cluster cta default gpu sys | shared::cta | diff-cluster same-cluster same-cta | 232 (41) | 0 | 0 |  | 105 |  |
-| `st.shared::cluster` | 97 | 97 | 37/60 | cluster cta default gpu sys | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 96 (5) | 0 | 0 |  | 33 |  |
+| `st.scope.cluster` | 128 | 128 | 64/64 | cluster | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 125 (12) | 0 | 0 |  | 54 |  |
+| `st.scope.cta` | 277 | 277 | 191/86 | cta | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 150 (36) | 0 | 221 |  | 42 |  |
+| `st.scope.gpu` | 437 | 433 | 213/224 | gpu | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 321 (56) | 4 | 242 |  | 132 |  |
+| `st.scope.sys` | 145 | 143 | 51/94 | sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 138 (15) | 0 | 110 |  | 9 |  |
+| `st.sem.relaxed` | 473 | 467 | 264/209 | cluster cta gpu sys | global local shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 450 (103) | 2 | 235 |  | 106 |  |
+| `st.sem.release` | 528 | 527 | 257/271 | cluster cta gpu sys | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster multi-gpu same-cluster same-cta | 296 (15) | 2 | 348 |  | 107 |  |
+| `st.shared` | 243 | 243 | 109/134 | cluster cta default gpu sys | shared::cta | diff-cluster same-cluster same-cta | 232 (41) | 0 | 0 |  | 111 |  |
+| `st.shared::cluster` | 97 | 97 | 37/60 | cluster cta default gpu sys | shared::cluster-local shared::cluster-remote | same-cluster same-cta | 96 (5) | 0 | 0 |  | 38 |  |
 | `st.volatile` | 23 | 23 | 8/15 | default | global shared::cluster-local shared::cluster-remote shared::cta | diff-cluster same-cluster same-cta | 23 (3) | 0 | 0 | D28 | 0 |  |
-| `stmatrix` | 9 | 9 | 2/7 | default | shared::cta | same-cta | 9 (2) | 0 | 0 | D33 | 6 |  |
-| `tensormap.cp_fenceproxy` | 8 | 8 | 4/4 | gpu | shared::cta | same-cluster same-cta | 0 (0) | 0 | 0 |  | 5 |  |
+| `stmatrix` | 9 | 9 | 2/7 | default | shared::cta | same-cta | 9 (2) | 0 | 0 | D33 | 0 |  |
+| `tensormap.cp_fenceproxy` | 8 | 8 | 4/4 | gpu | shared::cta | same-cluster same-cta | 0 (0) | 0 | 0 |  | 2 |  |
 | `tensormap.replace` | 35 | 35 | 19/16 | default | shared::cta | diff-cluster same-cluster same-cta | 25 (0) | 1 | 0 |  | 11 |  |
-| `wgmma.commit_group` | 32 | 32 | 18/14 | default |  | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 13 |  |
-| `wgmma.fence` | 27 | 27 | 13/14 | default |  | same-cluster same-cta | 22 (5) | 0 | 0 | D24 | 13 |  |
-| `wgmma.mma_async` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 13 |  |
-| `wgmma.mma_async.b1` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 13 |  |
-| `wgmma.mma_async.fp8` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 13 |  |
-| `wgmma.mma_async.int8` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 13 |  |
-| `wgmma.mma_async.rs` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 13 |  |
-| `wgmma.mma_async.sp` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 13 |  |
-| `wgmma.mma_async.tf32` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 13 |  |
-| `wgmma.wait_group` | 25 | 25 | 12/13 | default |  | same-cluster same-cta | 20 (5) | 0 | 0 | D24 | 13 |  |
+| `wgmma.commit_group` | 32 | 32 | 18/14 | default |  | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 63 |  |
+| `wgmma.fence` | 27 | 27 | 13/14 | default |  | same-cluster same-cta | 22 (5) | 0 | 0 | D24 | 63 |  |
+| `wgmma.mma_async` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 63 |  |
+| `wgmma.mma_async.b1` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 63 |  |
+| `wgmma.mma_async.fp8` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 63 |  |
+| `wgmma.mma_async.int8` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 63 |  |
+| `wgmma.mma_async.rs` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 63 |  |
+| `wgmma.mma_async.sp` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 63 |  |
+| `wgmma.mma_async.tf32` | 32 | 32 | 18/14 | default | shared::cta | same-cluster same-cta | 27 (7) | 0 | 0 | D24 | 63 |  |
+| `wgmma.wait_group` | 25 | 25 | 12/13 | default |  | same-cluster same-cta | 20 (5) | 0 | 0 | D24 | 63 |  |
 
 ## Exempt (register operations)
 

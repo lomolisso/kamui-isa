@@ -936,3 +936,15 @@
     program order, which the Fence-SC axiom forbids. Dartagnan's ptx-v7.5 model requires the same virtual address
     for morally strong (its ms3 uses vloc), so nothing synchronizes and the load may return the later store's
     value.
+
+- kind: models
+  test: ptx/kamui/hand/CoRW-self+alias+surface
+  model: "*"
+  reason: >-
+    Two readings of SC per location (8.10.5) since aliases can be morally strong (D48). The manual first limits the
+    axiom to "any set of overlapping memory operations that are pairwise morally strong", then states it as "a
+    concatenation of program order between overlapping operations and morally strong relations in communication
+    order cannot result in a cycle". ptx-v8.7-alloy follows the second sentence, as NVIDIA's formal model does
+    (acyclic strong com + po_loc), and forbids the cycle through the generic and the surface accesses. The
+    Dartagnan fork (ptx-v8.7) requires every edge to be morally strong and on one virtual address, and ptx-v7.5
+    never makes aliases morally strong; both allow it. The contract takes the stronger reading, the Alloy model's.
