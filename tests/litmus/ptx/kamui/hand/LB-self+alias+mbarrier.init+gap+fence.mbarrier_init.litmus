@@ -1,0 +1,18 @@
+PTX LB-self+alias+mbarrier.init+gap+fence.mbarrier_init
+"One thread loads shared y (ld.acquire.cluster), initializes an mbarrier, loads an unrelated global z, runs fence.mbarrier_init.release.cluster, then stores 1 to the alias x (relaxed, .cluster). If the load read the later store: the fence and the store form a release pattern that synchronizes with the load through the alias (D48), and the fence orders every earlier mbarrier.init of its thread before it (22622, D18), not only an init directly before it; the init follows the load in program order: a causality cycle (8.10.6): forbidden."
+{
+x=0 @cta 0;
+y @ generic aliases x;
+z=0;
+m=mbarrier() @cta 0;
+P0:r0=0;
+P0:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0             ;
+ ld.acquire.cluster.shared::cta r0, y ;
+ mbarrier.init.shared::cta m, 1       ;
+ ld.weak.global r1, z                 ;
+ fence.mbarrier_init.release.cluster  ;
+ st.relaxed.cluster.shared::cta x, 1  ;
+exists
+(P0:r0 == 1)

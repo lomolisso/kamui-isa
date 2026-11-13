@@ -1,0 +1,15 @@
+PTX LB-self+alias+gap+fence.acquire.sync_restrict
+"One thread loads shared y (relaxed, .cluster), initializes an unrelated mbarrier, runs fence.acquire.sync_restrict::shared::cluster, then stores 1 to the alias x with st.release. If the load read the later store: the store is itself the release pattern, it synchronizes with the acquire pattern of the load and the restricted fence through the alias (D48), and the fence orders it before the store again (a later operation on shared::cluster memory, 22626, D18): a causality cycle (8.10.6): forbidden."
+{
+x=0 @cta 0;
+y @ generic aliases x;
+m=mbarrier() @cta 0;
+P0:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0                             ;
+ ld.relaxed.cluster.shared::cta r0, y                 ;
+ mbarrier.init.shared::cta m, 1                       ;
+ fence.acquire.sync_restrict::shared::cluster.cluster ;
+ st.release.cluster.shared::cta x, 1                  ;
+exists
+(P0:r0 == 1)

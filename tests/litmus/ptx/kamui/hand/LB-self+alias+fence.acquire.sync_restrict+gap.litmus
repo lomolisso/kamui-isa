@@ -1,0 +1,16 @@
+PTX LB-self+alias+fence.acquire.sync_restrict+gap
+"One thread loads shared y (relaxed, .cluster), runs fence.acquire.sync_restrict::shared::cluster, an unrelated load of global z, then stores 1 to the alias x with st.release. If the load read the later store: the load and the restricted fence form an acquire pattern (8.8), the load observes the release store, morally strong through the alias (D48), and the restricted fence orders the acquire pattern before every later operation on shared::cluster memory of its thread (22626, D18), not only the next instruction: the store precedes itself in causality order (8.10.6): forbidden."
+{
+x=0 @cta 0;
+y @ generic aliases x;
+z=0;
+P0:r0=0;
+P0:r1=0;
+}
+ P0@cta 0,cluster 0,gpu 0                             ;
+ ld.relaxed.cluster.shared::cta r0, y                 ;
+ fence.acquire.sync_restrict::shared::cluster.cluster ;
+ ld.weak.global r1, z                                 ;
+ st.release.cluster.shared::cta x, 1                  ;
+exists
+(P0:r0 == 1)

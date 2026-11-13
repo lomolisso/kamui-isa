@@ -1,0 +1,13 @@
+PTX CoWW+alias+fence.release.sync_restrict+acquire
+"P0 stores 1 to shared y, runs fence.release.sync_restrict::shared::cta, then stores 2 to the alias x (relaxed, .cluster); P1, in the same CTA, loads y with ld.acquire.cta and reads 2. The fence and the store of 2 form a release pattern that synchronizes with P1's load through the alias (D48), and the restricted fence orders P0's earlier store to the CTA's shared memory before it (22626, D18). So the store of 1 precedes in causality a read of the store of 2, which therefore precedes it in coherence order (8.10.6); without the synchronization the two stores to aliases would be unordered (8.6). x == 1 at the end: forbidden."
+{
+x=0 @cta 0;
+y @ generic aliases x;
+P1:r0=0;
+}
+ P0@cta 0,cluster 0,gpu 0                         | P1@cta 0,cluster 0,gpu 0         ;
+ st.weak.shared::cta y, 1                         | ld.acquire.cta.shared::cta r0, y ;
+ fence.release.sync_restrict::shared::cta.cluster |                                  ;
+ st.relaxed.cluster.shared::cta x, 2              |                                  ;
+exists
+(P1:r0 == 2 /\ x == 1)

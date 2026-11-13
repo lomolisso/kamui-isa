@@ -1,0 +1,18 @@
+KAMUI LB-self+alias+fence.acquire.sync_restrict+gap
+"Lowered from tests/litmus/ptx/kamui/hand/LB-self+alias+fence.acquire.sync_restrict+gap.litmus by tools/litmus/to_kamui.py (Kamui instructions only). Generated: do not edit."
+{
+x=0 @cta 0;
+y @ generic aliases x;
+z=0;
+P0:r0=0;
+P0:r1=0;
+x in shared cta 0;
+z in global;
+}
+ P0@cta 0,cluster 0,gpu 0                       ;
+ klds.relaxed.cluster r0, y                     ;
+ kfence.restrict.shared_cluster.acquire.cluster ;
+ kldg.weak r1, z                                ;
+ ksts.release.cluster x, 1                      ;
+exists
+(P0:r0 == 1)
