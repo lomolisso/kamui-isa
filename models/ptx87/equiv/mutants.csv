@@ -16,7 +16,7 @@ R-cause_base-domain-397,equivalent,4 and 5
 R-cause_base-range-396,equivalent,4 and 5
 R-cause_base-refl-closure-396,differs,4 and 5
 R-cause_base-refl-closure-397,differs,4 and 5
-R-cluster_of-range-242,differs,4 and 5
+R-cluster_of-range-242,equivalent,4 and 5
 R-cluster_sync-closure-353,equivalent,4 and 5
 R-cluster_sync-range-353,equivalent,4 and 5
 R-coherence-closure-457,equivalent up to the coherence witness,4 and 5

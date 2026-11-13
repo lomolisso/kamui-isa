@@ -54,6 +54,11 @@ pred emitted {
   // aliases: views of one physical location, in its state space and with its owner
   no alias.alias
   all a: Address | a.aliases.space = a.space and a.aliases.owner = a.owner
+  // shared memory is used by the threads of its CTA's cluster (of its CTA when there are no clusters)
+  all e: MemoryEvent | e.address.space = Shared =>
+    (some ClusterScope => e.cluster_of = e.address.owner.~subscope else e.cta_of = e.address.owner)
+  // texture and surface memory is global memory
+  proxy.(Texture + Surface).address.space in Global
   // local memory is used by its own thread only
   all e: MemoryEvent - thd.AsyncUnit | e.address.space = Local => e.address.owner = e.thd
   // only generic operations and the reductions of cp.reduce.async.bulk are strong (texture, surface and constant
@@ -92,7 +97,7 @@ pred emitted {
   // write of an ordinary thread
   Mbar in space.Shared
   MbarEv.proxy in Generic
-  MbarInit in (Write - Release) & thd.(Thread - AsyncUnit)
+  MbarInit in (Write - Release - Read.rmw) & thd.(Thread - AsyncUnit)
   // the issue, completion and grid-dependency edges never form a cycle with program order
   acyclic[po + issue + done + gdep]
   // an access (D6) is one instruction: one thread, one kind, one scope, one proxy, distinct granules
@@ -108,14 +113,19 @@ pred emitted {
   (MemoryEvent - Weak) & proxy.Async in Read.rmw + rmw.Write
   // in an asynchronous unit, mbarrier operations are read-modify-write updates
   MbarEv & thd.AsyncUnit in Read.rmw + rmw.Write
+  // a dependency ends at a memory operation or at a bar.sync whose operands come from registers
+  Read.dep in MemoryEvent + BarrierArrive
   // no location is owned by an asynchronous unit
   no Address.owner & AsyncUnit
   // a completion ends at a marker or at the first event of a unit; units never acquire
   Event.done in Marker + AsyncUnit.start
   no Acquire & thd.AsyncUnit
-  // operations on an mbarrier object: init, inval (phase -1), read-modify-write updates and waits
-  MbarEv & Write in MbarInit + Read.rmw + { w: Write | w.ph = -1 }
+  // operations on an mbarrier object: init, inval (the state of mb_inval), read-modify-write updates and waits
+  MbarEv & Write in MbarInit + Read.rmw + { w: Write | w.ph = -1 and w.pend = 0 and w.expc = 0 and w.tx = 0 }
   MbarEv & Read in MbarWait + rmw.Write
+  // a wait names its phase by a parity or by a state token, never both
+  all r: MbarWait | (one r.wpar and no r.wtok) or (one r.wtok and no r.wpar)
+  MbarWait.wpar in 0 + 1
   // mixed-size accesses come from the loads and stores of ordinary threads (never an mbarrier operation or a
   // read-modify-write), and the events of one access lie on different physical locations
   acc.Access in thd.(Thread - AsyncUnit) - MbarEv - Read.rmw - rmw.Write
