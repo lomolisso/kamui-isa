@@ -11,7 +11,7 @@
 #   tools/dev.sh 'make -C proofs/rocq checker && proofs/rocq/extract/diff.sh --jobs 24'
 #   tools/dev.sh 'proofs/rocq/extract/diff.sh --every 1 --mutate 3 --jobs 48'          # every test
 #   tools/dev.sh 'proofs/rocq/extract/diff.sh tests/litmus/alloy-ptx87/kamui/hand/X.als'
-#   proofs/rocq/extract/diff.sh --check proofs/rocq/extract/mutants.txt                  # a stored sample (CI)
+#   proofs/rocq/extract/diff.sh --check proofs/rocq/extract/mutants.txt.gz               # the stored sample (CI)
 #
 # Options:
 #   --every K    the default sample: every K-th query of tests/litmus/alloy-ptx87, by name (default 40)
@@ -19,7 +19,8 @@
 #   --mutate N   at most N mutants of each kind per field and execution (default 2)
 #   --seed S     the seed of the random choice of mutants (default 1)
 #   --jobs J     queries in parallel (default 8)
-#   --out FILE   also write all the mutants, with Alloy's answers, to FILE (to store a sample for --check)
+#   --out FILE   also write all the mutants, with Alloy's answers, to FILE (to store a sample for --check;
+#                gzipped when FILE ends in .gz)
 #   --check FILE run the checker on FILE (written by --out) instead of making mutants: needs no Alloy
 #
 # Prints the number of mutants per field and how many were rejected, then every disagreement. Exit status: 0 when
@@ -51,7 +52,7 @@ if [ -n "$check" ]; then
   [ -f "$check" ] || { echo "diff.sh: no file $check" >&2; exit 2; }
   mkdir -p "$(dirname "$work")"
   input="$(mktemp -p "$(dirname "$work")" diff-input.XXXXXX)"
-  cp "$check" "$input"
+  case "$check" in *.gz) gzip -dc "$check" > "$input" ;; *) cp "$check" "$input" ;; esac
 fi
 rm -rf "$work"
 mkdir -p "$work"
@@ -78,7 +79,7 @@ else
   export here work max mutate seed root
   printf '%s\n' "${queries[@]}" | xargs -P "$jobs" -I{} bash -c 'one "$@"' _ {} || { echo "diff.sh: a dump failed" >&2; exit 2; }
   cat "$work"/*.dump > "$work/all.dump"
-  [ -z "$out" ] || cp "$work/all.dump" "$out"
+  case "$out" in "") ;; *.gz) gzip -9nc "$work/all.dump" > "$out" ;; *) cp "$work/all.dump" "$out" ;; esac
 fi
 
 "$checker" --wf < "$work/all.dump" > "$work/all.ans" || { echo "diff.sh: the checker failed" >&2; exit 2; }

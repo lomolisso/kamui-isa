@@ -62,7 +62,9 @@ executions that Alloy finds (a tuple removed, added or replaced; `FORMAT.md`, "M
 result still satisfies the model's facts, and compares with the checker's well-formedness (`wf_prog` and
 `wf_exec`). Result (November 2026), on 93 tests (every 40th test, and every test with mixed-size or vector
 accesses, and every 10th with an mbarrier), 185 executions and 14575 mutants of them over 42 fields: the two agree
-on every mutant (Alloy rejects 10716 of them). It takes about 2 minutes on 12 cores.
+on every mutant (Alloy rejects 10716 of them). It takes about 2 minutes on 12 cores. CI runs the checker on a stored sample,
+`extract/mutants.txt.gz` (the default sample of 50 tests: 6713 executions and mutants, with Alloy's answers;
+written by `diff.sh --out`), which needs no Alloy and takes seconds.
 
 Rocq 9.2.0 with its standard library 9.1.0, as in the dev image and in CI (the official `rocq/rocq-prover:9.2.0`
 image). The relation library is [hahn](https://github.com/vafeiadis/hahn) (MIT licence), a submodule at

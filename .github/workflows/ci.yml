@@ -145,11 +145,12 @@ jobs:
           path: build/rocq/hahn
           key: rocq-9.2.0-hahn-${{ hashFiles('deps/hahn/*.v', 'deps/hahn/_CoqProject') }}
 
-      - name: Rocq proof builds and passes its checks
+      - name: Rocq proof builds and passes its checks (with the stored sample of mutated executions)
         env:
           ROCQ_IMAGE: rocq/rocq-prover:9.2.0@sha256:33926fb3757b2b560c3844157bd64173a26b6d338a256be1ae5eec8df2019025
         run: |
           docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
             -e PATH=/home/rocq/.opam/4.14.2+flambda/bin:/usr/local/bin:/usr/bin:/bin \
             --entrypoint bash -v "$PWD:/w" -w /w "$ROCQ_IMAGE" \
-            -c 'time make -C proofs/rocq JOBS=4 && tools/proofs/check.sh'
+            -c 'time make -C proofs/rocq JOBS=4 checker && tools/proofs/check.sh &&
+                proofs/rocq/extract/diff.sh --check proofs/rocq/extract/mutants.txt.gz'
