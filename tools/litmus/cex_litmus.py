@@ -197,7 +197,9 @@ def to_litmus(rel: dict, name: str) -> str:
         last = [w for w in ws if all((v, w) in co for v in ws if v != w)]
         if ws and len(last) == 1:
             cond.append(f"{names[a]} == {val[last[0]]}")
-    rows = max(len(c) for c in cols) if cols else 0
+    if not any(cols):
+        raise Unconvertible("no instruction in any thread")
+    rows = max(len(c) for c in cols)
     width = max([len(p) for p in place] + [len(x) for c in cols for x in c]) + 1
     lines = [f"PTX {name}", f'"Generated from a counterexample of {name.split("+")[0]}."', "{", *decl, "}",
              " " + " | ".join(p.ljust(width) for p in place) + " ;"]

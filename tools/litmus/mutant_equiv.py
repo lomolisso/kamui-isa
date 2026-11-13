@@ -229,11 +229,14 @@ def defs(text):
     return out
 
 
+# executions with no undefined behaviour and no mixed-size race, where the axioms decide the verdict alone
+DEFINED = "not undefined and not mixed_size_race"
+
 CORE = ("no AsyncUnit and no Marker and no MbarEv and no acc and no vacc and no SyncRestrictCta + SyncRestrictCluster + "
         "OpRestrictInit and ProxyFence in PlainProxyFence and no pspace and Address.space in Global + Shared")
 
 
-def module(m, bounds, core=False):
+def module(m, bounds, core=False, defined=False):
     text = MODEL.read_text()
     if text.count(m["find"]) != 1:
         raise SystemExit(f"{m['id']}: its text does not occur once")
@@ -242,7 +245,7 @@ def module(m, bounds, core=False):
     if [n for n, _ in orig_defs] != [n for n, _ in mut_defs]:
         raise SystemExit(f"{m['id']}: the mutation changes the definitions themselves")
     if sum(a != b for (_, a), (_, b) in zip(orig_defs, mut_defs)) == 0:
-        return fact_module(m, text, mutated, bounds, core)
+        return fact_module(m, text, mutated, bounds, core, defined)
     names = {n for n, _ in orig_defs}
     pat = re.compile(r"\b(" + "|".join(sorted(names, key=len, reverse=True)) + r")\b")
     body = [pat.sub(lambda x: x.group(1) + "_m", t) for _, t in mut_defs]
@@ -260,8 +263,9 @@ def module(m, bounds, core=False):
     for b in bounds:
         for p in PREDS:
             cond = f"(emitted and {CORE})" if core else "emitted"
+            cond = f"({cond} and {DEFINED})" if defined else cond
             out.append(f"eq_{p}_{b}: check {{ {cond} => ({p} <=> {p}_m) }} {SCOPES[b]}")
-    if core:
+    if core or defined:
         return "\n".join(out) + "\n"
     # Coherence order is a witness: the solver picks co, and ptx87.als only uses its closure ^co (and acyclic[co],
     # rf + co in same_location_r, which ^co also satisfies), so a test's verdict is the same with co and with ^co.
@@ -287,7 +291,7 @@ def module(m, bounds, core=False):
     return "\n".join(out) + "\n"
 
 
-def fact_module(m, text, mutated, bounds, core):
+def fact_module(m, text, mutated, bounds, core, defined=False):
     """A mutant that changes a fact: the module holds the model with that fact taken out, and the fact as it is
     (fact_o) and as mutated (fact_m) as predicates. The two versions judge every execution alike if, on executions
     of the shape `emitted`, the model's verdicts are the same under either fact."""
@@ -315,6 +319,7 @@ def fact_module(m, text, mutated, bounds, core):
     for b in bounds:
         for p in PREDS:
             cond = f"(emitted and {CORE})" if core else "emitted"
+            cond = f"({cond} and {DEFINED})" if defined else cond
             out.append(f"eq_{p}_{b}: check {{ {cond} => ((fact_o and {p}) <=> (fact_m and {p})) }} {SCOPES[b]}")
     return "\n".join(out) + "\n"
 
@@ -354,6 +359,8 @@ def main():
     ap.add_argument("--core", action="store_true",
                     help="search only executions without asynchronous units, mbarriers, mixed-size accesses or "
                          "restricted fences (counterexamples that tools/litmus/cex_litmus.py can write back)")
+    ap.add_argument("--defined", action="store_true",
+                    help="compare only executions with no undefined behaviour and no mixed-size race")
     ap.add_argument("--bounds", default="4,5")
     ap.add_argument("--limit", default="3600")
     ap.add_argument("--jobs", default="8")
@@ -369,8 +376,8 @@ def main():
         if m["model"] != "alloy":
             print(f"{mid}: not an Alloy mutant")
             continue
-        src = module(m, bounds, a.core)
-        tag = "_core" if a.core else ""
+        src = module(m, bounds, a.core, a.defined)
+        tag = "_core" if a.core else "_defined" if a.defined else ""
         path = OUT / f"mut_{re.sub(r'[^A-Za-z0-9_]', '_', mid)}{tag}.als"
         path.write_text(src)
         env = dict(os.environ, LIMIT=a.limit, JOBS=a.jobs)
@@ -386,9 +393,12 @@ def main():
         if a.core:   # agreement on the core fragment proves nothing about the whole model
             verdict = {"equivalent": "agrees on the core fragment", "differs": "differs on the core fragment"}.get(
                 verdict, verdict)
+        if a.defined:
+            verdict = {"equivalent": "agrees on defined executions", "differs": "differs on defined executions"}.get(
+                verdict, verdict)
         res = [l for l in res if l.startswith("eq_")] if verdict == "equivalent" else res
         print(f"{mid}: {verdict} ({'; '.join(res)})", flush=True)
-        if not a.core and verdict != "no result":
+        if not (a.core or a.defined) and verdict != "no result":
             record(mid, verdict, bounds)
     return 0
 
