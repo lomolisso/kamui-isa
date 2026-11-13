@@ -513,9 +513,8 @@
   file: ptx-v8.7.cat
   rule: SC per location axiom (8.10.5)
   kind: weaken
-  find: "acyclic (morally-strong & (po | rf | co | fr) & vloc) as axiom-ScPerLocation\n"
+  find: "acyclic ((po & vloc) | (morally-strong & (rf | co | fr))) as axiom-ScPerLocation\n"
   replace: "\n"
-  equivalent: "implied by Coherence and Causality: program order is part of base causality order (cause-normal), so every cycle the axiom forbids is already a Causality cycle"
 - id: D-causality
   model: dartagnan
   file: ptx-v8.7.cat

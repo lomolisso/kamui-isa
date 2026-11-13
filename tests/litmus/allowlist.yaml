@@ -944,7 +944,7 @@
     Two readings of SC per location (8.10.5) since aliases can be morally strong (D48). The manual first limits the
     axiom to "any set of overlapping memory operations that are pairwise morally strong", then states it as "a
     concatenation of program order between overlapping operations and morally strong relations in communication
-    order cannot result in a cycle". ptx-v8.7-alloy follows the second sentence, as NVIDIA's formal model does
-    (acyclic strong com + po_loc), and forbids the cycle through the generic and the surface accesses. The
-    Dartagnan fork (ptx-v8.7) requires every edge to be morally strong and on one virtual address, and ptx-v7.5
-    never makes aliases morally strong; both allow it. The contract takes the stronger reading, the Alloy model's.
+    order cannot result in a cycle". The contract takes the second, stronger reading, as NVIDIA's formal model does
+    (acyclic strong com + po_loc): ptx-v8.7-alloy and the Dartagnan fork (ptx-v8.7, since 2026-11-12) forbid the
+    cycle through the generic and the surface accesses. Dartagnan's ptx-v7.5 never makes aliases morally strong and
+    allows it.
