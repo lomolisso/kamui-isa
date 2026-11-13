@@ -5,6 +5,7 @@ A-false-wait-acquires,differs,4 and 5
 A-fence-sc,differs,4 and 5
 A-ms-weak,equivalent,4 and 5
 A-sc-per-location,equivalent,4 and 5
+A-vec-co,differs,4 and 5
 R-AcqReads-minus-315,differs,4 and 5
 R-Atomics-or-to-and-458,differs,4 and 5
 R-StrongR-minus-267,equivalent,4 and 5
