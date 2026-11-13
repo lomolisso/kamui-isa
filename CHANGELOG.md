@@ -10,6 +10,8 @@ All notable changes to this project are listed here. The format follows
 
 - Rocq proof that the PTX 8.7 to Kamui lowering is correct for every program (`proofs/rocq/`), with checkers
   tested against Alloy on every litmus execution.
+- Bounded comparisons of the PTX 8.7 model with NVIDIA's 2019 and mixed-proxy models, and a Rocq proof that
+  `fence.sc` between all accesses restores sequential consistency.
 - `proofs/rocq/extract/diff.sh`, which checks that the Rocq well-formedness rejects the mutated executions the
   Alloy model rejects.
 - Kamui memory model (`spec/memory-model.md`, `models/kamui/`): every memory instruction's meaning, the meaning of
