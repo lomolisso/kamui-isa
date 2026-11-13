@@ -49,12 +49,12 @@ execution that Alloy finds for the litmus tests (`extract/AlloyDump.java` writes
 behaviour, the race, and every tuple of the derived relations), and the verdict it computes must be the verdict
 of `tests/litmus/expected.csv` for each of the three Alloy models.
 
-Result (November 2026, `litmus.py --report`): of the 5236 test runs (1665 to 1898 tests per model), 5200 pass, on
-168109 executions; the checker never disagrees with Alloy. The 36 others are 12 tests (in each model) with more than
+Result (November 2026, `litmus.py --report`): of the 5325 test runs (1693 to 1931 tests per model), 5289 pass, on
+172592 executions; the checker never disagrees with Alloy. The 36 others are 12 tests (in each model) with more than
 3000 executions even after narrowing them to those with the outcome, undefined behaviour or a race (mbarrier
-transaction counts, asynchronous copies with mbarrier completion, `rmw-ops+values`,
+transaction counts, mbarrier re-initialization, asynchronous copies with mbarrier completion, `rmw-ops+values`,
 `2+cp.reduce.async.bulk`); the checker agrees with Alloy on their first 3000 executions, but their verdicts are
-checked by Alloy alone. A full run takes about 3 hours on 40 cores.
+checked by Alloy alone. A full run takes about 3 hours on 40 cores (5.5 hours with 20 jobs on a loaded host).
 
 The litmus tests only show that the checker accepts the executions Alloy accepts. `extract/diff.sh` checks the
 other direction, so that a fact of the model missing from `Ptx87.v` would be seen: it changes one field of
